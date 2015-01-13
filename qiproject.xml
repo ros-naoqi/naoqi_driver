@@ -1,0 +1,6 @@
+<!-- in qiproject.xml -->
+<project version="3">
+  <qibuild name="alrosconverter" >
+    <depends buildtime="true" runtime="true" names="libnaoqi" />
+  </qibuild>
+</project>
