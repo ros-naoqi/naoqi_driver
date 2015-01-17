@@ -11,43 +11,31 @@
 
 int main(int argc, char *argv[])
 {
-  qi::ApplicationSession app(argc, argv);
-  app.start();
-  qi::SessionPtr session = app.session();
 
-  // temporary debug master ip
-  const std::string& ip = "http://10.0.132.69:11311";
-  qi::Object<ALRosConverter> converter( new ALRosConverter(ip) );
+ std::cout << "application started " << std::endl;
 
-  session->registerService("ALRosConverter", converter);
-  //app.run();
+ qi::ApplicationSession app(argc, argv);
+ app.start();
+ qi::SessionPtr session = app.session();
 
+ // temporary debug master ip
+ const std::string& ip = "http://10.0.132.69:11311";
+ alros::ALRosConverter* conv =new alros::ALRosConverter(argc, argv, ip);
+ qi::Object<alros::ALRosConverter> converter( conv );
 
-  /*
-  * ROS Stuff
-  */
-  ros::init( argc, argv, "alrosconverter" );
-  std::cout << "alrosconverter init" << std::endl;
+ session->registerService("ALRosConverter", converter);
+// //app.run();
 
-  /*
-  * registers the node at ROS Master's side
-  * verify with: rosnode list
-  */
-  ros::NodeHandle nh("~");
-  std::cout << "node handle setup" << std::endl;
+  std::cout << "entering main loop" << std::endl;
 
-  ros::Publisher pub = nh.advertise< std_msgs::Int32 >( "chatter", 100 );
-  std_msgs::Int32 m;
-  m.data = 0;
-
+//  // BAD!! FIND A BETTER BREAK CONDITION
   ros::Rate r(1);
-  while( nh.ok() )
+  while( converter->isAlive() )
   {
-    std::cout << "publishing " << m.data << std::endl;
-    pub.publish( m );
-    m.data++;
-
+    converter->update();
+    std::cout << "publishing alive " << std::endl;
     r.sleep();
   }
   std::cout << "shutting down .. " << std::endl;
+  return 0;
 }
