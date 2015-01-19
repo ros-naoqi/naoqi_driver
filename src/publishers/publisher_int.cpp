@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <std_msgs/Int32.h>
+
 #include "publisher_int.hpp"
 
 namespace alros
@@ -11,13 +13,24 @@ IntPublisher::IntPublisher( const std::string& name, const std::string& topic ):
   BasePublisher( name, topic )
 {}
 
-void IntPublisher::publish()
+IntPublisher::IntPublisher( const std::string& name, const std::string& topic, ros::NodeHandle& nh ):
+  BasePublisher( name, topic )
 {
-  std::cout << name() << " is publishing " << std::endl;
+  reset( nh );
 }
 
-void IntPublisher::reset()
+void IntPublisher::publish()
 {
+  static std_msgs::Int32 m;
+  m.data++;
+  std::cout << name() << " is publishing " << m.data << std::endl;
+  pub_.publish( m );
+}
+
+void IntPublisher::reset( ros::NodeHandle& nh )
+{
+  pub_ = nh.advertise< std_msgs::Int32>( topic_, 10 );
+  is_initialized_ = true;
   std::cout << name() << " is resetting" << std::endl;
 }
 
