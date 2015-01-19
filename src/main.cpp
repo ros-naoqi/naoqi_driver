@@ -5,9 +5,11 @@
 
 #include <string>
 #include <ros/ros.h>
-#include <std_msgs/Int32.h>
 
-#include "alrosconverter.hpp"
+
+#include "publishers/publisher_string.hpp"
+#include "publishers/publisher_int.hpp"
+#include "alrosbridge.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -20,20 +22,21 @@ int main(int argc, char *argv[])
 
  // temporary debug master ip
  const std::string& ip = "http://10.0.132.69:11311";
- alros::ALRosConverter* conv =new alros::ALRosConverter(argc, argv, ip);
- qi::Object<alros::ALRosConverter> converter( conv );
+ qi::Object<alros::Bridge> bridge( new alros::Bridge(ip)  );
 
- session->registerService("ALRosConverter", converter);
-// //app.run();
+ session->registerService("ALRosBridge", bridge);
+
+  alros::publisher::Publisher string_pub = alros::publisher::StringPublisher( "string_pub", "string_pub");
+  bridge->registerPublisher( string_pub );
+  bridge->registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub") );
 
   std::cout << "entering main loop" << std::endl;
 
 //  // BAD!! FIND A BETTER BREAK CONDITION
   ros::Rate r(1);
-  while( converter->isAlive() )
+  while( bridge->isAlive() )
   {
-    converter->update();
-    std::cout << "publishing alive " << std::endl;
+    bridge->publish();
     r.sleep();
   }
   std::cout << "shutting down .. " << std::endl;
