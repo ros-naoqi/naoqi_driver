@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
   std::cout << "entering main loop" << std::endl;
 
 //  // BAD!! FIND A BETTER BREAK CONDITION
-  ros::Rate r(1);
+  ros::Rate r(15);
   while( bridge->isAlive() )
   {
     bridge->publish();
