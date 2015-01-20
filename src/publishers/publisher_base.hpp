@@ -18,6 +18,8 @@ public:
     is_initialized_( false )
   {}
 
+  virtual ~BasePublisher() {};
+
   inline std::string name() const
   {
     return name_;

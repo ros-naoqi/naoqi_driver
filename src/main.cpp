@@ -15,17 +15,26 @@
 int main(int argc, char *argv[])
 {
 
- std::cout << "application started " << std::endl;
+  std::cout << "application started " << std::endl;
 
- qi::ApplicationSession app(argc, argv);
- app.start();
- qi::SessionPtr session = app.session();
+  qi::ApplicationSession app(argc, argv);
+  app.start();
+  qi::SessionPtr session = app.session();
 
- // temporary debug master ip
- const std::string& ip = "http://10.0.132.69:11311";
- qi::Object<alros::Bridge> bridge( new alros::Bridge(ip)  );
+  // get host ip for ros_init
+ //  std::map< std::string, std::vector<std::string> > ips = qi::os::hostIPAddrs();
+ // const std::string& host_ip = ips["eth0"][0];
 
- session->registerService("ALRosBridge", bridge);
+
+  // temporary debug master ip
+  const std::string& ip = "http://10.0.132.69:11311";
+  qi::Object<alros::Bridge> bridge( new alros::Bridge(ip)  );
+  size_t service_id = session->registerService("ALRosBridge", bridge);
+
+  qi::AnyObject p_memory = session->service("ALMemory");
+  qi::AnyObject p_motion = session->service("ALMotion");
+
+
 
   alros::publisher::Publisher string_pub = alros::publisher::StringPublisher( "string_pub", "string_pub");
   bridge->registerPublisher( string_pub );
@@ -41,6 +50,9 @@ int main(int argc, char *argv[])
     bridge->publish();
     r.sleep();
   }
+  ros::shutdown();
   std::cout << "shutting down .. " << std::endl;
+  session->unregisterService(service_id);
+  app.stop();
   return 0;
 }

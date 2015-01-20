@@ -23,11 +23,12 @@ Bridge::Bridge( const std::string& ip )
   nhPtr_.reset( new ros::NodeHandle("~") );
 }
 
-Bridge::~Bridge()
-{
-  // destroy nodehandle?
-  nhPtr_->shutdown();
-}
+//Bridge::~Bridge()
+//{
+//  // destroy nodehandle?
+//  nhPtr_->shutdown();
+//  ros::shutdown();
+//}
 
 std::string Bridge::getMasterURI() const
 {
@@ -39,14 +40,11 @@ void Bridge::setMasterURI( const std::string& uri )
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   nhPtr_.reset();
   std::cout << "nodehandle reset " << std::endl;
-  //pub_.shutdown();
-  //std::cout << "publisher shutdown " << std::endl;
   ros_env::setMasterURI( uri );
   lock.unlock();
 
   initPublisher();
 }
-
 
 void Bridge::initPublisher()
 {
@@ -91,9 +89,5 @@ bool Bridge::isAlive() const
   return ros::ok();
 }
 
-
-
-
 QI_REGISTER_OBJECT( Bridge, getMasterURI, setMasterURI );
-
 } //alros

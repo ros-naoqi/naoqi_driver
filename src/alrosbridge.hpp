@@ -18,7 +18,7 @@ class Bridge
 {
 public:
   Bridge( const std::string& ip );
-  ~Bridge();
+  //~Bridge();
 
   /**
   * callable with qicli call
