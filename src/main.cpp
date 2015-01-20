@@ -9,6 +9,7 @@
 
 #include "publishers/publisher_string.hpp"
 #include "publishers/publisher_int.hpp"
+#include "publishers/publisher_joint_state.hpp"
 #include "alrosbridge.hpp"
 
 int main(int argc, char *argv[])
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
   alros::publisher::Publisher string_pub = alros::publisher::StringPublisher( "string_pub", "string_pub");
   bridge->registerPublisher( string_pub );
   bridge->registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub") );
+  bridge->registerPublisher( alros::publisher::JointStatePublisher("joint_states", "joint_states", p_motion) );
 
   std::cout << "entering main loop" << std::endl;
 
