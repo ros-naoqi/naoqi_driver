@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 project(myservice)
 find_package(qibuild)
 
+SET (CMAKE_CXX_FLAGS_INIT "-Wall -std=c++0x -stdlib=libc++")
+
 add_library(
   alrosbridge
   src/alrosbridge.cpp
@@ -30,4 +32,5 @@ target_link_libraries(
   alrosconverter
 )
 
+add_subdirectory( benchmark )
 add_subdirectory( test )
