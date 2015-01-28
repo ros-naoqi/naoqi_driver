@@ -12,6 +12,18 @@ You can check out the toolchain packages under:
 git@gitlab.aldebaran.lan:kknese/ros-toolchain.git
 (!) As for now, there are pre-compiled packages for atom and linux64
 
+Building the doc
+================
+
+Run:
+
+   cd ./doc
+   sphinx-build ./source/ ./build/
+
+Enjoy:
+
+   xdg-open ./build/index.html
+
 TODO
 ====
 - write down instructions on how to deploy that module in that README.rst file
