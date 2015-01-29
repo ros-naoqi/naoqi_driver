@@ -6,8 +6,14 @@
 /*
 * BOOST
 */
+#include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/scoped_ptr.hpp>
+
+/*
+* ALDEB
+*/
+#include <qi/session.hpp>
 
 
 #include "publishers/publisher.hpp"
@@ -17,18 +23,8 @@ namespace alros
 class Bridge
 {
 public:
-  Bridge( const std::string& ip );
-  //~Bridge();
-
-  /**
-  * callable with qicli call
-  */
-  std::string getMasterURI() const;
-
-  /**
-  * callable with qicli call
-  */
-  void setMasterURI( const std::string& uri );
+  Bridge( qi::SessionPtr& session );
+  ~Bridge();
 
   // make a copy here since this should actually be replaced by move semantics
   void registerPublisher( publisher::Publisher pub );
@@ -37,9 +33,26 @@ public:
 
   bool isAlive() const;
 
-private:
+  /**
+  * callable with qicli call
+  */
+  std::string getMasterURI() const;
+  void setMasterURI( const std::string& uri );
+  void start();
+  void stop();
 
+
+private:
+  qi::SessionPtr sessionPtr_;
+  bool publish_enabled_;
+  const size_t freq_;
+  boost::thread publisherThread_;
+  //ros::Rate r_;
+
+  void registerDefaultPublisher();
   void initPublisher();
+
+  void rosLoop();
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
