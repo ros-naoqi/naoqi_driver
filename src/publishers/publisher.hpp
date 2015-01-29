@@ -1,5 +1,5 @@
 #ifndef PUBLISHER_HPP
-#define HPP
+#define PUBLISHER_HPP
 
 #include <string>
 
@@ -50,6 +50,14 @@ public:
   std::string topic() const
   {
     return pubPtr_->topic();
+  }
+
+  friend bool operator==( const Publisher& lhs, const Publisher& rhs )
+  {
+    // decision made for OR-comparison since we want to be more restrictive
+    if ( lhs.name() == rhs.name() || lhs.topic() == rhs.topic() )
+      return true;
+    return false;
   }
 
 private:
