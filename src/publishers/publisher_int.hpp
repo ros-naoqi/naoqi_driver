@@ -10,7 +10,7 @@ namespace alros
 namespace publisher
 {
 
-class IntPublisher : public BasePublisher
+class IntPublisher : public BasePublisher<IntPublisher>
 {
 
 public:

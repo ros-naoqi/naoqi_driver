@@ -22,7 +22,7 @@ namespace publisher
 {
 
 
-class JointStatePublisher : public BasePublisher
+class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {
 
 public:

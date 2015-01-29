@@ -8,6 +8,8 @@ namespace alros
 namespace publisher
 {
 
+// CRTP
+template<class T>
 class BasePublisher
 {
 
