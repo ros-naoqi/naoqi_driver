@@ -40,7 +40,8 @@ static void setMasterURI( const std::string& uri )
   std::map< std::string, std::string > remap;
   remap["__master"] = uri;
   remap["__ip"] = ::alros::ros_env::getROSIP();
-  ros::init( remap, "alrosconverter" );
+  // init ros without a sigint-handler in order to shutdown correctly by naoqi
+  ros::init( remap, "alrosconverter", ros::init_options::NoSigintHandler );
   // to prevent shutdown based on no existing nodehandle
   ros::start();
 
