@@ -33,8 +33,8 @@ The following services are also exposed to bridge with the NAOqi API:
 Getting Started
 ---------------
 
-Starting ROS
-++++++++++++
+Starting ROS on your machine
+++++++++++++++++++++++++++++
 
 First of all, you need to have ROS installed on your machine. Please follow the instructions at http://wiki.ros.org/ROS/Installation .
 
@@ -75,15 +75,47 @@ And you should then see the following output:
   process[rosout-1]: started with pid [13316]
   started core service [/rosout]
 
-Starting the **ALROS** module
-+++++++++++++++++++++++++++++
-
-In order to get the module to connect to your roscore, you should send it your IP:
+You also need to launch your robot description:
 
 .. code-block:: sh
 
-  rosrun local_naoqi_module whatever_ip_from_above TODO
+  roslaunch nao_description nao_desc_generated.launch
 
+Starting the **ALROS** module
++++++++++++++++++++++++++++++
+
+In the future, this module will be started by default.
+
+.. code-block:: sh
+
+  cd kk
+  source toolchain/install/setup.sh
+  ./bin/naoqi-bin
+
+In a different terminal:
+
+.. code-block:: sh
+
+  ./bin/alros_bin
+
+
+Triggering the **ALROS** module
++++++++++++++++++++++++++++++++
+
+In order to get the module to connect to your roscore, you should send it your IP.
+Let us assume your IP is ``10.0.132.105`` and your port ``11311``.
+
+If oyu are on your desktop:
+
+.. code-block:: sh
+
+  rosrun local_naoqi_module local_executable http://10.0.132.105:11311
+
+You can also perform that action from your robot:
+
+.. code-block:: sh
+
+  qicli call BridgeService.setMasterURI http://10.0.132.105:11311
 
 Using the **ALROS** module
 ++++++++++++++++++++++++++
@@ -116,4 +148,33 @@ Try out the following solutions:
 Additional Resources
 --------------------
 
+ROS
++++
 For any ROS question, please refer to the official doc at http://wiki.ros.org .
+
+Compiling
++++++++++
+
+Those instructions are internal to Aldebaran for now.
+
+To compile the module, you first need to get ROS in your toolchain. For an atom toolchain,
+you need to do the following.
+
+Get the toolchain file from https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master .
+
+Then execute the proper instruction to add it to your toolchain, e.g.:
+
+.. code-block:: sh
+
+  qitoolchain add-packages -c atom ros toolchain_install_atom.tar.gz
+
+TODO: fix compilation error ROS
+
+Get the code from gitlab:
+
+.. code-block:: sh
+
+  git clone git@gitlab.aldebaran.lan:kknese/alrosconverter.git
+  qisrc add ./alrosconverter
+  qibuild configure -c atom alrosconverter
+  qibuild make -c atom alrosconverter
