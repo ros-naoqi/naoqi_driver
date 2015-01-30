@@ -19,7 +19,11 @@ When there are no subscribers connected to a specific topic, no CPU is used on t
 
 This module tries to be as close to the ROS standard. The following topics are being published:
 
-- ``/tf`` matching the corresponding one on http://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html
+- ``/tf  [tf2_msgs/TFMessage]``: http://wiki.ros.org/tf#Published_Topics
+- ``/joint_states [sensor_msgs/JointState]``: http://wiki.ros.org/joint_state_publisher#Published_Topics
+- ``/rosout [rosgraph_msgs/Log]``: http://wiki.ros.org/rosout#rosout_topic
+- ``/alrosconverter/string_pub [std_msgs/String]`` TODO
+- ``/alrosconverter/int_pub [std_msgs/Int32]`` TODO
 - TODO
 
 The following services are also exposed to bridge with the NAOqi API:
@@ -48,7 +52,7 @@ You can then start the **roscore** as explained at http://wiki.ros.org/roscore
 
 .. code-block:: sh
 
-  roscore
+  $ roscore
 
 And you should then see the following output:
 
@@ -79,7 +83,7 @@ You also need to launch your robot description:
 
 .. code-block:: sh
 
-  roslaunch nao_description nao_desc_generated.launch
+  $ roslaunch nao_description nao_desc_generated.launch
 
 Starting the **ALROS** module
 +++++++++++++++++++++++++++++
@@ -88,15 +92,15 @@ In the future, this module will be started by default.
 
 .. code-block:: sh
 
-  cd kk
-  source toolchain/install/setup.sh
-  ./bin/naoqi-bin
+  $ cd kk
+  $ source toolchain/install/setup.sh
+  $ ./bin/naoqi-bin
 
 In a different terminal:
 
 .. code-block:: sh
 
-  ./bin/alros_bin
+  $ ./bin/alros_bin
 
 
 Triggering the **ALROS** module
@@ -109,30 +113,53 @@ If oyu are on your desktop:
 
 .. code-block:: sh
 
-  rosrun local_naoqi_module local_executable http://10.0.132.105:11311
+  $ rosrun local_naoqi_module local_executable http://10.0.132.105:11311
 
 You can also perform that action from your robot:
 
 .. code-block:: sh
 
-  qicli call BridgeService.setMasterURI http://10.0.132.105:11311
+  $ qicli call BridgeService.setMasterURI http://10.0.132.105:11311
 
 Using the **ALROS** module
 ++++++++++++++++++++++++++
 
-You can then use ROS as you would normally do:
+On your desktop, you can then use ROS as you would normally do:
 
 .. code-block:: sh
 
-  source /opt/ros/you_installed_rosdistro/setup.sh
-  rostopic list
+  $ source /opt/ros/your_installed_rosdistro/setup.sh
+  $ rostopic info alrosconverter
 
 And you will get the following output:
 
 .. code-block:: sh
 
-  TODO
-
+  $ rosnode info /alrosconverter 
+  --------------------------------------------------------------------------------
+  Node [/alrosconverter]
+  Publications: 
+   * /alrosconverter/string_pub [std_msgs/String]
+   * /joint_states [sensor_msgs/JointState]
+   * /rosout [rosgraph_msgs/Log]
+   * /tf [tf2_msgs/TFMessage]
+   * /alrosconverter/int_pub [std_msgs/Int32]
+  
+  Subscriptions: None
+  
+  Services: 
+   * /alrosconverter/get_loggers
+   * /alrosconverter/set_logger_level
+  
+  
+  contacting node http://10.0.132.89:44869/ ...
+  Pid: 9678
+  Connections:
+   * topic: /rosout
+      * to: /rosout
+      * direction: outbound
+      * transport: TCPROS
+    
 Troubleshooting
 ---------------
 
@@ -144,6 +171,17 @@ Try out the following solutions:
 - make sure you are on a local network
 - check the IP you are giving: make sure it has the format TODO
 - check you can ping the roscore IP from the robot
+
+ROS gets delayed data
++++++++++++++++++++++
+
+This is due to a difference of time between your robot and your desktop.
+In order to synchronize the two, you need to update the NTP server on both:
+
+.. code-block:: sh
+
+  TODO
+
 
 Additional Resources
 --------------------
@@ -157,16 +195,13 @@ Compiling
 
 Those instructions are internal to Aldebaran for now.
 
-To compile the module, you first need to get ROS in your toolchain. For an atom toolchain,
-you need to do the following.
-
-Get the toolchain file from https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master .
+To compile the module, you first need to get ROS in your toolchain. Get the toolchain file from https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master .
 
 Then execute the proper instruction to add it to your toolchain, e.g.:
 
 .. code-block:: sh
 
-  qitoolchain add-packages -c atom ros toolchain_install_atom.tar.gz
+  $ qitoolchain add-package -c atom ros toolchain_install_atom.tar.gz
 
 TODO: fix compilation error ROS
 
@@ -174,7 +209,7 @@ Get the code from gitlab:
 
 .. code-block:: sh
 
-  git clone git@gitlab.aldebaran.lan:kknese/alrosconverter.git
-  qisrc add ./alrosconverter
-  qibuild configure -c atom alrosconverter
-  qibuild make -c atom alrosconverter
+  $ git clone git@gitlab.aldebaran.lan:kknese/alrosconverter.git
+  $ qisrc add ./alrosconverter
+  $ qibuild configure -c atom alrosconverter
+  $ qibuild make -c atom alrosconverter
