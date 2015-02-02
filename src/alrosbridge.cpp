@@ -72,10 +72,10 @@ void Bridge::publish( )
 {
   foreach( publisher::Publisher& pub, all_publisher_ )
   {
-    std::cout << "******************************" << std::endl;
-    std::cout << "Publisher name:\t" << pub.name() << std::endl;
-    std::cout << "Publisher subscribed:\t" << pub.isSubscribed() << std::endl;
-    std::cout << "Publisher init:\t" << pub.isInitialized() << std::endl;
+    //std::cout << "******************************" << std::endl;
+    //std::cout << "Publisher name:\t" << pub.name() << std::endl;
+    //std::cout << "Publisher subscribed:\t" << pub.isSubscribed() << std::endl;
+    //std::cout << "Publisher init:\t" << pub.isInitialized() << std::endl;
     if ( pub.isSubscribed() && pub.isInitialized() )
     {
       pub.publish();
