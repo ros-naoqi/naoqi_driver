@@ -10,7 +10,7 @@
 /**
 * ALDEBARAN includes
 */
-#include <alcommon/albroker.h>
+#include <qi/anyobject.hpp>
 
 #include <vector>
 
@@ -26,8 +26,7 @@ class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {
 
 public:
-  JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject p_motion );
-  JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject p_motion, ros::NodeHandle& nh );
+  JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject& p_motion );
 
   void publish();
 

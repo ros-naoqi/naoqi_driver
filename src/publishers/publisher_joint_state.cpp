@@ -12,17 +12,10 @@ namespace alros
 namespace publisher
 {
 
-JointStatePublisher::JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject p_motion ):
+JointStatePublisher::JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject& p_motion ):
   BasePublisher( name, topic ),
   p_motion_( p_motion )
 {}
-
-JointStatePublisher::JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject p_motion, ros::NodeHandle& nh ):
-  BasePublisher( name, topic ),
-  p_motion_( p_motion )
-{
-  reset( nh );
-}
 
 void JointStatePublisher::publish()
 {
