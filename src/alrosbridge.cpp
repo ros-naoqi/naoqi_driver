@@ -31,15 +31,6 @@ Bridge::Bridge( qi::SessionPtr& session )
   publish_enabled_(false)
 {
   std::cout << "application started " << std::endl;
-  // temporary debug master ip
-  //const std::string& ip = "http://10.0.132.69:11311";
-  //ros_env::setMasterURI( ip );
-
-  //nhPtr_.reset( new ros::NodeHandle("~") );
-  //registerDefaultPublisher();
-
-  // publish_enabled_ set to false by default
-  //publisherThread_ = boost::thread( &Bridge::rosLoop, this );
 }
 
 
@@ -92,20 +83,12 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   // if publisher is not found, register it!
   if (it == all_publisher_.end() )
   {
-    if( !pub.isInitialized() )
-    {
-      pub.reset( *nhPtr_ );
-    }
     all_publisher_.push_back( pub );
     std::cout << "registered publisher:\t" << pub.name() << std::endl;
   }
   // if found, re-init them
   else
   {
-    if ( !it->isInitialized() )
-    {
-      it->reset( *nhPtr_ );
-    }
     std::cout << "re-initialized existing publisher:\t" << it->name() << std::endl;
   }
 }
@@ -149,6 +132,10 @@ void Bridge::setMasterURI( const std::string& uri )
   lock.unlock();
 
   publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+
+  // first register publisher
+  registerDefaultPublisher();
+  // second initialize them with nodehandle
   initPublisher();
   start();
 }
