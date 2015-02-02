@@ -13,6 +13,7 @@ qi_create_lib(
   src/publishers/publisher_string.cpp
   src/publishers/publisher_int.cpp
   src/publishers/publisher_joint_state.cpp
+  src/publishers/publisher_camera.cpp
 )
 qi_stage_lib( alrosbridge )
 
@@ -33,7 +34,7 @@ qi_stage_lib( alros )
 
 qi_use_lib(alros QI ROS)
 qi_use_lib(alrosconverter QI ROS)
-qi_use_lib(alrosbridge QI ALCOMMON ROS)
+qi_use_lib(alrosbridge QI ALCOMMON ALVISION ROS)
 
 target_link_libraries(
   alros
