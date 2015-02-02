@@ -17,17 +17,11 @@ This module is in C++ and gets data straight from the lowest levels of NAOqi hen
 
 When there are no subscribers connected to a specific topic, no CPU is used on the robot.
 
-This module tries to be as close to the ROS standard. The following topics are being published:
+This module tries to be as close to the ROS standard by exposing several standard ROS topics (like ``/tf``) as well as custom ones. Those topics are detailed on the :ref:`topics` page.
 
-- ``/tf  [tf2_msgs/TFMessage]``: http://wiki.ros.org/tf#Published_Topics
-- ``/joint_states [sensor_msgs/JointState]``: http://wiki.ros.org/joint_state_publisher#Published_Topics
-- ``/rosout [rosgraph_msgs/Log]``: http://wiki.ros.org/rosout#rosout_topic
-- ``/alrosconverter/string_pub [std_msgs/String]`` TODO
-- ``/alrosconverter/int_pub [std_msgs/Int32]`` TODO
+It also exposes the following higher level NAOqi API services:
+
 - TODO
-
-The following services are also exposed to bridge with the NAOqi API:
-
 - ``/naoqi/set_life_status`` to turn the life behavior on or off
 - ``/naoqi/move_to``
 - ``/naoqi/set_position_to``
