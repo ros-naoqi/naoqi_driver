@@ -9,13 +9,13 @@ namespace alros
 namespace publisher
 {
 
-StringPublisher::StringPublisher( const std::string& name, const std::string& topic ):
-    BasePublisher( name, topic )
+StringPublisher::StringPublisher( const std::string& name, const std::string& topic, float frequency ):
+    BasePublisher( name, topic, frequency )
 {
 }
 
-StringPublisher::StringPublisher( const std::string& name, const std::string& topic, ros::NodeHandle& nh ):
-  BasePublisher( name, topic )
+StringPublisher::StringPublisher( const std::string& name, const std::string& topic, float frequency, ros::NodeHandle& nh ):
+  BasePublisher( name, topic, frequency )
 {
   reset( nh );
 }

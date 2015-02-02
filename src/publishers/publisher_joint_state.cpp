@@ -12,8 +12,8 @@ namespace alros
 namespace publisher
 {
 
-JointStatePublisher::JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject& p_motion ):
-  BasePublisher( name, topic ),
+JointStatePublisher::JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::AnyObject& p_motion ):
+  BasePublisher( name, topic, frequency ),
   p_motion_( p_motion )
 {}
 

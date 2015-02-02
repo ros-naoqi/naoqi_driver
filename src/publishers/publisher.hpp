@@ -47,6 +47,11 @@ public:
     return pubPtr_->name();
   }
 
+  float frequency() const
+  {
+    return pubPtr_->frequency();
+  }
+
   std::string topic() const
   {
     return pubPtr_->topic();
@@ -74,6 +79,7 @@ private:
     virtual void reset( ros::NodeHandle& nh ) = 0;
     virtual std::string name() const = 0;
     virtual std::string topic() const = 0;
+    virtual float frequency() const = 0;
   };
 
 
@@ -95,6 +101,11 @@ private:
     std::string topic() const
     {
       return publisher_.topic();
+    }
+
+    float frequency() const
+    {
+      return publisher_.frequency();
     }
 
     void publish()
