@@ -17,6 +17,7 @@
 #include "publishers/publisher_string.hpp"
 #include "publishers/publisher_int.hpp"
 #include "publishers/publisher_joint_state.hpp"
+#include "publishers/publisher_camera.hpp"
 
 #include "alrosbridge.hpp"
 #include "ros_env.hpp"
@@ -96,15 +97,16 @@ void Bridge::registerPublisher( publisher::Publisher pub )
 void Bridge::registerDefaultPublisher()
 {
   qi::AnyObject p_motion = sessionPtr_->service("ALMotion");
+  qi::AnyObject p_video = sessionPtr_->service("ALVideoDevice");
 
-  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub") );
-  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub") );
-  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", p_motion) );
+//  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub") );
+//  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub") );
+//  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", p_motion) );
+  registerPublisher( alros::publisher::CameraPublisher("camera", "camera/front", p_video) );
 }
 
 void Bridge::initPublisher()
 {
-  registerDefaultPublisher();
 
   foreach( publisher::Publisher& pub, all_publisher_ )
   {
