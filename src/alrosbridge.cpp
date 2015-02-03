@@ -64,7 +64,7 @@ void Bridge::rosLoop()
         // std::cout << "Publisher name:\t" << pub->name() << std::endl;
         // std::cout << "Publisher subscribed:\t" << pub->isSubscribed() << std::endl;
         // std::cout << "Publisher init:\t" << pub->isInitialized() << std::endl;
-        // pub->publish();
+        pub->publish();
       }
       // Schedule for a future time
       pub_queue_.pop();
