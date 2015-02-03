@@ -2,7 +2,7 @@
 
 #include <std_msgs/Int32.h>
 
-#include "publisher_int.hpp"
+#include "int.hpp"
 
 namespace alros
 {
