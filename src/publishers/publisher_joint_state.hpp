@@ -35,6 +35,8 @@ public:
   bool isSubscribed() const;
 
 private:
+  ros::Publisher pub_;
+
   qi::AnyObject p_motion_;
   sensor_msgs::JointState msg_;
   boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
