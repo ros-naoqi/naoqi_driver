@@ -44,7 +44,7 @@ Bridge::Bridge( qi::SessionPtr& session )
 
 Bridge::~Bridge()
 {
-  std::cout << "BridgeService is shutting down.." << std::endl;
+  std::cout << "ALRosBridge is shutting down.." << std::endl;
   stop();
   // destroy nodehandle?
   nhPtr_->shutdown();
@@ -84,7 +84,6 @@ void Bridge::rosLoop()
 // public interface here
 void Bridge::registerPublisher( publisher::Publisher pub )
 {
-
   std::vector<publisher::Publisher>::iterator it;
   it = std::find( all_publisher_.begin(), all_publisher_.end(), pub );
   // if publisher is not found, register it!
@@ -109,15 +108,14 @@ void Bridge::registerDefaultPublisher()
   qi::AnyObject p_motion = sessionPtr_->service("ALMotion");
   qi::AnyObject p_video = sessionPtr_->service("ALVideoDevice");
 
-//  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
-//  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
-//  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", 15, p_motion) );
+  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
+  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
+  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", 15, p_motion) );
   registerPublisher( alros::publisher::CameraPublisher("camera", "camera/front", 15, p_video) );
 }
 
 void Bridge::initPublisher()
 {
-
   foreach( publisher::Publisher& pub, all_publisher_ )
   {
     pub.reset( *nhPtr_ );
