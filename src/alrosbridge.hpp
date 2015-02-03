@@ -2,6 +2,7 @@
 #define ALROS_BRIDGE_HPP
 
 #include <vector>
+#include <queue>
 
 /*
 * BOOST
@@ -28,8 +29,6 @@ public:
 
   // make a copy here since this should actually be replaced by move semantics
   void registerPublisher( publisher::Publisher pub );
-
-  void publish( );
 
   bool isAlive() const;
 
@@ -58,6 +57,24 @@ private:
   boost::mutex mutex_reinit_;
 
   std::vector< publisher::Publisher > all_publisher_;
+
+  /** Pub Publisher to execute at a specific time */
+  struct ScheduledPublish {
+    ScheduledPublish(const ros::Time& schedule, alros::publisher::Publisher* pub) :
+       schedule_(schedule), pub_(pub)
+    {
+    }
+    bool operator < (const ScheduledPublish& sp_in) const {
+      return schedule_ > sp_in.schedule_;
+    }
+    /** Time at which the publisher will be called */
+    ros::Time schedule_;
+    /** Time at which the publisher will be called */
+    alros::publisher::Publisher* pub_;
+  };
+
+  /** Priority queue to process the publishers according to their frequency */
+  std::priority_queue<ScheduledPublish> pub_queue_;
 };
 
 } // alros

@@ -26,7 +26,7 @@ class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {
 
 public:
-  JointStatePublisher( const std::string& name, const std::string& topic, qi::AnyObject& p_motion );
+  JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::AnyObject& p_motion );
 
   void publish();
 

@@ -48,30 +48,29 @@ Bridge::~Bridge()
 
 void Bridge::rosLoop()
 {
-  static ros::Rate r(freq_);
   while( ros::ok() )
   {
     if ( isAlive() )
     {
-      publish();
-      ros::spinOnce();
-    }
-    r.sleep();
-  }
-}
+      // Wait for the next Publisher to be ready
+      alros::publisher::Publisher* pub = pub_queue_.top().pub_;
+      ros::Time schedule = pub_queue_.top().schedule_;
 
-void Bridge::publish( )
-{
-  foreach( publisher::Publisher& pub, all_publisher_ )
-  {
-    //std::cout << "******************************" << std::endl;
-    //std::cout << "Publisher name:\t" << pub.name() << std::endl;
-    //std::cout << "Publisher subscribed:\t" << pub.isSubscribed() << std::endl;
-    //std::cout << "Publisher init:\t" << pub.isInitialized() << std::endl;
-    if ( pub.isSubscribed() && pub.isInitialized() )
-    {
-      pub.publish();
+      ros::Duration(schedule - ros::Time::now()).sleep();
+
+      if ( pub->isSubscribed() && pub->isInitialized() )
+      {
+        // std::cout << "******************************" << std::endl;
+        // std::cout << "Publisher name:\t" << pub->name() << std::endl;
+        // std::cout << "Publisher subscribed:\t" << pub->isSubscribed() << std::endl;
+        // std::cout << "Publisher init:\t" << pub->isInitialized() << std::endl;
+        // pub->publish();
+      }
+      // Schedule for a future time
+      pub_queue_.pop();
+      pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub->frequency()), pub));
     }
+    ros::spinOnce();
   }
 }
 
@@ -85,6 +84,7 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   if (it == all_publisher_.end() )
   {
     all_publisher_.push_back( pub );
+    it = all_publisher_.end() - 1;
     std::cout << "registered publisher:\t" << pub.name() << std::endl;
   }
   // if found, re-init them
@@ -92,6 +92,9 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   {
     std::cout << "re-initialized existing publisher:\t" << it->name() << std::endl;
   }
+
+  // Schedule it for the next publish
+  pub_queue_.push(ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()), &(*it)));
 }
 
 void Bridge::registerDefaultPublisher()
@@ -99,10 +102,10 @@ void Bridge::registerDefaultPublisher()
   qi::AnyObject p_motion = sessionPtr_->service("ALMotion");
   qi::AnyObject p_video = sessionPtr_->service("ALVideoDevice");
 
-//  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub") );
-//  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub") );
-//  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", p_motion) );
-  registerPublisher( alros::publisher::CameraPublisher("camera", "camera/front", p_video) );
+//  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
+//  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
+//  registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", 15, p_motion) );
+  registerPublisher( alros::publisher::CameraPublisher("camera", "camera/front", 15, p_video) );
 }
 
 void Bridge::initPublisher()

@@ -16,7 +16,7 @@ namespace publisher
 class CameraPublisher : public ImageBasePublisher<CameraPublisher>
 {
 public:
-  CameraPublisher( const std::string& name, const std::string& topic, const qi::AnyObject& p_video);
+  CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video);
 
   void publish();
 

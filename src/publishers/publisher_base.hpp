@@ -14,9 +14,10 @@ class BasePublisher
 {
 
 public:
-  BasePublisher( const std::string& name, const std::string& topic ):
+  BasePublisher( const std::string& name, const std::string& topic, float frequency ):
     name_( name ),
     topic_( topic ),
+    frequency_( frequency ),
     is_initialized_( false )
   {}
 
@@ -30,6 +31,11 @@ public:
   inline std::string topic() const
   {
     return topic_;
+  }
+
+  inline float frequency() const
+  {
+    return frequency_;
   }
 
   inline bool isInitialized() const
@@ -49,6 +55,8 @@ protected:
   ros::Publisher pub_;
   bool is_initialized_;
 
+  /** Frequency at which the publisher should publish. This is informative */
+  float frequency_;
 }; // class
 
 } //publisher
