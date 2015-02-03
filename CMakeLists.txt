@@ -11,7 +11,7 @@ include_directories( include )
 qi_create_lib(
   alros
   SRC
-  src/registration.cpp
+  src/autoload_registration.cpp
   SHARED
 )
 qi_stage_lib( alros )
