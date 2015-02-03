@@ -13,12 +13,6 @@ IntPublisher::IntPublisher( const std::string& name, const std::string& topic, f
   BasePublisher( name, topic, frequency )
 {}
 
-IntPublisher::IntPublisher( const std::string& name, const std::string& topic, float frequency, ros::NodeHandle& nh ):
-  BasePublisher( name, topic, frequency )
-{
-  reset( nh );
-}
-
 void IntPublisher::publish()
 {
   static std_msgs::Int32 m;

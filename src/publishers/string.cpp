@@ -14,12 +14,6 @@ StringPublisher::StringPublisher( const std::string& name, const std::string& to
 {
 }
 
-StringPublisher::StringPublisher( const std::string& name, const std::string& topic, float frequency, ros::NodeHandle& nh ):
-  BasePublisher( name, topic, frequency )
-{
-  reset( nh );
-}
-
 void StringPublisher::publish()
 {
   static std_msgs::String m;
