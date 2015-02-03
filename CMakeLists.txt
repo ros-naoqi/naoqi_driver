@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(myservice)
+project(alrosbridge)
 
 find_package(qibuild)
 find_package(qimodule)
@@ -10,7 +10,6 @@ include_directories( include )
 
 qi_create_lib(
   alros
-  SRC
   src/autoload_registration.cpp
   SHARED
 )
@@ -27,24 +26,16 @@ qi_create_lib(
 )
 qi_stage_lib( alrosbridge )
 
-qi_create_lib(
-  alrosconverter
-  src/converters/alrosconverter.cpp
-)
-qi_stage_lib( alrosconverter )
-
 
 qi_use_lib(alros QI ROS)
 qi_use_lib(alrosbridge QI ALCOMMON ALVISION ROS)
-qi_use_lib(alrosconverter QI ROS)
 
 target_link_libraries(
   alros
   alrosbridge
-  alrosconverter
 )
 
-qi_create_bin(alros_bin src/main.cpp)
+qi_create_bin(alros_bin src/external_registration.cpp)
 target_link_libraries(
   alros_bin
   alros
