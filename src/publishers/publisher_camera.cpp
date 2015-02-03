@@ -16,7 +16,7 @@ namespace publisher
 {
 
 CameraPublisher::CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video )
-  : ImageBasePublisher( name, topic, frequency ),
+  : BasePublisher( name, topic, frequency ),
     p_video_( p_video )
 {}
 

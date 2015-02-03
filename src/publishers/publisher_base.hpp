@@ -43,16 +43,11 @@ public:
     return is_initialized_;
   }
 
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
+  virtual bool isSubscribed() const = 0;
 
 protected:
   std::string name_, topic_;
 
-  ros::Publisher pub_;
   bool is_initialized_;
 
   /** Frequency at which the publisher should publish. This is informative */
