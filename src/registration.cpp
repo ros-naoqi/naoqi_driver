@@ -3,7 +3,9 @@
 #include <qi/anyobject.hpp>
 #include <qi/anymodule.hpp>
 #include <qi/session.hpp>
-#include "alrosbridge.hpp"
+
+#include <alrosbridge/alrosbridge.hpp>
+
 /*
 #include <string>
 #include <ros/ros.h>

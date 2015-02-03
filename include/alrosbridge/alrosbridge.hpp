@@ -16,8 +16,11 @@
 */
 #include <qi/session.hpp>
 
+/*
+* PUBLIC INTERFACE
+*/
+#include <alrosbridge/publisher/publisher.hpp>
 
-#include "publishers/publisher.hpp"
 namespace alros
 {
 

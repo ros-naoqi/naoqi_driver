@@ -6,6 +6,8 @@ find_package(qimodule)
 
 SET (CMAKE_CXX_FLAGS_INIT "-Wall -std=c++0x -stdlib=libc++")
 
+include_directories( include )
+
 qi_create_lib(
   alros
   SRC

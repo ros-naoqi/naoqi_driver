@@ -1,7 +1,7 @@
 #ifndef HELPERS_HPP
 #define HELPERS_HPP
 
-#include "publishers/publisher.hpp"
+#include <alrosbridge/publisher/publisher.hpp>
 
 namespace alros
 {

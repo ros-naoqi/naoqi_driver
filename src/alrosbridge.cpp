@@ -12,6 +12,11 @@
 #define foreach BOOST_FOREACH
 
 /*
+* PUBLIC INTERFACE
+*/
+#include <alrosbridge/alrosbridge.hpp>
+
+/*
 * publishers
 */
 #include "publishers/string.hpp"
@@ -19,7 +24,9 @@
 #include "publishers/joint_state.hpp"
 #include "publishers/camera.hpp"
 
-#include "alrosbridge.hpp"
+/*
+* STATIC FUNCTIONS INCLUDE
+*/
 #include "ros_env.hpp"
 #include "helpers.hpp"
 
