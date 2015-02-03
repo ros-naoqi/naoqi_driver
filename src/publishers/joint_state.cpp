@@ -5,7 +5,7 @@
 
 #include <robot_state_publisher/robot_state_publisher.h>
 
-#include "publisher_joint_state.hpp"
+#include "joint_state.hpp"
 
 namespace alros
 {

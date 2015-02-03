@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "publisher_string.hpp"
+#include "string.hpp"
 
 #include <std_msgs/String.h>
 

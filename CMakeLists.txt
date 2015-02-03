@@ -7,13 +7,21 @@ find_package(qimodule)
 SET (CMAKE_CXX_FLAGS_INIT "-Wall -std=c++0x -stdlib=libc++")
 
 qi_create_lib(
+  alros
+  SRC
+  src/registration.cpp
+  SHARED
+)
+qi_stage_lib( alros )
+
+qi_create_lib(
   alrosbridge
   SHARED
   src/alrosbridge.cpp
-  src/publishers/publisher_string.cpp
-  src/publishers/publisher_int.cpp
-  src/publishers/publisher_joint_state.cpp
-  src/publishers/publisher_camera.cpp
+  src/publishers/camera.cpp
+  src/publishers/int.cpp
+  src/publishers/joint_state.cpp
+  src/publishers/string.cpp
 )
 qi_stage_lib( alrosbridge )
 
@@ -23,18 +31,10 @@ qi_create_lib(
 )
 qi_stage_lib( alrosconverter )
 
-qi_create_lib(
-  alros
-  SRC
-  src/registration.cpp
-  SHARED
-)
-qi_stage_lib( alros )
-
 
 qi_use_lib(alros QI ROS)
-qi_use_lib(alrosconverter QI ROS)
 qi_use_lib(alrosbridge QI ALCOMMON ALVISION ROS)
+qi_use_lib(alrosconverter QI ROS)
 
 target_link_libraries(
   alros

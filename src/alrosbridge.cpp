@@ -14,10 +14,10 @@
 /*
 * publishers
 */
-#include "publishers/publisher_string.hpp"
-#include "publishers/publisher_int.hpp"
-#include "publishers/publisher_joint_state.hpp"
-#include "publishers/publisher_camera.hpp"
+#include "publishers/string.hpp"
+#include "publishers/int.hpp"
+#include "publishers/joint_state.hpp"
+#include "publishers/camera.hpp"
 
 #include "alrosbridge.hpp"
 #include "ros_env.hpp"

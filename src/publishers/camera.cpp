@@ -8,7 +8,7 @@
 #include <alvision/alimage_opencv.h>
 
 
-#include "publisher_camera.hpp"
+#include "camera.hpp"
 
 namespace alros
 {
