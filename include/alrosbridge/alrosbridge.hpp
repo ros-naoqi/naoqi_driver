@@ -1,3 +1,21 @@
+/*
+ * Copyright 2015 Aldebaran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+*/
+
+
 #ifndef ALROS_BRIDGE_HPP
 #define ALROS_BRIDGE_HPP
 
@@ -24,24 +42,52 @@
 namespace alros
 {
 
+
+/**
+* @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
+* once the external roscore ip is set, this class will advertise and publish ros messages
+*/
 class Bridge
 {
 public:
+  /**
+  * @brief Constructor for ALRosBridge
+  * @param session[in] session pointer for naoqi2 service registration
+  */
   Bridge( qi::SessionPtr& session );
+
+  /**
+  * @brief Destructor for ALRosBridge,
+  * destroys all ros nodehandle and shutsdown all publisher
+  */
   ~Bridge();
 
-  // make a copy here since this should actually be replaced by move semantics
+  /*
+  * @brief registers a publisher
+  * @param publisher to register
+  * @see Publisher
+  * @note it will be called by value to expose that internally there will be a copy,
+  * eventually this should be replaced by move semantics C++11
+  */
   void registerPublisher( publisher::Publisher pub );
 
+  /*
+  * @brief poll function to check if publishing is enabled
+  * @return bool indicating if publishing is enabled/disabled
+  */
   bool isAlive() const;
 
   /**
-  * callable with qicli call
+  * @brief qicli call function to get current master uri
+  * @return string indicating http master uri
   */
   std::string getMasterURI() const;
+
+  /**
+  * @brief qicli call function to set current master uri
+  * @param string in form of http://<ip>:11311
+  */
   void setMasterURI( const std::string& uri );
-  void start();
-  void stop();
 
 
 private:
@@ -55,6 +101,9 @@ private:
   void initPublisher();
 
   void rosLoop();
+
+  void start();
+  void stop();
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
