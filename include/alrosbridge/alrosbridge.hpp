@@ -89,6 +89,15 @@ public:
   */
   void setMasterURI( const std::string& uri );
 
+  /**
+  * @brief qicli call function to start/enable publishing all registered publisher
+  */
+  void start();
+
+  /**
+  * @brief qicli call function to stop/disable publishing all registered publisher
+  */
+  void stop();
 
 private:
   qi::SessionPtr sessionPtr_;
@@ -102,8 +111,6 @@ private:
 
   void rosLoop();
 
-  void start();
-  void stop();
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
