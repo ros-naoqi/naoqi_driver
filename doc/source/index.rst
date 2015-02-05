@@ -82,20 +82,25 @@ You also need to launch your robot description:
 Starting the **ALROS** module
 +++++++++++++++++++++++++++++
 
-In the future, this module will be started by default.
+In the future, this module will be started by default. But for now, you need to start it yourself. On your robot create
+you have to create a folder to work in:
 
 .. code-block:: sh
 
-  $ cd kk
-  $ source toolchain/install/setup.sh
-  $ ./bin/naoqi-bin
+  $ mkdir ~/ros
 
-In a different terminal:
+Then copy the file at ``https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master/atom`` on your robot and unzip it:
 
 .. code-block:: sh
 
+  $ unzip toolchain_install_atom.zip -d ./toolchain_install/
+
+Deploy the ROS beidge in ``~/ros``. And in a different terminal, launch that executable to register your module:
+
+.. code-block:: sh
+
+  $ source toolchain_install/setup.bash
   $ ./bin/alros_bin
-
 
 Triggering the **ALROS** module
 +++++++++++++++++++++++++++++++
@@ -103,11 +108,11 @@ Triggering the **ALROS** module
 In order to get the module to connect to your roscore, you should send it your IP.
 Let us assume your IP is ``10.0.132.105`` and your port ``11311``.
 
-If oyu are on your desktop:
+If you are on your desktop:
 
 .. code-block:: sh
 
-  $ rosrun local_naoqi_module local_executable http://10.0.132.105:11311
+  $ TODO rosrun local_naoqi_module local_executable http://10.0.132.105:11311
 
 You can also perform that action from your robot:
 
