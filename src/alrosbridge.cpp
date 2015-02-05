@@ -77,22 +77,23 @@ void Bridge::rosLoop()
     if ( isAlive() )
     {
       // Wait for the next Publisher to be ready
-      alros::publisher::Publisher* pub = pub_queue_.top().pub_;
+      size_t pub_index = pub_queue_.top().pub_index_;
+      publisher::Publisher& pub = publishers_[pub_index];
       ros::Time schedule = pub_queue_.top().schedule_;
 
       ros::Duration(schedule - ros::Time::now()).sleep();
 
-      if ( pub->isSubscribed() && pub->isInitialized() )
+      if ( pub.isSubscribed() && pub.isInitialized() )
       {
         // std::cout << "******************************" << std::endl;
         // std::cout << "Publisher name:\t" << pub->name() << std::endl;
         // std::cout << "Publisher subscribed:\t" << pub->isSubscribed() << std::endl;
         // std::cout << "Publisher init:\t" << pub->isInitialized() << std::endl;
-        pub->publish();
+        pub.publish();
       }
       // Schedule for a future time
       pub_queue_.pop();
-      pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub->frequency()), pub));
+      pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
     }
     ros::spinOnce();
   }
@@ -102,22 +103,26 @@ void Bridge::rosLoop()
 void Bridge::registerPublisher( publisher::Publisher pub )
 {
   std::vector<publisher::Publisher>::iterator it;
-  it = std::find( all_publisher_.begin(), all_publisher_.end(), pub );
+  it = std::find( publishers_.begin(), publishers_.end(), pub );
+  size_t pub_index = 0;
+
   // if publisher is not found, register it!
-  if (it == all_publisher_.end() )
+  if (it == publishers_.end() )
   {
-    all_publisher_.push_back( pub );
-    it = all_publisher_.end() - 1;
+    pub_index = publishers_.size();
+    publishers_.push_back( pub );
+    it = publishers_.end() - 1;
     std::cout << "registered publisher:\t" << pub.name() << std::endl;
   }
   // if found, re-init them
   else
   {
+    pub_index = it - publishers_.begin();
     std::cout << "re-initialized existing publisher:\t" << it->name() << std::endl;
   }
 
   // Schedule it for the next publish
-  pub_queue_.push(ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()), &(*it)));
+  pub_queue_.push(ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()), pub_index));
 }
 
 void Bridge::registerDefaultPublisher()
@@ -133,7 +138,7 @@ void Bridge::registerDefaultPublisher()
 
 void Bridge::initPublisher()
 {
-  foreach( publisher::Publisher& pub, all_publisher_ )
+  foreach( publisher::Publisher& pub, publishers_ )
   {
     pub.reset( *nhPtr_ );
   }
