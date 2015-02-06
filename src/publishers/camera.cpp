@@ -24,8 +24,9 @@
 #include <alvalue/alvalue.h>
 #include <alvision/alimage_opencv.h>
 
-
 #include "camera.hpp"
+
+#include <ros/serialization.h>
 
 namespace alros
 {
@@ -35,20 +36,24 @@ namespace publisher
 CameraPublisher::CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video )
   : BasePublisher( name, topic, frequency ),
     p_video_( p_video )
-{}
+{
+}
 
 void CameraPublisher::publish()
 {
-
   // THIS WILL CRASH IN THE FUTURE
   AL::ALValue value = p_video_.call<AL::ALValue>("getImageRemote", handle_);
+  if (!value.isArray())
+  {
+    std::cout << "Cannot retrieve image" << std::endl;
+    return;
+  }
 
-  AL::ALImage* img_buffer = AL::ALImage::fromALValue(value); // allocate memory -> call delete later
-  cv::Mat cv_img = AL::aLImageToCvMat( *img_buffer );
-  msg_ = cv_bridge::CvImage(std_msgs::Header(), "bgr8", cv_img).toImageMsg();
-  delete img_buffer;
+  // Create a cv::Mat of the right dimensions
+  cv::Mat img(value[1], value[0], CV_8UC3, const_cast<void*>(value[6].GetBinary()));
+  sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", img).toImageMsg();
 
-  pub_.publish( msg_ );
+  pub_.publish( *msg );
 }
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
@@ -77,7 +82,6 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
   is_initialized_ = true;
 
   std::cout << "image device is totally initialized" << std::endl;
-
 }
 
 } // publisher

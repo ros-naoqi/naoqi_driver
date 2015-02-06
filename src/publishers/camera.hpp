@@ -50,7 +50,6 @@ private:
   image_transport::Publisher pub_;
 
   qi::AnyObject p_video_;
-  sensor_msgs::ImagePtr msg_;
   std::string handle_;
 };
 
