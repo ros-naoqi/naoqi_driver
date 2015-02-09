@@ -42,42 +42,13 @@ First, get yourself in a ROS workspace by sourcing your ``setup.sh``:
 
   source /opt/ros/you_installed_rosdistro/setup.sh
 
-You can then start the **roscore** as explained at http://wiki.ros.org/roscore
-
-.. code-block:: sh
-
-  $ roscore
-
-And you should then see the following output:
-
-.. code-block:: sh
-
-  started roslaunch server http://MY_MACHINE:53971/
-  ros_comm version 1.11.10
-  
-  
-  SUMMARY
-  =======
-  
-  PARAMETERS
-   * /rosdistro: indigo
-   * /rosversion: 1.11.10
-  
-  NODES
-  
-  auto-starting new master
-  process[master]: started with pid [13303]
-  ROS_MASTER_URI=http://ALD-1270-LA:11311/
-  
-  setting /run_id to 7b0eaf26-a718-11e4-a3f8-f01faf464728
-  process[rosout-1]: started with pid [13316]
-  started core service [/rosout]
-
-You also need to launch your robot description:
+You then need to launch your robot description:
 
 .. code-block:: sh
 
   $ roslaunch nao_description nao_desc_generated.launch
+
+which also spawns a **roscore** as explained at http://wiki.ros.org/roscore.
 
 Starting the **ALROS** module
 +++++++++++++++++++++++++++++
@@ -95,7 +66,7 @@ Then copy the file at ``https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/m
 
   $ unzip toolchain_install_atom.zip -d ./toolchain_install/
 
-Deploy the ROS beidge in ``~/ros``. And in a different terminal, launch that executable to register your module:
+Deploy the ROS bridge in ``~/ros``. And in a different terminal, launch that executable to register your module:
 
 .. code-block:: sh
 
@@ -201,8 +172,6 @@ Then execute the proper instruction to add it to your toolchain, e.g.:
 .. code-block:: sh
 
   $ qitoolchain add-package -c atom ros toolchain_install_atom.tar.gz
-
-TODO: fix compilation error ROS
 
 Get the code from gitlab:
 
