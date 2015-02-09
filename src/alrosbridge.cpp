@@ -84,8 +84,6 @@ void Bridge::rosLoop()
 
       if ( pub->isSubscribed() && pub->isInitialized() )
       {
-        // std::cout << "******************************" << std::endl;
-        // std::cout << "Publisher name:\t" << pub->name() << std::endl;
         // std::cout << "Publisher subscribed:\t" << pub->isSubscribed() << std::endl;
         // std::cout << "Publisher init:\t" << pub->isInitialized() << std::endl;
         pub->publish();
@@ -107,7 +105,7 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   if (it == all_publisher_.end() )
   {
     all_publisher_.push_back( pub );
-    it = all_publisher_.end() - 1;
+    //it = all_publisher_.end() - 1;
     std::cout << "registered publisher:\t" << pub.name() << std::endl;
   }
   // if found, re-init them
@@ -117,13 +115,20 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   }
 
   // Schedule it for the next publish
-  pub_queue_.push(ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()), &(*it)));
+  pub_queue_.push( ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()),
+                                    &all_publisher_.back()));
 }
 
 void Bridge::registerDefaultPublisher()
 {
   qi::AnyObject p_motion = sessionPtr_->service("ALMotion");
   qi::AnyObject p_video = sessionPtr_->service("ALVideoDevice");
+
+  // this is really important
+  // we have to prevent the all_publisher_ instance from re-allocating memory
+  // since we work with pointer to instances
+  // we can change this at one point for using a concrete index
+  all_publisher_.reserve( 10 );
 
   registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
   registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
