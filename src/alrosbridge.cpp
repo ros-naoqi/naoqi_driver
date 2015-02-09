@@ -21,7 +21,7 @@
 * NAOQI
 */
 #include <qi/anyobject.hpp>
-
+#include <alvision/alvisiondefinitions.h> // for kTop...
 /*
 * BOOST
 */
@@ -133,7 +133,8 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
   registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
   registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", 15, p_motion) );
-  registerPublisher( alros::publisher::CameraPublisher("camera", "camera/front", 15, p_video) );
+  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, p_video, AL::kTopCamera, AL::kQVGA) );
+  registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, p_video, AL::kDepthCamera, AL::kQVGA) );
 }
 
 void Bridge::initPublisher()

@@ -33,7 +33,7 @@ namespace publisher
 class CameraPublisher : public BasePublisher<CameraPublisher>
 {
 public:
-  CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video);
+  CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video, int camera_source, int resolution );
 
   void publish();
 
@@ -42,16 +42,28 @@ public:
   inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
+    return image_pub_.getNumSubscribers() > 0;
   }
 
 private:
   //image_transport::ImageTransport it_;
-  image_transport::Publisher pub_;
+  image_transport::Publisher image_pub_;
+  ros::Publisher info_pub_;
 
+  /** VideoDevice (Proxy) configurations */
   qi::AnyObject p_video_;
-  sensor_msgs::ImagePtr msg_;
+  int camera_source_;
+  int resolution_;
+  int colorspace_;
   std::string handle_;
+
+  // string indicating image transport encoding
+  // goes along with colorspace_
+  std::string msg_colorspace_;
+  // msg frame id
+  std::string msg_frameid_;
+  const sensor_msgs::CameraInfo& camera_info_;
+  sensor_msgs::ImagePtr msg_;
 };
 
 } //publisher
