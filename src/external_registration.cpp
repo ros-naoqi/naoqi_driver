@@ -25,7 +25,7 @@ int main(int argc, char** argv)
   app.start();
   app.session()->loadService( "alros.BridgeService" );
 //app.session()->registerService("BridgeService",
-//    qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
+   // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
 
   app.run();
   app.session()->close();
