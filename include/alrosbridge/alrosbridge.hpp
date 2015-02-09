@@ -123,13 +123,28 @@ private:
        schedule_(schedule), pub_(pub)
     {
     }
+
+    ScheduledPublish& operator= ( const ScheduledPublish& rhs )
+    {
+      schedule_ = rhs.schedule_;
+
+      alros::publisher::Publisher*& ptr= const_cast< alros::publisher::Publisher*& >(this->pub_);
+      ptr = rhs.pub_;
+
+      //alros::publisher::Publisher** ptr= const_cast< alros::publisher::Publisher** >(&(this->pub_));
+      //*ptr = rhs.pub_;
+      return *this;
+    }
+
     bool operator < (const ScheduledPublish& sp_in) const {
       return schedule_ > sp_in.schedule_;
     }
     /** Time at which the publisher will be called */
     ros::Time schedule_;
     /** Time at which the publisher will be called */
-    alros::publisher::Publisher* pub_;
+    alros::publisher::Publisher* const pub_;
+
+    ScheduledPublish(const ScheduledPublish& rhs):schedule_(rhs.schedule_), pub_(rhs.pub_) {}
   };
 
   /** Priority queue to process the publishers according to their frequency */
