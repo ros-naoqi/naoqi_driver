@@ -8,7 +8,7 @@ SET (CMAKE_CXX_FLAGS_INIT "-Wall -std=c++0x -stdlib=libc++")
 
 include_directories( include )
 
-qi_create_lib(
+qi_create_module(
   alros
   src/autoload_registration.cpp
   SHARED
