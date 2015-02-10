@@ -154,7 +154,6 @@ void CameraPublisher::publish()
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
 {
-
   // check for double subscribers
   // if handle_ is not null i continue or I unsubscribe and re-subscribe again
   // if handle_ is null, i subscribe
@@ -173,7 +172,7 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           );
   }
   image_transport::ImageTransport it( nh );
-  pub_ = it.advertiseCamera( topic_, 1 );
+  pub_ = it.advertiseCamera( topic_ + "/image", 1 );
 
   is_initialized_ = true;
 
