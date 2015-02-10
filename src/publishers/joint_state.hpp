@@ -23,7 +23,10 @@
 */
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
+#include <nav_msgs/Odometry.h>
 #include <robot_state_publisher/robot_state_publisher.h>
+#include <tf/transform_broadcaster.h>
+#include <geometry_msgs/Transform.h>
 /**
 * ALDEBARAN includes
 */
@@ -52,10 +55,17 @@ public:
   bool isSubscribed() const;
 
 private:
-  ros::Publisher pub_;
-
   qi::AnyObject p_motion_;
-  sensor_msgs::JointState msg_;
+
+  /** initialize separate publishers for js and odom */
+  ros::Publisher pub_joint_states_;
+  ros::Publisher pub_odom_;
+  /* initialize the broadcaster for publishing the odom frame */
+  tf::TransformBroadcaster tf_br_;
+
+  sensor_msgs::JointState msg_joint_states_;
+  nav_msgs::Odometry msg_nav_odom_;
+  geometry_msgs::TransformStamped msg_tf_odom_;
   boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
 }; // class
 
