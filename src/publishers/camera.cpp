@@ -149,8 +149,7 @@ void CameraPublisher::publish()
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 
-  image_pub_.publish( msg_ );
-  info_pub_.publish( camera_info_ );
+  pub_.publish( *msg_, camera_info_ );
 }
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
@@ -174,10 +173,15 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           );
   }
   image_transport::ImageTransport it( nh );
-  image_pub_ = it.advertise( topic_+"/raw", 1 );
-  info_pub_ = nh.advertise<sensor_msgs::CameraInfo>( topic_+"/camera_info", 1 );
+  pub_ = it.advertiseCamera( topic_, 1 );
 
   is_initialized_ = true;
+
+  std::cout << "The following transports were declared locally" << std::endl;
+
+  std::vector<std::string> tmp = it.getDeclaredTransports();
+  for(size_t i = 0; i < tmp.size(); ++i)
+    std::cout << " * " << tmp[i] << std::endl;
 
   std::cout << "image device is totally initialized" << std::endl;
 }
