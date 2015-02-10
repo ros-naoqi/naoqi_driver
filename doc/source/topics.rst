@@ -25,7 +25,8 @@ The usual ``rosgraph_msgs/Log`` message from http://wiki.ros.org/rosout#rosout_t
 /diagnostics
 ++++++++++++
 
-Not done yet, but it should probably use those keys or maybe a subset.
+For CPU efficiency, information is published right awawy to ``/diagnostics_agg`` for now. The following keys should be
+taken into account.
 
 +-------------------+----------------------------------------------------------------------+-------------------+-----------------+
 | Family            | Key name                                                             | Ideal period (ms) | Max period (ms) |

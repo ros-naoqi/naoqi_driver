@@ -149,13 +149,11 @@ void CameraPublisher::publish()
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 
-  image_pub_.publish( msg_ );
-  info_pub_.publish( camera_info_ );
+  pub_.publish( *msg_, camera_info_ );
 }
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
 {
-
   // check for double subscribers
   // if handle_ is not null i continue or I unsubscribe and re-subscribe again
   // if handle_ is null, i subscribe
@@ -174,8 +172,7 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           );
   }
   image_transport::ImageTransport it( nh );
-  image_pub_ = it.advertise( topic_+"/raw", 1 );
-  info_pub_ = nh.advertise<sensor_msgs::CameraInfo>( topic_+"/camera_info", 1 );
+  pub_ = it.advertiseCamera( topic_ + "/image", 1 );
 
   is_initialized_ = true;
 

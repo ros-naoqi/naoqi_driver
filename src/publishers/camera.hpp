@@ -42,13 +42,12 @@ public:
   inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-    return image_pub_.getNumSubscribers() > 0;
+    return pub_.getNumSubscribers() > 0;
   }
 
 private:
   //image_transport::ImageTransport it_;
-  image_transport::Publisher image_pub_;
-  ros::Publisher info_pub_;
+  image_transport::CameraPublisher pub_;
 
   /** VideoDevice (Proxy) configurations */
   qi::AnyObject p_video_;

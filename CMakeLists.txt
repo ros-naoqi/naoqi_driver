@@ -20,6 +20,7 @@ qi_create_lib(
   SHARED
   src/alrosbridge.cpp
   src/publishers/camera.cpp
+  src/publishers/diagnostics.cpp
   src/publishers/int.cpp
   src/publishers/joint_state.cpp
   src/publishers/string.cpp

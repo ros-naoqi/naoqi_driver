@@ -117,7 +117,7 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
 
   // pre-fill odometry message
   msg_nav_odom_.header.frame_id = "odom";
-  //msg_nav_odom_.child_frame_id = "base_footprint";
+  msg_nav_odom_.child_frame_id = "base_footprint";
 
   msg_tf_odom_.header.frame_id = "odom";
   msg_tf_odom_.child_frame_id = "base_footprint";
