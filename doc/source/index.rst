@@ -171,7 +171,7 @@ Then execute the proper instruction to add it to your toolchain, e.g.:
 
 .. code-block:: sh
 
-  $ qitoolchain add-package -c atom ros toolchain_install_atom.tar.gz
+  $ qitoolchain add-package -c atom toolchain_install_atom.tar.gz
 
 Get the code from gitlab:
 
