@@ -179,7 +179,7 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
 
   is_initialized_ = true;
 
-  std::cout << "image device is totally initialized" << std::endl;
+  std::cout << name_ << " image device is totally initialized" << std::endl;
 }
 
 } // publisher
