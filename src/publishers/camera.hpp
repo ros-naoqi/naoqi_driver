@@ -35,6 +35,8 @@ class CameraPublisher : public BasePublisher<CameraPublisher>
 public:
   CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video, int camera_source, int resolution );
 
+  ~CameraPublisher();
+
   void publish();
 
   void reset( ros::NodeHandle& nh );

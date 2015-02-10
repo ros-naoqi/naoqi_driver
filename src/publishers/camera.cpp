@@ -134,6 +134,15 @@ CameraPublisher::CameraPublisher( const std::string& name, const std::string& to
   }
 }
 
+CameraPublisher::~CameraPublisher()
+{
+  if (!handle_.empty())
+  {
+    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    handle_.clear();
+  }
+}
+
 void CameraPublisher::publish()
 {
   // THIS WILL CRASH IN THE FUTURE
@@ -154,15 +163,13 @@ void CameraPublisher::publish()
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
 {
-  // check for double subscribers
-  // if handle_ is not null i continue or I unsubscribe and re-subscribe again
-  // if handle_ is null, i subscribe
-
-  // ALSO WICHTIG:: unsubscribe in desctructor
-  // check for re-init of video device
-  if ( handle_.empty() )
+  if (!handle_.empty())
   {
-    handle_ = p_video_.call<std::string>(
+    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    handle_.clear();
+  }
+
+  handle_ = p_video_.call<std::string>(
                          "subscribeCamera",
                           name_,
                           camera_source_,
@@ -170,9 +177,9 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           colorspace_,
                           20
                           );
-  }
+
   image_transport::ImageTransport it( nh );
-  pub_ = it.advertiseCamera( topic_ + "/image", 1 );
+  pub_ = it.advertiseCamera( topic_, 1 );
 
   is_initialized_ = true;
 
