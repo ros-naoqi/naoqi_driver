@@ -161,7 +161,7 @@ void LaserPublisher::publish()
     float by = lx*std::sin(-1.757) + ly*std::cos(-1.757) - 0.090;
     float dist = std::sqrt( std::pow(bx,2) + std::pow(by,2) );
     //float dist = std::sqrt( std::pow(lx,2) + std::pow(ly,2) );
-    std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
+    //std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
     msg_.ranges[pos] = dist;
   }
 
@@ -176,7 +176,7 @@ void LaserPublisher::publish()
     float by = ly;
     float dist = std::sqrt( std::pow(bx,2) + std::pow(by,2) );
     //float dist = std::sqrt( std::pow(lx,2) + std::pow(ly,2) );
-    std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
+    //std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
     msg_.ranges[pos] = dist;
   }
 
@@ -190,11 +190,11 @@ void LaserPublisher::publish()
     float by = lx*std::sin(1.757) + ly*std::cos(1.757) + 0.090;
     float dist = std::sqrt( std::pow(bx,2) + std::pow(by,2) );
     //float dist = std::sqrt( std::pow(lx,2) + std::pow(ly,2) );
-    std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
+    //std::cout << "got a distance at "<< pos << " with "  << dist << std::endl;
     msg_.ranges[pos] = dist;
   }
 
-  std::cout << "****************" << std::endl;
+  //std::cout << "****************" << std::endl;
 
   //std::cout << name() << " is publishing " << m.data << std::endl;
   pub_.publish( msg_ );
