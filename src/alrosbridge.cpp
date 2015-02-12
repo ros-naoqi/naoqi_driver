@@ -38,6 +38,7 @@
 */
 #include "publishers/camera.hpp"
 #include "publishers/diagnostics.hpp"
+#include "publishers/laser.hpp"
 #include "publishers/int.hpp"
 #include "publishers/joint_state.hpp"
 #include "publishers/string.hpp"
@@ -128,12 +129,13 @@ void Bridge::registerDefaultPublisher()
   qi::AnyObject p_video = sessionPtr_->service("ALVideoDevice");
   qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
 
-  registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
-  registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
+  //registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
+  //registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
   registerPublisher( alros::publisher::JointStatePublisher("/joint_states", "/joint_states", 15, p_motion) );
-  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, p_video, AL::kTopCamera, AL::kQVGA) );
-  registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, p_video, AL::kDepthCamera, AL::kQVGA) );
-  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, p_memory, p_motion) );
+  //registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, p_video, AL::kTopCamera, AL::kQVGA) );
+  //registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, p_video, AL::kDepthCamera, AL::kQVGA) );
+  //registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, p_memory, p_motion) );
+  registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 1, p_memory) );
 }
 
 void Bridge::initPublisher()
