@@ -36,14 +36,12 @@ void StringPublisher::publish()
   static std_msgs::String m;
   m.data = "test_string_data";
   pub_.publish( m );
-  std::cout << name() << " is publishing " << m.data << std::endl;
 }
 
 void StringPublisher::reset( ros::NodeHandle& nh)
 {
   pub_ = nh.advertise<std_msgs::String>( topic_, 10 );
   is_initialized_ = true;
-  std::cout << name() << " is resetting" << std::endl;
 }
 
 

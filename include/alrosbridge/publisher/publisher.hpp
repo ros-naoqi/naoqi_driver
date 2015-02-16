@@ -84,7 +84,9 @@ public:
   */
   void reset( ros::NodeHandle& nh )
   {
+    std::cout << name() << " is resetting" << std::endl;
     pubPtr_->reset( nh );
+    std::cout << name() << " reset" << std::endl;
   }
 
   /**

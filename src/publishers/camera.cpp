@@ -186,8 +186,6 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
   pub_camera_ = nh.advertise<sensor_msgs::CameraInfo>( topic_ + "/camera_info", 1 );
 
   is_initialized_ = true;
-
-  std::cout << name_ << " image device is totally initialized" << std::endl;
 }
 
 } // publisher

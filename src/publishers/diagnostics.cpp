@@ -73,7 +73,6 @@ DiagnosticsPublisher::DiagnosticsPublisher( const std::string& name, float frequ
 
 void DiagnosticsPublisher::publish()
 {
-  std::cout << name() << " is publishing " << std::endl;
   diagnostic_msgs::DiagnosticArray msg;
   msg.header.stamp = ros::Time::now();
 
@@ -211,8 +210,6 @@ void DiagnosticsPublisher::publish()
 
 void DiagnosticsPublisher::reset( ros::NodeHandle& nh)
 {
-  std::cout << name() << " is resetting" << std::endl;
-
   pub_ = nh.advertise< diagnostic_msgs::DiagnosticArray >( "/diagnostics_agg", 1 );
   is_initialized_ = true;
 }

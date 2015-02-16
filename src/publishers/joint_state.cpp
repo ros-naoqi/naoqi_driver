@@ -123,7 +123,6 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
   msg_tf_odom_.child_frame_id = "base_footprint";
 
   is_initialized_ = true;
-  std::cout << name() << " is resetting" << std::endl;
 }
 
 bool JointStatePublisher::isSubscribed() const

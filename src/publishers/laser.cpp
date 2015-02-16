@@ -214,7 +214,6 @@ void LaserPublisher::reset( ros::NodeHandle& nh )
   msg_.ranges = std::vector<float>(61, -1.0f);
 
   is_initialized_ = true;
-  //std::cout << name() << " is resetting" << std::endl;
 }
 
 } //publisher

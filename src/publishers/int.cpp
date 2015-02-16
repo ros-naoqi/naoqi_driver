@@ -35,7 +35,6 @@ void IntPublisher::publish()
 {
   static std_msgs::Int32 m;
   m.data++;
-  std::cout << name() << " is publishing " << m.data << std::endl;
   pub_.publish( m );
 }
 
@@ -43,7 +42,6 @@ void IntPublisher::reset( ros::NodeHandle& nh )
 {
   pub_ = nh.advertise< std_msgs::Int32>( topic_, 10 );
   is_initialized_ = true;
-  std::cout << name() << " is resetting" << std::endl;
 }
 
 } //publisher
