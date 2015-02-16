@@ -41,6 +41,7 @@
 #include "publishers/laser.hpp"
 #include "publishers/int.hpp"
 #include "publishers/joint_state.hpp"
+#include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 
 /*
@@ -132,6 +133,7 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 1, sessionPtr_) );
+  registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
 }
 
 void Bridge::initPublisher()

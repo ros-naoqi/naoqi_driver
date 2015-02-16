@@ -25,6 +25,7 @@ qi_create_lib(
   src/publishers/joint_state.cpp
   src/publishers/string.cpp
   src/publishers/laser.cpp
+  src/publishers/sonar.cpp
 )
 qi_stage_lib( alrosbridge )
 
