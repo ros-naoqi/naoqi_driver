@@ -22,6 +22,7 @@ This module tries to be as close to the ROS standard by exposing several standar
 It also exposes the following higher level NAOqi API services:
 
 - TODO
+- ``/cmd_vel`` as detailed here http://wiki.ros.org/android_teleop
 - ``/naoqi/set_life_status`` to turn the life behavior on or off
 - ``/naoqi/move_to``
 - ``/naoqi/set_position_to``
