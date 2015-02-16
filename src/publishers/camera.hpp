@@ -20,7 +20,10 @@
 
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
+// We don't use image_transport yet: we need to have the API that
+// avoids a memcopy in there. WIP
+//#include <image_transport/image_transport.h>
+#include <sensor_msgs/CameraInfo.h>
 #include <qi/anyobject.hpp>
 
 #include "publisher_base.hpp"
@@ -44,12 +47,13 @@ public:
   inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
+    return (pub_image_.getNumSubscribers() > 0) || (pub_camera_.getNumSubscribers() > 0);
   }
 
 private:
   //image_transport::ImageTransport it_;
-  image_transport::CameraPublisher pub_;
+  ros::Publisher pub_image_;
+  ros::Publisher pub_camera_;
 
   /** VideoDevice (Proxy) configurations */
   qi::AnyObject p_video_;
