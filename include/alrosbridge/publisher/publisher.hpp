@@ -25,6 +25,8 @@
 
 #include <ros/ros.h>
 
+#include <alrosbridge/tools.hpp>
+
 namespace alros
 {
 namespace publisher
@@ -107,6 +109,11 @@ public:
     return pubPtr_->frequency();
   }
 
+  Robot robot() const
+  {
+    return pubPtr_->robot();
+  }
+
   /**
   * @brief getting the topic to publish on
   * @return string indicating the topic
@@ -139,6 +146,7 @@ private:
     virtual std::string name() const = 0;
     virtual std::string topic() const = 0;
     virtual float frequency() const = 0;
+    virtual Robot robot() const = 0;
   };
 
 
@@ -165,6 +173,11 @@ private:
     float frequency() const
     {
       return publisher_.frequency();
+    }
+
+    Robot robot() const
+    {
+      return publisher_.robot();
     }
 
     void publish()

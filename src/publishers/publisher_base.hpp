@@ -25,6 +25,8 @@
 #include <alvalue/alvalue.h>
 #include <qi/session.hpp>
 
+#include <alrosbridge/tools.hpp>
+
 namespace alros
 {
 namespace publisher
@@ -67,16 +69,9 @@ public:
     return is_initialized_;
   }
 
-  enum Robot
-  {
-    UNIDENTIFIED,
-    NAO,
-    PEPPER
-  };
-
   /** Function that returns the type of a robot
    */
-  inline Robot robot()
+  inline Robot robot() const
   {
     if (robot_ != UNIDENTIFIED)
       return robot_;
@@ -101,7 +96,7 @@ protected:
   /** Frequency at which the publisher should publish. This is informative */
   float frequency_;
   /** The type of the robot */
-  Robot robot_;
+  mutable Robot robot_;
 
   /** Pointer to a session from which we can create proxies */
   qi::SessionPtr session_;
