@@ -122,15 +122,15 @@ CameraPublisher::CameraPublisher( const std::string& name, const std::string& to
 {
   if ( camera_source == AL::kTopCamera )
   {
-    msg_frameid_ = "CameraTop_frame";
+    msg_frameid_ = "CameraTop_optical_frame";
   }
   else if (camera_source == AL::kBottomCamera )
   {
-    msg_frameid_ = "CameraBottom_frame";
+    msg_frameid_ = "CameraBottom_optical_frame";
   }
   else if (camera_source_ == AL::kDepthCamera )
   {
-    msg_frameid_ = "CameraDepth_frame";
+    msg_frameid_ = "CameraDepth_optical_frame";
   }
 }
 
