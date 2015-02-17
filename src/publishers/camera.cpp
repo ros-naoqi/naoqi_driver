@@ -182,7 +182,7 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           frequency_
                           );
 
-  pub_image_ = nh.advertise<sensor_msgs::Image>( topic_, 1 );
+  pub_image_ = nh.advertise<sensor_msgs::Image>( topic_ + "/raw" , 1 );
   pub_camera_ = nh.advertise<sensor_msgs::CameraInfo>( topic_ + "/camera_info", 1 );
 
   is_initialized_ = true;
