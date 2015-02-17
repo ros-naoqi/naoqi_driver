@@ -31,7 +31,7 @@ class StringPublisher : public BasePublisher<StringPublisher>
 {
 
 public:
-  StringPublisher( const std::string& name, const std::string& topic, float frequency );
+  StringPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
 
   void publish();
 

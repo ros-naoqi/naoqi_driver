@@ -126,9 +126,9 @@ static const char* laserMemoryKeys[] = {
   "Device/SubDeviceList/Platform/LaserSensor/Left/Horizontal/Seg15/Y/Sensor/Value",
 };
 
-LaserPublisher::LaserPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_memory ):
-  BasePublisher( name, topic, frequency ),
-  p_memory_(p_memory)
+LaserPublisher::LaserPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
+  BasePublisher( name, topic, frequency, session ),
+  p_memory_(session->service("ALMemory"))
 {
   std::cout << " initialized a laser publisher with first memorykey " << laserMemoryKeys[0] << std::endl;
   std::cout << " initialized a laser publisher with last memorykey " << laserMemoryKeys[89] << std::endl;

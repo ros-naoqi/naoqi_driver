@@ -42,7 +42,7 @@ class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
 {
 
 public:
-  DiagnosticsPublisher( const std::string& name, float frequency, qi::AnyObject& p_memory, qi::AnyObject& p_motion );
+  DiagnosticsPublisher( const std::string& name, float frequency, qi::SessionPtr& session );
 
   void publish();
 

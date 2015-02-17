@@ -36,7 +36,7 @@ namespace publisher
 class CameraPublisher : public BasePublisher<CameraPublisher>
 {
 public:
-  CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video, int camera_source, int resolution );
+  CameraPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session, int camera_source, int resolution );
 
   ~CameraPublisher();
 

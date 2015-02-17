@@ -36,13 +36,14 @@ namespace alros
 namespace publisher
 {
 
-DiagnosticsPublisher::DiagnosticsPublisher( const std::string& name, float frequency, qi::AnyObject& p_memory, qi::AnyObject& p_motion ):
-    BasePublisher( name, "/diagnostics", frequency ),
-    p_memory_(p_memory),
+DiagnosticsPublisher::DiagnosticsPublisher( const std::string& name, float frequency, qi::SessionPtr& session ):
+    BasePublisher( name, "/diagnostics", frequency, session ),
+    p_memory_(session->service("ALMemory")),
     temperature_warn_level_(68),
     temperature_error_level_(74)
 {
   // Get all the joint names
+  qi::AnyObject p_motion = session->service("ALMotion");
   joint_names_ = p_motion.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
 
   for(std::vector<std::string>::const_iterator it = joint_names_.begin(); it != joint_names_.end(); ++it)

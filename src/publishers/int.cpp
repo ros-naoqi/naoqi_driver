@@ -27,8 +27,8 @@ namespace alros
 namespace publisher
 {
 
-IntPublisher::IntPublisher( const std::string& name, const std::string& topic, float frequency ):
-  BasePublisher( name, topic, frequency )
+IntPublisher::IntPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
+  BasePublisher( name, topic, frequency, session )
 {}
 
 void IntPublisher::publish()

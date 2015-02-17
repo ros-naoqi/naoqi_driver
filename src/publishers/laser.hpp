@@ -34,7 +34,7 @@ class LaserPublisher : public BasePublisher<LaserPublisher>
 {
 
 public:
-  LaserPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_memory );
+  LaserPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
 
   void publish();
 

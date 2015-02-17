@@ -109,9 +109,9 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
 
 } // camera_info_definitions
 
-CameraPublisher::CameraPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_video, int camera_source, int resolution )
-  : BasePublisher( name, topic, frequency ),
-    p_video_( p_video ),
+CameraPublisher::CameraPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session, int camera_source, int resolution )
+  : BasePublisher( name, topic, frequency, session ),
+    p_video_( session->service("ALVideoDevice") ),
     camera_source_(camera_source),
     resolution_(resolution),
     // change in case of depth camera

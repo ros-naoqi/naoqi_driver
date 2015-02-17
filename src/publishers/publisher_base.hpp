@@ -18,7 +18,12 @@
 #ifndef BASE_PUBLISHER_HPP
 #define BASE_PUBLISHER_HPP
 
+#include <algorithm>
 #include <iostream>
+#include <string>
+
+#include <alvalue/alvalue.h>
+#include <qi/session.hpp>
 
 namespace alros
 {
@@ -31,11 +36,13 @@ class BasePublisher
 {
 
 public:
-  BasePublisher( const std::string& name, const std::string& topic, float frequency ):
+  BasePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr session ):
     name_( name ),
     topic_( topic ),
     frequency_( frequency ),
-    is_initialized_( false )
+    is_initialized_( false ),
+    robot_( UNIDENTIFIED ),
+    session_(session)
   {}
 
   virtual ~BasePublisher() {};
@@ -60,6 +67,30 @@ public:
     return is_initialized_;
   }
 
+  enum Robot
+  {
+    UNIDENTIFIED,
+    NAO,
+    PEPPER
+  };
+
+  /** Function that returns the type of a robot
+   */
+  inline Robot robot()
+  {
+    if (robot_ != UNIDENTIFIED)
+      return robot_;
+
+    qi::AnyObject p_memory = session_->service("ALMemory");
+    std::string robot = p_memory.call<AL::ALValue>("getData", "RobotConfig/Body/Type" );
+    std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
+
+    if (std::string(robot) == "nao")
+      robot_ = NAO;
+    if (std::string(robot) == "pepper   ")
+      robot_ = PEPPER;
+  }
+
   virtual bool isSubscribed() const = 0;
 
 protected:
@@ -69,6 +100,11 @@ protected:
 
   /** Frequency at which the publisher should publish. This is informative */
   float frequency_;
+  /** The type of the robot */
+  Robot robot_;
+
+  /** Pointer to a session from which we can create proxies */
+  qi::SessionPtr session_;
 }; // class
 
 } //publisher
