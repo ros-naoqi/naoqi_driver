@@ -15,13 +15,11 @@
  *
 */
 
-#ifndef PUBLISHER_SONAR_HPP
-#define PUBLISHER_SONAR_HPP
+#ifndef PUBLISHER_INFO_HPP
+#define PUBLISHER_INFO_HPP
 
 #include <ros/ros.h>
 #include <qi/anyobject.hpp>
-
-#include <sensor_msgs/Range.h>
 
 #include "publisher_base.hpp"
 
@@ -30,12 +28,10 @@ namespace alros
 namespace publisher
 {
 
-class SonarPublisher : public BasePublisher<SonarPublisher>
+class InfoPublisher : public BasePublisher<InfoPublisher>
 {
 public:
-  SonarPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_memory, const qi::AnyObject& p_video );
-
-  ~SonarPublisher();
+  InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
 
   void publish();
 
@@ -44,30 +40,22 @@ public:
   inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-    for(std::vector<ros::Publisher>::const_iterator it = pubs_.begin(); it != pubs_.end(); ++it)
-      if (it->getNumSubscribers())
-        return true;
-    return false;
+    return pub_.getNumSubscribers() > 0;
   }
 
 private:
-  std::vector<ros::Publisher> pubs_;
+  ros::Publisher pub_;
 
-  /** Sonar (Proxy) configurations */
-  qi::AnyObject p_sonar_;
+  /** as we only publish once, we need to keep track of that */
+  bool has_published_;
+
   /** Memory (Proxy) configurations */
   qi::AnyObject p_memory_;
-  /** Key describeing whether we are subscribed to the ALSonar module */
-  bool is_subscribed_;
 
-  /** The memory keys of the sonars */
-  AL::ALValue keys_;
-  /** The frames of the sonars */
-  std::vector<std::string> frames_;
-  /** The topics that will be published */
-  std::vector<std::string> topics_;
-  /** Pre-filled messges that are sent */
-  std::vector<sensor_msgs::Range> msgs_;
+  /** The keys to get from ALMemory */
+  std::vector<std::string> keys_;
+  /** The memory keys of the info */
+  AL::ALValue alvalues_;
 };
 
 } //publisher

@@ -21,11 +21,12 @@ qi_create_lib(
   src/alrosbridge.cpp
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
+  src/publishers/info.cpp
   src/publishers/int.cpp
   src/publishers/joint_state.cpp
-  src/publishers/string.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp
+  src/publishers/string.cpp
 )
 qi_stage_lib( alrosbridge )
 
