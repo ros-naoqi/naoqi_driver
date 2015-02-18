@@ -128,14 +128,14 @@ void Bridge::registerDefaultPublisher()
 {
   //registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
   //registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
-  publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "joint_states", 15, sessionPtr_);
+  publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_);
   registerPublisher( joint_states );
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
   if (joint_states.robot() == alros::PEPPER)
-    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 1, sessionPtr_) );
+    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
 }
 
 void Bridge::initPublisher()
