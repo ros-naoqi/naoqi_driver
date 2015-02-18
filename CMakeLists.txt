@@ -4,7 +4,7 @@ project(alrosbridge)
 find_package(qibuild)
 find_package(qimodule)
 
-SET (CMAKE_CXX_FLAGS_INIT "-Wall -std=c++0x -stdlib=libc++")
+#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
 
 include_directories( include )
 
@@ -15,10 +15,8 @@ qi_create_module(
 )
 qi_stage_lib( alros )
 
-qi_create_lib(
-  alrosbridge
-  SHARED
-  src/alrosbridge.cpp
+set(
+  PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
   src/publishers/int.cpp
@@ -26,7 +24,22 @@ qi_create_lib(
   src/publishers/string.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp
+  #  src/publishers/info.cpp
+  )
+
+set(
+  SUBSCRIBER
+  src/subscribers/teleop.cpp
+  )
+
+qi_create_lib(
+  alrosbridge
+  SHARED
+  src/alrosbridge.cpp
+  ${PUBLISHER}
+  ${SUBSCRIBER}
 )
+
 qi_stage_lib( alrosbridge )
 
 

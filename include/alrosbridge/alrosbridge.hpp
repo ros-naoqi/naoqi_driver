@@ -38,6 +38,7 @@
 * PUBLIC INTERFACE
 */
 #include <alrosbridge/publisher/publisher.hpp>
+#include <alrosbridge/subscriber/subscriber.hpp>
 
 namespace alros
 {
@@ -72,6 +73,15 @@ public:
   void registerPublisher( publisher::Publisher pub );
 
   /**
+  * @brief registers a subscriber
+  * @param subscriber to register
+  * @see Subscriber
+  * @note it will be called by value to expose that internally there will be a copy,
+  * eventually this should be replaced by move semantics C++11
+  */
+  void registerSubscriber( subscriber::Subscriber sub );
+
+  /**
   * @brief qicli call function to get current master uri
   * @return string indicating http master uri
   */
@@ -102,7 +112,8 @@ private:
   //ros::Rate r_;
 
   void registerDefaultPublisher();
-  void initPublisher();
+  void registerDefaultSubscriber();
+  void init();
 
   void rosLoop();
 
@@ -111,6 +122,7 @@ private:
   boost::mutex mutex_reinit_;
 
   std::vector< publisher::Publisher > publishers_;
+  std::vector< subscriber::Subscriber> subscribers_;
 
   /** Pub Publisher to execute at a specific time */
   struct ScheduledPublish {

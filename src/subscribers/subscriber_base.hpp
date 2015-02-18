@@ -1,0 +1,108 @@
+/*
+ * Copyright 2015 Aldebaran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+*/
+
+#ifndef BASE_SUBSCRIBER_HPP
+#define BASE_SUBSCRIBER_HPP
+
+#include <algorithm>
+#include <iostream>
+#include <string>
+
+#include <alvalue/alvalue.h>
+#include <qi/session.hpp>
+
+#include <alrosbridge/tools.hpp>
+
+namespace alros
+{
+namespace subscriber
+{
+
+// CRTP
+template<class T>
+class BaseSubscriber
+{
+
+public:
+  BaseSubscriber( const std::string& name, const std::string& topic, qi::SessionPtr session ):
+    name_( name ),
+    topic_( topic ),
+    is_initialized_( false ),
+    robot_( UNIDENTIFIED ),
+    session_(session)
+  {}
+
+  virtual ~BaseSubscriber() {};
+
+  inline std::string name() const
+  {
+    return name_;
+  }
+
+  inline std::string topic() const
+  {
+    return topic_;
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
+
+  /** Function that returns the type of a robot
+   */
+  inline Robot robot() const
+  {
+    if (robot_ != UNIDENTIFIED)
+      return robot_;
+
+    qi::AnyObject p_memory = session_->service("ALMemory");
+    std::string robot = p_memory.call<AL::ALValue>("getData", "RobotConfig/Body/Type" );
+    std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
+
+    if (std::string(robot) == "nao")
+    {
+      robot_ = NAO;
+      return robot_;
+    }
+    if (std::string(robot) == "pepper")
+    {
+      robot_ = PEPPER;
+      return robot_;
+    }
+    else
+    {
+      return UNIDENTIFIED;
+    }
+  }
+
+protected:
+  std::string name_, topic_;
+
+  bool is_initialized_;
+
+  /** The type of the robot */
+  mutable Robot robot_;
+
+  /** Pointer to a session from which we can create proxies */
+  qi::SessionPtr session_;
+}; // class
+
+} // subscriber
+} // alros
+
+#endif

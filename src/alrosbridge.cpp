@@ -45,6 +45,11 @@
 #include "publishers/string.hpp"
 
 /*
+ * subscribers
+ */
+#include "subscribers/teleop.hpp"
+
+/*
 * STATIC FUNCTIONS INCLUDE
 */
 #include "ros_env.hpp"
@@ -149,11 +154,43 @@ void Bridge::registerDefaultPublisher()
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
 }
 
-void Bridge::initPublisher()
+// public interface here
+void Bridge::registerSubscriber( subscriber::Subscriber sub )
+{
+  std::vector<subscriber::Subscriber>::iterator it;
+  it = std::find( subscribers_.begin(), subscribers_.end(), sub );
+  size_t sub_index = 0;
+
+  // if subscriber is not found, register it!
+  if (it == subscribers_.end() )
+  {
+    sub_index = subscribers_.size();
+    subscribers_.push_back( sub );
+    std::cout << "registered subscriber:\t" << sub.name() << std::endl;
+  }
+  // if found, re-init them
+  else
+  {
+    std::cout << "re-initialized existing subscriber:\t" << it->name() << std::endl;
+  }
+}
+
+void Bridge::registerDefaultSubscriber()
+{
+  if (!subscribers_.empty())
+    return;
+  registerSubscriber( alros::subscriber::TeleopSubscriber("teleop", "cmd_vel", sessionPtr_) );
+}
+
+void Bridge::init()
 {
   foreach( publisher::Publisher& pub, publishers_ )
   {
     pub.reset( *nhPtr_ );
+  }
+  foreach( subscriber::Subscriber& sub, subscribers_ )
+  {
+    sub.reset( *nhPtr_ );
   }
 }
 
@@ -186,8 +223,9 @@ void Bridge::setMasterURI( const std::string& uri )
 
   // register publishers, that will not start them
   registerDefaultPublisher();
-  // initialize the publishers with nodehandle
-  initPublisher();
+  registerDefaultSubscriber();
+  // initialize the publishers and subscribers with nodehandle
+  init();
   // Start publishing again
   start();
 }
