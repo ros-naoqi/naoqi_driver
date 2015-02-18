@@ -82,7 +82,7 @@ public:
 
     if (std::string(robot) == "nao")
       robot_ = NAO;
-    if (std::string(robot) == "pepper   ")
+    if (std::string(robot) == "pepper")
       robot_ = PEPPER;
   }
 
