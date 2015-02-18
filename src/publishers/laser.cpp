@@ -210,7 +210,7 @@ void LaserPublisher::reset( ros::NodeHandle& nh )
   msg_.angle_max = 2.0944;    // +120
   msg_.angle_increment = (2*2.0944) / (15+15+15+8+8); // 240 deg FoV / 61 points (blind zones inc)
   msg_.range_min = 0.1; // in m
-  msg_.range_max = 7.0; // in m
+  msg_.range_max = 1.5; // in m
   msg_.ranges = std::vector<float>(61, -1.0f);
 
   is_initialized_ = true;
