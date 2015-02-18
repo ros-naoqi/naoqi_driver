@@ -38,9 +38,10 @@
 */
 #include "publishers/camera.hpp"
 #include "publishers/diagnostics.hpp"
-#include "publishers/laser.hpp"
 #include "publishers/int.hpp"
+#include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
+#include "publishers/laser.hpp"
 #include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 
@@ -150,6 +151,9 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
+  registerPublisher( alros::publisher::InfoPublisher("info", "info", 1000, sessionPtr_) );
+
+  // Pepper specific publishers
   if (joint_states.robot() == alros::PEPPER)
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
 }

@@ -18,113 +18,67 @@
 #include <alvalue/alvalue.h>
 
 #include <ros/serialization.h>
+#include <std_msgs/String.h>
 
-#include "sonar.hpp"
+#include "info.hpp"
 
 namespace alros
 {
 namespace publisher
 {
 
-SonarPublisher::SonarPublisher( const std::string& name, const std::string& topic, float frequency, const qi::AnyObject& p_memory, const qi::AnyObject& p_sonar )
-  : BasePublisher( name, topic, frequency ),
-    p_memory_( p_memory ),
-    p_sonar_( p_sonar ),
-    is_subscribed_(false)
+InfoPublisher::InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& session )
+  : BasePublisher( name, topic, frequency, session ),
+    p_memory_( session->service("ALMemory") ),
+    has_published_( false )
 {
+  keys_.push_back("RobotConfig/Head/FullHeadId");
+  keys_.push_back("Device/DeviceList/ChestBoard/BodyId");
+  keys_.push_back("Device/DeviceList/BatteryFuelGauge/SerialNumber");
+  keys_.push_back("Device/DeviceList/BatteryFuelGauge/FirmwareVersion");
+  keys_.push_back("RobotConfig/Body/Type");
+  keys_.push_back("RobotConfig/Body/BaseVersion");
+  keys_.push_back("RobotConfig/Body/Device/LeftArm/Version");
+  keys_.push_back("RobotConfig/Body/Device/RightArm/Version");
+  keys_.push_back("RobotConfig/Body/Device/Hand/Left/Version");
+  keys_.push_back("RobotConfig/Body/Device/Platform/Version");
+  keys_.push_back("RobotConfig/Body/Device/Brakes/Version");
+  keys_.push_back("RobotConfig/Body/Device/Wheel/Version");
+  keys_.push_back("RobotConfig/Body/Version");
+  keys_.push_back("RobotConfig/Body/SoftwareRequirement");
+  keys_.push_back("RobotConfig/Body/Device/Legs/Version");
+  keys_.push_back("RobotConfig/Mode/Slave");
 
-RobotConfig/Head/FullHeadId
-Device/DeviceList/ChestBoard/BodyId
-Device/DeviceList/BatteryFuelGauge/SerialNumber
-Device/DeviceList/BatteryFuelGauge/FirmwareVersion
-RobotConfig/Body/Type
-RobotConfig/Body/BaseVersion
-RobotConfig/Body/Device/LeftArm/Version
-RobotConfig/Body/Device/Platform/Version
-RobotConfig/Body/Version
-RobotConfig/Body/Device/Brakes/Version
-RobotConfig/Body/Device/RightArm/Version
-RobotConfig/Body/Device/Wheel/Version
-RobotConfig/Body/SoftwareRequirement
-RobotConfig/Body/Device/Hand/Left/Version
-RobotConfig/Body/Device/Legs/Version
-RobotConfig/Mode/Slave
-
-  std::vector<std::string> keys;
-  if (robot() == PEPPER) {
-    keys.push_back("Device/SubDeviceList/Platform/Front/Sonar/Sensor/Value");
-    keys.push_back("Device/SubDeviceList/Platform/Back/Sonar/Sensor/Value");
-    frames_.push_back("SonarFront_frame");
-    frames_.push_back("SonarBack_frame");
-    topics_.push_back(topic + "/Front_sensor");
-    topics_.push_back(topic + "/Back_sensor");
-  } else if (robot() == NAO) {
-    keys.push_back("Device/SubDeviceList/US/Left/Sensor/Value");
-    keys.push_back("Device/SubDeviceList/US/Right/Sensor/Value");
-    frames_.push_back("LSonar_frame");
-    frames_.push_back("RSonar_frame");
-    topics_.push_back(topic + "/Left_sensor");
-    topics_.push_back(topic + "/Right_sensor");
-  }
-
-  // Prepare the messages
-  msgs_.resize(frames_.size());
-  for(size_t i = 0; i < msgs_.size(); ++i)
-    {
-      msgs_[i].header.frame_id = frames_[i];
-      msgs_[i].min_range = 0.25;
-      msgs_[i].max_range = 2.55;
-      msgs_[i].field_of_view = 0.523598776;
-      msgs_[i].radiation_type = sensor_msgs::Range::ULTRASOUND;
-    }
-
-  keys_.arraySetSize(keys.size());
+  alvalues_.arraySetSize(keys_.size());
   size_t i = 0;
-  for(std::vector<std::string>::const_iterator it = keys.begin(); it != keys.end(); ++it, ++i)
-    keys_[i] = *it;
+  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
+    alvalues_[i] = *it;
 }
 
-SonarPublisher::~SonarPublisher()
+void InfoPublisher::publish()
 {
-  if (is_subscribed_)
+  if (has_published_)
+    return;
+
+  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", alvalues_);
+  std_msgs::String msg;
+  for(size_t i = 0; i < keys_.size(); ++i)
   {
-    p_sonar_.call<AL::ALValue>("unsubscribe", "ROS");
-    is_subscribed_ = false;
+    msg.data += keys_[i] + ": " + std::string(values[i]);
+    if (i != keys_.size()-1)
+      msg.data += " ; ";
   }
+
+  pub_.publish(msg);
+  has_published_ = true;
 }
 
-void SonarPublisher::publish()
+void InfoPublisher::reset( ros::NodeHandle& nh )
 {
-  if (!is_subscribed_)
-  {
-    p_sonar_.call<AL::ALValue>("subscribe", "ROS");
-    is_subscribed_ = true;
-  }
+  // We latch as we only publish once
+  pub_ = nh.advertise<std_msgs::String>( "info", 1, true );
 
-  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", keys_);
-  ros::Time now = ros::Time::now();
-  for(size_t i = 0; i < msgs_.size(); ++i)
-  {
-    msgs_[i].header.stamp = now;
-    msgs_[i].range = float(values[i]);
-    pubs_[i].publish(msgs_[i]);
-  }
-}
-
-void SonarPublisher::reset( ros::NodeHandle& nh )
-{
-  if (is_subscribed_)
-  {
-    p_sonar_.call<AL::ALValue>("unsubscribe", "ROS");
-    is_subscribed_ = false;
-  }
-
-  pubs_.clear();
-  if (true) {
-    for(std::vector<std::string>::const_iterator it = topics_.begin(); it != topics_.end(); ++it)
-      pubs_.push_back( nh.advertise<sensor_msgs::Range>( *it, 1 ) );
-  }
-
+  has_published_ = false;
   is_initialized_ = true;
 }
 

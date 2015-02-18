@@ -4,7 +4,7 @@ project(alrosbridge)
 find_package(qibuild)
 find_package(qimodule)
 
-#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
+#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x -std=c++0x")
 
 include_directories( include )
 
@@ -19,9 +19,10 @@ set(
   PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
+  src/publishers/info.cpp
   src/publishers/int.cpp
-  src/publishers/joint_state.cpp
   src/publishers/string.cpp
+  src/publishers/joint_state.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp
   #  src/publishers/info.cpp
