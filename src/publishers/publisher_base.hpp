@@ -82,12 +82,11 @@ public:
 
     if (std::string(robot) == "nao")
       robot_ = NAO;
-      return robot_;
-    if (std::string(robot) == "pepper")
+    else if (std::string(robot) == "pepper")
       robot_ = PEPPER;
-      return robot_;
     else
-      return UNIDENTIFIED;
+      robot_ = UNIDENTIFIED;
+    return robot_;
   }
 
   virtual bool isSubscribed() const = 0;
