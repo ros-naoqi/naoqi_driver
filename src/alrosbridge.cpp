@@ -151,7 +151,7 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
-  registerPublisher( alros::publisher::InfoPublisher("info", "info", 1000, sessionPtr_) );
+  registerPublisher( alros::publisher::InfoPublisher("info", "info", 0.001, sessionPtr_) );
 
   // Pepper specific publishers
   if (joint_states.robot() == alros::PEPPER)
