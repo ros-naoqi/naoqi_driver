@@ -37,59 +37,67 @@ JointStatePublisher::JointStatePublisher( const std::string& name, const std::st
 void JointStatePublisher::publish()
 {
   // get joint state values
-  std::vector<float> al_joint_angles = p_motion_.call<std::vector<float> >("getAngles", "JointActuators", true );
-  msg_joint_states_.header.stamp = ros::Time::now();
+  std::vector<float> al_joint_angles = p_motion_.call<std::vector<float> >("getAngles", "Body", true );
+  // Leg might be an artificial joint in between all wheels of pepper
+  std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", 1, true );
+  const ros::Time& stamp = ros::Time::now();
+  const float& odomX =  al_odometry_data[0];
+  const float& odomY =  al_odometry_data[1];
+  const float& odomZ =  al_odometry_data[2];
+  const float& odomWX =  al_odometry_data[3];
+  const float& odomWY =  al_odometry_data[4];
+  const float& odomWZ =  al_odometry_data[5];
+  //since all odometry is 6DOF we'll need a quaternion created from yaw
+  geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw( odomWX, odomWY, odomWZ );
+
+  /**
+   * JOINT STATE PUBLISHER
+   */
+  msg_joint_states_.header.stamp = stamp;
+
   // STUPID CONVERTION FROM FLOAT TO DOUBLE ARRAY --> OPTIMIZE THAT!
   msg_joint_states_.position = std::vector<double>( al_joint_angles.begin(), al_joint_angles.end() );
   pub_joint_states_.publish( msg_joint_states_ );
 
-  // Leg might be an artificial joint in between all wheels of pepper
-  std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getRobotPosition", true );
-
-  msg_nav_odom_.header.stamp = ros::Time::now();
-  msg_tf_odom_.header.stamp = ros::Time::now();
-
-
-  const float& odomX =  al_odometry_data[0];
-  const float& odomY =  al_odometry_data[1];
-  const float& odomTheta =  al_odometry_data[2];
-
-  // we can improve this with a velocity computation as well
-  // with this we simply set the velocity as the diff between (odomX - msg_odom_.pose.pose.position.x)/dt
-  msg_nav_odom_.pose.pose.position.x = odomX;
-  msg_nav_odom_.pose.pose.position.y = odomY;
-  msg_nav_odom_.pose.pose.position.z = 0;
-  msg_nav_odom_.pose.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw( 0, 0, odomTheta );
-  // fill in velocity components here
-  pub_odom_.publish(msg_nav_odom_);
-
-
-
+  /**
+   * ROBOT STATE PUBLISHER
+   */
   // put joint states in tf broadcaster
   std::map< std::string, double > joint_state_map;
   // stupid version --> change this with std::transform c++11 ??!
   std::transform( msg_joint_states_.name.begin(), msg_joint_states_.name.end(), msg_joint_states_.position.begin(), std::inserter( joint_state_map, joint_state_map.end() ), std::make_pair<std::string, double>);
 
   static const std::string& jt_tf_prefix = "";
-  rspPtr_->publishTransforms( joint_state_map, msg_joint_states_.header.stamp, jt_tf_prefix );
+  rspPtr_->publishTransforms( joint_state_map, stamp, jt_tf_prefix );
   rspPtr_->publishFixedTransforms( jt_tf_prefix );
 
-  //const geometry_msgs::Point& p = msg_nav_odom_.pose.pose.position;
-  //const geometry_msgs::Quaternion& q = msg_nav_odom_.pose.pose.orientation;
-  //msg_tf_odom_.transform.translation.x = odomX;
-  //msg_tf_odom_.transform.translation.y = odomY;
-  //msg_tf_odom_.transform.translation.z = 0;
-  //msg_tf_odom_.transform.rotation = msg_nav_odom_.pose.pose.orientation;
 
-  // DEBUG
-  static tf::Transform transform;
-  transform.setOrigin( tf::Vector3(odomX, odomY, 0) );
-  tf::Quaternion q;
-  q.setRPY(0, 0, odomTheta);
-  transform.setRotation(q);
+  /**
+   * ODOMETRY FRAME
+   */
+  msg_tf_odom_.header.stamp = stamp+ros::Duration(0.5);
 
-  tf_br_.sendTransform( tf::StampedTransform(transform, msg_tf_odom_.header.stamp, "base_footprint", "odom" ) );
-  //tf_br_.sendTransform( msg_tf_odom_ );
+  msg_tf_odom_.transform.translation.x = odomX;
+  msg_tf_odom_.transform.translation.y = odomY;
+  msg_tf_odom_.transform.translation.z = odomZ;
+  msg_tf_odom_.transform.rotation = odom_quat;
+
+  tf_br_.sendTransform( msg_tf_odom_ );
+
+
+  /**
+   * ODOMETRY MESSAGE
+   */
+  // we can improve this with a velocity computation as well
+  // with this we simply set the velocity as the diff between (odomX - msg_odom_.pose.pose.position.x)/dt
+//  msg_nav_odom_.header.stamp = msg_tf_odom_.header.stamp;
+//
+//  msg_nav_odom_.pose.pose.position.x = odomX;
+//  msg_nav_odom_.pose.pose.position.y = odomY;
+//  msg_nav_odom_.pose.pose.position.z = 0;
+//  msg_nav_odom_.pose.pose.orientation = odom_quat;
+//  // fill in velocity components here
+//  pub_odom_.publish(msg_nav_odom_);
 }
 
 void JointStatePublisher::reset( ros::NodeHandle& nh )
@@ -113,14 +121,14 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
   }
 
   // pre-fill joint states message
-  msg_joint_states_.name = p_motion_.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
+  msg_joint_states_.name = p_motion_.call<std::vector<std::string> >("getBodyNames", "Body" );
+
+  msg_tf_odom_.header.frame_id = "odom";
+  msg_tf_odom_.child_frame_id = "base_link";
 
   // pre-fill odometry message
   msg_nav_odom_.header.frame_id = "odom";
   msg_nav_odom_.child_frame_id = "base_footprint";
-
-  msg_tf_odom_.header.frame_id = "odom";
-  msg_tf_odom_.child_frame_id = "base_footprint";
 
   is_initialized_ = true;
 }
