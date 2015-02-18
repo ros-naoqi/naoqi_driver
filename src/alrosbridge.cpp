@@ -56,7 +56,8 @@ namespace alros
 Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
   freq_(15),
-  publish_enabled_(false)
+  publish_enabled_(false),
+  publish_cancelled_(false)
 {
   std::cout << "application started " << std::endl;
 }
@@ -65,34 +66,42 @@ Bridge::Bridge( qi::SessionPtr& session )
 Bridge::~Bridge()
 {
   std::cout << "ALRosBridge is shutting down.." << std::endl;
+  publish_cancelled_ = true;
   stop();
+  if (publisherThread_.get_id() !=  boost::thread::id())
+    publisherThread_.join();
   // destroy nodehandle?
   nhPtr_->shutdown();
   ros::shutdown();
-  publisherThread_.join();
 }
 
 
 void Bridge::rosLoop()
 {
-  while( ros::ok() )
+  while( !publish_cancelled_ )
   {
-    if ( isAlive() )
-    {
-      // Wait for the next Publisher to be ready
-      size_t pub_index = pub_queue_.top().pub_index_;
-      publisher::Publisher& pub = publishers_[pub_index];
-      ros::Time schedule = pub_queue_.top().schedule_;
-
-      ros::Duration(schedule - ros::Time::now()).sleep();
-
-      if ( pub.isSubscribed() && pub.isInitialized() )
+   {
+      boost::mutex::scoped_lock lock( mutex_reinit_ );
+      if (publish_enabled_)
       {
-        pub.publish();
-      }
-      // Schedule for a future time
-      pub_queue_.pop();
-      pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
+        // Wait for the next Publisher to be ready
+        size_t pub_index = pub_queue_.top().pub_index_;
+        publisher::Publisher& pub = publishers_[pub_index];
+        ros::Time schedule = pub_queue_.top().schedule_;
+
+        ros::Duration(schedule - ros::Time::now()).sleep();
+
+        if ( pub.isSubscribed() && pub.isInitialized())
+        {
+          pub.publish();
+        }
+
+        // Schedule for a future time
+        pub_queue_.pop();
+        pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
+      } else
+        // sleep one second
+        ros::Duration(1).sleep();
     }
     ros::spinOnce();
   }
@@ -126,6 +135,8 @@ void Bridge::registerPublisher( publisher::Publisher pub )
 
 void Bridge::registerDefaultPublisher()
 {
+  if (!publishers_.empty())
+    return;
   //registerPublisher( alros::publisher::StringPublisher( "string_pub", "string_pub", 15) );
   //registerPublisher( alros::publisher::IntPublisher("int_pub", "int_pub", 15) );
   publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_);
@@ -158,6 +169,10 @@ std::string Bridge::getMasterURI() const
 
 void Bridge::setMasterURI( const std::string& uri )
 {
+  // Stopping publishing
+  stop();
+
+  // Reinitializing ROS
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   nhPtr_.reset();
   std::cout << "nodehandle reset " << std::endl;
@@ -165,31 +180,28 @@ void Bridge::setMasterURI( const std::string& uri )
   nhPtr_.reset( new ros::NodeHandle("~") );
   lock.unlock();
 
-  publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+  // Create the publishing thread if needed
+  if (publisherThread_.get_id() ==  boost::thread::id())
+    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
 
-  // first register publisher
+  // register publishers, that will not start them
   registerDefaultPublisher();
-  // second initialize them with nodehandle
+  // initialize the publishers with nodehandle
   initPublisher();
+  // Start publishing again
   start();
 }
 
 void Bridge::start()
 {
-  boost::mutex::scoped_lock( mutex_reinit_ );
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
 }
 
 void Bridge::stop()
 {
-  boost::mutex::scoped_lock( mutex_reinit_ );
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = false;
-}
-
-bool Bridge::isAlive() const
-{
-  boost::mutex::scoped_lock( mutex_reinit_ );
-  return publish_enabled_;
 }
 
 QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI );

@@ -70,7 +70,7 @@ SonarPublisher::~SonarPublisher()
 {
   if (is_subscribed_)
   {
-    p_sonar_.call<AL::ALValue>("unsubscribe", "ROS");
+    p_sonar_.call<void>("unsubscribe", "ROS");
     is_subscribed_ = false;
   }
 }
@@ -79,7 +79,7 @@ void SonarPublisher::publish()
 {
   if (!is_subscribed_)
   {
-    p_sonar_.call<AL::ALValue>("subscribe", "ROS");
+    p_sonar_.call<void>("subscribe", "ROS");
     is_subscribed_ = true;
   }
 
@@ -97,7 +97,7 @@ void SonarPublisher::reset( ros::NodeHandle& nh )
 {
   if (is_subscribed_)
   {
-    p_sonar_.call<AL::ALValue>("unsubscribe", "ROS");
+    p_sonar_.call<void>("unsubscribe", "ROS");
     is_subscribed_ = false;
   }
 
