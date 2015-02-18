@@ -81,12 +81,20 @@ public:
     std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
 
     if (std::string(robot) == "nao")
+    {
       robot_ = NAO;
+      return robot_;
+    }
     else if (std::string(robot) == "pepper")
+    {
       robot_ = PEPPER;
+      return robot_;
+    }
     else
+    {
       robot_ = UNIDENTIFIED;
-    return robot_;
+      return robot_;
+    }
   }
 
   virtual bool isSubscribed() const = 0;
