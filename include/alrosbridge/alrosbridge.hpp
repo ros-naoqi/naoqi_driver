@@ -72,12 +72,6 @@ public:
   void registerPublisher( publisher::Publisher pub );
 
   /**
-  * @brief poll function to check if publishing is enabled
-  * @return bool indicating if publishing is enabled/disabled
-  */
-  bool isAlive() const;
-
-  /**
   * @brief qicli call function to get current master uri
   * @return string indicating http master uri
   */
@@ -102,6 +96,7 @@ public:
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
+  bool publish_cancelled_;
   const size_t freq_;
   boost::thread publisherThread_;
   //ros::Rate r_;
