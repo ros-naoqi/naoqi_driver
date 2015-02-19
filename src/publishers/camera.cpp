@@ -154,15 +154,11 @@ void CameraPublisher::publish()
   }
 
   // Create a cv::Mat of the right dimensions
-  cv::Mat img(value[1], value[0], cv_mat_type_, const_cast<void*>(value[6].GetBinary()));
-  std_msgs::Header header;
-  header.frame_id = msg_frameid_;
-  header.stamp = ros::Time::now();
-  cv_bridge::CvImage cv_img(header, msg_colorspace_, img);
+  cv::Mat cv_img(value[1], value[0], cv_mat_type_, const_cast<void*>(value[6].GetBinary()));
+  msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
+  msg_->header.frame_id = msg_frameid_;
 
-  // Image transport would be cleaner here but would create another memory copy
-  pub_image_.publish( cv_img );
-  pub_camera_.publish( camera_info_ );
+  pub_.publish( *msg_, camera_info_ );
 }
 
 void CameraPublisher::reset( ros::NodeHandle& nh )
@@ -179,11 +175,11 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           camera_source_,
                           resolution_,
                           colorspace_,
-                          frequency_
+                          20
                           );
 
-  pub_image_ = nh.advertise<sensor_msgs::Image>( topic_ + "/raw" , 1 );
-  pub_camera_ = nh.advertise<sensor_msgs::CameraInfo>( topic_ + "/camera_info", 1 );
+  image_transport::ImageTransport it( nh );
+  pub_ = it.advertiseCamera( topic_, 1 );
 
   is_initialized_ = true;
 }
