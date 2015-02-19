@@ -35,7 +35,8 @@ boost::mutex MUTEX_LOGS;
 std::list<rosgraph_msgs::Log> LOGS;
 /** Vector where at index NAOQI_LOG_LEVEL, there is the matching ROS level */
 std::vector<rosgraph_msgs::Log::_level_type> LOG_LEVELS;
-
+/** Latest time at which the updates happened */
+ros::Time last_log_update_ = ros::TIME_MIN;
 
 void logCallback(const qi::LogMessage& msg)
 {
@@ -52,12 +53,13 @@ void logCallback(const qi::LogMessage& msg)
   log.msg = msg.message;
   log.header.stamp = ros::Time(msg.timestamp.tv_sec, msg.timestamp.tv_usec);
 
-  boost::mutex::scoped_lock lock( MUTEX_LOGS );
-  LOGS.push_back(log);
-
   // If we are not publishing, the queue will increase, so we have to prevent an explosion
-  if (LOGS.size() > 100)
-    LOGS.clear();
+  // We only keep a log if it's within 5 second of the last publish (totally arbitrary)
+  if ((log.header.stamp - last_log_update_) < ros::Duration(5))
+  {
+    boost::mutex::scoped_lock lock( MUTEX_LOGS );
+    LOGS.push_back(log);
+  }
 }
 
 LogPublisher::LogPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& session )
@@ -74,13 +76,15 @@ LogPublisher::LogPublisher( const std::string& name, const std::string& topic, f
 
 void LogPublisher::publish()
 {
-  boost::mutex::scoped_lock lock( MUTEX_LOGS );
-
   while ( !LOGS.empty() )
   {
     pub_.publish(LOGS.front());
-    LOGS.pop_front();
+    {
+      boost::mutex::scoped_lock lock( MUTEX_LOGS );
+      LOGS.pop_front();
+    }
   }
+  last_log_update_ = ros::Time::now();
 }
 
 void LogPublisher::reset( ros::NodeHandle& nh )
