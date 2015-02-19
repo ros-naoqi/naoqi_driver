@@ -19,8 +19,8 @@ set(
   PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
-  src/publishers/info.cpp
   src/publishers/int.cpp
+  src/publishers/log.cpp
   src/publishers/string.cpp
   src/publishers/joint_state.cpp
   src/publishers/laser.cpp
@@ -46,7 +46,7 @@ qi_stage_lib( alrosbridge )
 
 
 qi_use_lib(alros QI ROS)
-qi_use_lib(alrosbridge QI ALCOMMON ALVISION ROS)
+qi_use_lib(alrosbridge QICORE QI ALCOMMON ALVISION ROS)
 
 target_link_libraries(
   alros
