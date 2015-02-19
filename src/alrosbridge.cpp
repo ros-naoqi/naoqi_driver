@@ -49,6 +49,7 @@
  * subscribers
  */
 #include "subscribers/teleop.hpp"
+#include "subscribers/moveto.hpp"
 
 /*
 * STATIC FUNCTIONS INCLUDE
@@ -151,7 +152,7 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
-  registerPublisher( alros::publisher::InfoPublisher("info", "info", 1000, sessionPtr_) );
+  registerPublisher( alros::publisher::InfoPublisher("info", "info", 1, sessionPtr_) );
 
   // Pepper specific publishers
   if (joint_states.robot() == alros::PEPPER)
@@ -183,7 +184,8 @@ void Bridge::registerDefaultSubscriber()
 {
   if (!subscribers_.empty())
     return;
-  registerSubscriber( alros::subscriber::TeleopSubscriber("teleop", "cmd_vel", sessionPtr_) );
+  registerSubscriber( alros::subscriber::TeleopSubscriber("teleop", "/cmd_vel", sessionPtr_) );
+  registerSubscriber( alros::subscriber::MovetoSubscriber("moveto", "/move_base_simple/goal", sessionPtr_) );
 }
 
 void Bridge::init()

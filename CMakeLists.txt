@@ -25,12 +25,13 @@ set(
   src/publishers/joint_state.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp
-  #  src/publishers/info.cpp
+  src/publishers/info.cpp
   )
 
 set(
   SUBSCRIBER
   src/subscribers/teleop.cpp
+  src/subscribers/moveto.cpp
   )
 
 qi_create_lib(
