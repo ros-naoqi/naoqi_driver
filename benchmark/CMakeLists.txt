@@ -1,3 +1,4 @@
+# to use those utilities, you need to compile the message type
 find_package( qibuild )
 
 qi_create_bin(
