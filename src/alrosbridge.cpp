@@ -212,7 +212,11 @@ std::string Bridge::getMasterURI() const
   return ros_env::getMasterURI();
 }
 
-void Bridge::setMasterURI( const std::string& uri )
+void Bridge::setMasterURI( const std::string& uri)
+{
+  setMasterURINet(uri, "eth0");
+}
+void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // Stopping publishing
   stop();
@@ -221,7 +225,7 @@ void Bridge::setMasterURI( const std::string& uri )
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   nhPtr_.reset();
   std::cout << "nodehandle reset " << std::endl;
-  ros_env::setMasterURI( uri );
+  ros_env::setMasterURI( uri, network_interface );
   nhPtr_.reset( new ros::NodeHandle("~") );
   lock.unlock();
 
@@ -250,5 +254,5 @@ void Bridge::stop()
   publish_enabled_ = false;
 }
 
-QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI );
+QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet );
 } //alros

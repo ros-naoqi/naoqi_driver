@@ -37,14 +37,20 @@ namespace alros
 namespace ros_env
 {
 
-static std::string getROSIP()
+/** Queries NAOqi to get the IP
+ * @param network_interface the name of the network interface to use. "eth0" by default. If you put your NAO in
+ * tethering mode, you will need to put "tether"
+ */
+static std::string getROSIP(std::string network_interface)
 {
+  if (network_interface.empty())
+    network_interface = "eth0";
   typedef std::map< std::string, std::vector<std::string> > Map_IP;
-  static const std::string ip = static_cast<Map_IP>(qi::os::hostIPAddrs())["eth0"][0];
+  static const std::string ip = static_cast<Map_IP>(qi::os::hostIPAddrs())[network_interface][0];
   return ip;
 }
 
-static void setMasterURI( const std::string& uri )
+static void setMasterURI( const std::string& uri, const std::string& network_interface )
 {
   if (ros::isInitialized() )
   {
@@ -57,7 +63,7 @@ static void setMasterURI( const std::string& uri )
   std::string my_master = "__master="+uri;
   std::map< std::string, std::string > remap;
   remap["__master"] = uri;
-  remap["__ip"] = ::alros::ros_env::getROSIP();
+  remap["__ip"] = ::alros::ros_env::getROSIP(network_interface);
   // init ros without a sigint-handler in order to shutdown correctly by naoqi
   ros::init( remap, "alrosconverter", ros::init_options::NoSigintHandler );
   // to prevent shutdown based on no existing nodehandle

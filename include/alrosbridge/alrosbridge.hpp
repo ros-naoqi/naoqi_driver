@@ -90,6 +90,13 @@ public:
   /**
   * @brief qicli call function to set current master uri
   * @param string in form of http://<ip>:11311
+  * @param network_interface the network interface ("eth0", "tether" ...)
+  */
+  void setMasterURINet( const std::string& uri, const std::string& network_interface );
+
+  /**
+  * @brief qicli call function to set current master uri
+  * @param string in form of http://<ip>:11311
   */
   void setMasterURI( const std::string& uri );
 
