@@ -21,13 +21,24 @@ This module tries to be as close to the ROS standard by exposing several standar
 
 It also exposes the following higher level NAOqi API services:
 
-- TODO
 - ``/cmd_vel`` as detailed here http://wiki.ros.org/android_teleop
+
+TODO
+----
+
+The following services need to be implemented:
 - ``/naoqi/set_life_status`` to turn the life behavior on or off
-- ``/naoqi/move_to``
-- ``/naoqi/set_position_to``
 - ``/naoqi/start_asr`` and ``/naoqi/stop_asr``
 - ``/naoqi/speak`` (TODO: look at audio common)
+
+The following items need love:
+- info needs to be a proper struct, not fake JSON
+- bumpers are not implemented
+- generic audio
+- IMU message
+- octomap
+- LEDs
+
 
 Getting Started
 ---------------
@@ -91,6 +102,13 @@ You can also perform that action from your robot:
 .. code-block:: sh
 
   $ qicli call BridgeService.setMasterURI http://10.0.132.105:11311
+
+If on a different network interface, e.g. on tethering (and ``tether`` shows when doing ``ifconfig``), use:
+
+
+.. code-block:: sh
+
+  $ qicli call BridgeService.setMasterURINet http://10.0.132.105:11311 tether
 
 Using the **ALROS** module
 ++++++++++++++++++++++++++
@@ -172,7 +190,7 @@ Then execute the proper instruction to add it to your toolchain, e.g.:
 
 .. code-block:: sh
 
-  $ qitoolchain add-package -c atom toolchain_install_atom.tar.gz
+  $ qitoolchain add-package -c atom toolchain_install_atom.zip
 
 Get the code from gitlab:
 
@@ -182,3 +200,18 @@ Get the code from gitlab:
   $ qisrc add ./alrosconverter
   $ qibuild configure -c atom alrosconverter
   $ qibuild make -c atom alrosconverter
+
+Android Teleop
+++++++++++++++
+
+First, install the teleop app on your Android after installing rosjava and android_apps at http://wiki.ros.org/rosjava
+(or ask Karsten for the ``.apk``)
+
+When starting your roscore and this bridge, make sure you export your ``ROS_IP`` and ``ROS_MASTER_URI`` to your IP.
+
+Then start motion on your robot:
+
+.. code-block:: sh
+
+  $ qicli call ALMotion.wakeUp
+  $ qicli call ALRobotPosture.goToPosture Stand 1
