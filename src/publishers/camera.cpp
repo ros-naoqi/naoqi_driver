@@ -158,6 +158,10 @@ void CameraPublisher::publish()
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 
+  ros::Time now = ros::Time::now();
+  msg_->header.stamp = now;
+  camera_info_.header.stamp = now;
+
   pub_.publish( *msg_, camera_info_ );
 }
 

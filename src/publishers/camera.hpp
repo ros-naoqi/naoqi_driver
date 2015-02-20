@@ -64,7 +64,7 @@ private:
   int cv_mat_type_;
   // msg frame id
   std::string msg_frameid_;
-  const sensor_msgs::CameraInfo& camera_info_;
+  sensor_msgs::CameraInfo camera_info_;
   sensor_msgs::ImagePtr msg_;
 };
 
