@@ -39,6 +39,9 @@ The following items need love:
 - octomap
 - LEDs
 
+To get things faster:
+- check how DCM access is done with B-Human: https://github.com/bhuman/BHumanCodeRelease/blob/master/Src/libbhuman/bhuman.cpp#L768
+
 
 Getting Started
 ---------------
