@@ -24,7 +24,6 @@
  */
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <tf/transform_listener.h>
 
 /**
  * Aldebaran includes
@@ -32,6 +31,11 @@
 #include <qi/anyobject.hpp>
 
 #include "subscriber_base.hpp"
+namespace tf2_ros
+{
+  class Buffer;
+  class TransformListener;
+}
 namespace alros
 {
 namespace subscriber
@@ -49,8 +53,8 @@ public:
 private:
   qi::AnyObject p_motion_;
   ros::Subscriber sub_moveto_;
-  boost::shared_ptr<tf::TransformListener> tf_listenerPtr_;
-
+  boost::shared_ptr<tf2_ros::Buffer> buffer_;
+  boost::shared_ptr<tf2_ros::TransformListener> tf_listenerPtr_;
 }; // class Teleop
 
 } // subscriber

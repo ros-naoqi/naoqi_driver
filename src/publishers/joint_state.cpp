@@ -19,7 +19,6 @@
 
 #include <kdl_parser/kdl_parser.hpp>
 #include <kdl/tree.hpp>
-#include <tf/transform_datatypes.h>
 #include <robot_state_publisher/robot_state_publisher.h>
 
 #include "joint_state.hpp"

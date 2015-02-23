@@ -14,10 +14,14 @@
  * limitations under the License.
  *
 */
-#include <math.h>
-#include <tf/transform_listener.h>
 
 #include "moveto.hpp"
+
+#include <math.h>
+
+#include <geometry_msgs/TransformStamped.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 
 namespace alros
 {
@@ -32,7 +36,8 @@ MovetoSubscriber::MovetoSubscriber( const std::string& name, const std::string& 
 void MovetoSubscriber::reset( ros::NodeHandle& nh )
 {
   sub_moveto_ = nh.subscribe( topic_, 10, &MovetoSubscriber::callback, this );
-  tf_listenerPtr_.reset( new tf::TransformListener(nh) );
+  buffer_.reset( new tf2_ros::Buffer() );
+  tf_listenerPtr_.reset( new tf2_ros::TransformListener(*buffer_) );
   is_initialized_ = true;
 }
 
@@ -45,21 +50,21 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
   }
   else{
     geometry_msgs::PoseStamped pose_msg_bf;
-    tf::StampedTransform tf_trans;
+    //geometry_msgs::TransformStamped tf_trans;
     //tf_listenerPtr_->waitForTransform( "/base_footprint", "/odom", ros::Time(0), ros::Duration(5) );
     try
     {
       //tf_listenerPtr_->lookupTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), tf_trans);
       //std::cout << "got a transform " << tf_trans.getOrigin().x() << std::endl;
-      tf_listenerPtr_->transformPose( "/base_footprint", *pose_msg, pose_msg_bf);
+      buffer_->transform( *pose_msg, pose_msg_bf, "/base_footprint" );
     std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << std::endl;
       p_motion_.call<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, 0.0f );
-    } catch( const tf::LookupException& e)
+    } catch( const tf2::LookupException& e)
     {
       std::cout << e.what() << std::endl;
       std::cout << "moveto position in frame_id " << pose_msg->header.frame_id << "is not supported in any other base frame than basefootprint" << std::endl;
     }
-    catch( const tf::ExtrapolationException& e)
+    catch( const tf2::ExtrapolationException& e)
     {
       std::cout << "received an error on the time lookup" << std::endl;
     }
