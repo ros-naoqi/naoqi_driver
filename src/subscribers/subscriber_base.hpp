@@ -79,7 +79,7 @@ public:
       robot_ = NAO;
       return robot_;
     }
-    if (std::string(robot) == "pepper")
+    if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
     {
       robot_ = PEPPER;
       return robot_;
