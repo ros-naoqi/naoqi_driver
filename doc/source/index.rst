@@ -49,6 +49,28 @@ To get things faster:
 Getting Started
 ---------------
 
+Compiling
++++++++++
+
+Those instructions are internal to Aldebaran for now.
+
+To compile the module, you first need to get ROS in your toolchain. Get the toolchain file from https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master .
+
+Then execute the proper instruction to add it to your toolchain, e.g.:
+
+.. code-block:: sh
+
+  $ qitoolchain add-package -c atom toolchain_install_atom.zip
+
+Get the code from gitlab:
+
+.. code-block:: sh
+
+  $ git clone git@gitlab.aldebaran.lan:kknese/alrosconverter.git
+  $ qisrc add ./alrosconverter
+  $ qibuild configure -c atom alrosconverter
+  $ qibuild make -c atom alrosconverter
+
 Starting ROS on your machine
 ++++++++++++++++++++++++++++
 
@@ -185,27 +207,6 @@ ROS
 +++
 For any ROS question, please refer to the official doc at http://wiki.ros.org .
 
-Compiling
-+++++++++
-
-Those instructions are internal to Aldebaran for now.
-
-To compile the module, you first need to get ROS in your toolchain. Get the toolchain file from https://gitlab.aldebaran.lan/kknese/ros-toolchain/tree/master .
-
-Then execute the proper instruction to add it to your toolchain, e.g.:
-
-.. code-block:: sh
-
-  $ qitoolchain add-package -c atom toolchain_install_atom.zip
-
-Get the code from gitlab:
-
-.. code-block:: sh
-
-  $ git clone git@gitlab.aldebaran.lan:kknese/alrosconverter.git
-  $ qisrc add ./alrosconverter
-  $ qibuild configure -c atom alrosconverter
-  $ qibuild make -c atom alrosconverter
 
 Android Teleop
 ++++++++++++++
