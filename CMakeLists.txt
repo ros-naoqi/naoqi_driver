@@ -59,6 +59,8 @@ target_link_libraries(
   alros
 )
 
+# install the urdf for runtime loading
+qi_install_data( share/)
 
 add_subdirectory( benchmark )
 add_subdirectory( test )

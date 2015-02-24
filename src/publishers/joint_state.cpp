@@ -16,11 +16,14 @@
 */
 
 #include <iostream>
+#include <fstream>
+#include <stdio.h>
 
 #include <kdl_parser/kdl_parser.hpp>
 #include <kdl/tree.hpp>
 #include <robot_state_publisher/robot_state_publisher.h>
 
+#include "boost/filesystem.hpp"
 #include "joint_state.hpp"
 
 namespace alros
@@ -104,20 +107,61 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
   pub_joint_states_ = nh.advertise<sensor_msgs::JointState>( topic_, 10 );
   pub_odom_ = nh.advertise<nav_msgs::Odometry>( "/odom", 10 );
 
+  std::string robot_desc;
   // load urdf from param server (alternatively from file)
   if ( nh.hasParam("/robot_description") )
   {
-    KDL::Tree tree;
-    std::string robot_desc;
     nh.getParam("/robot_description", robot_desc);
-    kdl_parser::treeFromString( robot_desc, tree );
-    rspPtr_.reset( new robot_state_publisher::RobotStatePublisher(tree) );
+    std::cout << "load robot description from param server" << std::endl;
   }
+  // load urdf from file
   else{
-    std::cerr << "failed to load robot description in joint_state_publisher" << std::endl;
+
+    // FIX THAT LATER: didn't find a better way to get a relative share folder
+    char current_path[FILENAME_MAX];
+    readlink("/proc/self/exe", current_path, sizeof(current_path));
+    boost::filesystem::path root_path = boost::filesystem::complete( current_path ).parent_path().parent_path();
+    const std::string& share_folder = root_path.string()+"/share/";
+    std::cout << "share folder found in " << share_folder << std::endl;
+
+    std::string path;
+    if ( robot() == PEPPER)
+    {
+      path = "urdf/pepper_robot.urdf";
+    }
+    else if ( robot() == NAO )
+    {
+      path = "urdf/nao_robot.urdf";
+    }
+    else
+    {
+      is_initialized_ = false;
+      return;
+    }
+
+    std::ifstream stream( (share_folder+path).c_str() );
+    if (!stream)
+    {
+      std::cerr << "failed to load robot description in joint_state_publisher: " << path << std::endl;
+      is_initialized_ = false;
+      return;
+    }
+    robot_desc = std::string( (std::istreambuf_iterator<char>(stream)),
+        std::istreambuf_iterator<char>());
+    // upload to param server
+    nh.setParam("/robot_description", robot_desc);
+    std::cout << "load robot description from file" << std::endl;
+  }
+
+  if ( robot_desc.empty() )
+  {
     is_initialized_ = false;
+    std::cout << "error in loading robot description" << std::endl;
     return;
   }
+  KDL::Tree tree;
+  kdl_parser::treeFromString( robot_desc, tree );
+  rspPtr_.reset( new robot_state_publisher::RobotStatePublisher(tree) );
 
   // pre-fill joint states message
   msg_joint_states_.name = p_motion_.call<std::vector<std::string> >("getBodyNames", "Body" );
