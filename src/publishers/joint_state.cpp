@@ -120,7 +120,9 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
     // FIX THAT LATER: didn't find a better way to get a relative share folder
     char current_path[FILENAME_MAX];
     readlink("/proc/self/exe", current_path, sizeof(current_path));
-    boost::filesystem::path root_path = boost::filesystem::complete( current_path ).parent_path().parent_path();
+    boost::filesystem::path root_path = boost::filesystem::complete( current_path );
+    std::cout << "executable path found in " << root_path.string() << std::endl;
+    root_path = root_path.parent_path().parent_path();
     const std::string& share_folder = root_path.string()+"/share/";
     std::cout << "share folder found in " << share_folder << std::endl;
 
