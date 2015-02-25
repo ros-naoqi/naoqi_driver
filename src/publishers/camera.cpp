@@ -179,7 +179,7 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
                           camera_source_,
                           resolution_,
                           colorspace_,
-                          20
+                          frequency_
                           );
 
   image_transport::ImageTransport it( nh );
