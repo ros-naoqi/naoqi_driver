@@ -130,9 +130,6 @@ LaserPublisher::LaserPublisher( const std::string& name, const std::string& topi
   BasePublisher( name, topic, frequency, session ),
   p_memory_(session->service("ALMemory"))
 {
-  std::cout << " initialized a laser publisher with first memorykey " << laserMemoryKeys[0] << std::endl;
-  std::cout << " initialized a laser publisher with last memorykey " << laserMemoryKeys[89] << std::endl;
-  std::cout << " size of ocnst char array " << sizeof(laserMemoryKeys);
 }
 
 void LaserPublisher::publish()
