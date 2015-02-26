@@ -27,7 +27,10 @@
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
 
+#include <XmlRpcValue.h>
+#include <ros/master.h>
 #include <ros/serialization.h>
+#include <ros/this_node.h>
 
 namespace alros
 {
@@ -184,6 +187,31 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
 
   image_transport::ImageTransport it( nh );
   pub_ = it.advertiseCamera( topic_, 1 );
+
+  // Unregister compressedDepth topics for non depth cameras
+  if (camera_source_!=AL::kDepthCamera)
+  {
+    // Get our URI as a caller
+    std::string node_name = ros::this_node::getName();
+    XmlRpc::XmlRpcValue args, result, payload;
+    args[0] = node_name;
+    args[1] = node_name;
+    ros::master::execute("lookupNode", args, result, payload, false);
+    args[2] = result[2];
+
+    // List the topics to remove
+    std::vector<std::string> topic_list;
+    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth"));
+    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth/parameter_updates"));
+    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth/parameter_descriptions"));
+
+    // Remove undesirable topics
+    for(std::vector<std::string>::const_iterator topic = topic_list.begin(); topic != topic_list.end(); ++topic)
+    {
+      args[1] = *topic;
+      ros::master::execute("unregisterPublisher", args, result, payload, false);
+    }
+  }
 
   is_initialized_ = true;
 }
