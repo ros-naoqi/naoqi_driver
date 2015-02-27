@@ -38,12 +38,17 @@ void MovetoSubscriber::reset( ros::NodeHandle& nh )
 {
   sub_moveto_ = nh.subscribe( topic_, 10, &MovetoSubscriber::callback, this );
   buffer_.reset( new tf2_ros::Buffer() );
-  tf_listenerPtr_.reset( new tf2_ros::TransformListener(*buffer_) );
+  tf_listenerPtr_.reset();
   is_initialized_ = true;
 }
 
 void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_msg )
 {
+  if ( !tf_listenerPtr_ )
+  {
+    tf_listenerPtr_.reset( new tf2_ros::TransformListener(*buffer_) );
+  }
+
   if ( pose_msg->header.frame_id == "base_footprint" )
   {
     std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << std::endl;
