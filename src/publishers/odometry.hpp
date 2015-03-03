@@ -15,15 +15,15 @@
  *
 */
 
-#ifndef JOINT_STATES_PUBLISHER_HPP
-#define JOINT_STATES_PUBLISHER_HPP
+#ifndef ODOMETRY_PUBLISHER_HPP
+#define ODOMETRY_PUBLISHER_HPP
 
 /**
 * ROS includes
 */
 #include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <robot_state_publisher/robot_state_publisher.h>
+#include <nav_msgs/Odometry.h>
+#include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/Transform.h>
 /**
 * ALDEBARAN includes
@@ -40,11 +40,11 @@ namespace publisher
 {
 
 
-class JointStatePublisher : public BasePublisher<JointStatePublisher>
+class OdometryPublisher : public BasePublisher<OdometryPublisher>
 {
 
 public:
-  JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  OdometryPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
 
   void publish();
 
@@ -56,10 +56,12 @@ private:
   qi::AnyObject p_motion_;
 
   /** initialize separate publishers for js and odom */
-  ros::Publisher pub_joint_states_;
+  ros::Publisher pub_odom_;
+  /* initialize the broadcaster for publishing the odom frame */
+  tf2_ros::TransformBroadcaster tf_br_;
 
-  sensor_msgs::JointState msg_joint_states_;
-  boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
+  nav_msgs::Odometry msg_nav_odom_;
+  geometry_msgs::TransformStamped msg_tf_odom_;
 }; // class
 
 } //publisher

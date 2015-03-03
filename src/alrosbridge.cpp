@@ -41,6 +41,7 @@
 #include "publishers/int.hpp"
 #include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
+#include "publishers/odometry.hpp"
 #include "publishers/laser.hpp"
 #include "publishers/log.hpp"
 #include "publishers/sonar.hpp"
@@ -148,6 +149,7 @@ void Bridge::registerDefaultPublisher()
 
   publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_);
   registerPublisher( joint_states );
+  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_) );
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
