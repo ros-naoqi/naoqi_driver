@@ -23,6 +23,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
+#include <tf/transform_datatypes.h>
 
 namespace alros
 {
@@ -51,20 +52,28 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
 
   if ( pose_msg->header.frame_id == "base_footprint" )
   {
-    std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << std::endl;
-    p_motion_.call<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, 0.0f);
+    double yaw = tf::getYaw(pose_msg->pose.orientation);
+
+    std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << " yaw: " << yaw << std::endl;
+    p_motion_.call<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, yaw);
   }
   else{
     geometry_msgs::PoseStamped pose_msg_bf;
     //geometry_msgs::TransformStamped tf_trans;
-    //tf_listenerPtr_->waitForTransform( "/base_footprint", "/odom", ros::Time(0), ros::Duration(5) );
+    //tf_listenerPtr_->waitForTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(5) );
+    bool canTransform = buffer_->canTransform("base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(2) );
+    if (!canTransform) {
+      std::cout << "Cannot transform from " << pose_msg->header.frame_id << " to base_footprint" << std::endl;
+      return;
+    }
     try
     {
       //tf_listenerPtr_->lookupTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), tf_trans);
       //std::cout << "got a transform " << tf_trans.getOrigin().x() << std::endl;
-      buffer_->transform( *pose_msg, pose_msg_bf, "/base_footprint" );
-    std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << std::endl;
-      p_motion_.call<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, 0.0f );
+      buffer_->transform( *pose_msg, pose_msg_bf, "base_footprint", ros::Time(0), pose_msg->header.frame_id );
+      double yaw = tf::getYaw(pose_msg_bf.pose.orientation);
+      std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
+      p_motion_.call<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, yaw );
     } catch( const tf2::LookupException& e)
     {
       std::cout << e.what() << std::endl;
