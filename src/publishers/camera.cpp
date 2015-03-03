@@ -119,7 +119,7 @@ CameraPublisher::CameraPublisher( const std::string& name, const std::string& to
     resolution_(resolution),
     // change in case of depth camera
     colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kBGRColorSpace:AL::kDepthColorSpace ),
-    msg_colorspace_( (camera_source_!=AL::kDepthCamera)?"bgr8":"mono16" ),
+    msg_colorspace_( (camera_source_!=AL::kDepthCamera)?"bgr8":"16UC1" ),
     cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
     camera_info_( camera_info_definitions::getCameraInfo(camera_source, resolution) )
 {
