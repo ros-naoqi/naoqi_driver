@@ -48,7 +48,7 @@ void OdometryPublisher::publish()
   /**
    * ODOMETRY FRAME
    */
-  msg_tf_odom_.header.stamp = stamp+ros::Duration(0.5);
+  msg_tf_odom_.header.stamp = stamp;
 
   msg_tf_odom_.transform.translation.x = odomX;
   msg_tf_odom_.transform.translation.y = odomY;
