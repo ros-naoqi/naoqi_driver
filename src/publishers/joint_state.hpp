@@ -46,11 +46,14 @@ class JointStatePublisher : public BasePublisher<JointStatePublisher>
 public:
   JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
 
-  void publish();
+  virtual void publish();
 
-  void reset( ros::NodeHandle& nh );
+  virtual void reset( ros::NodeHandle& nh );
 
-  bool isSubscribed() const;
+  virtual bool isSubscribed() const;
+
+protected:
+  sensor_msgs::JointState msg_joint_states_;
 
 private:
   qi::AnyObject p_motion_;
@@ -58,7 +61,6 @@ private:
   /** initialize separate publishers for js and odom */
   ros::Publisher pub_joint_states_;
 
-  sensor_msgs::JointState msg_joint_states_;
   boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
 }; // class
 

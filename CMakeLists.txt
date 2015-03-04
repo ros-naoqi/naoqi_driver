@@ -23,6 +23,7 @@ set(
   src/publishers/log.cpp
   src/publishers/string.cpp
   src/publishers/joint_state.cpp
+  src/publishers/nao_joint_state.cpp
   src/publishers/odometry.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp

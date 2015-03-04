@@ -41,6 +41,7 @@
 #include "publishers/int.hpp"
 #include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
+#include "publishers/nao_joint_state.hpp"
 #include "publishers/odometry.hpp"
 #include "publishers/laser.hpp"
 #include "publishers/log.hpp"
@@ -148,7 +149,6 @@ void Bridge::registerDefaultPublisher()
     return;
 
   publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_);
-  registerPublisher( joint_states );
   registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_) );
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
@@ -159,8 +159,14 @@ void Bridge::registerDefaultPublisher()
   // Pepper specific publishers
   if (joint_states.robot() == alros::PEPPER)
   {
+    registerPublisher( joint_states );
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
     registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
+  }
+
+  if (joint_states.robot() == alros::NAO)
+  {
+    registerPublisher( alros::publisher::NaoJointStatePublisher( "nao_joint_states", "/joint_states", 15, sessionPtr_) );
   }
 }
 
