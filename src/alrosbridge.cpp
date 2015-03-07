@@ -143,24 +143,24 @@ void Bridge::registerDefaultPublisher()
   if (!publishers_.empty())
     return;
 
-  publisher::Publisher joint_states = alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_);
+  // Info should be at 0 (latched) but somehow that does not work ...
+  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
+  registerPublisher( info );
   registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_) );
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
-  // Info should be at 0 (latched) but somehow that does not work ...
-  registerPublisher( alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_) );
   registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
 
   // Pepper specific publishers
-  if (joint_states.robot() == alros::PEPPER)
+  if (info.robot() == alros::PEPPER)
   {
-    registerPublisher( joint_states );
+    registerPublisher( alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_) );
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
     registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   }
 
-  if (joint_states.robot() == alros::NAO)
+  if (info.robot() == alros::NAO)
   {
     registerPublisher( alros::publisher::NaoJointStatePublisher( "nao_joint_states", "/joint_states", 15, sessionPtr_) );
   }
