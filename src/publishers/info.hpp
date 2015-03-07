@@ -46,9 +46,6 @@ public:
 private:
   ros::Publisher pub_;
 
-  /** as we only publish once, we need to keep track of that */
-  bool has_published_;
-
   /** Memory (Proxy) configurations */
   qi::AnyObject p_memory_;
 
