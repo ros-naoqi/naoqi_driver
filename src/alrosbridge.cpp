@@ -106,9 +106,10 @@ void Bridge::rosLoop()
           pub.publish();
         }
 
-        // Schedule for a future time
+        // Schedule for a future time or not
         pub_queue_.pop();
-        pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
+        if ( pub.frequency() != 0 )
+          pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
       } else
         // sleep one second
         ros::Duration(1).sleep();
@@ -122,12 +123,10 @@ void Bridge::registerPublisher( publisher::Publisher pub )
 {
   std::vector<publisher::Publisher>::iterator it;
   it = std::find( publishers_.begin(), publishers_.end(), pub );
-  size_t pub_index = 0;
 
   // if publisher is not found, register it!
   if (it == publishers_.end() )
   {
-    pub_index = publishers_.size();
     publishers_.push_back( pub );
     it = publishers_.end() - 1;
     std::cout << "registered publisher:\t" << pub.name() << std::endl;
@@ -135,12 +134,8 @@ void Bridge::registerPublisher( publisher::Publisher pub )
   // if found, re-init them
   else
   {
-    pub_index = it - publishers_.begin();
     std::cout << "re-initialized existing publisher:\t" << it->name() << std::endl;
   }
-
-  // Schedule it for the next publish
-  pub_queue_.push(ScheduledPublish(ros::Time::now() + ros::Duration(1.0f / pub.frequency()), pub_index));
 }
 
 void Bridge::registerDefaultPublisher()
@@ -153,7 +148,8 @@ void Bridge::registerDefaultPublisher()
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
-  registerPublisher( alros::publisher::InfoPublisher("info", "info", 0.001, sessionPtr_) );
+  // Info should be at 0 (latched) but somehow that does not work ...
+  registerPublisher( alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_) );
   registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
 
   // Pepper specific publishers
@@ -201,9 +197,15 @@ void Bridge::registerDefaultSubscriber()
 
 void Bridge::init()
 {
+  pub_queue_ =  std::priority_queue<ScheduledPublish>();
+  size_t pub_index = 0;
   foreach( publisher::Publisher& pub, publishers_ )
   {
     pub.reset( *nhPtr_ );
+
+    // Schedule it for the next publish
+    pub_queue_.push(ScheduledPublish(ros::Time::now(), pub_index));
+    ++pub_index;
   }
   foreach( subscriber::Subscriber& sub, subscribers_ )
   {
