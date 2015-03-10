@@ -28,9 +28,6 @@
 #include <rosbag/view.h>
 #include <ros/ros.h>
 
-//#include <alrosbridge/tools.hpp>
-//#include <alrosbridge/publisher/publisher.hpp>
-
 namespace alros
 {
 

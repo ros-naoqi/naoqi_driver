@@ -17,8 +17,8 @@
 
 #include <alrosbridge/recorder/recorder.hpp>
 #include <std_msgs/Int32.h>
-
 #include <qi/log.hpp>
+#include <ctime>
 
 qiLogCategory("ros.Recorder");
 
@@ -28,7 +28,7 @@ namespace alros
   Recorder::Recorder():
     _bag()
   , _processMutex()
-  , _nameBag("out.bag")
+  , _nameBag("")
   , _isRecording(false)
   {
 
@@ -38,6 +38,19 @@ namespace alros
     boost::mutex::scoped_lock startLock( _processMutex );
     if (!_isRecording) {
       try {
+        time_t rawtime;
+        struct tm * timeinfo;
+        char buffer[80];
+
+        std::time(&rawtime);
+        timeinfo = std::localtime(&rawtime);
+
+        std::strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+        _nameBag = buffer;
+        //std::string str(buffer);
+        //std::string nameBag(_nameBag);
+
+        _nameBag.append(".bag");
         _bag.open(_nameBag, rosbag::bagmode::Write);
         _isRecording = true;
         std::cout << "The bag " << _nameBag << " is opened !" << std::endl;
@@ -73,6 +86,7 @@ namespace alros
       _bag.close();
       _isRecording = false;
       std::cout << "The bag " << _nameBag << " is closed !" << std::endl;
+      _nameBag.clear();
     }
     else {
       qiLogError() << "Cannot stop recording while it has not been started.";
