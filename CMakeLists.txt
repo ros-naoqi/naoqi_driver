@@ -40,6 +40,7 @@ qi_create_lib(
   alrosbridge
   SHARED
   src/alrosbridge.cpp
+  src/recorder/recorder.cpp
   ${PUBLISHER}
   ${SUBSCRIBER}
 )
