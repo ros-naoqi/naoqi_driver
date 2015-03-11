@@ -143,7 +143,7 @@ private:
   */
   struct PublisherConcept
   {
-    virtual ~PublisherConcept(){};
+    virtual ~PublisherConcept(){}
     //virtual void publish() = 0;
     virtual bool isInitialized() const = 0;
     virtual bool isSubscribed() const = 0;

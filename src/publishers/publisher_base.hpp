@@ -43,7 +43,7 @@ public:
     is_initialized_( false )
   {}
 
-  virtual ~BasePublisher() {};
+  virtual ~BasePublisher() {}
 
   inline std::string topic() const
   {
