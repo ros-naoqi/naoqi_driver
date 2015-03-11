@@ -49,7 +49,7 @@ qi_stage_lib( alrosbridge )
 
 
 qi_use_lib(alros QI ROS)
-qi_use_lib(alrosbridge QICORE QI ALCOMMON ALVISION ROS)
+qi_use_lib(alrosbridge QICORE QI ALCOMMON ALVISION ROS CONSOLE_BRIDGE)
 
 target_link_libraries(
   alros
