@@ -102,7 +102,7 @@ void Bridge::rosLoop()
   {
    {
       boost::mutex::scoped_lock lock( mutex_reinit_ );
-      if (publish_enabled_)
+      if (publish_enabled_ && !pub_queue_.empty())
       {
         // Wait for the next Publisher to be ready
         size_t pub_index = pub_queue_.top().pub_index_;
