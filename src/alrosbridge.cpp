@@ -88,8 +88,11 @@ Bridge::~Bridge()
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
   // destroy nodehandle?
-  nhPtr_->shutdown();
-  ros::shutdown();
+  if(nhPtr_)
+  {
+    nhPtr_->shutdown();
+    ros::shutdown();
+  }
 }
 
 
