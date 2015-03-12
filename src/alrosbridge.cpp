@@ -304,6 +304,13 @@ void Bridge::startRecord()
   record_enabled_ = true;
 }
 
+void Bridge::startRecordTopics(const std::vector<Topics>& topics)
+{
+  _recorder->startRecord();
+  record_enabled_ = true;
+  // enabled only topics given
+}
+
 void Bridge::stopRecord()
 {
   _recorder->stopRecord();
@@ -311,5 +318,5 @@ void Bridge::stopRecord()
 }
 
 QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet,
-                    startRecord, stopRecord );
+                    startRecord, startRecordTopics, stopRecord );
 } //alros

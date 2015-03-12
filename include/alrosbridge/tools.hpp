@@ -19,6 +19,8 @@
 #ifndef ALROS_TOOLS_HPP
 #define ALROS_TOOLS_HPP
 
+# include <qi/anyobject.hpp>
+
 namespace alros
 {
 enum Robot
@@ -34,5 +36,7 @@ enum Topics {
   Sonar
 };
 } // alros
+
+QI_TYPE_ENUM_REGISTER(alros::Topics);
 
 #endif
