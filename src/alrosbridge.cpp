@@ -88,8 +88,11 @@ Bridge::~Bridge()
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
   // destroy nodehandle?
-  nhPtr_->shutdown();
-  ros::shutdown();
+  if(nhPtr_)
+  {
+    nhPtr_->shutdown();
+    ros::shutdown();
+  }
 }
 
 
@@ -99,7 +102,7 @@ void Bridge::rosLoop()
   {
    {
       boost::mutex::scoped_lock lock( mutex_reinit_ );
-      if (publish_enabled_)
+      if (publish_enabled_ && !pub_queue_.empty())
       {
         // Wait for the next Publisher to be ready
         size_t pub_index = pub_queue_.top().pub_index_;
@@ -249,13 +252,13 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   stop();
 
   // Reinitializing ROS
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
-  nhPtr_.reset();
-  std::cout << "nodehandle reset " << std::endl;
-  ros_env::setMasterURI( uri, network_interface );
-  nhPtr_.reset( new ros::NodeHandle("~") );
-  lock.unlock();
-
+  {
+    boost::mutex::scoped_lock lock( mutex_reinit_ );
+    nhPtr_.reset();
+    std::cout << "nodehandle reset " << std::endl;
+    ros_env::setMasterURI( uri, network_interface );
+    nhPtr_.reset( new ros::NodeHandle("~") );
+  }
   // Create the publishing thread if needed
   if (publisherThread_.get_id() ==  boost::thread::id())
     publisherThread_ = boost::thread( &Bridge::rosLoop, this );
