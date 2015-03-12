@@ -133,6 +133,7 @@ private:
   bool publish_cancelled_;
   const size_t freq_;
   boost::thread publisherThread_;
+  bool record_enabled_;
   //ros::Rate r_;
 
   boost::shared_ptr<Recorder> _recorder;

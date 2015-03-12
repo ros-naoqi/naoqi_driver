@@ -119,7 +119,7 @@ void Bridge::rosLoop()
         if ( pub.isSubscribed() && pub.isInitialized())
         {
           pub.publish();
-          if (_recorder->isRecording()) {
+          if (_recorder->isStarted()) {
             std_msgs::Int32 i;
             i.data = 32;
             geometry_msgs::PointStamped ps;
@@ -301,11 +301,13 @@ void Bridge::stop()
 void Bridge::startRecord()
 {
   _recorder->startRecord();
+  record_enabled_ = true;
 }
 
 void Bridge::stopRecord()
 {
   _recorder->stopRecord();
+  record_enabled_ = false;
 }
 
 QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet,

@@ -28,14 +28,10 @@
 #include <rosbag/view.h>
 #include <ros/ros.h>
 
+#include <alrosbridge/tools.hpp>
+
 namespace alros
 {
-
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
 
 /**
 * @brief Recorder concept interface
@@ -60,11 +56,6 @@ public:
   void startRecord();
 
   /**
-  * @brief Initialize the recording of the ROSbag
-  */
-  void startRecordTopics(const std::vector<Topics>& topics);
-
-  /**
   * @brief Terminate the recording of the ROSbag
   */
   void stopRecord();
@@ -81,13 +72,13 @@ public:
   /**
   * @brief Check if the ROSbag is opened
   */
-  bool isRecording();
+  bool isStarted();
 
 private:
   boost::mutex _processMutex;
   rosbag::Bag _bag;
   std::string _nameBag;
-  bool _isRecording;
+  bool _isStarted;
 
   // TOPICS
   std::vector<Topics> _topics;
