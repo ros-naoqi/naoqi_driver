@@ -34,6 +34,11 @@
 
 #include "publisher_base.hpp"
 
+namespace tf2_ros
+{
+  class Buffer;
+}
+
 namespace alros
 {
 namespace publisher
@@ -44,7 +49,8 @@ class OdometryPublisher : public BasePublisher<OdometryPublisher>
 {
 
 public:
-  OdometryPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  OdometryPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session,
+    boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
 
   void publish();
 
@@ -62,6 +68,7 @@ private:
 
   nav_msgs::Odometry msg_nav_odom_;
   geometry_msgs::TransformStamped msg_tf_odom_;
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 }; // class
 
 } //publisher

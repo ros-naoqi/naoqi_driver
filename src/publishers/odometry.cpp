@@ -22,14 +22,18 @@
 #include "boost/filesystem.hpp"
 #include "odometry.hpp"
 
+#include <tf2_ros/buffer.h>
+
 namespace alros
 {
 namespace publisher
 {
 
-OdometryPublisher::OdometryPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
+OdometryPublisher::OdometryPublisher( const std::string& name, const std::string& topic, float frequency,
+                                      qi::SessionPtr& session, boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
   BasePublisher( name, topic, frequency, session ),
-  p_motion_( session->service("ALMotion") )
+  p_motion_( session->service("ALMotion") ),
+  tf2_buffer_( tf2_buffer )
 {}
 
 void OdometryPublisher::publish()
@@ -56,6 +60,7 @@ void OdometryPublisher::publish()
   msg_tf_odom_.transform.rotation = odom_quat;
 
   tf_br_.sendTransform( msg_tf_odom_ );
+  tf2_buffer_->setTransform( msg_tf_odom_, "alrosconverter", false);
 
   /**
    * ODOMETRY MESSAGE

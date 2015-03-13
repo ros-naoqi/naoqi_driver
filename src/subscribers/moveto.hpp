@@ -34,7 +34,6 @@
 namespace tf2_ros
 {
   class Buffer;
-  class TransformListener;
 }
 namespace alros
 {
@@ -44,7 +43,7 @@ namespace subscriber
 class MovetoSubscriber: public BaseSubscriber<MovetoSubscriber>
 {
 public:
-  MovetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session );
+  MovetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session, boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
   ~MovetoSubscriber(){}
 
   void reset( ros::NodeHandle& nh );
@@ -53,8 +52,7 @@ public:
 private:
   qi::AnyObject p_motion_;
   ros::Subscriber sub_moveto_;
-  boost::shared_ptr<tf2_ros::Buffer> buffer_;
-  boost::shared_ptr<tf2_ros::TransformListener> tf_listenerPtr_;
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 }; // class Teleop
 
 } // subscriber

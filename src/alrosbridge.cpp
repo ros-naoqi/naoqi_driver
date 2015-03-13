@@ -65,6 +65,11 @@
 #include "ros_env.hpp"
 #include "helpers.hpp"
 
+/*
+ * ROS
+ */
+#include <tf2_ros/buffer.h>
+
 namespace alros
 {
 
@@ -165,7 +170,22 @@ void Bridge::registerDefaultPublisher()
   // Info should be at 0 (latched) but somehow that does not work ...
   publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
   registerPublisher( info );
-  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_) );
+
+  // Define the tf2 buffer
+  if (info.robot() == alros::PEPPER)
+  {
+    alros::publisher::JointStatePublisher publisher("joint_states", "/joint_states", 15, sessionPtr_);
+    tf2_buffer_ = publisher.getTF2Buffer();
+    registerPublisher( publisher );
+  }
+  if (info.robot() == alros::NAO)
+  {
+    alros::publisher::NaoJointStatePublisher publisher( "nao_joint_states", "/joint_states", 15, sessionPtr_);
+    tf2_buffer_ = publisher.getTF2Buffer();
+    registerPublisher( publisher );
+  }
+
+  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
   registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
@@ -174,14 +194,8 @@ void Bridge::registerDefaultPublisher()
   // Pepper specific publishers
   if (info.robot() == alros::PEPPER)
   {
-    registerPublisher( alros::publisher::JointStatePublisher("joint_states", "/joint_states", 15, sessionPtr_) );
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
     registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
-  }
-
-  if (info.robot() == alros::NAO)
-  {
-    registerPublisher( alros::publisher::NaoJointStatePublisher( "nao_joint_states", "/joint_states", 15, sessionPtr_) );
   }
 }
 
@@ -211,7 +225,7 @@ void Bridge::registerDefaultSubscriber()
   if (!subscribers_.empty())
     return;
   registerSubscriber( alros::subscriber::TeleopSubscriber("teleop", "/cmd_vel", sessionPtr_) );
-  registerSubscriber( alros::subscriber::MovetoSubscriber("moveto", "/move_base_simple/goal", sessionPtr_) );
+  registerSubscriber( alros::subscriber::MovetoSubscriber("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
 void Bridge::init()

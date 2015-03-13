@@ -41,6 +41,11 @@
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
 
+namespace tf2_ros
+{
+  class Buffer;
+}
+
 namespace alros
 {
 
@@ -163,6 +168,11 @@ private:
 
   /** Priority queue to process the publishers according to their frequency */
   std::priority_queue<ScheduledPublish> pub_queue_;
+
+  /** tf2 buffer that will be shared between different publishers/subscribers
+   * This is only for performance improvements
+   */
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 };
 
 } // alros

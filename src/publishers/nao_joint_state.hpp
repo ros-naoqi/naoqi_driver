@@ -20,7 +20,6 @@
 
 #include "joint_state.hpp"
 #include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 
 namespace alros
@@ -39,9 +38,8 @@ public:
   virtual void reset( ros::NodeHandle& nh );
 
 private:
-  boost::shared_ptr<tf2_ros::Buffer> tf_bufferPtr_;
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
   boost::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcasterPtr_;
-  boost::shared_ptr<tf2_ros::TransformListener> tf_listenerPtr_;
 }; // class
 
 } //publisher
