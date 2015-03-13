@@ -49,7 +49,7 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
     double yaw = tf::getYaw(pose_msg->pose.orientation);
 
     std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << " yaw: " << yaw << std::endl;
-    p_motion_.call<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, yaw);
+    p_motion_.async<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, yaw);
   }
   else{
     geometry_msgs::PoseStamped pose_msg_bf;
@@ -67,7 +67,7 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
       tf2_buffer_->transform( *pose_msg, pose_msg_bf, "base_footprint", ros::Time(0), pose_msg->header.frame_id );
       double yaw = tf::getYaw(pose_msg_bf.pose.orientation);
       std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
-      p_motion_.call<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, yaw );
+      p_motion_.async<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, yaw );
     } catch( const tf2::LookupException& e)
     {
       std::cout << e.what() << std::endl;
