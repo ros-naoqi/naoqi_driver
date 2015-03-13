@@ -21,10 +21,13 @@
 /**
 * ROS includes
 */
+#include <geometry_msgs/Transform.h>
+#include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include <robot_state_publisher/robot_state_publisher.h>
-#include <geometry_msgs/Transform.h>
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_broadcaster.h>
+
 /**
 * ALDEBARAN includes
 */
@@ -52,16 +55,29 @@ public:
 
   virtual bool isSubscribed() const;
 
+  boost::shared_ptr<tf2_ros::Buffer> getTF2Buffer();
+
 protected:
   sensor_msgs::JointState msg_joint_states_;
 
+  /** blatently copied from robot state publisher */
+  void addChildren(const KDL::SegmentMap::const_iterator segment);
+  std::map<std::string, robot_state_publisher::SegmentPair> segments_, segments_fixed_;
+
 private:
+
+  void setTransforms(const std::map<std::string, double>& joint_positions, const ros::Time& time, const std::string& tf_prefix);
+  void setFixedTransforms(const std::string& tf_prefix, const ros::Time& time);
+
   qi::AnyObject p_motion_;
+
+  tf2_ros::TransformBroadcaster tf_broadcaster_;
 
   /** initialize separate publishers for js and odom */
   ros::Publisher pub_joint_states_;
 
-  boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
+  /** tf2 buffer that is filled with transform data if other persons own it */
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 }; // class
 
 } //publisher

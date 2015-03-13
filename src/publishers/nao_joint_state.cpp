@@ -25,7 +25,8 @@ namespace publisher
 {
 
 NaoJointStatePublisher::NaoJointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
-  JointStatePublisher( name, topic, frequency, session )
+  JointStatePublisher( name, topic, frequency, session ),
+  tf2_buffer_(getTF2Buffer())
 {}
 
 void NaoJointStatePublisher::publish()
@@ -33,15 +34,17 @@ void NaoJointStatePublisher::publish()
   JointStatePublisher::publish();
 
   // use msg_joint_states_.header.stamp for getting time stamp
-  ros::Time time = msg_joint_states_.header.stamp - ros::Duration(0.5);
+  // The 0.1 is totally arbitrary: it's due to the fact that odom and the rest of tf are published at
+  // different timestamps
+  ros::Time time = msg_joint_states_.header.stamp - ros::Duration(0.1);
   geometry_msgs::TransformStamped tf_odom_to_base, tf_odom_to_left_foot, tf_odom_to_right_foot;
 
-  bool canTransform = tf_bufferPtr_->canTransform("odom", "l_sole", time, ros::Duration(0.1) );
+  bool canTransform = tf2_buffer_->canTransform("odom", "l_sole", time, ros::Duration(0.1) );
   try {
     // TRANSFORM THEM DIRECTLY INTO TRANSFORM
-    tf_odom_to_left_foot  = tf_bufferPtr_->lookupTransform("odom", "l_sole",    time );
-    tf_odom_to_right_foot = tf_bufferPtr_->lookupTransform("odom", "r_sole",    time );
-    tf_odom_to_base       = tf_bufferPtr_->lookupTransform("odom", "base_link", time );
+    tf_odom_to_left_foot  = tf2_buffer_->lookupTransform("odom", "l_sole",    time );
+    tf_odom_to_right_foot = tf2_buffer_->lookupTransform("odom", "r_sole",    time );
+    tf_odom_to_base       = tf2_buffer_->lookupTransform("odom", "base_link", time );
   } catch (const tf::TransformException& ex){
     ROS_ERROR("%s",ex.what());
     return ;
@@ -73,7 +76,6 @@ void NaoJointStatePublisher::publish()
   tf2::Transform tf_odom_to_base_conv( q,r);
   tf2::Transform tf_base_to_footprint = tf_odom_to_base_conv.inverse() * tf_odom_to_footprint;
 
-
   // convert it back to geometry_msgs
   geometry_msgs::TransformStamped message;
   message.header.stamp = time;
@@ -91,6 +93,7 @@ void NaoJointStatePublisher::publish()
   //tf::transformTFToMsg( tf_base_to_footprint, message.transform);
   // publish transform with parent m_baseFrameId and new child m_baseFootPrintID
   // i.e. transform from m_baseFrameId to m_baseFootPrintID
+  tf2_buffer_->setTransform(message, "alrosconverter", false);
   tf_broadcasterPtr_->sendTransform( message );
 }
 
@@ -98,8 +101,6 @@ void NaoJointStatePublisher::reset( ros::NodeHandle& nh )
 {
   JointStatePublisher::reset(nh);
 
-  tf_bufferPtr_.reset( new tf2_ros::Buffer() );
-  tf_listenerPtr_.reset( new tf2_ros::TransformListener(*tf_bufferPtr_) );
   tf_broadcasterPtr_.reset( new tf2_ros::TransformBroadcaster() );
 }
 
