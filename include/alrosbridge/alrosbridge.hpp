@@ -37,6 +37,7 @@
 /*
 * PUBLIC INTERFACE
 */
+#include <alrosbridge/converter/converter.hpp>
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
@@ -69,6 +70,12 @@ public:
   * destroys all ros nodehandle and shutsdown all publisher
   */
   ~Bridge();
+
+  /**
+   * @brief registers generall converter units
+   * they are connected via callbacks to various actions such as record, log, publish
+   */
+  void registerConverter( converter::Converter conv );
 
   /**
   * @brief registers a publisher
@@ -110,12 +117,12 @@ public:
   /**
   * @brief qicli call function to start/enable publishing all registered publisher
   */
-  void start();
+  void startPublishing();
 
   /**
   * @brief qicli call function to stop/disable publishing all registered publisher
   */
-  void stop();
+  void stopPublishing();
 
   /**
   * @brief qicli call function to start recording all registered publisher in a ROSbag
@@ -131,12 +138,17 @@ private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
   bool publish_cancelled_;
+
+  bool record_enabled_;
+  bool record_cancelled_;
+
   const size_t freq_;
   boost::thread publisherThread_;
   //ros::Rate r_;
 
   boost::shared_ptr<Recorder> _recorder;
 
+  void registerDefaultConverter();
   void registerDefaultPublisher();
   void registerDefaultSubscriber();
   void init();
@@ -147,27 +159,27 @@ private:
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
 
-  std::vector< publisher::Publisher > publishers_;
-  std::vector< subscriber::Subscriber> subscribers_;
+  std::vector< converter::Converter > converters_;
+  std::vector< subscriber::Subscriber > subscribers_;
 
   /** Pub Publisher to execute at a specific time */
-  struct ScheduledPublish {
-    ScheduledPublish(const ros::Time& schedule, size_t pub_index) :
-       schedule_(schedule), pub_index_(pub_index)
+  struct ScheduledConverter {
+    ScheduledConverter(const ros::Time& schedule, size_t conv_index) :
+       schedule_(schedule), conv_index_(conv_index)
     {
     }
 
-    bool operator < (const ScheduledPublish& sp_in) const {
+    bool operator < (const ScheduledConverter& sp_in) const {
       return schedule_ > sp_in.schedule_;
     }
     /** Time at which the publisher will be called */
     ros::Time schedule_;
     /** Time at which the publisher will be called */
-    size_t pub_index_;
+    size_t conv_index_;
   };
 
   /** Priority queue to process the publishers according to their frequency */
-  std::priority_queue<ScheduledPublish> pub_queue_;
+  std::priority_queue<ScheduledConverter> conv_queue_;
 
   /** tf2 buffer that will be shared between different publishers/subscribers
    * This is only for performance improvements

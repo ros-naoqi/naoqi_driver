@@ -32,25 +32,32 @@
 * ROS
 */
 #include <std_msgs/Int32.h>
+#include <std_msgs/String.h>
 
 /*
 * PUBLIC INTERFACE
 */
 #include <alrosbridge/alrosbridge.hpp>
+#include <alrosbridge/message_actions.h>
+/*
+ * CONVERTERS
+ */
+#include "converters/int.hpp"
+#include "converters/string.hpp"
 
 /*
 * publishers
 */
-#include "publishers/camera.hpp"
-#include "publishers/diagnostics.hpp"
+//#include "publishers/camera.hpp"
+//#include "publishers/diagnostics.hpp"
 #include "publishers/int.hpp"
-#include "publishers/info.hpp"
-#include "publishers/joint_state.hpp"
-#include "publishers/nao_joint_state.hpp"
-#include "publishers/odometry.hpp"
-#include "publishers/laser.hpp"
-#include "publishers/log.hpp"
-#include "publishers/sonar.hpp"
+//#include "publishers/info.hpp"
+//#include "publishers/joint_state.hpp"
+//#include "publishers/nao_joint_state.hpp"
+//#include "publishers/odometry.hpp"
+//#include "publishers/laser.hpp"
+//#include "publishers/log.hpp"
+//#include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 
 /*
@@ -78,10 +85,11 @@ Bridge::Bridge( qi::SessionPtr& session )
   freq_(15),
   publish_enabled_(false),
   publish_cancelled_(false),
+  record_enabled_(false),
+  record_cancelled_(false),
   _recorder(boost::make_shared<Recorder>())
 {
   //_recorder = std::make_shared<Recorder>();
-  std::cout << "application path "<< std::endl;
 }
 
 
@@ -89,7 +97,7 @@ Bridge::~Bridge()
 {
   std::cout << "ALRosBridge is shutting down.." << std::endl;
   publish_cancelled_ = true;
-  stop();
+  stopPublishing();
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
   // destroy nodehandle?
@@ -107,33 +115,37 @@ void Bridge::rosLoop()
   {
    {
       boost::mutex::scoped_lock lock( mutex_reinit_ );
-      if (publish_enabled_ && !pub_queue_.empty())
+      if (publish_enabled_ && !conv_queue_.empty())
       {
         // Wait for the next Publisher to be ready
-        size_t pub_index = pub_queue_.top().pub_index_;
-        publisher::Publisher& pub = publishers_[pub_index];
-        ros::Time schedule = pub_queue_.top().schedule_;
+        size_t conv_index = conv_queue_.top().conv_index_;
+        converter::Converter conv = converters_[conv_index];
+        ros::Time schedule = conv_queue_.top().schedule_;
 
         ros::Duration(schedule - ros::Time::now()).sleep();
 
-        if ( pub.isSubscribed() && pub.isInitialized())
-        {
-          pub.publish();
-          if (_recorder->isRecording()) {
-            std_msgs::Int32 i;
-            i.data = 32;
-            geometry_msgs::PointStamped ps;
-            ps.point.x = 2;
-            ps.point.y = 4;
-            ps.point.z = 6;
-            _recorder->write(pub.name(), ps);
-          }
-        }
+
+        std::vector<message_actions::MessageAction> actions;
+        actions.push_back( message_actions::PUBLISH );
+        conv.callAll( actions );
+        //if ( pub.isSubscribed() && pub.isInitialized())
+        //{
+        //  pub.publish();
+        //  if (_recorder->isRecording()) {
+        //    std_msgs::Int32 i;
+        //    i.data = 32;
+        //    geometry_msgs::PointStamped ps;
+        //    ps.point.x = 2;
+        //    ps.point.y = 4;
+        //    ps.point.z = 6;
+        //    _recorder->write(pub.name(), ps);
+        //  }
+        //}
 
         // Schedule for a future time or not
-        pub_queue_.pop();
-        if ( pub.frequency() != 0 )
-          pub_queue_.push(ScheduledPublish(schedule + ros::Duration(1.0f / pub.frequency()), pub_index));
+        conv_queue_.pop();
+        if ( conv.frequency() != 0 )
+          conv_queue_.push(ScheduledConverter(schedule + ros::Duration(1.0f / conv.frequency()), conv_index));
       } else
         // sleep one second
         ros::Duration(1).sleep();
@@ -142,61 +154,88 @@ void Bridge::rosLoop()
   }
 }
 
+void Bridge::registerConverter( converter::Converter conv )
+{
+}
+
+void Bridge::registerDefaultConverter()
+{
+}
+
 // public interface here
 void Bridge::registerPublisher( publisher::Publisher pub )
 {
-  std::vector<publisher::Publisher>::iterator it;
-  it = std::find( publishers_.begin(), publishers_.end(), pub );
-
-  // if publisher is not found, register it!
-  if (it == publishers_.end() )
-  {
-    publishers_.push_back( pub );
-    it = publishers_.end() - 1;
-    std::cout << "registered publisher:\t" << pub.name() << std::endl;
-  }
-  // if found, re-init them
-  else
-  {
-    std::cout << "re-initialized existing publisher:\t" << it->name() << std::endl;
-  }
+//  std::vector< boost::shared_ptr<publisher::Publisher> >::iterator it;
+//  it = std::find( publishers_.begin(), publishers_.end(), pub );
+//
+//  // if publisher is not found, register it!
+//  if (it == publishers_.end() )
+//  {
+//    publishers_.push_back( boost::make_shared<publisher::Publisher>(pub) );
+//    it = publishers_.end() - 1;
+//    std::cout << "registered publisher:\t" << pub.name() << std::endl;
+//  }
+//  // if found, re-init them
+//  else
+//  {
+//    std::cout << "re-initialized existing publisher:\t" << (*it)->name() << std::endl;
+//  }
 }
 
 void Bridge::registerDefaultPublisher()
 {
-  if (!publishers_.empty())
-    return;
+//  if (!publishers_.empty())
+//    return;
+//
+//  // Info should be at 0 (latched) but somehow that does not work ...
+//  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
+//  registerPublisher( info );
+//
+//  // Define the tf2 buffer
+//  if (info.robot() == alros::PEPPER)
+//  {
+//    alros::publisher::JointStatePublisher publisher("joint_states", "/joint_states", 15, sessionPtr_);
+//    tf2_buffer_ = publisher.getTF2Buffer();
+//    registerPublisher( publisher );
+//  }
+//  if (info.robot() == alros::NAO)
+//  {
+//    alros::publisher::NaoJointStatePublisher publisher( "nao_joint_states", "/joint_states", 15, sessionPtr_);
+//    tf2_buffer_ = publisher.getTF2Buffer();
+//    registerPublisher( publisher );
+//  }
+//
+//  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
+//  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
+//  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
+//  registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
+//  registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
+//
+//  // Pepper specific publishers
+//  if (info.robot() == alros::PEPPER)
+//  {
+//    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
+//    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
+//  }
+  boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
+  sp->reset( *nhPtr_ );
 
-  // Info should be at 0 (latched) but somehow that does not work ...
-  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
-  registerPublisher( info );
+  boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
+  ip->reset( *nhPtr_ );
 
-  // Define the tf2 buffer
-  if (info.robot() == alros::PEPPER)
-  {
-    alros::publisher::JointStatePublisher publisher("joint_states", "/joint_states", 15, sessionPtr_);
-    tf2_buffer_ = publisher.getTF2Buffer();
-    registerPublisher( publisher );
-  }
-  if (info.robot() == alros::NAO)
-  {
-    alros::publisher::NaoJointStatePublisher publisher( "nao_joint_states", "/joint_states", 15, sessionPtr_);
-    tf2_buffer_ = publisher.getTF2Buffer();
-    registerPublisher( publisher );
-  }
+  /**
+   * TEST HERE
+   */
+  converter::StringConverter sc( "string_converter", 10, sessionPtr_ );
+  sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
+  // check if copy works well here
+  converters_.push_back( sc );
 
-  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
-  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
-  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
-  registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
-  registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
+  converter::IntConverter ic( "int_converter", 15, sessionPtr_);
+  ic.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
+  //sc.registerCallback( message_actions::RECORD, boost::bind(&Recorder::record<std_msgs::String>, &rec, _1) );
+  converters_.push_back( ic );
 
-  // Pepper specific publishers
-  if (info.robot() == alros::PEPPER)
-  {
-    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
-    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
-  }
 }
 
 // public interface here
@@ -230,16 +269,26 @@ void Bridge::registerDefaultSubscriber()
 
 void Bridge::init()
 {
-  pub_queue_ =  std::priority_queue<ScheduledPublish>();
-  size_t pub_index = 0;
-  foreach( publisher::Publisher& pub, publishers_ )
+  // init converters
+  conv_queue_ =  std::priority_queue<ScheduledConverter>();
+  size_t conv_index = 0;
+  foreach( converter::Converter& conv, converters_ )
   {
-    pub.reset( *nhPtr_ );
-
     // Schedule it for the next publish
-    pub_queue_.push(ScheduledPublish(ros::Time::now(), pub_index));
-    ++pub_index;
+    // COULD BE REFACTORED DUE TU POINTER
+    conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
+    ++conv_index;
   }
+
+  // init publishers
+  //stringPublisherPtr_->reset( *nhPtr_ );
+  //intPublisherPtr_->reset( *nhPtr_ );
+  //foreach( boost::shared_ptr<publisher::Publisher>& pub, publishers_ )
+  //{
+  //  pub->reset( *nhPtr_ );
+  //}
+
+  // init subscribers
   foreach( subscriber::Subscriber& sub, subscribers_ )
   {
     sub.reset( *nhPtr_ );
@@ -263,7 +312,7 @@ void Bridge::setMasterURI( const std::string& uri)
 void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // Stopping publishing
-  stop();
+  stopPublishing();
 
   // Reinitializing ROS
   {
@@ -283,16 +332,16 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   // initialize the publishers and subscribers with nodehandle
   init();
   // Start publishing again
-  start();
+  startPublishing();
 }
 
-void Bridge::start()
+void Bridge::startPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
 }
 
-void Bridge::stop()
+void Bridge::stopPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = false;
@@ -308,6 +357,6 @@ void Bridge::stopRecord()
   _recorder->stopRecord();
 }
 
-QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet,
+QI_REGISTER_OBJECT( Bridge, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
                     startRecord, stopRecord );
 } //alros

@@ -89,7 +89,7 @@ struct StringConverter
   void operator()( const std::vector<MessageAction>& actions )
   {
     std_msgs::String m;
-    m.data = "Hello String";
+    m.data = "Hello String2";
 
     for_each( const MessageAction& action, actions )
     {
@@ -159,33 +159,53 @@ struct Int32Converter
   }
 };
 
+void registerCallbacks( std::vector< boost::function<void( std::vector<MessageAction> )> >& converters  )
+{
+  StringConverter sc;
+  boost::shared_ptr<StringPublisher> spPtr = boost::make_shared<StringPublisher>( );
+  sc.registerCallback( PUBLISH, boost::bind( &StringPublisher::publish, spPtr, _1 ) );
+  converters.push_back( sc );
+
+  Float32Converter fc;
+  boost::shared_ptr<Float32Publisher> fpPtr = boost::make_shared<Float32Publisher>( );
+  fc.registerCallback( PUBLISH, boost::bind( &Float32Publisher::publish, fpPtr, _1 ) );
+  converters.push_back( fc );
+
+  Int32Converter ic;
+  boost::shared_ptr<Int32Publisher> ipPtr = boost::make_shared<Int32Publisher>( );
+  ic.registerCallback( PUBLISH, boost::bind( &Int32Publisher::publish, ipPtr, _1, _2 ) );
+  converters.push_back( ic );
+
+}
 
 int main()
 {
-  StringPublisher sp;
-  Float32Publisher fp;
-  Int32Publisher ip;
+  //StringPublisher sp;
+  //Float32Publisher fp;
+  //Int32Publisher ip;
 
-  Recorder rec;
+  //Recorder rec;
 
-  StringConverter sc;
-  sc.registerCallback( PUBLISH, boost::bind(&StringPublisher::publish, &sp, _1) );
-  sc.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::String>, &rec, _1) );
+  //StringConverter sc;
+  //sc.registerCallback( PUBLISH, boost::bind(&StringPublisher::publish, &sp, _1) );
+  //sc.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::String>, &rec, _1) );
 
-  Float32Converter fc;
-  fc.registerCallback( PUBLISH, boost::bind(&Float32Publisher::publish, &fp, _1) );
-  fc.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::Float32>, &rec, _1) );
+  //Float32Converter fc;
+  //fc.registerCallback( PUBLISH, boost::bind(&Float32Publisher::publish, &fp, _1) );
+  //fc.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::Float32>, &rec, _1) );
+  //registerFloat32Callback( fc );
 
-  Int32Converter ic;
-  ic.registerCallback( PUBLISH, boost::bind(&Int32Publisher::publish, &ip, _1, _2) );
-  boost::bind(&Recorder::record<std_msgs::Int32>, &rec, _1, _2);
-  //ic.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::Int32>, &rec, _1, _2) );
+  //Int32Converter ic;
+  //ic.registerCallback( PUBLISH, boost::bind(&Int32Publisher::publish, &ip, _1, _2) );
+  //boost::bind(&Recorder::record<std_msgs::Int32>, &rec, _1, _2);
+  ////ic.registerCallback( RECORD, boost::bind(&Recorder::record<std_msgs::Int32>, &rec, _1, _2) );
 
   std::vector< boost::function<void( std::vector<MessageAction> )> > converters;
-  converters.push_back( sc );
-  converters.push_back( fc );
-  converters.push_back( ic );
+  //converters.push_back( sc );
+  //converters.push_back( fc );
+  //converters.push_back( ic );
 
+  registerCallbacks( converters );
   bool publish_enabled = true;
   bool record_enabled = false;
 

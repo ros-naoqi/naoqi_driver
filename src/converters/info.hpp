@@ -15,45 +15,44 @@
  *
 */
 
-#ifndef PUBLISHER_LOG_HPP
-#define PUBLISHER_LOG_HPP
+#ifndef PUBLISHER_INFO_HPP
+#define PUBLISHER_INFO_HPP
 
 #include <ros/ros.h>
-#include <rosgraph_msgs/Log.h>
+#include <qi/anyobject.hpp>
 
 #include "publisher_base.hpp"
-
-#include <boost/thread/mutex.hpp>
-
-#include <qi/anyobject.hpp>
-#include <qicore/logmanager.hpp>
-#include <qicore/loglistener.hpp>
 
 namespace alros
 {
 namespace publisher
 {
 
-class LogPublisher : public BasePublisher<LogPublisher>
+class InfoPublisher : public BasePublisher<InfoPublisher>
 {
 public:
-  LogPublisher( );
+  InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
 
-  // check whether a real copy of the log message should be more safe
-  // remove const ref here
-  void publish( std::list<rosgraph_msgs::Log>& log_msgs );
+  void publish();
 
   void reset( ros::NodeHandle& nh );
 
   inline bool isSubscribed() const
   {
-    // We assume it is essential
-    return true;
+    if (is_initialized_ == false) return false;
+    return pub_.getNumSubscribers() > 0;
   }
 
 private:
   ros::Publisher pub_;
 
+  /** Memory (Proxy) configurations */
+  qi::AnyObject p_memory_;
+
+  /** The keys to get from ALMemory */
+  std::vector<std::string> keys_;
+  /** The memory keys of the info */
+  AL::ALValue alvalues_;
 };
 
 } //publisher

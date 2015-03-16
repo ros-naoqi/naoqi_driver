@@ -37,11 +37,9 @@ namespace publisher
 class LogPublisher : public BasePublisher<LogPublisher>
 {
 public:
-  LogPublisher( );
+  LogPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
 
-  // check whether a real copy of the log message should be more safe
-  // remove const ref here
-  void publish( std::list<rosgraph_msgs::Log>& log_msgs );
+  void publish();
 
   void reset( ros::NodeHandle& nh );
 
@@ -54,6 +52,8 @@ public:
 private:
   ros::Publisher pub_;
 
+  qi::LogManagerPtr logger_;
+  qi::LogListenerPtr listener_;
 };
 
 } //publisher

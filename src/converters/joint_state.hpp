@@ -21,13 +21,10 @@
 /**
 * ROS includes
 */
-#include <geometry_msgs/Transform.h>
-#include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_broadcaster.h>
-
+#include <robot_state_publisher/robot_state_publisher.h>
+#include <geometry_msgs/Transform.h>
 /**
 * ALDEBARAN includes
 */
@@ -47,21 +44,24 @@ class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {
 
 public:
-  JointStatePublisher( );
+  JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
 
-  virtual void publish( const sensor_msgs::JointState& js_msg,
-                        const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
+  virtual void publish();
 
   virtual void reset( ros::NodeHandle& nh );
 
   virtual bool isSubscribed() const;
 
+protected:
+  sensor_msgs::JointState msg_joint_states_;
+
 private:
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
+  qi::AnyObject p_motion_;
 
   /** initialize separate publishers for js and odom */
   ros::Publisher pub_joint_states_;
 
+  boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
 }; // class
 
 } //publisher

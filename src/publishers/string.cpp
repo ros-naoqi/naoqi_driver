@@ -19,31 +19,26 @@
 
 #include "string.hpp"
 
-#include <std_msgs/String.h>
-
 namespace alros
 {
 namespace publisher
 {
 
-StringPublisher::StringPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
-    BasePublisher( name, topic, frequency, session )
+StringPublisher::StringPublisher( const std::string& topic ):
+    BasePublisher( topic )
 {
 }
 
-void StringPublisher::publish()
+void StringPublisher::publish( const std_msgs::String& msg )
 {
-  static std_msgs::String m;
-  m.data = "test_string_data";
-  pub_.publish( m );
+  pub_.publish( msg );
 }
 
-void StringPublisher::reset( ros::NodeHandle& nh)
+void StringPublisher::reset( ros::NodeHandle& nh )
 {
   pub_ = nh.advertise<std_msgs::String>( topic_, 10 );
   is_initialized_ = true;
 }
-
 
 } //publisher
 } // alros

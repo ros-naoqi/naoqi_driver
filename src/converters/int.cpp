@@ -13,47 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
-
-#ifndef DIAGNOSTICS_PUBLISHER_HPP
-#define DIAGNOSTICS_PUBLISHER_HPP
-
-#include "publisher_base.hpp"
-
-/**
-* ROS includes
 */
-#include <ros/ros.h>
+#include <iostream>
 
-#include <diagnostic_msgs/DiagnosticArray.h>
+#include <boost/foreach.hpp>
 
+#include "int.hpp"
+
+#define for_each BOOST_FOREACH
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
+IntConverter::IntConverter( const std::string& name, float frequency, qi::SessionPtr& session ):
+  BaseConverter( name, frequency, session )
+{}
+
+void IntConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
 {
+  callbacks_[action] = cb;
+}
 
-public:
-  DiagnosticsPublisher( );
+void IntConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
+{
+  static std_msgs::Int32 m;
+  m.data = 123;
 
-  void publish( diagnostic_msgs::DiagnosticArray& msg );
-
-  void reset( ros::NodeHandle& nh );
-
-  inline bool isSubscribed() const
+  for_each( const message_actions::MessageAction& action, actions )
   {
-    // Should always be publishe: it is the convention
-    // and it a low frame rate
-    return true;
+    callbacks_[action](m);
   }
+}
 
-private:
-  ros::Publisher pub_;
-}; // class
-
-} //publisher
+} // converter
 } // alros
-
-#endif

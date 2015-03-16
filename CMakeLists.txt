@@ -16,6 +16,19 @@ qi_create_module(
 qi_stage_lib( alros )
 
 set(
+  CONVERTERS
+  src/converters/int.cpp
+  src/converters/string.cpp
+  )
+qi_create_lib(
+  alrosconverters
+  SHARED
+  ${CONVERTERS}
+  )
+qi_use_lib( alrosconverters QI QICORE ALCOMMON ALVISION ROS )
+qi_stage_lib( alrosconverters )
+
+set(
   PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
@@ -23,8 +36,8 @@ set(
   src/publishers/log.cpp
   src/publishers/string.cpp
   src/publishers/joint_state.cpp
-  src/publishers/nao_joint_state.cpp
-  src/publishers/odometry.cpp
+  #  src/publishers/nao_joint_state.cpp
+  #  src/publishers/odometry.cpp
   src/publishers/laser.cpp
   src/publishers/sonar.cpp
   src/publishers/info.cpp
@@ -46,10 +59,12 @@ qi_create_lib(
 )
 
 qi_stage_lib( alrosbridge )
-
-
 qi_use_lib(alros QI ROS)
 qi_use_lib(alrosbridge QICORE QI ALCOMMON ALVISION ROS)
+target_link_libraries(
+  alrosbridge
+  alrosconverters
+  )
 
 target_link_libraries(
   alros

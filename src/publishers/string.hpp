@@ -19,6 +19,7 @@
 #define STRING_PUBLISHER_HPP
 
 #include <ros/ros.h>
+#include <std_msgs/String.h>
 
 #include "publisher_base.hpp"
 
@@ -31,9 +32,9 @@ class StringPublisher : public BasePublisher<StringPublisher>
 {
 
 public:
-  StringPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  StringPublisher( const std::string& topic );
 
-  void publish();
+  void publish( const std_msgs::String& msg );
 
   void reset( ros::NodeHandle& nh );
 

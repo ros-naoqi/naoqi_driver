@@ -56,9 +56,9 @@ public:
   /**
   * @brief triggers the publishing process of the concrete publisher instance
   */
-  void publish()
+  void publish( )
   {
-    pubPtr_->publish();
+    pubPtr_->publish( );
   }
 
   /**
@@ -131,6 +131,11 @@ public:
     return false;
   }
 
+  friend bool operator==( const boost::shared_ptr<Publisher>& lhs, const boost::shared_ptr<Publisher>& rhs )
+  {
+    return operator==( *lhs, *rhs );
+  }
+
 private:
 
   /**
@@ -147,6 +152,7 @@ private:
     virtual std::string topic() const = 0;
     virtual float frequency() const = 0;
     virtual Robot robot() const = 0;
+
   };
 
 
@@ -180,9 +186,9 @@ private:
       return publisher_.robot();
     }
 
-    void publish()
+    void publish( )
     {
-      publisher_.publish();
+      publisher_.publish( );
     }
 
     bool isInitialized() const

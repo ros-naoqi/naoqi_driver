@@ -13,47 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- */
-
-#ifndef DIAGNOSTICS_PUBLISHER_HPP
-#define DIAGNOSTICS_PUBLISHER_HPP
-
-#include "publisher_base.hpp"
-
-/**
-* ROS includes
 */
-#include <ros/ros.h>
 
-#include <diagnostic_msgs/DiagnosticArray.h>
+#ifndef STRING_CONVERTER_HPP
+#define STRING_CONVERTER_HPP
+
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+
+#include <alrosbridge/message_actions.h>
+#include "converter_base.hpp"
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
+class StringConverter : public BaseConverter<StringConverter>
 {
+  typedef boost::function<void(std_msgs::String)> Callback_t;
 
 public:
-  DiagnosticsPublisher( );
 
-  void publish( diagnostic_msgs::DiagnosticArray& msg );
+    StringConverter( const std::string& name, float frequency, qi::SessionPtr& session );
 
-  void reset( ros::NodeHandle& nh );
+    void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  inline bool isSubscribed() const
-  {
-    // Should always be publishe: it is the convention
-    // and it a low frame rate
-    return true;
-  }
+    void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
-  ros::Publisher pub_;
+
+    std::map<message_actions::MessageAction, Callback_t> callbacks_;
+
 }; // class
 
-} //publisher
+} // converter
 } // alros
 
 #endif

@@ -15,56 +15,36 @@
  *
 */
 
-#ifndef BASE_PUBLISHER_HPP
-#define BASE_PUBLISHER_HPP
-
-#include <algorithm>
 #include <iostream>
-#include <string>
+#include <boost/foreach.hpp>
 
-#include <alvalue/alvalue.h>
-#include <qi/session.hpp>
+#include "string.hpp"
 
-#include <alrosbridge/tools.hpp>
-
+#define for_each BOOST_FOREACH
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-// CRTP
-template<class T>
-class BasePublisher
-{
-
-public:
-  BasePublisher( const std::string& topic ):
-    topic_( topic ),
-    is_initialized_( false )
+StringConverter::StringConverter( const std::string& name, float frequency, qi::SessionPtr& session ):
+    BaseConverter( name, frequency, session )
   {}
 
-  virtual ~BasePublisher() {};
+void StringConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
 
-  inline std::string topic() const
+void StringConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
+{
+  static std_msgs::String m;
+  m.data = "test_string_data";
+
+  for_each( const message_actions::MessageAction& action, actions )
   {
-    return topic_;
+    callbacks_[action](m);
   }
-  
-  inline bool isInitialized() const
-  {
-    return is_initialized_;
-  }
+}
 
-  virtual bool isSubscribed() const = 0;
-
-protected:
-  std::string topic_;
-
-  bool is_initialized_;
-
-}; // class
-
-} // publisher
+} //publisher
 } // alros
-
-#endif

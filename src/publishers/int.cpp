@@ -18,8 +18,6 @@
 
 #include <iostream>
 
-#include <std_msgs/Int32.h>
-
 #include "int.hpp"
 
 namespace alros
@@ -27,15 +25,13 @@ namespace alros
 namespace publisher
 {
 
-IntPublisher::IntPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
-  BasePublisher( name, topic, frequency, session )
+IntPublisher::IntPublisher( const std::string& topic ):
+  BasePublisher( topic )
 {}
 
-void IntPublisher::publish()
+void IntPublisher::publish( const std_msgs::Int32& msg )
 {
-  static std_msgs::Int32 m;
-  m.data++;
-  pub_.publish( m );
+  pub_.publish( msg );
 }
 
 void IntPublisher::reset( ros::NodeHandle& nh )

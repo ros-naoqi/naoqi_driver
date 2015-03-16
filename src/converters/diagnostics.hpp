@@ -25,7 +25,13 @@
 */
 #include <ros/ros.h>
 
-#include <diagnostic_msgs/DiagnosticArray.h>
+#include <diagnostic_updater/diagnostic_updater.h>
+
+/**
+* ALDEBARAN includes
+*/
+#include <alvalue/alvalue.h>
+#include <qi/anyobject.hpp>
 
 namespace alros
 {
@@ -36,9 +42,9 @@ class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
 {
 
 public:
-  DiagnosticsPublisher( );
+  DiagnosticsPublisher( const std::string& name, float frequency, qi::SessionPtr& session );
 
-  void publish( diagnostic_msgs::DiagnosticArray& msg );
+  void publish();
 
   void reset( ros::NodeHandle& nh );
 
@@ -51,6 +57,24 @@ public:
 
 private:
   ros::Publisher pub_;
+  ros::Publisher pub2_;
+
+  /** The names of the joints in the order given by the motion proxy */
+  std::vector<std::string> joint_names_;
+  /** The list of the ALMemory keys for joint temperatures */
+  std::vector<std::string> joint_temperatures_keys_;
+  /** The list of the ALMemory keys for the battery */
+  std::vector<std::string> battery_keys_;
+  /** all the keys to check. It is a concatenation of joint_temperatures_keys_, battery_keys_ */
+  AL::ALValue all_keys_;
+  /** Keys for the battery status */
+  std::vector<std::string> battery_status_keys_;
+
+  /** Proxy to ALMemory */
+  qi::AnyObject p_memory_;
+
+  float temperature_warn_level_;
+  float temperature_error_level_;
 }; // class
 
 } //publisher
