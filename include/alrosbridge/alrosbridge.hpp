@@ -39,7 +39,6 @@
 */
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
-#include <alrosbridge/recorder/recorder.hpp>
 
 namespace tf2_ros
 {
@@ -48,8 +47,6 @@ namespace tf2_ros
 
 namespace alros
 {
-
-class Recorder;
 
 /**
 * @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
@@ -117,16 +114,6 @@ public:
   */
   void stop();
 
-  /**
-  * @brief qicli call function to start recording all registered publisher in a ROSbag
-  */
-  void startRecord();
-
-  /**
-  * @brief qicli call function to stop recording all registered publisher in a ROSbag
-  */
-  void stopRecord();
-
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
@@ -134,8 +121,6 @@ private:
   const size_t freq_;
   boost::thread publisherThread_;
   //ros::Rate r_;
-
-  boost::shared_ptr<Recorder> _recorder;
 
   void registerDefaultPublisher();
   void registerDefaultSubscriber();
