@@ -77,10 +77,8 @@ Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
   freq_(15),
   publish_enabled_(false),
-  publish_cancelled_(false),
-  _recorder(boost::make_shared<Recorder>())
+  publish_cancelled_(false)
 {
-  //_recorder = std::make_shared<Recorder>();
   std::cout << "application path "<< std::endl;
 }
 
@@ -119,15 +117,6 @@ void Bridge::rosLoop()
         if ( pub.isSubscribed() && pub.isInitialized())
         {
           pub.publish();
-          if (_recorder->isStarted()) {
-            std_msgs::Int32 i;
-            i.data = 32;
-            geometry_msgs::PointStamped ps;
-            ps.point.x = 2;
-            ps.point.y = 4;
-            ps.point.z = 6;
-            _recorder->write(pub.name(), ps);
-          }
         }
 
         // Schedule for a future time or not
@@ -298,25 +287,5 @@ void Bridge::stop()
   publish_enabled_ = false;
 }
 
-void Bridge::startRecord()
-{
-  _recorder->startRecord();
-  record_enabled_ = true;
-}
-
-void Bridge::startRecordTopics(const std::vector<Topics>& topics)
-{
-  _recorder->startRecord();
-  record_enabled_ = true;
-  // enabled only topics given
-}
-
-void Bridge::stopRecord()
-{
-  _recorder->stopRecord();
-  record_enabled_ = false;
-}
-
-QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet,
-                    startRecord, startRecordTopics, stopRecord );
+QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet );
 } //alros
