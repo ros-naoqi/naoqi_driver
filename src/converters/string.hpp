@@ -35,11 +35,11 @@ class StringConverter : public BaseConverter<StringConverter>
 
 public:
 
-    StringConverter( const std::string& name, float frequency, qi::SessionPtr& session );
+  StringConverter( const std::string& name, float frequency, qi::SessionPtr& session );
 
-    void registerCallback( const message_actions::MessageAction action, Callback_t cb );
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-    void callAll( const std::vector<message_actions::MessageAction>& actions );
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
 

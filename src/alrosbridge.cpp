@@ -44,11 +44,12 @@
  */
 #include "converters/int.hpp"
 #include "converters/string.hpp"
+#include "converters/camera.hpp"
 
 /*
 * publishers
 */
-//#include "publishers/camera.hpp"
+#include "publishers/camera.hpp"
 //#include "publishers/diagnostics.hpp"
 #include "publishers/int.hpp"
 //#include "publishers/info.hpp"
@@ -217,24 +218,37 @@ void Bridge::registerDefaultPublisher()
 //    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
 //    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
 //  }
+
+
+
+  /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
   sp->reset( *nhPtr_ );
-
-  boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
-  ip->reset( *nhPtr_ );
-
-  /**
-   * TEST HERE
-   */
   converter::StringConverter sc( "string_converter", 10, sessionPtr_ );
   sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
-  // check if copy works well here
   converters_.push_back( sc );
 
+  /** Int Publisher */
+  boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
+  ip->reset( *nhPtr_ );
   converter::IntConverter ic( "int_converter", 15, sessionPtr_);
   ic.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
   //sc.registerCallback( message_actions::RECORD, boost::bind(&Recorder::record<std_msgs::String>, &rec, _1) );
   converters_.push_back( ic );
+
+  /** Front Camera */
+  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "front_camera", AL::kTopCamera );
+  fcp->reset( *nhPtr_ );
+  converter::CameraConverter fcc( "front_camera_converter", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
+  fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
+  converters_.push_back( fcc );
+
+  /** Depth Camera */
+  boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "depth_camera", AL::kDepthCamera );
+  dcp->reset( *nhPtr_ );
+  converter::CameraConverter dcc( "depth_camera_converter", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+  dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
+  converters_.push_back( dcc );
 
 }
 

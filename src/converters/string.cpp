@@ -16,11 +16,9 @@
 */
 
 #include <iostream>
-#include <boost/foreach.hpp>
 
 #include "string.hpp"
 
-#define for_each BOOST_FOREACH
 namespace alros
 {
 namespace converter

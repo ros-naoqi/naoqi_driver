@@ -15,41 +15,37 @@
  *
 */
 
-#ifndef PUBLISHER_CAMERA_HPP
-#define PUBLISHER_CAMERA_HPP
+#ifndef CONVERTER_CAMERA_HPP
+#define CONVERTER_CAMERA_HPP
 
 #include <ros/ros.h>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <qi/anyobject.hpp>
 
-#include "publisher_base.hpp"
+#include "converter_base.hpp"
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class CameraPublisher : public BasePublisher<CameraPublisher>
+class CameraConverter : public BaseConverter<CameraConverter>
 {
+
+  typedef boost::function<void(sensor_msgs::ImagePtr, sensor_msgs::CameraInfo)> Callback_t;
+
 public:
-  CameraPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session, int camera_source, int resolution );
+  CameraConverter( const std::string& name, float frequency, qi::SessionPtr& session, int camera_source, int resolution );
 
-  ~CameraPublisher();
+  ~CameraConverter();
 
-  void publish();
-
-  void reset( ros::NodeHandle& nh );
-
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
+  
+  virtual void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
-  //image_transport::ImageTransport it_;
-  image_transport::CameraPublisher pub_;
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
 
   /** VideoDevice (Proxy) configurations */
   qi::AnyObject p_video_;

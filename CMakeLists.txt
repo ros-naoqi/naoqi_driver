@@ -19,6 +19,7 @@ set(
   CONVERTERS
   src/converters/int.cpp
   src/converters/string.cpp
+  src/converters/camera.cpp
   )
 qi_create_lib(
   alrosconverters

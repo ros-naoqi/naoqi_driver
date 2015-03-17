@@ -34,7 +34,7 @@
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
 namespace camera_info_definitions
@@ -112,8 +112,8 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
 
 } // camera_info_definitions
 
-CameraPublisher::CameraPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session, int camera_source, int resolution )
-  : BasePublisher( name, topic, frequency, session ),
+CameraConverter::CameraConverter( const std::string& name, float frequency, qi::SessionPtr& session, int camera_source, int resolution )
+  : BaseConverter( name, frequency, session ),
     p_video_( session->service("ALVideoDevice") ),
     camera_source_(camera_source),
     resolution_(resolution),
@@ -135,9 +135,24 @@ CameraPublisher::CameraPublisher( const std::string& name, const std::string& to
   {
     msg_frameid_ = "CameraDepth_optical_frame";
   }
+
+  if (!handle_.empty())
+  {
+    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    handle_.clear();
+  }
+
+  handle_ = p_video_.call<std::string>(
+                         "subscribeCamera",
+                          name_,
+                          camera_source_,
+                          resolution_,
+                          colorspace_,
+                          frequency_
+                          );
 }
 
-CameraPublisher::~CameraPublisher()
+CameraConverter::~CameraConverter()
 {
   if (!handle_.empty())
   {
@@ -146,7 +161,12 @@ CameraPublisher::~CameraPublisher()
   }
 }
 
-void CameraPublisher::publish()
+void CameraConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+void CameraConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   // THIS WILL CRASH IN THE FUTURE
   AL::ALValue value = p_video_.call<AL::ALValue>("getImageRemote", handle_);
@@ -165,55 +185,10 @@ void CameraPublisher::publish()
   msg_->header.stamp = now;
   camera_info_.header.stamp = now;
 
-  pub_.publish( *msg_, camera_info_ );
-}
-
-void CameraPublisher::reset( ros::NodeHandle& nh )
-{
-  if (!handle_.empty())
+  for_each( const message_actions::MessageAction& action, actions )
   {
-    p_video_.call<AL::ALValue>("unsubscribe", handle_);
-    handle_.clear();
+    callbacks_[action]( msg_, camera_info_ );
   }
-
-  handle_ = p_video_.call<std::string>(
-                         "subscribeCamera",
-                          name_,
-                          camera_source_,
-                          resolution_,
-                          colorspace_,
-                          frequency_
-                          );
-
-  image_transport::ImageTransport it( nh );
-  pub_ = it.advertiseCamera( topic_, 1 );
-
-  // Unregister compressedDepth topics for non depth cameras
-  if (camera_source_!=AL::kDepthCamera)
-  {
-    // Get our URI as a caller
-    std::string node_name = ros::this_node::getName();
-    XmlRpc::XmlRpcValue args, result, payload;
-    args[0] = node_name;
-    args[1] = node_name;
-    ros::master::execute("lookupNode", args, result, payload, false);
-    args[2] = result[2];
-
-    // List the topics to remove
-    std::vector<std::string> topic_list;
-    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth"));
-    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth/parameter_updates"));
-    topic_list.push_back(std::string("/") + node_name + "/" + topic_ + std::string("/compressedDepth/parameter_descriptions"));
-
-    // Remove undesirable topics
-    for(std::vector<std::string>::const_iterator topic = topic_list.begin(); topic != topic_list.end(); ++topic)
-    {
-      args[1] = *topic;
-      ros::master::execute("unregisterPublisher", args, result, payload, false);
-    }
-  }
-
-  is_initialized_ = true;
 }
 
 } // publisher

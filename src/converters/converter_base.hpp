@@ -26,6 +26,10 @@
 #include <qi/session.hpp>
 
 #include <alrosbridge/tools.hpp>
+#include <alrosbridge/message_actions.h>
+
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {
@@ -84,6 +88,8 @@ public:
       return robot_;
     }
   }
+
+  virtual void callAll( const std::vector<message_actions::MessageAction>& actions ) = 0;
 
 protected:
   std::string name_;
