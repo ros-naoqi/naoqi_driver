@@ -134,6 +134,8 @@ public:
   */
   void stopRecord();
 
+  void stopService();
+
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
