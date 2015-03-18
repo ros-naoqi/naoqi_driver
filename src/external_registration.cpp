@@ -18,14 +18,21 @@
 
 #include <qi/applicationsession.hpp>
 #include <qi/anymodule.hpp>
+#include <alrosbridge/alrosbridge.hpp>
 
 int main(int argc, char** argv)
 {
   qi::ApplicationSession app(argc, argv);
   app.start();
-  app.session()->loadService( "alros.BridgeService" );
-//app.session()->registerService("BridgeService",
-   // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
+  //app.session()->loadService( "alros.BridgeService" );
+  //app.session()->registerService("BridgeService",
+  // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
+  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("BridgeService", app.session()).asSharedPtr();
+  app.session()->registerService("BridgeService", bs);
+
+  //! @note Must call ow._stopService when the application stops to do the clean-up
+  app.atStop(boost::function<void()>(
+                 boost::bind(&alros::Bridge::stopService, boost::ref(bs))));
 
   app.run();
   app.session()->close();

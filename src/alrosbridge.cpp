@@ -98,6 +98,11 @@ Bridge::~Bridge()
   }
 }
 
+void Bridge::stopService() {
+  publishers_.clear();
+  subscribers_.clear();
+}
+
 
 void Bridge::rosLoop()
 {
