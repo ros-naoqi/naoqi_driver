@@ -86,16 +86,21 @@ Bridge::Bridge( qi::SessionPtr& session )
 Bridge::~Bridge()
 {
   std::cout << "ALRosBridge is shutting down.." << std::endl;
-  publish_cancelled_ = true;
-  stop();
-  if (publisherThread_.get_id() !=  boost::thread::id())
-    publisherThread_.join();
   // destroy nodehandle?
   if(nhPtr_)
   {
     nhPtr_->shutdown();
     ros::shutdown();
   }
+}
+
+void Bridge::stopService() {
+  publish_cancelled_ = true;
+  stop();
+  if (publisherThread_.get_id() !=  boost::thread::id())
+    publisherThread_.join();
+  publishers_.clear();
+  subscribers_.clear();
 }
 
 
