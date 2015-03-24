@@ -45,7 +45,7 @@
 #include "converters/int.hpp"
 #include "converters/string.hpp"
 #include "converters/camera.hpp"
-
+#include "converters/joint_state.hpp"
 /*
 * publishers
 */
@@ -53,7 +53,7 @@
 //#include "publishers/diagnostics.hpp"
 #include "publishers/int.hpp"
 //#include "publishers/info.hpp"
-//#include "publishers/joint_state.hpp"
+#include "publishers/joint_state.hpp"
 //#include "publishers/nao_joint_state.hpp"
 //#include "publishers/odometry.hpp"
 //#include "publishers/laser.hpp"
@@ -88,9 +88,8 @@ Bridge::Bridge( qi::SessionPtr& session )
   publish_cancelled_(false),
   record_enabled_(false),
   record_cancelled_(false),
-  _recorder(boost::make_shared<Recorder>())
+  _recorder(boost::make_shared<recorder::Recorder>())
 {
-  //_recorder = std::make_shared<Recorder>();
 }
 
 
@@ -107,10 +106,10 @@ Bridge::~Bridge()
 
 void Bridge::stopService() {
   publish_cancelled_ = true;
-  stop();
+  stopPublishing();
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
-  publishers_.clear();
+  converters_.clear();
   subscribers_.clear();
 }
 
@@ -134,19 +133,6 @@ void Bridge::rosLoop()
         std::vector<message_actions::MessageAction> actions;
         actions.push_back( message_actions::PUBLISH );
         conv.callAll( actions );
-        //if ( pub.isSubscribed() && pub.isInitialized())
-        //{
-        //  pub.publish();
-        //  if (_recorder->isRecording()) {
-        //    std_msgs::Int32 i;
-        //    i.data = 32;
-        //    geometry_msgs::PointStamped ps;
-        //    ps.point.x = 2;
-        //    ps.point.y = 4;
-        //    ps.point.z = 6;
-        //    _recorder->write(pub.name(), ps);
-        //  }
-        //}
 
         // Schedule for a future time or not
         conv_queue_.pop();
@@ -162,33 +148,10 @@ void Bridge::rosLoop()
 
 void Bridge::registerConverter( converter::Converter conv )
 {
+  converters_.push_back( conv );
 }
 
 void Bridge::registerDefaultConverter()
-{
-}
-
-// public interface here
-void Bridge::registerPublisher( publisher::Publisher pub )
-{
-//  std::vector< boost::shared_ptr<publisher::Publisher> >::iterator it;
-//  it = std::find( publishers_.begin(), publishers_.end(), pub );
-//
-//  // if publisher is not found, register it!
-//  if (it == publishers_.end() )
-//  {
-//    publishers_.push_back( boost::make_shared<publisher::Publisher>(pub) );
-//    it = publishers_.end() - 1;
-//    std::cout << "registered publisher:\t" << pub.name() << std::endl;
-//  }
-//  // if found, re-init them
-//  else
-//  {
-//    std::cout << "re-initialized existing publisher:\t" << (*it)->name() << std::endl;
-//  }
-}
-
-void Bridge::registerDefaultPublisher()
 {
 //  if (!publishers_.empty())
 //    return;
@@ -255,6 +218,13 @@ void Bridge::registerDefaultPublisher()
   dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
   converters_.push_back( dcc );
 
+  /** Joint States */
+  boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
+  jsp->reset( *nhPtr_ );
+  converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
+  converters_.push_back( jsc );
+  
 }
 
 // public interface here
@@ -288,24 +258,20 @@ void Bridge::registerDefaultSubscriber()
 
 void Bridge::init()
 {
+  // init global tf2 buffer
+  tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
+  tf2_buffer_->setUsingDedicatedThread(true);
+
   // init converters
   conv_queue_ =  std::priority_queue<ScheduledConverter>();
   size_t conv_index = 0;
   foreach( converter::Converter& conv, converters_ )
   {
+    conv.reset();
     // Schedule it for the next publish
-    // COULD BE REFACTORED DUE TU POINTER
     conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
     ++conv_index;
   }
-
-  // init publishers
-  //stringPublisherPtr_->reset( *nhPtr_ );
-  //intPublisherPtr_->reset( *nhPtr_ );
-  //foreach( boost::shared_ptr<publisher::Publisher>& pub, publishers_ )
-  //{
-  //  pub->reset( *nhPtr_ );
-  //}
 
   // init subscribers
   foreach( subscriber::Subscriber& sub, subscribers_ )
@@ -346,7 +312,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
     publisherThread_ = boost::thread( &Bridge::rosLoop, this );
 
   // register publishers, that will not start them
-  registerDefaultPublisher();
+  registerDefaultConverter();
   registerDefaultSubscriber();
   // initialize the publishers and subscribers with nodehandle
   init();

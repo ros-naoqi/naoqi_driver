@@ -20,6 +20,7 @@ set(
   src/converters/int.cpp
   src/converters/string.cpp
   src/converters/camera.cpp
+  src/converters/joint_state.cpp
   )
 qi_create_lib(
   alrosconverters
