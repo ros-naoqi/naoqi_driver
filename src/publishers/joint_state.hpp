@@ -47,7 +47,7 @@ class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {
 
 public:
-  JointStatePublisher( );
+  JointStatePublisher( const std::string& topic = "/joint_states" );
 
   virtual void publish( const sensor_msgs::JointState& js_msg,
                         const std::vector<geometry_msgs::TransformStamped>& tf_transforms );

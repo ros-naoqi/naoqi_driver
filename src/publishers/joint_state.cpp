@@ -26,8 +26,8 @@ namespace alros
 namespace publisher
 {
 
-JointStatePublisher::JointStatePublisher( ):
-  BasePublisher( "/joint_states" )
+JointStatePublisher::JointStatePublisher( const std::string& topic ):
+  BasePublisher( topic )
 {}
 
 void JointStatePublisher::publish( const sensor_msgs::JointState& js_msg,

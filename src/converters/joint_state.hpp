@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef JOINT_STATES_PUBLISHER_HPP
-#define JOINT_STATES_PUBLISHER_HPP
+#ifndef JOINT_STATES_CONVERTER_HPP
+#define JOINT_STATES_CONVERTER_HPP
 
 /**
 * ROS includes
@@ -25,6 +25,10 @@
 #include <sensor_msgs/JointState.h>
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <geometry_msgs/Transform.h>
+#include <tf2_ros/buffer.h>
+#include <kdl_parser/kdl_parser.hpp>
+#include <kdl/tree.hpp>
+
 /**
 * ALDEBARAN includes
 */
@@ -32,36 +36,58 @@
 
 #include <vector>
 
-#include "publisher_base.hpp"
+#include "converter_base.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-
-class JointStatePublisher : public BasePublisher<JointStatePublisher>
+class JointStateConverter : public BaseConverter<JointStateConverter>
 {
+
+  typedef boost::function<void(sensor_msgs::JointState&, std::vector<geometry_msgs::TransformStamped>&) > Callback_t;
+
+  typedef boost::shared_ptr<tf2_ros::Buffer> BufferPtr;
 
 public:
-  JointStatePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  JointStateConverter( const std::string& name, float frequency, BufferPtr tf2_buffer, qi::SessionPtr& session, ros::NodeHandle& nh );
 
-  virtual void publish();
+  ~JointStateConverter();
 
-  virtual void reset( ros::NodeHandle& nh );
+  virtual void reset( );
 
-  virtual bool isSubscribed() const;
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-protected:
-  sensor_msgs::JointState msg_joint_states_;
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
+
+  /** blatently copied from robot state publisher */
+  void addChildren(const KDL::SegmentMap::const_iterator segment);
+  std::map<std::string, robot_state_publisher::SegmentPair> segments_, segments_fixed_;
+  void setTransforms(const std::map<std::string, double>& joint_positions, const ros::Time& time, const std::string& tf_prefix);
+  void setFixedTransforms(const std::string& tf_prefix, const ros::Time& time);
+
+  /** Global Shared tf2 buffer **/
+  BufferPtr tf2_buffer_;
+
+  /** Motion Proxy **/
   qi::AnyObject p_motion_;
 
-  /** initialize separate publishers for js and odom */
-  ros::Publisher pub_joint_states_;
+  /** Registered Callbacks **/
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
 
-  boost::shared_ptr<robot_state_publisher::RobotStatePublisher> rspPtr_;
+  /** Robot Description in xml format **/
+  std::string robot_desc_;
+
+  /** JointState Message **/
+  sensor_msgs::JointState msg_joint_states_;
+
+  /** Transform Messages **/
+  std::vector<geometry_msgs::TransformStamped> tf_transforms_;
+
 }; // class
 
 } //publisher
