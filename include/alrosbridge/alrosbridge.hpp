@@ -123,6 +123,11 @@ public:
   void startRecord();
 
   /**
+  * @brief qicli call function to start recording all registered publisher in a ROSbag
+  */
+  void startRecordTopics(const std::vector<Topics>& topics);
+
+  /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
   void stopRecord();

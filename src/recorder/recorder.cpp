@@ -17,6 +17,7 @@
 
 #include <alrosbridge/recorder/recorder.hpp>
 #include <std_msgs/Int32.h>
+#include <tf2_msgs/TFMessage.h>
 #include <qi/log.hpp>
 #include <ctime>
 
@@ -31,30 +32,26 @@ namespace recorder
     _bag()
   , _processMutex()
   , _nameBag("")
-  , _isRecording(false)
+  , _isStarted(false)
   {
 
   }
 
   void Recorder::startRecord() {
     boost::mutex::scoped_lock startLock( _processMutex );
-    if (!_isRecording) {
+    if (!_isStarted) {
       try {
         time_t rawtime;
         struct tm * timeinfo;
         char buffer[80];
-
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
-
-        std::strftime(buffer,80,"%d-%m-%Y %I:%M:%S",timeinfo);
+        std::strftime(buffer,80,"%d-%m-%Y_%I:%M:%S",timeinfo);
         _nameBag = buffer;
-        //std::string str(buffer);
-        //std::string nameBag(_nameBag);
-
         _nameBag.append(".bag");
+
         _bag.open(_nameBag, rosbag::bagmode::Write);
-        _isRecording = true;
+        _isStarted = true;
         std::cout << "The bag " << _nameBag << " is opened !" << std::endl;
       } catch (std::exception e){
         throw std::runtime_error(e.what());
@@ -63,30 +60,13 @@ namespace recorder
     else {
       qiLogError() << "Cannot start a record. The module is already recording.";
     }
-  }
-
-  void Recorder::startRecordTopics(const std::vector<Topics>& topics) {
-    boost::mutex::scoped_lock startLock( _processMutex );
-    if (!_isRecording) {
-      try {
-        _bag.open(_nameBag, rosbag::bagmode::Write);
-        _isRecording = true;
-        std::cout << "The bag " << _nameBag << " is opened !" << std::endl;
-      } catch (std::exception e){
-        throw std::runtime_error(e.what());
-      }
-    }
-    else {
-      qiLogError() << "Cannot start a record. The module is already recording.";
-    }
-
   }
 
   void Recorder::stopRecord() {
     boost::mutex::scoped_lock stopLock( _processMutex );
-    if (_isRecording) {
+    if (_isStarted) {
       _bag.close();
-      _isRecording = false;
+      _isStarted = false;
       std::cout << "The bag " << _nameBag << " is closed !" << std::endl;
       _nameBag.clear();
     }
@@ -95,8 +75,18 @@ namespace recorder
     }
   }
 
-  bool Recorder::isRecording() {
-    return _isRecording;
+  bool Recorder::isStarted() {
+    return _isStarted;
+  }
+
+  void Recorder::write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf) {
+    tf2_msgs::TFMessage message;
+    for (std::vector<geometry_msgs::TransformStamped>::const_iterator it = msgtf.begin(); it != msgtf.end(); ++it)
+    {
+    message.transforms.push_back(*it);
+    }
+    boost::mutex::scoped_lock writeLock( _processMutex );
+    _bag.write(topic, ros::Time::now(), message);
   }
 
 } // recorder

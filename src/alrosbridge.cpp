@@ -224,7 +224,6 @@ void Bridge::registerDefaultConverter()
   converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   converters_.push_back( jsc );
-  
 }
 
 // public interface here
@@ -335,13 +334,22 @@ void Bridge::stopPublishing()
 void Bridge::startRecord()
 {
   _recorder->startRecord();
+  record_enabled_ = true;
+}
+
+void Bridge::startRecordTopics(const std::vector<Topics>& topics)
+{
+  _recorder->startRecord();
+  record_enabled_ = true;
+  // enabled only topics given
 }
 
 void Bridge::stopRecord()
 {
   _recorder->stopRecord();
+  record_enabled_ = false;
 }
 
 QI_REGISTER_OBJECT( Bridge, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
-                    startRecord, stopRecord );
+                    startRecord, startRecordTopics, stopRecord );
 } //alros

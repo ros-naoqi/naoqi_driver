@@ -24,20 +24,17 @@
 #include <boost/shared_ptr.hpp>
 # include <boost/thread/mutex.hpp>
 
+#include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-#include <ros/ros.h>
+#include <geometry_msgs/TransformStamped.h>
+
+#include <alrosbridge/tools.hpp>
 
 namespace alros
 {
 namespace recorder
 {
-
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
 
 /**
 * @brief Recorder concept interface
@@ -62,11 +59,6 @@ public:
   void startRecord();
 
   /**
-  * @brief Initialize the recording of the ROSbag
-  */
-  void startRecordTopics(const std::vector<Topics>& topics);
-
-  /**
   * @brief Terminate the recording of the ROSbag
   */
   void stopRecord();
@@ -80,16 +72,18 @@ public:
     _bag.write(topic, ros::Time::now(), msg);
   }
 
+  void write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf);
+
   /**
   * @brief Check if the ROSbag is opened
   */
-  bool isRecording();
+  bool isStarted();
 
 private:
   boost::mutex _processMutex;
   rosbag::Bag _bag;
   std::string _nameBag;
-  bool _isRecording;
+  bool _isStarted;
 
   // TOPICS
   std::vector<Topics> _topics;
