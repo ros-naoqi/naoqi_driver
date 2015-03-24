@@ -17,6 +17,7 @@
 
 #include <alrosbridge/recorder/recorder.hpp>
 #include <std_msgs/Int32.h>
+#include <tf2_msgs/TFMessage.h>
 #include <qi/log.hpp>
 #include <ctime>
 
@@ -74,6 +75,16 @@ namespace alros
 
   bool Recorder::isStarted() {
     return _isStarted;
+  }
+
+  void Recorder::write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf) {
+    tf2_msgs::TFMessage message;
+    for (std::vector<geometry_msgs::TransformStamped>::const_iterator it = msgtf.begin(); it != msgtf.end(); ++it)
+    {
+    message.transforms.push_back(*it);
+    }
+    boost::mutex::scoped_lock writeLock( _processMutex );
+    _bag.write(topic, ros::Time::now(), message);
   }
 
 }

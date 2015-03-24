@@ -24,9 +24,10 @@
 #include <boost/shared_ptr.hpp>
 # include <boost/thread/mutex.hpp>
 
+#include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-#include <ros/ros.h>
+#include <geometry_msgs/TransformStamped.h>
 
 #include <alrosbridge/tools.hpp>
 
@@ -68,6 +69,8 @@ public:
     boost::mutex::scoped_lock writeLock( _processMutex );
     _bag.write(topic, ros::Time::now(), msg);
   }
+
+  void write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf);
 
   /**
   * @brief Check if the ROSbag is opened

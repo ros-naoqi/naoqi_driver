@@ -5,6 +5,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/JointState.h>
 #include <sensor_msgs/LaserScan.h>
@@ -159,6 +160,16 @@ void recordAll() {
     laser.angle_max = 180;
     laser.ranges = boost::assign::list_of(0)(20)(40)(60)(80)(100);
     recorder.write("laser", laser);
+
+    // TransformStamped
+    std::vector<geometry_msgs::TransformStamped> msg;
+    geometry_msgs::TransformStamped msg_1;
+    msg_1.header.frame_id = "1";
+    geometry_msgs::TransformStamped msg_2;
+    msg_2.header.frame_id = "1";
+    msg.push_back(msg_1);
+    msg.push_back(msg_2);
+    recorder.write("transform stamped", msg);
 
     qi::os::msleep(100);
 
