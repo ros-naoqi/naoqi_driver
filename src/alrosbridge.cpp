@@ -124,15 +124,6 @@ void Bridge::rosLoop()
         if ( pub.isSubscribed() && pub.isInitialized())
         {
           pub.publish();
-          if (_recorder->isStarted()) {
-            std_msgs::Int32 i;
-            i.data = 32;
-            geometry_msgs::PointStamped ps;
-            ps.point.x = 2;
-            ps.point.y = 4;
-            ps.point.z = 6;
-            _recorder->write(pub.name(), ps);
-          }
         }
 
         // Schedule for a future time or not
