@@ -28,6 +28,10 @@ StringConverter::StringConverter( const std::string& name, float frequency, qi::
     BaseConverter( name, frequency, session )
   {}
 
+void StringConverter::reset()
+{
+}
+
 void StringConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
 {
   callbacks_[action] = cb;

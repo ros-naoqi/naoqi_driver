@@ -30,6 +30,10 @@ IntConverter::IntConverter( const std::string& name, float frequency, qi::Sessio
   BaseConverter( name, frequency, session )
 {}
 
+void IntConverter::reset()
+{
+}
+
 void IntConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
 {
   callbacks_[action] = cb;

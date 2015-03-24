@@ -44,6 +44,8 @@ public:
 
   IntConverter( const std::string& name, float frequency, qi::SessionPtr& session );
 
+  void reset();
+
   void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
   void callAll( const std::vector<message_actions::MessageAction>& actions );
