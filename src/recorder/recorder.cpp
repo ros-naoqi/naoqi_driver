@@ -24,6 +24,8 @@ qiLogCategory("ros.Recorder");
 
 namespace alros
 {
+namespace recorder
+{
 
   Recorder::Recorder():
     _bag()
@@ -97,4 +99,5 @@ namespace alros
     return _isRecording;
   }
 
-}
+} // recorder
+} // alros

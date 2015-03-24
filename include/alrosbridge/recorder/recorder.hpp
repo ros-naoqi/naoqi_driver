@@ -30,6 +30,8 @@
 
 namespace alros
 {
+namespace recorder
+{
 
 enum Topics {
   Laser = 0,
@@ -93,7 +95,7 @@ private:
   std::vector<Topics> _topics;
 
 }; // class recorder
-
+} // recorder
 } //alros
 
 #endif

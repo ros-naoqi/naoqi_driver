@@ -16,7 +16,7 @@ int main( int argc, char** argv )
 {
   ros::Time::init();
 
-  alros::Recorder recorder;
+  alros::recorder::Recorder recorder;
   recorder.startRecord();
 
   int count = 10;
