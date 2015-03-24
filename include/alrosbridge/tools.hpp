@@ -19,6 +19,8 @@
 #ifndef ALROS_TOOLS_HPP
 #define ALROS_TOOLS_HPP
 
+# include <qi/anyobject.hpp>
+
 namespace alros
 {
 enum Robot
