@@ -89,8 +89,6 @@ public:
     }
   }
 
-  virtual void callAll( const std::vector<message_actions::MessageAction>& actions ) = 0;
-
 protected:
   std::string name_;
 

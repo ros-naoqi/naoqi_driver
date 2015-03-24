@@ -76,6 +76,11 @@ public:
     return convPtr_->robot();
   }
 
+  void reset()
+  {
+    convPtr_->reset();
+  }
+
   void callAll( const std::vector<message_actions::MessageAction>& actions )
   {
     convPtr_->callAll(actions);
@@ -100,6 +105,7 @@ private:
     virtual std::string name() const = 0;
     virtual float frequency() const = 0;
     virtual Robot robot() const = 0;
+    virtual void reset() = 0;
     virtual void callAll( const std::vector<message_actions::MessageAction>& actions ) = 0;
   };
 
@@ -127,6 +133,11 @@ private:
     Robot robot() const
     {
       return converter_.robot();
+    }
+
+    void reset()
+    {
+      converter_.reset();
     }
 
     void callAll( const std::vector<message_actions::MessageAction>& actions )

@@ -50,8 +50,10 @@ namespace tf2_ros
 namespace alros
 {
 
-class Recorder;
-
+namespace recorder
+{
+  class Recorder;
+}
 /**
 * @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
 * once the external roscore ip is set, this class will advertise and publish ros messages
@@ -76,15 +78,6 @@ public:
    * they are connected via callbacks to various actions such as record, log, publish
    */
   void registerConverter( converter::Converter conv );
-
-  /**
-  * @brief registers a publisher
-  * @param publisher to register
-  * @see Publisher
-  * @note it will be called by value to expose that internally there will be a copy,
-  * eventually this should be replaced by move semantics C++11
-  */
-  void registerPublisher( publisher::Publisher pub );
 
   /**
   * @brief registers a subscriber
@@ -148,10 +141,9 @@ private:
   boost::thread publisherThread_;
   //ros::Rate r_;
 
-  boost::shared_ptr<Recorder> _recorder;
+  boost::shared_ptr<recorder::Recorder> _recorder;
 
   void registerDefaultConverter();
-  void registerDefaultPublisher();
   void registerDefaultSubscriber();
   void init();
 
