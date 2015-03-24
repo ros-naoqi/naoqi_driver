@@ -135,7 +135,20 @@ CameraConverter::CameraConverter( const std::string& name, float frequency, qi::
   {
     msg_frameid_ = "CameraDepth_optical_frame";
   }
+}
 
+CameraConverter::~CameraConverter()
+{
+  if (!handle_.empty())
+  {
+    std::cout << "Unsubscribe camera handle " << handle_ << std::endl;
+    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    handle_.clear();
+  }
+}
+
+void CameraConverter::reset()
+{
   if (!handle_.empty())
   {
     p_video_.call<AL::ALValue>("unsubscribe", handle_);
@@ -152,15 +165,6 @@ CameraConverter::CameraConverter( const std::string& name, float frequency, qi::
                           );
 }
 
-CameraConverter::~CameraConverter()
-{
-  if (!handle_.empty())
-  {
-    p_video_.call<AL::ALValue>("unsubscribe", handle_);
-    handle_.clear();
-  }
-}
-
 void CameraConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
 {
   callbacks_[action] = cb;
@@ -168,6 +172,13 @@ void CameraConverter::registerCallback( const message_actions::MessageAction act
 
 void CameraConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
+
+  if (handle_.empty() )
+  {
+    std::cerr << "Camera Handle is empty - cannot retrieve image" << std::endl;
+    return;
+  }
+
   // THIS WILL CRASH IN THE FUTURE
   AL::ALValue value = p_video_.call<AL::ALValue>("getImageRemote", handle_);
   if (!value.isArray())
