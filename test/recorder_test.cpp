@@ -22,7 +22,7 @@
 #include <qi/os.hpp>
 
 #include <alrosbridge/tools.hpp>
-#include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 /**
  * Emulate different converters here
@@ -130,6 +130,7 @@ void recordAll() {
 
     // PoseStamped
     geometry_msgs::PoseStamped ps;
+    ps.header.stamp = ros::Time::now();
     ps.pose.position.x = 0;
     ps.pose.position.y = 1;
     ps.pose.position.z = 2;
@@ -141,6 +142,7 @@ void recordAll() {
 
     // CameraInfo
     sensor_msgs::CameraInfo cam_info_msg;
+    cam_info_msg.header.stamp = ros::Time::now();
     cam_info_msg.header.frame_id = "CameraDepth_frame";
     cam_info_msg.width = 320;
     cam_info_msg.height = 240;
@@ -151,11 +153,13 @@ void recordAll() {
 
     // JointState
     sensor_msgs::JointState joint;
+    joint.header.stamp = ros::Time::now();
     joint.position = boost::assign::list_of(0)(1)(2);
     recorder.write("joint state", joint);
 
     // Laser
     sensor_msgs::LaserScan laser;
+    laser.header.stamp = ros::Time::now();
     laser.angle_min = 0;
     laser.angle_max = 180;
     laser.ranges = boost::assign::list_of(0)(20)(40)(60)(80)(100);
@@ -175,7 +179,7 @@ void recordAll() {
 
     count--;
     if (count<0) {
-      recorder.stopRecord();
+      recorder.stopRecord("");
     }
   }
 }
