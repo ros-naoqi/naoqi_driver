@@ -86,6 +86,16 @@ public:
     convPtr_->callAll(actions);
   }
 
+  bool isRecordEnabled() const
+  {
+    return convPtr_->isRecordEnabled();
+  }
+
+  void setRecordEnabled(bool state)
+  {
+    convPtr_->setRecordEnabled(state);
+  }
+
   friend bool operator==( const Converter& lhs, const Converter& rhs )
   {
     // decision made for OR-comparison since we want to be more restrictive
@@ -107,6 +117,8 @@ private:
     virtual Robot robot() const = 0;
     virtual void reset() = 0;
     virtual void callAll( const std::vector<message_actions::MessageAction>& actions ) = 0;
+    virtual bool isRecordEnabled() const = 0;
+    virtual void setRecordEnabled(bool state) = 0;
   };
 
 
@@ -143,6 +155,16 @@ private:
     void callAll( const std::vector<message_actions::MessageAction>& actions )
     {
       converter_.callAll( actions );
+    }
+
+    bool isRecordEnabled() const
+    {
+      return converter_.isRecordEnabled();
+    }
+
+    void setRecordEnabled( bool state )
+    {
+      converter_.setRecordEnabled(state);
     }
 
     T converter_;
