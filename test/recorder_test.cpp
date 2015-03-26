@@ -111,7 +111,7 @@ struct SonarConverter
  * Emulate the startRecord call
  */
 void recordAll() {
-  alros::recorder::Recorder recorder;
+  alros::recorder::GlobalRecorder recorder;
   recorder.startRecord();
 
   int count = 10;
@@ -184,7 +184,7 @@ void recordAll() {
  * Emulate the startRecordTopics call
  */
 void recordByTopics() {
-  alros::recorder::Recorder recorder;
+  alros::recorder::GlobalRecorder recorder;
   CameraConverter cam;
   LaserConverter laser;
   SonarConverter sonar;

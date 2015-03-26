@@ -29,7 +29,7 @@
 #include <rosbag/view.h>
 #include <geometry_msgs/TransformStamped.h>
 
-#include <alrosbridge/tools.hpp>
+#include "alrosbridge/recorder/globalrecorder.hpp"
 
 namespace alros
 {
@@ -41,7 +41,7 @@ namespace recorder
 * @note this defines an private concept struct,
 * which each instance has to implement
 * @note a type erasure pattern in implemented here to avoid strict inheritance,
-* thus each possible publisher instance has to implement the virtual functions mentioned in the concept
+* thus each possible recorder instance has to implement the virtual functions mentioned in the concept
 */
 class Recorder
 {
@@ -51,44 +51,163 @@ public:
   /**
   * @brief Constructor for recorder interface
   */
-  Recorder();
+  template<typename T>
+  Recorder( T rec ):
+    recPtr_( boost::make_shared<RecorderModel<T> >(rec) )
+  {};
 
   /**
-  * @brief Initialize the recording of the ROSbag
+  * @brief triggers the writing process of the concrete recorder instance
   */
-  void startRecord();
-
-  /**
-  * @brief Terminate the recording of the ROSbag
-  */
-  void stopRecord();
-
-  /**
-  * @brief Insert data into the ROSbag
-  */
-  template <class T>
-  void write(const std::string& topic, const T& msg) {
-    boost::mutex::scoped_lock writeLock( _processMutex );
-    _bag.write(topic, ros::Time::now(), msg);
+  void write( )
+  {
+    recPtr_->write();
   }
 
-  void write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf);
+  /**
+  * @brief getting the descriptive name for this recorder instance
+  * @return string with the name
+  */
+  std::string name() const
+  {
+    return recPtr_->name();
+  }
 
   /**
-  * @brief Check if the ROSbag is opened
+  * @brief getting the assigned frequency of this recorder instance
+  * @return float value indicating the frequency
   */
-  bool isStarted();
+  float frequency() const
+  {
+    return recPtr_->frequency();
+  }
+
+  Robot robot() const
+  {
+    return recPtr_->robot();
+  }
+
+  /**
+  * @brief checks if the recorder is correctly initialized on the ros-master
+  @ @return bool value indicating true for success
+  */
+  bool isInitialized() const
+  {
+    return recPtr_->isInitialized();
+  }
+
+  /**
+  * @brief checks if the recorder has a subscription and is hence allowed to record
+  * @return bool value indicating true for number of sub > 0
+  */
+  bool isSubscribed() const
+  {
+    return recPtr_->isSubscribed();
+  }
+
+  /**
+  * @brief initializes/resets the recorder into ROS with a given nodehandle,
+  * this will be called at first for initialization or again when master uri has changed
+  * @param ros NodeHandle to advertise the recorder on
+  */
+  //void reset( alros::recorder::GlobalRecorder& gr )
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr)
+  {
+    std::cout << name() << " is resetting" << std::endl;
+    recPtr_->reset( gr );
+    std::cout << name() << " reset" << std::endl;
+  }
+
+  friend bool operator==( const Recorder& lhs, const Recorder& rhs )
+  {
+    // decision made for OR-comparison since we want to be more restrictive
+    if ( lhs.name() == rhs.name() )
+      return true;
+    return false;
+  }
 
 private:
-  boost::mutex _processMutex;
-  rosbag::Bag _bag;
-  std::string _nameBag;
-  bool _isStarted;
 
-  // TOPICS
-  std::vector<Topics> _topics;
+  /**
+  * BASE concept struct
+  */
+  struct RecorderConcept
+  {
+    virtual ~RecorderConcept(){};
+    virtual void write() = 0;
+    virtual bool isInitialized() const = 0;
+    virtual void subscribe(bool state) const = 0;
+    virtual bool isSubscribed() const = 0;
+    virtual std::string name() const = 0;
+    virtual float frequency() const = 0;
+    virtual std::string topic() const = 0;
+    virtual Robot robot() const = 0;
+    virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr ) = 0;
+  };
+
+
+  /**
+  * templated instances of base concept
+  */
+  template<typename T>
+  struct RecorderModel : public RecorderConcept
+  {
+    RecorderModel( const T& other ):
+      recorder_( other )
+    {}
+
+    std::string name() const
+    {
+      return recorder_.name();
+    }
+
+    float frequency() const
+    {
+      return recorder_.frequency();
+    }
+
+    Robot robot() const
+    {
+      return recorder_.robot();
+    }
+
+    void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+    {
+      recorder_.reset( gr );
+    }
+
+    void write()
+    {
+      recorder_.write();
+    }
+
+    bool isInitialized()
+    {
+      return recorder_.isInitialized();
+    }
+
+    void subscribe(bool state)
+    {
+      recorder_.subscribe( state );
+    }
+
+    bool isSubscribed()
+    {
+      return recorder_.isSubscribed();
+    }
+
+    std::string topic() const
+    {
+      return recorder_.topic();
+    }
+
+    T recorder_;
+  };
+
+  boost::shared_ptr<RecorderConcept> recPtr_;
 
 }; // class recorder
+
 } // recorder
 } //alros
 

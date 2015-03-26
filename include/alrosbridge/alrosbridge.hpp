@@ -41,6 +41,7 @@
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace tf2_ros
 {
@@ -52,7 +53,7 @@ namespace alros
 
 namespace recorder
 {
-  class Recorder;
+  class GlobalRecorder;
 }
 /**
 * @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
@@ -146,7 +147,7 @@ private:
   boost::thread publisherThread_;
   //ros::Rate r_;
 
-  boost::shared_ptr<recorder::Recorder> _recorder;
+  boost::shared_ptr<recorder::GlobalRecorder> recorder_;
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();

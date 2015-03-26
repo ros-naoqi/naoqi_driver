@@ -88,7 +88,7 @@ Bridge::Bridge( qi::SessionPtr& session )
   publish_cancelled_(false),
   record_enabled_(false),
   record_cancelled_(false),
-  _recorder(boost::make_shared<recorder::Recorder>())
+  recorder_(boost::make_shared<recorder::GlobalRecorder>())
 {
 }
 
@@ -333,20 +333,20 @@ void Bridge::stopPublishing()
 
 void Bridge::startRecord()
 {
-  _recorder->startRecord();
+  recorder_->startRecord();
   record_enabled_ = true;
 }
 
 void Bridge::startRecordTopics(const std::vector<Topics>& topics)
 {
-  _recorder->startRecord();
+  recorder_->startRecord();
   record_enabled_ = true;
   // enabled only topics given
 }
 
 void Bridge::stopRecord()
 {
-  _recorder->stopRecord();
+  recorder_->stopRecord();
   record_enabled_ = false;
 }
 
