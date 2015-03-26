@@ -159,6 +159,8 @@ private:
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
 
+  boost::mutex mutex_record_;
+
   std::vector< converter::Converter > converters_;
   std::vector< subscriber::Subscriber > subscribers_;
 

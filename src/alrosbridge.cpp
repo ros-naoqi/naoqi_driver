@@ -68,6 +68,14 @@
 #include "subscribers/moveto.hpp"
 
 /*
+ * recorders
+ */
+#include "recorder/int.hpp"
+#include "recorder/camera.hpp"
+#include "recorder/joint_state.hpp"
+#include "recorder/string.hpp"
+
+/*
 * STATIC FUNCTIONS INCLUDE
 */
 #include "ros_env.hpp"
@@ -132,6 +140,13 @@ void Bridge::rosLoop()
 
         std::vector<message_actions::MessageAction> actions;
         actions.push_back( message_actions::PUBLISH );
+
+        boost::mutex::scoped_lock lock_record( mutex_record_ );
+        if (record_enabled_) {
+          if (conv.isRecordEnabled()) {
+            actions.push_back( message_actions::RECORD );
+          }
+        }
         conv.callAll( actions );
 
         // Schedule for a future time or not
@@ -192,37 +207,51 @@ void Bridge::registerDefaultConverter()
   /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
   sp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::StringRecorder> sr = boost::make_shared<recorder::StringRecorder>( "string" );
+  sr->reset(recorder_);
   converter::StringConverter sc( "string_converter", 10, sessionPtr_ );
   sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
+  sc.registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   converters_.push_back( sc );
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
   ip->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::IntRecorder> ir = boost::make_shared<recorder::IntRecorder>( "int" );
+  ir->reset(recorder_);
   converter::IntConverter ic( "int_converter", 15, sessionPtr_);
   ic.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
-  //sc.registerCallback( message_actions::RECORD, boost::bind(&Recorder::record<std_msgs::String>, &rec, _1) );
+  ic.registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
   converters_.push_back( ic );
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "front_camera", AL::kTopCamera );
   fcp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "front_camera" );
+  fcr->reset(recorder_);
   converter::CameraConverter fcc( "front_camera_converter", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
+  fcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
   converters_.push_back( fcc );
 
   /** Depth Camera */
   boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "depth_camera", AL::kDepthCamera );
   dcp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "depth_camera" );
+  dcr->reset(recorder_);
   converter::CameraConverter dcc( "depth_camera_converter", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
   dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
+  dcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
   converters_.push_back( dcc );
 
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
   jsp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
+  jsr->reset(recorder_);
   converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
+  jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   converters_.push_back( jsc );
 }
 
@@ -323,6 +352,7 @@ void Bridge::startPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
+
 }
 
 void Bridge::stopPublishing()
@@ -333,12 +363,18 @@ void Bridge::stopPublishing()
 
 void Bridge::startRecord()
 {
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
+  foreach( converter::Converter& conv, converters_ )
+  {
+    conv.setRecordEnabled(true);
+  }
   record_enabled_ = true;
 }
 
 void Bridge::startRecordTopics(const std::vector<Topics>& topics)
 {
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
   record_enabled_ = true;
   // enabled only topics given
@@ -346,8 +382,17 @@ void Bridge::startRecordTopics(const std::vector<Topics>& topics)
 
 void Bridge::stopRecord()
 {
-  recorder_->stopRecord();
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
+  foreach( converter::Converter& conv, converters_ )
+  {
+    // enabled recording
+    if (conv.name() == "front_camera_converter"
+        || conv.name() == "int_converter") {
+      conv.setRecordEnabled(false);
+    }
+  }
+  recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
 QI_REGISTER_OBJECT( Bridge, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
