@@ -51,13 +51,27 @@ set(
   src/subscribers/moveto.cpp
   )
 
+set(
+  RECORDER
+  src/recorder/int.cpp
+  src/recorder/string.cpp
+  src/recorder/camera.cpp
+  src/recorder/joint_state.cpp
+  src/recorder/laser.cpp
+  src/recorder/sonar.cpp
+  src/recorder/log.cpp
+  src/recorder/diagnostics.cpp
+  src/recorder/info.cpp
+  )
+
 qi_create_lib(
   alrosbridge
   SHARED
   src/alrosbridge.cpp
-  src/recorder/recorder.cpp
+  src/recorder/globalrecorder.cpp
   ${PUBLISHER}
   ${SUBSCRIBER}
+  ${RECORDER}
 )
 
 qi_stage_lib( alrosbridge )

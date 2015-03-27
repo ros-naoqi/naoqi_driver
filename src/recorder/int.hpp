@@ -15,28 +15,37 @@
  *
 */
 
+#ifndef INT_RECORDER_HPP
+#define INT_RECORDER_HPP
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <ros/ros.h>
+#include <std_msgs/Int32.h>
 
-# include <qi/anyobject.hpp>
+#include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <qi/anyobject.hpp>
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+class IntRecorder : public BaseRecorder<IntRecorder>
+{
+
+public:
+  IntRecorder( const std::string& topic );
+
+  void write( const std_msgs::Int32& msg );
+
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+
+private:
+  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+}; // class
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
 
 #endif

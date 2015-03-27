@@ -16,27 +16,40 @@
 */
 
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <iostream>
 
-# include <qi/anyobject.hpp>
+#include "log.hpp"
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+LogRecorder::LogRecorder( const std::string& topic ):
+  BaseRecorder( topic )
+{}
+
+void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
+{
+  while ( !log_msgs.empty() )
+  {
+    if (!log_msgs.front().header.stamp.isZero()) {
+      gr_->write(topic_, log_msgs.front(), log_msgs.front().header.stamp);
+    }
+    else {
+      gr_->write(topic_, log_msgs.front());
+    }
+    {
+      log_msgs.pop_front();
+    }
+  }
+}
+
+void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+{
+  gr_ = gr;
+  is_initialized_ = true;
+}
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
-
-#endif

@@ -16,27 +16,34 @@
 */
 
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <iostream>
 
-# include <qi/anyobject.hpp>
+#include "laser.hpp"
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+LaserRecorder::LaserRecorder( const std::string& topic ):
+  BaseRecorder( topic )
+{}
+
+void LaserRecorder::write(const sensor_msgs::LaserScan& laser_msg)
+{
+  if (!laser_msg.header.stamp.isZero()) {
+    gr_->write(topic_, laser_msg, laser_msg.header.stamp);
+  }
+  else {
+    gr_->write(topic_, laser_msg);
+  }
+}
+
+void LaserRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+{
+  gr_ = gr;
+  is_initialized_ = true;
+}
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
-
-#endif

@@ -41,6 +41,7 @@
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace tf2_ros
 {
@@ -52,7 +53,7 @@ namespace alros
 
 namespace recorder
 {
-  class Recorder;
+  class GlobalRecorder;
 }
 /**
 * @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
@@ -123,6 +124,11 @@ public:
   void startRecord();
 
   /**
+  * @brief qicli call function to start recording all registered publisher in a ROSbag
+  */
+  void startRecordTopics(const std::vector<Topics>& topics);
+
+  /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
   void stopRecord();
@@ -141,7 +147,7 @@ private:
   boost::thread publisherThread_;
   //ros::Rate r_;
 
-  boost::shared_ptr<recorder::Recorder> _recorder;
+  boost::shared_ptr<recorder::GlobalRecorder> recorder_;
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
@@ -152,6 +158,8 @@ private:
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
+
+  boost::mutex mutex_record_;
 
   std::vector< converter::Converter > converters_;
   std::vector< subscriber::Subscriber > subscribers_;

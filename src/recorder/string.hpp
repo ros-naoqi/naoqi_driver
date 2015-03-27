@@ -15,28 +15,37 @@
  *
 */
 
+#ifndef STRING_RECORDER_HPP
+#define STRING_RECORDER_HPP
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <ros/ros.h>
+#include <std_msgs/String.h>
 
-# include <qi/anyobject.hpp>
+#include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <qi/anyobject.hpp>
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+class StringRecorder : public BaseRecorder<StringRecorder>
+{
+
+public:
+  StringRecorder( const std::string& topic );
+
+  void write( const std_msgs::String& msg );
+
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+
+private:
+  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+}; // class
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
 
 #endif

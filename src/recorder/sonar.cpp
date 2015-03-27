@@ -16,27 +16,34 @@
 */
 
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <iostream>
 
-# include <qi/anyobject.hpp>
+#include "sonar.hpp"
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+SonarRecorder::SonarRecorder( const std::string& topic ):
+  BaseRecorder( topic )
+{}
+
+void SonarRecorder::write(const sensor_msgs::Range& sonar_msg)
+{
+  if (!sonar_msg.header.stamp.isZero()) {
+    gr_->write(topic_, sonar_msg, sonar_msg.header.stamp);
+  }
+  else {
+    gr_->write(topic_, sonar_msg);
+  }
+}
+
+void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+{
+  gr_ = gr;
+  is_initialized_ = true;
+}
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
-
-#endif

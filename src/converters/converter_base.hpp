@@ -46,7 +46,8 @@ public:
     name_( name ),
     frequency_( frequency ),
     robot_( UNIDENTIFIED ),
-    session_(session)
+    session_(session),
+    record_enabled_(false)
   {}
 
   virtual ~BaseConverter() {};
@@ -89,6 +90,17 @@ public:
     }
   }
 
+  inline bool isRecordEnabled() const
+  {
+    return record_enabled_;
+  }
+
+  inline void setRecordEnabled(bool state)
+  {
+    record_enabled_ = state;
+  }
+
+
 protected:
   std::string name_;
 
@@ -99,6 +111,9 @@ protected:
 
   /** Pointer to a session from which we can create proxies */
   qi::SessionPtr session_;
+
+  /** Enable recording */
+  bool record_enabled_;
 }; // class
 
 } // converter
