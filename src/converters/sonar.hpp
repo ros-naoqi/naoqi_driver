@@ -15,43 +15,43 @@
  *
 */
 
-#ifndef PUBLISHER_SONAR_HPP
-#define PUBLISHER_SONAR_HPP
+#ifndef SONAR_CONVERTER_HPP
+#define SONAR_CONVERTER_HPP
 
 #include <ros/ros.h>
 #include <qi/anyobject.hpp>
 
 #include <sensor_msgs/Range.h>
 
-#include "publisher_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+#include "converter_base.hpp"
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class SonarPublisher : public BasePublisher<SonarPublisher>
+class SonarConverter : public BaseConverter<SonarConverter>
 {
+
+  typedef boost::function<void(std::vector<sensor_msgs::Range>&)> Callback_t;
+
+
 public:
-  SonarPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  SonarConverter( const std::string& name, float frequency, qi::SessionPtr& session );
 
-  ~SonarPublisher();
+  ~SonarConverter();
 
-  void publish();
+  void reset( );
 
-  void reset( ros::NodeHandle& nh );
+  void registerCallback( message_actions::MessageAction action, Callback_t cb );
 
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    for(std::vector<ros::Publisher>::const_iterator it = pubs_.begin(); it != pubs_.end(); ++it)
-      if (it->getNumSubscribers())
-        return true;
-    return false;
-  }
+  void callAll( std::vector<message_actions::MessageAction>& actions );
+
 
 private:
-  std::vector<ros::Publisher> pubs_;
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
 
   /** Sonar (Proxy) configurations */
   qi::AnyObject p_sonar_;
@@ -64,8 +64,6 @@ private:
   AL::ALValue keys_;
   /** The frames of the sonars */
   std::vector<std::string> frames_;
-  /** The topics that will be published */
-  std::vector<std::string> topics_;
   /** Pre-filled messges that are sent */
   std::vector<sensor_msgs::Range> msgs_;
 };

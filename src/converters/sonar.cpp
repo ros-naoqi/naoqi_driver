@@ -23,11 +23,11 @@
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-SonarPublisher::SonarPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session )
-  : BasePublisher( name, topic, frequency, session ),
+SonarConverter::SonarConverter( const std::string& name, float frequency, qi::SessionPtr& session )
+  : BaseConverter( name, frequency, session ),
     p_memory_( session->service("ALMemory") ),
     p_sonar_( session->service("ALSonar") ),
     is_subscribed_(false)
@@ -38,15 +38,15 @@ SonarPublisher::SonarPublisher( const std::string& name, const std::string& topi
     keys.push_back("Device/SubDeviceList/Platform/Back/Sonar/Sensor/Value");
     frames_.push_back("SonarFront_frame");
     frames_.push_back("SonarBack_frame");
-    topics_.push_back(topic + "/Front_sensor");
-    topics_.push_back(topic + "/Back_sensor");
+    //topics_.push_back(topic + "/Front_sensor");
+    //topics_.push_back(topic + "/Back_sensor");
   } else if (robot() == NAO) {
     keys.push_back("Device/SubDeviceList/US/Left/Sensor/Value");
     keys.push_back("Device/SubDeviceList/US/Right/Sensor/Value");
     frames_.push_back("LSonar_frame");
     frames_.push_back("RSonar_frame");
-    topics_.push_back(topic + "/Left_sensor");
-    topics_.push_back(topic + "/Right_sensor");
+    //topics_.push_back(topic + "/Left_sensor");
+    //topics_.push_back(topic + "/Right_sensor");
   }
 
   // Prepare the messages
@@ -66,7 +66,7 @@ SonarPublisher::SonarPublisher( const std::string& name, const std::string& topi
     keys_[i] = *it;
 }
 
-SonarPublisher::~SonarPublisher()
+SonarConverter::~SonarConverter()
 {
   if (is_subscribed_)
   {
@@ -75,7 +75,12 @@ SonarPublisher::~SonarPublisher()
   }
 }
 
-void SonarPublisher::publish()
+void SonarConverter::registerCallback( message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+void SonarConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   if (!is_subscribed_)
   {
@@ -89,25 +94,21 @@ void SonarPublisher::publish()
   {
     msgs_[i].header.stamp = now;
     msgs_[i].range = float(values[i]);
-    pubs_[i].publish(msgs_[i]);
+  }
+
+  for_each( message_actions::MessageAction action, actions )
+  {
+    callbacks_[action]( msg_[0], msg_[1] );
   }
 }
 
-void SonarPublisher::reset( ros::NodeHandle& nh )
+void SonarConverter::reset( )
 {
   if (is_subscribed_)
   {
     p_sonar_.call<void>("unsubscribe", "ROS");
     is_subscribed_ = false;
   }
-
-  pubs_.clear();
-  if (true) {
-    for(std::vector<std::string>::const_iterator it = topics_.begin(); it != topics_.end(); ++it)
-      pubs_.push_back( nh.advertise<sensor_msgs::Range>( *it, 1 ) );
-  }
-
-  is_initialized_ = true;
 }
 
 } // publisher

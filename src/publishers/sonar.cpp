@@ -26,19 +26,32 @@ namespace alros
 namespace publisher
 {
 
-SonarPublisher::SonarPublisher( const std::string& topic )
-  : BasePublisher( topic )
+SonarPublisher::SonarPublisher( const std::vector<std::string>& topics )
+  : BasePublisher( "sonar" ),
+  topics_(topics)
 {
 }
 
-void SonarPublisher::publish( const sensor_msgs::Range& sonar_msg )
+void SonarPublisher::publish( const std::vector<sensor_msgs::Range>& sonar_msgs )
 {
-  pub_.publish( sonar_msg );
+  if ( pubs_.size() != sonar_msgs.size() )
+  {
+    std::cerr << "Incorrect number of sonar range messages in sonar publisher. " << sonar_msgs.size() << "/" << pubs_.size() << std::endl;
+    return;
+  }
+
+  for( size_t i=0; i<sonar_msgs.size(); ++i)
+  {
+    pubs_[i].publish( sonar_msgs[i] );
+  }
 }
 
 void SonarPublisher::reset( ros::NodeHandle& nh )
 {
-  pub_ = nh.advertise<sensor_msgs::Range>( topic_, 1 );
+  for( size_t i=0; i<topics_.size(); ++i)
+  {
+    pubs_.push_back( nh.advertise<sensor_msgs::Range>(topics_[i], 1) );
+  }
 
   is_initialized_ = true;
 }

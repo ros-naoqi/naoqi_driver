@@ -32,22 +32,24 @@ namespace publisher
 class SonarPublisher : public BasePublisher<SonarPublisher>
 {
 public:
-  SonarPublisher( const std::string& topic );
+  SonarPublisher( const std::vector<std::string>& topics );
 
-  void publish( const sensor_msgs::Range& sonar_msg );
+  void publish( const std::vector<sensor_msgs::Range>& sonar_msgs );
 
   void reset( ros::NodeHandle& nh );
 
   inline bool isSubscribed() const
   {
     if (is_initialized_ == false) return false;
-    if (pub_.getNumSubscribers())
-      return true;
+    for(std::vector<ros::Publisher>::const_iterator it = pubs_.begin(); it != pubs_.end(); ++it)
+      if (it->getNumSubscribers())
+        return true;
     return false;
   }
 
 private:
-  ros::Publisher pub_;
+  std::vector<std::string> topics_;
+  std::vector<ros::Publisher> pubs_;
 
 };
 
