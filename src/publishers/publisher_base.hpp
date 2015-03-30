@@ -25,6 +25,8 @@
 #include <alvalue/alvalue.h>
 #include <qi/session.hpp>
 
+#include <ros/ros.h>
+
 #include <alrosbridge/tools.hpp>
 
 namespace alros
@@ -55,13 +57,20 @@ public:
     return is_initialized_;
   }
 
-  virtual bool isSubscribed() const = 0;
+  virtual inline bool isSubscribed() const
+  {
+    if (is_initialized_ == false) return false;
+      return pub_.getNumSubscribers() > 0;
+
+  }
 
 protected:
   std::string topic_;
 
   bool is_initialized_;
 
+  /** Publisher */
+  ros::Publisher pub_;
 }; // class
 
 } // publisher
