@@ -78,7 +78,23 @@ public:
    * @brief registers generall converter units
    * they are connected via callbacks to various actions such as record, log, publish
    */
-  void registerConverter( converter::Converter conv );
+  void registerConverter( const converter::Converter& conv );
+
+  /**
+   * @brief register a converter with an associated publisher and recorder
+   */
+  void registerConverter( const converter::Converter& conv, const publisher::Publisher& pub, const recorder::Recorder& rec );
+
+  /**
+   * @brief register a converter with an associated publisher instance
+   */
+  void registerPublisher( const converter::Converter& conv, const publisher::Publisher& pub );
+
+  /**
+   * @brief register a converter with an associated recorder instance
+   */
+  void registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec );
+
 
   /**
   * @brief registers a subscriber
@@ -162,6 +178,13 @@ private:
   boost::mutex mutex_record_;
 
   std::vector< converter::Converter > converters_;
+  std::map< std::string, publisher::Publisher > pub_map_;
+  std::map< std::string, recorder::Recorder > rec_map_;
+  typedef std::map< std::string, publisher::Publisher>::const_iterator PubConstIter;
+  typedef std::map< std::string, publisher::Publisher>::iterator PubIter;
+  typedef std::map< std::string, recorder::Recorder>::const_iterator RecConstIter;
+  typedef std::map< std::string, recorder::Recorder>::iterator RecIter;
+
   std::vector< subscriber::Subscriber > subscribers_;
 
   /** Pub Publisher to execute at a specific time */

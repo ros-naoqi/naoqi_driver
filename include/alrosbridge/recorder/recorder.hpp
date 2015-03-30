@@ -57,20 +57,18 @@ public:
   {};
 
   /**
-  * @brief triggers the writing process of the concrete recorder instance
-  */
-  void write( )
-  {
-    recPtr_->write();
-  }
-
-  /**
   * @brief checks if the recorder is correctly initialized on the ros-master
   @ @return bool value indicating true for success
   */
   bool isInitialized() const
   {
     return recPtr_->isInitialized();
+  }
+
+
+  void subscribe( bool state )
+  {
+    recPtr_->subscribe(state);
   }
 
   /**
@@ -82,15 +80,27 @@ public:
     return recPtr_->isSubscribed();
   }
 
+  std::string topic() const
+  {
+    return recPtr_->topic();
+  }
+
   /**
   * @brief initializes/resets the recorder into ROS with a given nodehandle,
   * this will be called at first for initialization or again when master uri has changed
   * @param ros NodeHandle to advertise the recorder on
   */
-  //void reset( alros::recorder::GlobalRecorder& gr )
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr)
   {
     recPtr_->reset( gr );
+  }
+
+  friend bool operator==( const Recorder& lhs, const Recorder& rhs )
+  {
+    // decision made for OR-comparison since we want to be more restrictive
+    if ( lhs.topic() == rhs.topic() )
+      return true;
+    return false;
   }
 
 private:
@@ -101,9 +111,8 @@ private:
   struct RecorderConcept
   {
     virtual ~RecorderConcept(){};
-    virtual void write() = 0;
     virtual bool isInitialized() const = 0;
-    virtual void subscribe(bool state) const = 0;
+    virtual void subscribe(bool state) = 0;
     virtual bool isSubscribed() const = 0;
     virtual std::string topic() const = 0;
     virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr ) = 0;
@@ -125,12 +134,7 @@ private:
       recorder_.reset( gr );
     }
 
-    void write()
-    {
-      recorder_.write();
-    }
-
-    bool isInitialized()
+    bool isInitialized() const
     {
       return recorder_.isInitialized();
     }
@@ -140,7 +144,7 @@ private:
       recorder_.subscribe( state );
     }
 
-    bool isSubscribed()
+    bool isSubscribed() const
     {
       return recorder_.isSubscribed();
     }

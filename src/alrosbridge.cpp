@@ -27,7 +27,7 @@
 */
 #include <boost/foreach.hpp>
 #include <boost/make_shared.hpp>
-#define foreach BOOST_FOREACH
+#define for_each BOOST_FOREACH
 /*
 * ROS
 */
@@ -46,6 +46,8 @@
 #include "converters/string.hpp"
 #include "converters/camera.hpp"
 #include "converters/joint_state.hpp"
+#include "converters/laser.hpp"
+#include "converters/sonar.hpp"
 /*
 * publishers
 */
@@ -56,9 +58,9 @@
 #include "publishers/joint_state.hpp"
 //#include "publishers/nao_joint_state.hpp"
 //#include "publishers/odometry.hpp"
-//#include "publishers/laser.hpp"
+#include "publishers/laser.hpp"
 //#include "publishers/log.hpp"
-//#include "publishers/sonar.hpp"
+#include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 
 /*
@@ -124,27 +126,44 @@ void Bridge::stopService() {
 
 void Bridge::rosLoop()
 {
-  while( !publish_cancelled_ )
+  static std::vector<message_actions::MessageAction> actions;
+
+  while( !publish_cancelled_ && !record_cancelled_ )
   {
-   {
+    // clear the callback triggers
+    actions.clear();
+    {
       boost::mutex::scoped_lock lock( mutex_reinit_ );
-      if (publish_enabled_ && !conv_queue_.empty())
+      if (!conv_queue_.empty())
       {
         // Wait for the next Publisher to be ready
         size_t conv_index = conv_queue_.top().conv_index_;
-        converter::Converter conv = converters_[conv_index];
+        converter::Converter& conv = converters_[conv_index];
         ros::Time schedule = conv_queue_.top().schedule_;
 
         ros::Duration(schedule - ros::Time::now()).sleep();
+        // check the publishing condition
+        // publishing enabled
+        // has to be registered
+        // has to be subscribed
+        PubConstIter pub_it = pub_map_.find( conv.name() );
+        if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
+        {
+          std::cout << "Publisher on topic " << pub_it->second.topic() << " is  enabled" << std::endl;
+          actions.push_back(message_actions::PUBLISH);
+        }
 
-
-        std::vector<message_actions::MessageAction> actions;
-        actions.push_back( message_actions::PUBLISH );
-
-        boost::mutex::scoped_lock lock_record( mutex_record_ );
-        if (record_enabled_) {
-          if (conv.isRecordEnabled()) {
-            actions.push_back( message_actions::RECORD );
+        // check the recording condition
+        // recording enabled
+        // has to be registered
+        // has to be subscribed (configured to be recorded)
+        RecConstIter rec_it = rec_map_.find( conv.name() );
+        {
+          boost::mutex::scoped_lock lock_record( mutex_record_ );
+          if ( record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
+          {
+            std::cout << "Recording on topic " << rec_it->second.topic() << " is  enabled" << std::endl;
+            actions.push_back(message_actions::RECORD);
           }
         }
         conv.callAll( actions );
@@ -161,9 +180,34 @@ void Bridge::rosLoop()
   }
 }
 
-void Bridge::registerConverter( converter::Converter conv )
+void Bridge::registerConverter( const converter::Converter& conv )
 {
   converters_.push_back( conv );
+}
+
+void Bridge::registerConverter( const converter::Converter& conv, const publisher::Publisher& pub, const recorder::Recorder& rec )
+{
+  registerConverter( conv );
+  // Concept classes don't have any default constructors needed by operator[]
+  // Cannot use this operator here. So we use insert
+  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
+  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
+}
+
+void Bridge::registerPublisher( const converter::Converter& conv, const publisher::Publisher& pub )
+{
+  registerConverter( conv );
+  // Concept classes don't have any default constructors needed by operator[]
+  // Cannot use this operator here. So we use insert
+  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
+}
+
+void Bridge::registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec )
+{
+  registerConverter( conv );
+  // Concept classes don't have any default constructors needed by operator[]
+  // Cannot use this operator here. So we use insert
+  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
 }
 
 void Bridge::registerDefaultConverter()
@@ -212,7 +256,7 @@ void Bridge::registerDefaultConverter()
   converter::StringConverter sc( "string_converter", 10, sessionPtr_ );
   sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc.registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
-  converters_.push_back( sc );
+  registerConverter( sc, *sp, *sr );
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
@@ -222,7 +266,7 @@ void Bridge::registerDefaultConverter()
   converter::IntConverter ic( "int_converter", 15, sessionPtr_);
   ic.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
   ic.registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
-  converters_.push_back( ic );
+  registerConverter( ic, *ip, *ir  );
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "front_camera", AL::kTopCamera );
@@ -232,17 +276,17 @@ void Bridge::registerDefaultConverter()
   converter::CameraConverter fcc( "front_camera_converter", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
   fcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
-  converters_.push_back( fcc );
+  registerConverter( fcc, *fcp, *fcr );
 
   /** Depth Camera */
-  boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "depth_camera", AL::kDepthCamera );
+  boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth", AL::kDepthCamera );
   dcp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "depth_camera" );
   dcr->reset(recorder_);
   converter::CameraConverter dcc( "depth_camera_converter", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
   dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
   dcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
-  converters_.push_back( dcc );
+  registerConverter( dcc, *dcp, *dcr );
 
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
@@ -252,7 +296,15 @@ void Bridge::registerDefaultConverter()
   converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
-  converters_.push_back( jsc );
+  registerConverter( jsc, *jsp, *jsr );
+
+  /** Laser */
+  boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
+  lp->reset( *nhPtr_ );
+  converter::LaserConverter lc( "laser_converter", 10, sessionPtr_ );
+  lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
+  registerPublisher( lc, *lp );
+
 }
 
 // public interface here
@@ -293,7 +345,7 @@ void Bridge::init()
   // init converters
   conv_queue_ =  std::priority_queue<ScheduledConverter>();
   size_t conv_index = 0;
-  foreach( converter::Converter& conv, converters_ )
+  for_each( converter::Converter& conv, converters_ )
   {
     conv.reset();
     // Schedule it for the next publish
@@ -302,7 +354,7 @@ void Bridge::init()
   }
 
   // init subscribers
-  foreach( subscriber::Subscriber& sub, subscribers_ )
+  for_each( subscriber::Subscriber& sub, subscribers_ )
   {
     sub.reset( *nhPtr_ );
   }
@@ -352,7 +404,6 @@ void Bridge::startPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
-
 }
 
 void Bridge::stopPublishing()
@@ -365,9 +416,13 @@ void Bridge::startRecord()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
-  foreach( converter::Converter& conv, converters_ )
+  for_each( converter::Converter& conv, converters_ )
   {
-    conv.setRecordEnabled(true);
+    RecIter it = rec_map_.find(conv.name());
+    if ( it != rec_map_.end() )
+    {
+      it->second.subscribe(true);
+    }
   }
   record_enabled_ = true;
 }
@@ -384,12 +439,12 @@ void Bridge::stopRecord()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
-  foreach( converter::Converter& conv, converters_ )
+  for_each( converter::Converter& conv, converters_ )
   {
-    // enabled recording
-    if (conv.name() == "front_camera_converter"
-        || conv.name() == "int_converter") {
-      conv.setRecordEnabled(false);
+    RecIter it = rec_map_.find(conv.name());
+    if ( it != rec_map_.end() )
+    {
+      it->second.subscribe(false);
     }
   }
   recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));

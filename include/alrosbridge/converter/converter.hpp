@@ -86,15 +86,15 @@ public:
     convPtr_->callAll(actions);
   }
 
-  bool isRecordEnabled() const
-  {
-    return convPtr_->isRecordEnabled();
-  }
-
-  void setRecordEnabled(bool state)
-  {
-    convPtr_->setRecordEnabled(state);
-  }
+//  bool isRecordEnabled() const
+//  {
+//    return convPtr_->isRecordEnabled();
+//  }
+//
+//  void setRecordEnabled(bool state)
+//  {
+//    convPtr_->setRecordEnabled(state);
+//  }
 
   friend bool operator==( const Converter& lhs, const Converter& rhs )
   {
