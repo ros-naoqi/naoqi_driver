@@ -65,29 +65,6 @@ public:
   }
 
   /**
-  * @brief getting the descriptive name for this recorder instance
-  * @return string with the name
-  */
-  std::string name() const
-  {
-    return recPtr_->name();
-  }
-
-  /**
-  * @brief getting the assigned frequency of this recorder instance
-  * @return float value indicating the frequency
-  */
-  float frequency() const
-  {
-    return recPtr_->frequency();
-  }
-
-  Robot robot() const
-  {
-    return recPtr_->robot();
-  }
-
-  /**
   * @brief checks if the recorder is correctly initialized on the ros-master
   @ @return bool value indicating true for success
   */
@@ -113,17 +90,7 @@ public:
   //void reset( alros::recorder::GlobalRecorder& gr )
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr)
   {
-    std::cout << name() << " is resetting" << std::endl;
     recPtr_->reset( gr );
-    std::cout << name() << " reset" << std::endl;
-  }
-
-  friend bool operator==( const Recorder& lhs, const Recorder& rhs )
-  {
-    // decision made for OR-comparison since we want to be more restrictive
-    if ( lhs.name() == rhs.name() )
-      return true;
-    return false;
   }
 
 private:
@@ -138,10 +105,7 @@ private:
     virtual bool isInitialized() const = 0;
     virtual void subscribe(bool state) const = 0;
     virtual bool isSubscribed() const = 0;
-    virtual std::string name() const = 0;
-    virtual float frequency() const = 0;
     virtual std::string topic() const = 0;
-    virtual Robot robot() const = 0;
     virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr ) = 0;
   };
 
@@ -155,21 +119,6 @@ private:
     RecorderModel( const T& other ):
       recorder_( other )
     {}
-
-    std::string name() const
-    {
-      return recorder_.name();
-    }
-
-    float frequency() const
-    {
-      return recorder_.frequency();
-    }
-
-    Robot robot() const
-    {
-      return recorder_.robot();
-    }
 
     void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
     {
