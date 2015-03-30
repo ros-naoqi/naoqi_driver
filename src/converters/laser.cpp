@@ -25,9 +25,11 @@
 
 #include "laser.hpp"
 
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
 static const char* laserMemoryKeys[] = {
@@ -126,13 +128,18 @@ static const char* laserMemoryKeys[] = {
   "Device/SubDeviceList/Platform/LaserSensor/Left/Horizontal/Seg15/Y/Sensor/Value",
 };
 
-LaserPublisher::LaserPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session ):
-  BasePublisher( name, topic, frequency, session ),
+LaserConverter::LaserConverter( const std::string& name, float frequency, qi::SessionPtr& session ):
+  BaseConverter( name, frequency, session ),
   p_memory_(session->service("ALMemory"))
 {
 }
 
-void LaserPublisher::publish()
+void LaserConverter::registerCallback( message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+void LaserConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   static const AL::ALValue laser_keys_value(laserMemoryKeys, 90);
 
@@ -191,17 +198,14 @@ void LaserPublisher::publish()
     msg_.ranges[pos] = dist;
   }
 
-  //std::cout << "****************" << std::endl;
-
-  //std::cout << name() << " is publishing " << m.data << std::endl;
-  pub_.publish( msg_ );
+  for_each( message_actions::MessageAction action, actions )
+  {
+    callbacks_[action](msg_);
+  }
 }
 
-void LaserPublisher::reset( ros::NodeHandle& nh )
+void LaserConverter::reset( )
 {
-  // check if we have to split them into 3 pubs (front/left/right)
-  pub_ = nh.advertise<sensor_msgs::LaserScan>( topic_, 10 );
-
   msg_.header.frame_id = "base_footprint";
   msg_.angle_min = -2.0944;   // -120
   msg_.angle_max = 2.0944;    // +120
@@ -209,9 +213,7 @@ void LaserPublisher::reset( ros::NodeHandle& nh )
   msg_.range_min = 0.1; // in m
   msg_.range_max = 1.5; // in m
   msg_.ranges = std::vector<float>(61, -1.0f);
-
-  is_initialized_ = true;
 }
 
-} //publisher
+} //converter
 } // alros

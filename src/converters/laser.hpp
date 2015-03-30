@@ -15,40 +15,42 @@
  *
 */
 
-#ifndef LASER_PUBLISHER_HPP
-#define LASER_PUBLISHER_HPP
+#ifndef LASER_CONVERTER_HPP
+#define LASER_CONVERTER_HPP
 
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 
+#include <alrosbridge/message_actions.h>
+
 #include <qi/anyobject.hpp>
 
-#include "publisher_base.hpp"
+#include "converter_base.hpp"
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class LaserPublisher : public BasePublisher<LaserPublisher>
+class LaserConverter : public BaseConverter<LaserConverter>
 {
+
+  typedef boost::function<void(sensor_msgs::LaserScan&)> Callback_t;
 
 public:
-  LaserPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  LaserConverter( const std::string& name, float frequency, qi::SessionPtr& session );
 
-  void publish();
+  void registerCallback( message_actions::MessageAction action, Callback_t cb );
 
-  void reset( ros::NodeHandle& nh );
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
+  void reset( );
 
 private:
+
   qi::AnyObject p_memory_;
-  ros::Publisher pub_;
+
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
   sensor_msgs::LaserScan msg_;
 }; // class
 
