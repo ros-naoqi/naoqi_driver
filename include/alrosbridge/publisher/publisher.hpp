@@ -49,7 +49,7 @@ public:
   * @brief Constructor for publisher interface
   */
   template<typename T>
-  Publisher( T pub ):
+  Publisher( const T& pub ):
     pubPtr_( boost::make_shared<PublisherModel<T> >(pub) )
   {};
 
