@@ -70,17 +70,8 @@ public:
   void write(const std::string& topic, const T& msg, const ros::Time& time = ros::Time::now() ) {
     ros::Time time_msg = time;
     boost::mutex::scoped_lock writeLock( _processMutex );
-    _bag.write(topic, time_msg, msg);
-  }
-
-  template <class T1, class T2>
-  void write(const std::vector<std::string>& topics, const T1& msg1, const T2& msg2) {
-    boost::mutex::scoped_lock writeLock( _processMutex );
-    try {
-      _bag.write(topics[0], ros::Time::now(), msg1);
-      _bag.write(topics[1], ros::Time::now(), msg2);
-    } catch (std::exception e){
-      throw std::runtime_error(e.what());
+    if (_isStarted) {
+      _bag.write(topic, time_msg, msg);
     }
   }
 

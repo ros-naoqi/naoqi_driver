@@ -96,7 +96,9 @@ namespace recorder
       message.transforms.push_back(*it);
     }
     boost::mutex::scoped_lock writeLock( _processMutex );
-    _bag.write(topic, now, message);
+    if (_isStarted) {
+      _bag.write(topic, now, message);
+    }
   }
 
 } // recorder
