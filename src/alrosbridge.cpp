@@ -180,7 +180,7 @@ void Bridge::registerDefaultPublisher()
   }
 
   registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
-  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
+  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front/image_raw", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
   registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
   registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
   registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
@@ -189,7 +189,7 @@ void Bridge::registerDefaultPublisher()
   if (info.robot() == alros::PEPPER)
   {
     registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
-    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
+    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth/image_raw", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
   }
 }
 

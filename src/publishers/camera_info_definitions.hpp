@@ -34,7 +34,7 @@ inline sensor_msgs::CameraInfo createCameraInfoTOPVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraTop_frame";
+  cam_info_msg.header.frame_id = "CameraTop_optical_frame";
 
   cam_info_msg.width = 640;
   cam_info_msg.height = 480;
@@ -55,7 +55,7 @@ inline sensor_msgs::CameraInfo createCameraInfoTOPQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraTop_frame";
+  cam_info_msg.header.frame_id = "CameraTop_optical_frame";
 
   cam_info_msg.width = 320;
   cam_info_msg.height = 240;
@@ -76,7 +76,7 @@ inline sensor_msgs::CameraInfo createCameraInfoTOPQQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraTop_frame";
+  cam_info_msg.header.frame_id = "CameraTop_optical_frame";
 
   cam_info_msg.width = 160;
   cam_info_msg.height = 120;
@@ -100,7 +100,7 @@ inline sensor_msgs::CameraInfo createCameraInfoBOTTOMVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraBottom_frame";
+  cam_info_msg.header.frame_id = "CameraBottom_optical_frame";
 
   cam_info_msg.width = 640;
   cam_info_msg.height = 480;
@@ -121,7 +121,7 @@ inline sensor_msgs::CameraInfo createCameraInfoBOTTOMQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraBottom_frame";
+  cam_info_msg.header.frame_id = "CameraBottom_optical_frame";
 
   cam_info_msg.width = 320;
   cam_info_msg.height = 240;
@@ -142,7 +142,7 @@ inline sensor_msgs::CameraInfo createCameraInfoBOTTOMQQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraBottom_frame";
+  cam_info_msg.header.frame_id = "CameraBottom_optical_frame";
 
   cam_info_msg.width = 160;
   cam_info_msg.height = 120;
@@ -166,7 +166,7 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraDepth_frame";
+  cam_info_msg.header.frame_id = "CameraDepth_optical_frame";
 
   cam_info_msg.width = 640;
   cam_info_msg.height = 480;
@@ -187,7 +187,7 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraDepth_frame";
+  cam_info_msg.header.frame_id = "CameraDepth_optical_frame";
 
   cam_info_msg.width = 320;
   cam_info_msg.height = 240;
@@ -207,7 +207,7 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQVGA()
 {
   sensor_msgs::CameraInfo cam_info_msg;
 
-  cam_info_msg.header.frame_id = "CameraDepth_frame";
+  cam_info_msg.header.frame_id = "CameraDepth_optical_frame";
 
   cam_info_msg.width = 160;
   cam_info_msg.height = 120;
