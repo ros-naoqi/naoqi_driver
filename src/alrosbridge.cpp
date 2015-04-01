@@ -96,7 +96,7 @@ Bridge::~Bridge()
 
 void Bridge::stopService() {
   publish_cancelled_ = true;
-  stop();
+  stopPublishing();
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
   publishers_.clear();
@@ -257,7 +257,7 @@ void Bridge::setMasterURI( const std::string& uri)
 void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // Stopping publishing
-  stop();
+  stopPublishing();
 
   // Reinitializing ROS
   {
@@ -277,20 +277,20 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   // initialize the publishers and subscribers with nodehandle
   init();
   // Start publishing again
-  start();
+  startPublishing();
 }
 
-void Bridge::start()
+void Bridge::startPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
 }
 
-void Bridge::stop()
+void Bridge::stopPublishing()
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = false;
 }
 
-QI_REGISTER_OBJECT( Bridge, start, stop, getMasterURI, setMasterURI, setMasterURINet );
+QI_REGISTER_OBJECT( Bridge, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet );
 } //alros

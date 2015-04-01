@@ -107,12 +107,12 @@ public:
   /**
   * @brief qicli call function to start/enable publishing all registered publisher
   */
-  void start();
+  void startPublishing();
 
   /**
   * @brief qicli call function to stop/disable publishing all registered publisher
   */
-  void stop();
+  void stopPublishing();
 
   void stopService();
 
