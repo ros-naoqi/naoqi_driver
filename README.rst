@@ -31,3 +31,19 @@ This module tries to be as close to the ROS standard by exposing several standar
 It also exposes the following higher level NAOqi API services:
 
 * /cmd_vel as detailed here http://wiki.ros.org/android_teleop
+
+Getting Started
+===============
+
+Start the **BridgeService** module
+----------------------------------
+
+This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/bridgeservicepackage/tree/master>`_
+
+See instructions on installation `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/2-installation>`_ (Section *C++ Bridge*)
+
+Using the **BridgeService** module
+----------------------------------
+
+
+
