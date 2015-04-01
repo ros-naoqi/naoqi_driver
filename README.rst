@@ -45,5 +45,15 @@ See instructions on installation `here <https://sites.google.com/a/aldebaran-rob
 Using the **BridgeService** module
 ----------------------------------
 
+To start using this bridge, you need to communicate your external roscore IP (see instructions `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/start-core-bridge>`_ )
 
+API
++++
 
+* startPublishing:
+
+  start/enable publishing all registered publisher
+  
+* stopPublishing:
+
+  stop/disable publishing all registered publisher
