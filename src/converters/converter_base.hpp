@@ -50,7 +50,7 @@ public:
     record_enabled_(false)
   {}
 
-  virtual ~BaseConverter() {};
+  virtual ~BaseConverter() {}
 
   inline std::string name() const
   {

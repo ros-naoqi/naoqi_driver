@@ -49,7 +49,7 @@ public:
   * @brief Constructor for publisher interface
   */
   template<typename T>
-  Publisher( T pub ):
+  Publisher( const T& pub ):
     pubPtr_( boost::make_shared<PublisherModel<T> >(pub) )
   {};
 
@@ -143,7 +143,7 @@ private:
   */
   struct PublisherConcept
   {
-    virtual ~PublisherConcept(){};
+    virtual ~PublisherConcept(){}
     //virtual void publish() = 0;
     virtual bool isInitialized() const = 0;
     virtual bool isSubscribed() const = 0;

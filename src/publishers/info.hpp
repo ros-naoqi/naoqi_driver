@@ -35,15 +35,6 @@ public:
   void publish( const std_msgs::String& info_msg );
 
   void reset( ros::NodeHandle& nh );
-
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
-
-private:
-  ros::Publisher pub_;
 };
 
 } //publisher
