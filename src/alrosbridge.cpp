@@ -117,7 +117,11 @@ void Bridge::rosLoop()
         publisher::Publisher& pub = publishers_[pub_index];
         ros::Time schedule = pub_queue_.top().schedule_;
 
-        ros::Duration(schedule - ros::Time::now()).sleep();
+        ros::Duration d(schedule - ros::Time::now());
+        if ( d > ros::Duration(0))
+        {
+          d.sleep();
+        }
 
         if ( pub.isSubscribed() && pub.isInitialized())
         {
