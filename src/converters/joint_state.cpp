@@ -136,6 +136,41 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   setTransforms(joint_state_map, stamp, jt_tf_prefix);
   setFixedTransforms(jt_tf_prefix, stamp);
 
+
+  /**
+   * ODOMETRY
+   */
+
+  /*
+   * can be called via getRobotPosture
+   * but this would require a proper URDF 
+   * with a base_link and base_footprint in the base
+   */
+  std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", 1, true );
+  const ros::Time& odom_stamp = ros::Time::now();
+  const float& odomX =  al_odometry_data[0];
+  const float& odomY =  al_odometry_data[1];
+  const float& odomZ =  al_odometry_data[2];
+  const float& odomWX =  al_odometry_data[3];
+  const float& odomWY =  al_odometry_data[4];
+  const float& odomWZ =  al_odometry_data[5];
+  //since all odometry is 6DOF we'll need a quaternion created from yaw
+  geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw( odomWX, odomWY, odomWZ );
+
+  static geometry_msgs::TransformStamped msg_tf_odom;
+  msg_tf_odom.header.frame_id = "odom";
+  msg_tf_odom.child_frame_id = "base_link";
+  msg_tf_odom.header.stamp = odom_stamp;
+
+  msg_tf_odom.transform.translation.x = odomX;
+  msg_tf_odom.transform.translation.y = odomY;
+  msg_tf_odom.transform.translation.z = odomZ;
+  msg_tf_odom.transform.rotation = odom_quat;
+
+  tf_transforms_.push_back( msg_tf_odom );
+  tf2_buffer_->setTransform( msg_tf_odom, "alrosconverter", false);
+
+
   // If nobody uses that buffer, do not fill it next time
   if (( tf2_buffer_ ) && ( tf2_buffer_.use_count() == 1 ))
   {

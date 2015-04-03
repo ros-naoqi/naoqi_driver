@@ -50,7 +50,7 @@
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
 /*
-* publishers
+* PUBLISHERS
 */
 #include "publishers/camera.hpp"
 //#include "publishers/diagnostics.hpp"
@@ -66,13 +66,13 @@
 #include "publishers/string.hpp"
 
 /*
- * subscribers
+ * SUBSCRIBERS
  */
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
 
 /*
- * recorders
+ * RECORDERS
  */
 #include "recorder/camera.hpp"
 #include "recorder/int.hpp"
