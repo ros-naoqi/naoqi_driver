@@ -250,6 +250,7 @@ void Bridge::registerDefaultConverter()
 //    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
 //  }
 
+  alros::Robot robot_type;
 
 
   /** String Publisher */
@@ -261,6 +262,8 @@ void Bridge::registerDefaultConverter()
   sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc.registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   registerConverter( sc, *sp, *sr );
+
+  robot_type = sc.robot();
 
   /** IMU **/
   boost::shared_ptr<publisher::ImuPublisher> imup = boost::make_shared<publisher::ImuPublisher>( "imu" );
@@ -290,15 +293,17 @@ void Bridge::registerDefaultConverter()
   fcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
   registerConverter( fcc, *fcp, *fcr );
 
-  /** Depth Camera */
-  boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth", AL::kDepthCamera );
-  dcp->reset( *nhPtr_ );
-  boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "depth_camera" );
-  dcr->reset(recorder_);
-  converter::CameraConverter dcc( "depth_camera_converter", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
-  dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
-  dcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
-  registerConverter( dcc, *dcp, *dcr );
+  if(robot_type == alros::PEPPER){
+    /** Depth Camera */
+    boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth", AL::kDepthCamera );
+    dcp->reset( *nhPtr_ );
+    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "depth_camera" );
+    dcr->reset(recorder_);
+    converter::CameraConverter dcc( "depth_camera_converter", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+    dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
+    dcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
+    registerConverter( dcc, *dcp, *dcr );
+  }
 
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
