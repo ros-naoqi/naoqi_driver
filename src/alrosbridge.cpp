@@ -141,7 +141,11 @@ void Bridge::rosLoop()
         converter::Converter& conv = converters_[conv_index];
         ros::Time schedule = conv_queue_.top().schedule_;
 
-        ros::Duration(schedule - ros::Time::now()).sleep();
+        ros::Duration d(schedule - ros::Time::now());
+        if ( d > ros::Duration(0))
+        {
+          d.sleep();
+        }
         // check the publishing condition
         // publishing enabled
         // has to be registered
