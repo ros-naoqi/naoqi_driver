@@ -42,24 +42,26 @@
 /*
  * CONVERTERS
  */
-#include "converters/int.hpp"
-#include "converters/string.hpp"
 #include "converters/camera.hpp"
+#include "converters/imu.hpp"
+#include "converters/int.hpp"
 #include "converters/joint_state.hpp"
 #include "converters/laser.hpp"
 #include "converters/sonar.hpp"
+#include "converters/string.hpp"
 /*
 * publishers
 */
 #include "publishers/camera.hpp"
 //#include "publishers/diagnostics.hpp"
+#include "publishers/imu.hpp"
 #include "publishers/int.hpp"
 //#include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
-//#include "publishers/nao_joint_state.hpp"
-//#include "publishers/odometry.hpp"
 #include "publishers/laser.hpp"
 //#include "publishers/log.hpp"
+//#include "publishers/nao_joint_state.hpp"
+//#include "publishers/odometry.hpp"
 #include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 
@@ -72,8 +74,8 @@
 /*
  * recorders
  */
-#include "recorder/int.hpp"
 #include "recorder/camera.hpp"
+#include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
 #include "recorder/string.hpp"
 
@@ -259,6 +261,14 @@ void Bridge::registerDefaultConverter()
   sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc.registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   registerConverter( sc, *sp, *sr );
+
+  /** IMU **/
+  boost::shared_ptr<publisher::ImuPublisher> imup = boost::make_shared<publisher::ImuPublisher>( "imu" );
+  imup->reset( *nhPtr_ );
+
+  converter::ImuConverter imuc( "imu_converter", 15, sessionPtr_);
+  imuc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imup, _1) );
+  registerPublisher( imuc, *imup );
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
