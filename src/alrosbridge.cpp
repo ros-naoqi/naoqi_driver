@@ -216,6 +216,9 @@ void Bridge::registerRecorder( const converter::Converter& conv, const recorder:
 
 void Bridge::registerDefaultConverter()
 {
+  // init global tf2 buffer
+  tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
+  tf2_buffer_->setUsingDedicatedThread(true);
 //  if (!publishers_.empty())
 //    return;
 //
@@ -366,9 +369,6 @@ void Bridge::registerDefaultSubscriber()
 
 void Bridge::init()
 {
-  // init global tf2 buffer
-  tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
-  tf2_buffer_->setUsingDedicatedThread(true);
 
   // init converters
   conv_queue_ =  std::priority_queue<ScheduledConverter>();
