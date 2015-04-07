@@ -49,7 +49,7 @@ namespace recorder
         char buffer[80];
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
-        std::strftime(buffer,80,"%d-%m-%Y_%I:%M:%S",timeinfo);
+        std::strftime(buffer,80,"/home/nao/%d-%m-%Y_%I:%M:%S",timeinfo);
         _nameBag = buffer;
         _nameBag.append(".bag");
 
@@ -72,7 +72,7 @@ namespace recorder
       _isStarted = false;
       std::cout << "The bag " << _nameBag << " is closed" << std::endl;
       std::cout << BOLDRED << "To download this bag on your computer:" << RESET << std::endl
-                   << GREEN << "\t$ scp nao@" << robot_ip << ":/home/nao/" << _nameBag << " <LOCAL_PATH>" << RESET
+                   << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESET
                       << std::endl;
       _nameBag.clear();
     }
