@@ -44,7 +44,7 @@ public:
     is_subscribed_( false )
   {}
 
-  virtual ~BaseRecorder() {};
+  virtual ~BaseRecorder() {}
 
   inline std::string topic() const
   {
