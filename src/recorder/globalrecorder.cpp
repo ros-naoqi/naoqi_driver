@@ -20,6 +20,7 @@
 #include <tf2_msgs/TFMessage.h>
 #include <qi/log.hpp>
 #include <ctime>
+#include "boost/filesystem.hpp"
 
 #define RESET "\033[0m"
 #define GREEN "\033[32m"             /* Green */
@@ -44,13 +45,18 @@ namespace recorder
     boost::mutex::scoped_lock startLock( _processMutex );
     if (!_isStarted) {
       try {
+        // Get current path
+        boost::filesystem::path cur_path( boost::filesystem::current_path() );
+
+        // Get time
         time_t rawtime;
         struct tm * timeinfo;
         char buffer[80];
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
-        std::strftime(buffer,80,"/home/nao/%d-%m-%Y_%I:%M:%S",timeinfo);
-        _nameBag = buffer;
+        std::strftime(buffer,80,"/%d-%m-%Y_%I:%M:%S",timeinfo);
+
+        _nameBag = cur_path.string()+buffer;
         _nameBag.append(".bag");
 
         _bag.open(_nameBag, rosbag::bagmode::Write);
@@ -70,10 +76,19 @@ namespace recorder
     if (_isStarted) {
       _bag.close();
       _isStarted = false;
+
       std::cout << "The bag " << _nameBag << " is closed" << std::endl;
-      std::cout << BOLDRED << "To download this bag on your computer:" << RESET << std::endl
-                   << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESET
-                      << std::endl;
+
+      // Check if we are on a robot
+      char* current_path;
+      current_path = getenv("HOME");
+      std::string cp = current_path;
+      if (!(cp.find("nao") == std::string::npos)) {
+        std::cout << BOLDRED << "To download this bag on your computer:" << RESET << std::endl
+                     << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESET
+                        << std::endl;
+      }
+
       _nameBag.clear();
     }
     else {
