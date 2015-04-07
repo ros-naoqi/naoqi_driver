@@ -153,7 +153,6 @@ void Bridge::rosLoop()
         PubConstIter pub_it = pub_map_.find( conv.name() );
         if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
         {
-          std::cout << "Publisher on topic " << pub_it->second.topic() << " is  enabled" << std::endl;
           actions.push_back(message_actions::PUBLISH);
         }
 
@@ -166,7 +165,6 @@ void Bridge::rosLoop()
           boost::mutex::scoped_lock lock_record( mutex_record_ );
           if ( record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
           {
-            std::cout << "Recording on topic " << rec_it->second.topic() << " is  enabled" << std::endl;
             actions.push_back(message_actions::RECORD);
           }
         }
