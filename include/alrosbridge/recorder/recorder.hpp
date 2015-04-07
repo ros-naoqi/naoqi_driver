@@ -54,7 +54,7 @@ public:
   template<typename T>
   Recorder( T rec ):
     recPtr_( boost::make_shared<RecorderModel<T> >(rec) )
-  {};
+  {}
 
   /**
   * @brief checks if the recorder is correctly initialized on the ros-master
@@ -110,7 +110,7 @@ private:
   */
   struct RecorderConcept
   {
-    virtual ~RecorderConcept(){};
+    virtual ~RecorderConcept(){}
     virtual bool isInitialized() const = 0;
     virtual void subscribe(bool state) = 0;
     virtual bool isSubscribed() const = 0;

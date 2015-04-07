@@ -75,6 +75,7 @@
  * RECORDERS
  */
 #include "recorder/camera.hpp"
+#include "recorder/imu.hpp"
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
 #include "recorder/string.hpp"
@@ -271,19 +272,25 @@ void Bridge::registerDefaultConverter()
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
   imutp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::ImuRecorder> imutr = boost::make_shared<recorder::ImuRecorder>( "imu_torso" );
+  imutr->reset(recorder_);
 
   converter::ImuConverter imutc( "imu_torso_converter", converter::IMU::TORSO, 15, sessionPtr_);
   imutc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
-  registerPublisher( imutc, *imutp );
+  imutc.registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imutr, _1) );
+  registerConverter( imutc, *imutp, *imutr );
 
   if(robot_type == alros::PEPPER){
     /** IMU BASE **/
     boost::shared_ptr<publisher::ImuPublisher> imubp = boost::make_shared<publisher::ImuPublisher>( "imu_base" );
     imubp->reset( *nhPtr_ );
+    boost::shared_ptr<recorder::ImuRecorder> imubr = boost::make_shared<recorder::ImuRecorder>( "imu_base" );
+    imubr->reset(recorder_);
 
     converter::ImuConverter imubc( "imu_base_converter", converter::IMU::BASE, 15, sessionPtr_);
     imubc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
-    registerPublisher( imubc, *imubp );
+    imubc.registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imubr, _1) );
+    registerConverter( imubc, *imubp, *imubr );
 
   }
 

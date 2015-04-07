@@ -56,15 +56,16 @@ set(
 
 set(
   RECORDER
-  src/recorder/int.cpp
-  src/recorder/string.cpp
   src/recorder/camera.cpp
+  src/recorder/diagnostics.cpp
+  src/recorder/imu.cpp
+  src/recorder/info.cpp
+  src/recorder/int.cpp
   src/recorder/joint_state.cpp
   src/recorder/laser.cpp
-  src/recorder/sonar.cpp
   src/recorder/log.cpp
-  src/recorder/diagnostics.cpp
-  src/recorder/info.cpp
+  src/recorder/sonar.cpp
+  src/recorder/string.cpp
   )
 
 qi_create_lib(

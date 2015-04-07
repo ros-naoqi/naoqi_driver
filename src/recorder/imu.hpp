@@ -15,36 +15,31 @@
  *
 */
 
-#ifndef DIAGNOSTICS_RECORDER_HPP
-#define DIAGNOSTICS_RECORDER_HPP
+#ifndef IMU_RECORDER_HPP
+#define IMU_RECORDER_HPP
 
-#include <ros/ros.h>
-#include <diagnostic_msgs/DiagnosticArray.h>
+#include <sensor_msgs/Imu.h>
 
 #include "recorderbase.hpp"
-#include <qi/anyobject.hpp>
 
-namespace alros
-{
-namespace recorder
-{
+namespace alros{
 
-class DiagnosticsRecorder : public BaseRecorder<DiagnosticsRecorder>
-{
+namespace recorder{
 
+class ImuRecorder: public BaseRecorder<ImuRecorder>
+{
 public:
-  DiagnosticsRecorder( const std::string& topic );
+  ImuRecorder(const std::string& topic);
 
-  void write(diagnostic_msgs::DiagnosticArray& msg );
+  void write( const sensor_msgs::Imu& msg );
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
-
 private:
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+};
 
-}; // class
+}
 
-} //publisher
-} // alros
+}
 
-#endif
+#endif // IMU_RECORDER_HPP
