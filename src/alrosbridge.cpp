@@ -329,12 +329,14 @@ void Bridge::registerDefaultConverter()
   jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, *jsp, *jsr );
 
-  /** Laser */
-  boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
-  lp->reset( *nhPtr_ );
-  converter::LaserConverter lc( "laser_converter", 10, sessionPtr_ );
-  lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
-  registerPublisher( lc, *lp );
+  if(robot_type == alros::PEPPER){
+    /** Laser */
+    boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
+    lp->reset( *nhPtr_ );
+    converter::LaserConverter lc( "laser_converter", 10, sessionPtr_ );
+    lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
+    registerPublisher( lc, *lp );
+  }
 
 }
 
