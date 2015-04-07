@@ -71,7 +71,7 @@ namespace converter {
   void ImuConverter::callAll(const std::vector<message_actions::MessageAction>& actions)
   {
     // Get inertial data
-    std::vector<float> memData = p_memory_.call<std::vector<float> >("getListData", data_names_list_);
+    std::vector<float> memData = p_memory_.call<AL::ALValue>("getListData", data_names_list_);
     // angle (X,Y,Z) = memData(1,2,3);
     // gyro  (X,Y,Z) = memData(4,5,6);
     // acc   (X,Y,Z) = memData(7,8,9);
