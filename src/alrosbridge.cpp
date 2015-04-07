@@ -324,7 +324,7 @@ void Bridge::registerDefaultConverter()
   jsp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
   jsr->reset(recorder_);
-  converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  converter::JointStateConverter jsc( "joint_state_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, *jsp, *jsr );
