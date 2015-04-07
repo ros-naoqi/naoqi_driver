@@ -273,6 +273,16 @@ void Bridge::registerDefaultConverter()
   imutc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
   registerPublisher( imutc, *imutp );
 
+  if(robot_type == alros::PEPPER){
+    /** IMU BASE **/
+    boost::shared_ptr<publisher::ImuPublisher> imubp = boost::make_shared<publisher::ImuPublisher>( "imu_base" );
+    imubp->reset( *nhPtr_ );
+
+    converter::ImuConverter imubc( "imu_base_converter", converter::IMU::BASE, 15, sessionPtr_);
+    imubc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
+    registerPublisher( imubc, *imubp );
+
+  }
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
