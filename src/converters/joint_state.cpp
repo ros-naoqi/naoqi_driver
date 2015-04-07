@@ -19,6 +19,8 @@
 #include <fstream>
 #include <stdio.h>
 
+#include <qi/path.hpp>
+
 #include "boost/filesystem.hpp"
 #include "joint_state.hpp"
 
@@ -35,51 +37,34 @@ JointStateConverter::JointStateConverter( const std::string& name, float frequen
   p_motion_( session->service("ALMotion") ),
   tf2_buffer_(tf2_buffer)
 {
-  // load urdf from param server (alternatively from file)
-  if ( nh.hasParam("/robot_description") )
+  std::string urdf_path;
+  if ( robot() == PEPPER)
   {
-    nh.getParam("/robot_description", robot_desc_);
-    std::cout << "load robot description from param server" << std::endl;
+    urdf_path = qi::path::findData("/urdf/", "pepper_robot.urdf");
+    std::cout << "share folder found in " << urdf_path << std::endl;
   }
-  // load urdf from file
-  else{
-
-    // FIX THAT LATER: didn't find a better way to get a relative share folder
-    char current_path[FILENAME_MAX];
-    readlink("/proc/self/exe", current_path, sizeof(current_path));
-    boost::filesystem::path root_path = boost::filesystem::complete( current_path );
-    std::cout << "executable path found in " << root_path.string() << std::endl;
-    root_path = root_path.parent_path().parent_path();
-    const std::string& share_folder = root_path.string()+"/share/";
-    std::cout << "share folder found in " << share_folder << std::endl;
-
-    std::string path;
-    if ( robot() == PEPPER)
-    {
-      path = "urdf/pepper_robot.urdf";
-    }
-    else if ( robot() == NAO )
-    {
-      path = "urdf/nao_robot.urdf";
-    }
-    else
-    {
-      std::cerr << " could not load urdf file from disk " << std::endl;
-      return;
-    }
-
-    std::ifstream stream( (share_folder+path).c_str() );
-    if (!stream)
-    {
-      std::cerr << "failed to load robot description in joint_state_publisher: " << path << std::endl;
-      return;
-    }
-    robot_desc_ = std::string( (std::istreambuf_iterator<char>(stream)),
-        std::istreambuf_iterator<char>());
-    // upload to param server
-    nh.setParam("/robot_description", robot_desc_);
-    std::cout << "load robot description from file" << std::endl;
+  else if ( robot() == NAO )
+  {
+    urdf_path = qi::path::findData("/urdf/", "nao_robot.urdf");
+    std::cout << "share folder found in " << urdf_path << std::endl;
   }
+  else
+  {
+    std::cerr << " could not load urdf file from disk " << std::endl;
+    return;
+  }
+
+  std::ifstream stream( (urdf_path).c_str() );
+  if (!stream)
+  {
+    std::cerr << "failed to load robot description in joint_state_publisher: " << urdf_path << std::endl;
+    return;
+  }
+  robot_desc_ = std::string( (std::istreambuf_iterator<char>(stream)),
+                             std::istreambuf_iterator<char>());
+  // upload to param server
+  nh.setParam("/robot_description", robot_desc_);
+  std::cout << "load robot description from file" << std::endl;
 }
 
 JointStateConverter::~JointStateConverter()
