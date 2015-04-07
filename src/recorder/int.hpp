@@ -22,7 +22,6 @@
 #include <std_msgs/Int32.h>
 
 #include "recorderbase.hpp"
-#include <alrosbridge/recorder/globalrecorder.hpp>
 #include <qi/anyobject.hpp>
 
 namespace alros

@@ -22,7 +22,6 @@
 #include <sensor_msgs/Range.h>
 
 #include "recorderbase.hpp"
-#include <alrosbridge/recorder/globalrecorder.hpp>
 #include <qi/anyobject.hpp>
 
 namespace alros

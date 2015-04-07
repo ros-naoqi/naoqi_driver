@@ -22,7 +22,6 @@
 #include <sensor_msgs/LaserScan.h>
 
 #include "recorderbase.hpp"
-#include <alrosbridge/recorder/globalrecorder.hpp>
 #include <qi/anyobject.hpp>
 
 namespace alros
