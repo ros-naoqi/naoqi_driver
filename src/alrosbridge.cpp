@@ -265,13 +265,14 @@ void Bridge::registerDefaultConverter()
 
   robot_type = sc.robot();
 
-  /** IMU **/
-  boost::shared_ptr<publisher::ImuPublisher> imup = boost::make_shared<publisher::ImuPublisher>( "imu" );
-  imup->reset( *nhPtr_ );
+  /** IMU TORSO **/
+  boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
+  imutp->reset( *nhPtr_ );
 
-  converter::ImuConverter imuc( "imu_converter", 15, sessionPtr_);
-  imuc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imup, _1) );
-  registerPublisher( imuc, *imup );
+  converter::ImuConverter imutc( "imu_torso_converter", converter::IMU::TORSO, 15, sessionPtr_);
+  imutc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
+  registerPublisher( imutc, *imutp );
+
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );

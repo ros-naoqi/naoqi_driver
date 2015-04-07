@@ -36,13 +36,22 @@ namespace alros
 {
 namespace converter {
 
+namespace IMU{
+
+enum Location{
+    TORSO,
+    BASE
+};
+
+}
+
 class ImuConverter : public BaseConverter<ImuConverter>
 {
 
   typedef boost::function<void(sensor_msgs::Imu&) > Callback_t;
 
 public:
-  ImuConverter(std::string name, float frequency, qi::SessionPtr& session);
+  ImuConverter(std::string name, IMU::Location location, float frequency, qi::SessionPtr& session);
 
   ~ImuConverter();
 

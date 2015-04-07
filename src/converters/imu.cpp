@@ -21,7 +21,7 @@ namespace alros
 namespace converter {
 
 
-  ImuConverter::ImuConverter(std::string name, float frequency, qi::SessionPtr& session):
+  ImuConverter::ImuConverter(std::string name, IMU::Location location,  float frequency, qi::SessionPtr& session):
     BaseConverter(name, frequency, session),
     p_memory_(session->service("ALMemory"))
   {
