@@ -509,6 +509,6 @@ void Bridge::stopRecord()
   recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
-QI_REGISTER_OBJECT( Bridge, getMostWonderfullWomenInTheWorld, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
+QI_REGISTER_OBJECT( Bridge, _whoIsYourDaddy, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
                     getAvailableConverters, getSubscribedPublishers, startRecord, startRecordTopics, stopRecord );
 } //alros

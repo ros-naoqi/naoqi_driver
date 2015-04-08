@@ -105,9 +105,9 @@ public:
    */
   std::vector<std::string> getSubscribedPublishers();
 
-  std::string getMostWonderfullWomenInTheWorld()
+  std::string _whoIsYourDaddy()
   {
-    return "Marine Chamoux";
+    return "M.C.";
   }
 
 
