@@ -486,12 +486,22 @@ void Bridge::startRecord()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordTopics(const std::vector<Topics>& topics)
+void Bridge::startRecordTopics(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
+  for_each( const std::string& name, names)
+  {
+    RecIter it = rec_map_.find(name);
+    if ( it != rec_map_.end() )
+    {
+      it->second.subscribe(true);
+    }
+    else
+    {
+    }
+  }
   record_enabled_ = true;
-  // enabled only topics given
 }
 
 std::string Bridge::stopRecord()
