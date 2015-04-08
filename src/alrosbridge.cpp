@@ -242,17 +242,10 @@ void Bridge::registerDefaultConverter()
 //  }
 //
 //  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
-//  registerPublisher( alros::publisher::CameraPublisher("front_camera", "camera/front", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA) );
 //  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
 //  registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
 //  registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
 //
-//  // Pepper specific publishers
-//  if (info.robot() == alros::PEPPER)
-//  {
-//    registerPublisher( alros::publisher::LaserPublisher("laser", "laser", 10, sessionPtr_) );
-//    registerPublisher( alros::publisher::CameraPublisher("depth_camera", "camera/depth", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA) );
-//  }
 
   alros::Robot robot_type;
 
@@ -331,17 +324,19 @@ void Bridge::registerDefaultConverter()
   jsp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
   jsr->reset(recorder_);
-  converter::JointStateConverter jsc( "joint_statse_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  converter::JointStateConverter jsc( "joint_state_converter", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, *jsp, *jsr );
 
-  /** Laser */
-  boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
-  lp->reset( *nhPtr_ );
-  converter::LaserConverter lc( "laser_converter", 10, sessionPtr_ );
-  lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
-  registerPublisher( lc, *lp );
+  if(robot_type == alros::PEPPER){
+    /** Laser */
+    boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
+    lp->reset( *nhPtr_ );
+    converter::LaserConverter lc( "laser_converter", 10, sessionPtr_ );
+    lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
+    registerPublisher( lc, *lp );
+  }
 
 }
 
