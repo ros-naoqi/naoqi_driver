@@ -162,7 +162,7 @@ public:
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
-  void stopRecord();
+  std::string stopRecord();
 
   void stopService();
 

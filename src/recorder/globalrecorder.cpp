@@ -21,10 +21,13 @@
 #include <qi/log.hpp>
 #include <ctime>
 #include "boost/filesystem.hpp"
+#include <sstream>
 
 #define RESET "\033[0m"
-#define GREEN "\033[32m"             /* Green */
-#define BOLDRED "\033[1m\033[31m"    /* Bold Red */
+#define GREEN "\033[32m"
+#define BOLDRED "\033[1m\033[31m"
+#define YELLOW "\033[33m"
+#define BOLDCYAN "\033[1m\033[36m"
 
 qiLogCategory("ros.Recorder");
 
@@ -61,7 +64,7 @@ namespace recorder
 
         _bag.open(_nameBag, rosbag::bagmode::Write);
         _isStarted = true;
-        std::cout << "The bag " << _nameBag << " is opened" << std::endl;
+        std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESET << YELLOW << " is opened" << RESET << std::endl;
       } catch (std::exception e){
         throw std::runtime_error(e.what());
       }
@@ -71,13 +74,15 @@ namespace recorder
     }
   }
 
-  void GlobalRecorder::stopRecord(const std::string& robot_ip) {
+  std::string GlobalRecorder::stopRecord(const std::string& robot_ip) {
     boost::mutex::scoped_lock stopLock( _processMutex );
     if (_isStarted) {
       _bag.close();
       _isStarted = false;
 
-      std::cout << "The bag " << _nameBag << " is closed" << std::endl;
+      std::stringstream message;
+      message << "The bag " << _nameBag << " is closed. ";
+      std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESET << YELLOW << " is closed" << RESET << std::endl;
 
       // Check if we are on a robot
       char* current_path;
@@ -87,12 +92,16 @@ namespace recorder
         std::cout << BOLDRED << "To download this bag on your computer:" << RESET << std::endl
                      << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESET
                         << std::endl;
+        message << "To download this bag on your computer: "
+                << "scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>";
       }
 
       _nameBag.clear();
+      return message.str();
     }
     else {
       qiLogError() << "Cannot stop recording while it has not been started.";
+      return "Cannot stop recording while it has not been started.";
     }
   }
 

@@ -494,7 +494,7 @@ void Bridge::startRecordTopics(const std::vector<Topics>& topics)
   // enabled only topics given
 }
 
-void Bridge::stopRecord()
+std::string Bridge::stopRecord()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -506,7 +506,7 @@ void Bridge::stopRecord()
       it->second.subscribe(false);
     }
   }
-  recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
 QI_REGISTER_OBJECT( Bridge, _whoIsYourDaddy, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
