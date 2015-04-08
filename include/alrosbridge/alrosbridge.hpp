@@ -95,6 +95,21 @@ public:
    */
   void registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec );
 
+  /**
+   * @brief get all available converters
+   */
+  std::vector<std::string> getAvailableConverters();
+
+  /**
+   * @brief get all subscribed publishers
+   */
+  std::vector<std::string> getSubscribedPublishers();
+
+  std::string getMostWonderfullWomenInTheWorld()
+  {
+    return "Marine Chamoux";
+  }
+
 
   /**
   * @brief registers a subscriber

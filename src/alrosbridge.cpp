@@ -369,6 +369,35 @@ void Bridge::registerDefaultSubscriber()
   registerSubscriber( alros::subscriber::MovetoSubscriber("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
+std::vector<std::string> Bridge::getAvailableConverters()
+{
+  std::vector<std::string> conv_list;
+  for_each( const converter::Converter& conv, converters_ )
+  {
+    conv_list.push_back(conv.name());
+  }
+
+  return conv_list;
+}
+
+std::vector<std::string> Bridge::getSubscribedPublishers()
+{
+  std::vector<std::string> pub_list;
+  for_each( const converter::Converter& conv, converters_ )
+  {
+    PubIter it = pub_map_.find(conv.name());
+    if ( it != pub_map_.end() )
+    {
+      if (it->second.isSubscribed())
+      {
+        pub_list.push_back(it->second.topic());
+      }
+    }
+  }
+
+  return pub_list;
+}
+
 void Bridge::init()
 {
 
@@ -480,6 +509,6 @@ void Bridge::stopRecord()
   recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
-QI_REGISTER_OBJECT( Bridge, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
-                    startRecord, startRecordTopics, stopRecord );
+QI_REGISTER_OBJECT( Bridge, getMostWonderfullWomenInTheWorld, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
+                    getAvailableConverters, getSubscribedPublishers, startRecord, startRecordTopics, stopRecord );
 } //alros
