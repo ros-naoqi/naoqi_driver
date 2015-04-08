@@ -95,6 +95,21 @@ public:
    */
   void registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec );
 
+  /**
+   * @brief get all available converters
+   */
+  std::vector<std::string> getAvailableConverters();
+
+  /**
+   * @brief get all subscribed publishers
+   */
+  std::vector<std::string> getSubscribedPublishers();
+
+  std::string _whoIsYourDaddy()
+  {
+    return "M.C.";
+  }
+
 
   /**
   * @brief registers a subscriber
@@ -147,7 +162,7 @@ public:
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
-  void stopRecord();
+  std::string stopRecord();
 
   void stopService();
 
