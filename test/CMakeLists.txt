@@ -19,3 +19,5 @@ target_link_libraries(
   recorder_callback_test
   alrosbridge
 )
+#qi_create_bin(concept_test "concept_test.cpp")
+#qi_use_lib(concept_test BOOST)
