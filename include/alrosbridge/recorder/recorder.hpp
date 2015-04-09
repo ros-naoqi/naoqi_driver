@@ -131,27 +131,27 @@ private:
 
     void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
     {
-      recorder_.reset( gr );
+      recorder_->reset( gr );
     }
 
     bool isInitialized() const
     {
-      return recorder_.isInitialized();
+      return recorder_->isInitialized();
     }
 
     void subscribe(bool state)
     {
-      recorder_.subscribe( state );
+      recorder_->subscribe( state );
     }
 
     bool isSubscribed() const
     {
-      return recorder_.isSubscribed();
+      return recorder_->isSubscribed();
     }
 
     std::string topic() const
     {
-      return recorder_.topic();
+      return recorder_->topic();
     }
 
     T recorder_;

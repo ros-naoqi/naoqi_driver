@@ -51,7 +51,7 @@ public:
   template<typename T>
   Converter( T conv ):
     convPtr_( boost::make_shared<ConverterModel<T> >(conv) )
-  {};
+  {}
 
   /**
   * @brief getting the descriptive name for this converter instance
@@ -101,7 +101,7 @@ private:
   */
   struct ConverterConcept
   {
-    virtual ~ConverterConcept(){};
+    virtual ~ConverterConcept(){}
     virtual std::string name() const = 0;
     virtual float frequency() const = 0;
     virtual Robot robot() const = 0;
@@ -122,27 +122,27 @@ private:
 
     std::string name() const
     {
-      return converter_.name();
+      return converter_->name();
     }
 
     float frequency() const
     {
-      return converter_.frequency();
+      return converter_->frequency();
     }
 
     Robot robot() const
     {
-      return converter_.robot();
+      return converter_->robot();
     }
 
     void reset()
     {
-      converter_.reset();
+      converter_->reset();
     }
 
     void callAll( const std::vector<message_actions::MessageAction>& actions )
     {
-      converter_.callAll( actions );
+      converter_->callAll( actions );
     }
 
     T converter_;
