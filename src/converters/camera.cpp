@@ -112,7 +112,7 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
 
 } // camera_info_definitions
 
-CameraConverter::CameraConverter( const std::string& name, float frequency, qi::SessionPtr& session, int camera_source, int resolution )
+CameraConverter::CameraConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const int& camera_source, const int& resolution )
   : BaseConverter( name, frequency, session ),
     p_video_( session->service("ALVideoDevice") ),
     camera_source_(camera_source),

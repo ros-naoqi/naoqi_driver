@@ -38,7 +38,7 @@ class LaserConverter : public BaseConverter<LaserConverter>
   typedef boost::function<void(sensor_msgs::LaserScan&)> Callback_t;
 
 public:
-  LaserConverter( const std::string& name, float frequency, qi::SessionPtr& session );
+  LaserConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session );
 
   void registerCallback( message_actions::MessageAction action, Callback_t cb );
 

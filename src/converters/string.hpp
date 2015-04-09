@@ -35,7 +35,7 @@ class StringConverter : public BaseConverter<StringConverter>
 
 public:
 
-  StringConverter( const std::string& name, float frequency, qi::SessionPtr& session );
+  StringConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session );
 
   void reset();
 

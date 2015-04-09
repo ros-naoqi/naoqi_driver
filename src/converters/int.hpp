@@ -42,7 +42,7 @@ class IntConverter : public BaseConverter<IntConverter>
 
 public:
 
-  IntConverter( const std::string& name, float frequency, qi::SessionPtr& session );
+  IntConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session );
 
   void reset();
 

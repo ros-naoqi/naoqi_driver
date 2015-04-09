@@ -51,7 +51,7 @@ public:
   template<typename T>
   Publisher( const T& pub ):
     pubPtr_( boost::make_shared<PublisherModel<T> >(pub) )
-  {};
+  {}
 
 //  /**
 //  * @brief triggers the publishing process of the concrete publisher instance
@@ -168,42 +168,42 @@ private:
 
 //    std::string name() const
 //    {
-//      return publisher_.name();
+//      return publisher_->name();
 //    }
 
     std::string topic() const
     {
-      return publisher_.topic();
+      return publisher_->topic();
     }
 
 //    float frequency() const
 //    {
-//      return publisher_.frequency();
+//      return publisher_->frequency();
 //    }
 
 //    Robot robot() const
 //    {
-//      return publisher_.robot();
+//      return publisher_->robot();
 //    }
 
 //    void publish( )
 //    {
-//      publisher_.publish( );
+//      publisher_->publish( );
 //    }
 
     bool isInitialized() const
     {
-      return publisher_.isInitialized();
+      return publisher_->isInitialized();
     }
 
     bool isSubscribed() const
     {
-      return publisher_.isSubscribed();
+      return publisher_->isSubscribed();
     }
 
     void reset( ros::NodeHandle& nh )
     {
-      publisher_.reset( nh );
+      publisher_->reset( nh );
     }
 
     T publisher_;

@@ -246,12 +246,12 @@ void Bridge::registerDefaultConverter()
   sp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::StringRecorder> sr = boost::make_shared<recorder::StringRecorder>( "string" );
   sr->reset(recorder_);
-  converter::StringConverter sc( "string", 10, sessionPtr_ );
-  sc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
-  sc.registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
-  registerConverter( sc, *sp, *sr );
+  boost::shared_ptr<converter::StringConverter> sc = boost::make_shared<converter::StringConverter>( "string", 10, sessionPtr_ );
+  sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
+  sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
+  registerConverter( sc, sp, sr );
 
-  robot_type = sc.robot();
+  robot_type = sc->robot();
 
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
@@ -259,10 +259,10 @@ void Bridge::registerDefaultConverter()
   boost::shared_ptr<recorder::ImuRecorder> imutr = boost::make_shared<recorder::ImuRecorder>( "imu_torso" );
   imutr->reset(recorder_);
 
-  converter::ImuConverter imutc( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
-  imutc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
-  imutc.registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imutr, _1) );
-  registerConverter( imutc, *imutp, *imutr );
+  boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
+  imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
+  imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imutr, _1) );
+  registerConverter( imutc, imutp, imutr );
 
   if(robot_type == alros::PEPPER){
     /** IMU BASE **/
@@ -271,10 +271,10 @@ void Bridge::registerDefaultConverter()
     boost::shared_ptr<recorder::ImuRecorder> imubr = boost::make_shared<recorder::ImuRecorder>( "imu_base" );
     imubr->reset(recorder_);
 
-    converter::ImuConverter imubc( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
-    imubc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
-    imubc.registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imubr, _1) );
-    registerConverter( imubc, *imubp, *imubr );
+    boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
+    imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
+    imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imubr, _1) );
+    registerConverter( imubc, imubp, imubr );
 
   }
 
@@ -283,20 +283,20 @@ void Bridge::registerDefaultConverter()
   ip->reset( *nhPtr_ );
   boost::shared_ptr<recorder::IntRecorder> ir = boost::make_shared<recorder::IntRecorder>( "int" );
   ir->reset(recorder_);
-  converter::IntConverter ic( "int", 15, sessionPtr_);
-  ic.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
-  ic.registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
-  registerConverter( ic, *ip, *ir  );
+  boost::shared_ptr<converter::IntConverter> ic = boost::make_shared<converter::IntConverter>( "int", 15, sessionPtr_);
+  ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
+  ic->registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
+  registerConverter( ic, ip, ir  );
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
   fcp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front/image_raw" );
   fcr->reset(recorder_);
-  converter::CameraConverter fcc( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
-  fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
-  fcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
-  registerConverter( fcc, *fcp, *fcr );
+  boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
+  fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
+  fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
+  registerConverter( fcc, fcp, fcr );
   //registerPublisher( fcc, *fcp );
 
   if(robot_type == alros::PEPPER){
@@ -305,10 +305,10 @@ void Bridge::registerDefaultConverter()
     dcp->reset( *nhPtr_ );
     boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth/image_raw" );
     dcr->reset(recorder_);
-    converter::CameraConverter dcc( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
-    dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
-    dcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
-    registerConverter( dcc, *dcp, *dcr );
+    boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+    dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
+    dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
+    registerConverter( dcc, dcp, dcr );
   }
 
   /** Joint States */
@@ -316,18 +316,18 @@ void Bridge::registerDefaultConverter()
   jsp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
   jsr->reset(recorder_);
-  converter::JointStateConverter jsc( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
-  jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
-  jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
-  registerConverter( jsc, *jsp, *jsr );
+  boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
+  jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
+  registerConverter( jsc, jsp, jsr );
 
   if(robot_type == alros::PEPPER){
     /** Laser */
     boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
     lp->reset( *nhPtr_ );
-    converter::LaserConverter lc( "laser", 10, sessionPtr_ );
-    lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
-    registerPublisher( lc, *lp );
+    boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
+    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
+    registerPublisher( lc, lp );
   }
 
   /** Sonar */
@@ -344,9 +344,9 @@ void Bridge::registerDefaultConverter()
   }
   boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
   usp->reset( *nhPtr_ );
-  converter::SonarConverter usc( "sonar_converter", 10, sessionPtr_ );
-  usc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
-  registerPublisher( usc, *usp );
+  boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar_converter", 10, sessionPtr_ );
+  usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
+  registerPublisher( usc, usp );
 
 }
 
@@ -375,8 +375,8 @@ void Bridge::registerDefaultSubscriber()
 {
   if (!subscribers_.empty())
     return;
-  registerSubscriber( alros::subscriber::TeleopSubscriber("teleop", "/cmd_vel", sessionPtr_) );
-  registerSubscriber( alros::subscriber::MovetoSubscriber("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
+  registerSubscriber( boost::make_shared<alros::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", sessionPtr_) );
+  registerSubscriber( boost::make_shared<alros::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
 std::vector<std::string> Bridge::getAvailableConverters()
