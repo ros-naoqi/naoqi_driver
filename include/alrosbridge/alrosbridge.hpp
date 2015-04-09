@@ -150,14 +150,14 @@ public:
   void stopPublishing();
 
   /**
-  * @brief qicli call function to start recording all registered publisher in a ROSbag
+  * @brief qicli call function to start recording all registered converter in a ROSbag
   */
   void startRecord();
 
   /**
-  * @brief qicli call function to start recording all registered publisher in a ROSbag
+  * @brief qicli call function to start recording given topics in a ROSbag
   */
-  void startRecordTopics(const std::vector<Topics>& topics);
+  void startRecordTopics(const std::vector<std::string>& names);
 
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag

@@ -15,21 +15,21 @@
  *
 */
 
-#include <alrosbridge/recorder/globalrecorder.hpp>
+/* ROS */
 #include <std_msgs/Int32.h>
 #include <tf2_msgs/TFMessage.h>
+
+/* QI */
 #include <qi/log.hpp>
+qiLogCategory("ros.Recorder");
+
+/* BOOST */
+#include <boost/filesystem.hpp>
+
 #include <ctime>
-#include "boost/filesystem.hpp"
 #include <sstream>
 
-#define RESET "\033[0m"
-#define GREEN "\033[32m"
-#define BOLDRED "\033[1m\033[31m"
-#define YELLOW "\033[33m"
-#define BOLDCYAN "\033[1m\033[36m"
-
-qiLogCategory("ros.Recorder");
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace alros
 {
@@ -64,7 +64,7 @@ namespace recorder
 
         _bag.open(_nameBag, rosbag::bagmode::Write);
         _isStarted = true;
-        std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESET << YELLOW << " is opened" << RESET << std::endl;
+        std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESETCOLOR << YELLOW << " is opened" << RESETCOLOR << std::endl;
       } catch (std::exception e){
         throw std::runtime_error(e.what());
       }
@@ -82,15 +82,15 @@ namespace recorder
 
       std::stringstream message;
       message << "The bag " << _nameBag << " is closed. ";
-      std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESET << YELLOW << " is closed" << RESET << std::endl;
+      std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESETCOLOR << YELLOW << " is closed" << RESETCOLOR << std::endl;
 
       // Check if we are on a robot
       char* current_path;
       current_path = getenv("HOME");
       std::string cp = current_path;
       if (!(cp.find("nao") == std::string::npos)) {
-        std::cout << BOLDRED << "To download this bag on your computer:" << RESET << std::endl
-                     << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESET
+        std::cout << BOLDRED << "To download this bag on your computer:" << RESETCOLOR << std::endl
+                     << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESETCOLOR
                         << std::endl;
         message << "To download this bag on your computer: "
                 << "scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>";
