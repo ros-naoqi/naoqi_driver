@@ -47,8 +47,44 @@ Using the **BridgeService** module
 
 To start using this bridge, you need to communicate your external roscore IP (see instructions `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/start-core-bridge>`_ )
 
+This module povides an API to:
+
+* Publish data
+* Record data
+* Send command to naoqi modules
+
+To learn more, see API section above.
+
 API
-+++
+===
+
+-----------------
+
+**Environment setup**
+
+In order to get the module to connect to your roscore, you should send it your IP.
+
+* ``void`` BridgeService:\:**setMasterURI** ( ``const std::string&`` **uri** )
+
+  Set current master URI. The IP adress given is from defauth *eth0* network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+* ``void`` BridgeService:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
+
+  Set current master URI using a given network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+  *param:* **network_interface** - string. For example ``tether``.
+
+* ``const std::string&`` BridgeService:\:**getMasterURI** ()
+
+  Set current master URI using a given network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+  *param:* **network_interface** - string. For example ``tether``.
 
 * startPublishing():
 
