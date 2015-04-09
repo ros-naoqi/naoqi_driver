@@ -91,6 +91,8 @@
  */
 #include <tf2_ros/buffer.h>
 
+#define DEBUG 0
+
 namespace alros
 {
 
@@ -153,6 +155,9 @@ void Bridge::rosLoop()
         // publishing enabled
         // has to be registered
         // has to be subscribed
+#ifdef DEBUG
+        ros::Time before = ros::Time::now();
+#endif
         PubConstIter pub_it = pub_map_.find( conv.name() );
         if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
         {
@@ -171,8 +176,14 @@ void Bridge::rosLoop()
             actions.push_back(message_actions::RECORD);
           }
         }
-        conv.callAll( actions );
-
+        if (actions.size() >0)
+        {
+          conv.callAll( actions );
+        }
+#if DEBUG
+        ros::Time after = ros::Time::now();
+        std::cerr << "round trip last " << after-before << std::endl;
+#endif
         // Schedule for a future time or not
         conv_queue_.pop();
         if ( conv.frequency() != 0 )
