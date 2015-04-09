@@ -90,17 +90,6 @@ public:
     }
   }
 
-  inline bool isRecordEnabled() const
-  {
-    return record_enabled_;
-  }
-
-  inline void setRecordEnabled(bool state)
-  {
-    record_enabled_ = state;
-  }
-
-
 protected:
   std::string name_;
 
