@@ -32,7 +32,7 @@ namespace alros
 namespace converter
 {
 
-JointStateConverter::JointStateConverter( const std::string& name, float frequency, BufferPtr tf2_buffer, qi::SessionPtr& session, ros::NodeHandle& nh ):
+JointStateConverter::JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session, const ros::NodeHandle& nh ):
   BaseConverter( name, frequency, session ),
   p_motion_( session->service("ALMotion") ),
   tf2_buffer_(tf2_buffer)

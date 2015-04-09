@@ -128,7 +128,7 @@ static const char* laserMemoryKeys[] = {
   "Device/SubDeviceList/Platform/LaserSensor/Left/Horizontal/Seg15/Y/Sensor/Value",
 };
 
-LaserConverter::LaserConverter( const std::string& name, float frequency, qi::SessionPtr& session ):
+LaserConverter::LaserConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session ):
   BaseConverter( name, frequency, session ),
   p_memory_(session->service("ALMemory"))
 {

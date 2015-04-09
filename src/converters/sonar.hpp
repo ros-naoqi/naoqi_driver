@@ -39,7 +39,7 @@ class SonarConverter : public BaseConverter<SonarConverter>
 
 
 public:
-  SonarConverter( const std::string& name, float frequency, qi::SessionPtr& session );
+  SonarConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session );
 
   ~SonarConverter();
 

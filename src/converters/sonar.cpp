@@ -24,7 +24,7 @@ namespace alros
 namespace converter
 {
 
-SonarConverter::SonarConverter( const std::string& name, float frequency, qi::SessionPtr& session )
+SonarConverter::SonarConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : BaseConverter( name, frequency, session ),
     p_memory_( session->service("ALMemory") ),
     p_sonar_( session->service("ALSonar") ),

@@ -24,7 +24,7 @@ namespace alros
 namespace converter
 {
 
-StringConverter::StringConverter( const std::string& name, float frequency, qi::SessionPtr& session ):
+StringConverter::StringConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session ):
     BaseConverter( name, frequency, session )
   {}
 

@@ -51,7 +51,7 @@ class ImuConverter : public BaseConverter<ImuConverter>
   typedef boost::function<void(sensor_msgs::Imu&) > Callback_t;
 
 public:
-  ImuConverter(std::string name, IMU::Location location, float frequency, qi::SessionPtr& session);
+  ImuConverter(const std::string& name, const IMU::Location& location, const float& frequency, const qi::SessionPtr& session);
 
   ~ImuConverter();
 

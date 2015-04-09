@@ -43,7 +43,7 @@ namespace subscriber
 class MovetoSubscriber: public BaseSubscriber<MovetoSubscriber>
 {
 public:
-  MovetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session, boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
+  MovetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
   ~MovetoSubscriber(){}
 
   void reset( ros::NodeHandle& nh );

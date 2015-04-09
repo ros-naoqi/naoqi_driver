@@ -36,7 +36,7 @@ class CameraConverter : public BaseConverter<CameraConverter>
   typedef boost::function<void(sensor_msgs::ImagePtr, sensor_msgs::CameraInfo)> Callback_t;
 
 public:
-  CameraConverter( const std::string& name, float frequency, qi::SessionPtr& session, int camera_source, int resolution );
+  CameraConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const int& camera_source, const int& resolution );
 
   ~CameraConverter();
 
