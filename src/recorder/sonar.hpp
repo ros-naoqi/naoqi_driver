@@ -33,14 +33,15 @@ class SonarRecorder : public BaseRecorder<SonarRecorder>
 {
 
 public:
-  SonarRecorder( const std::string& topic );
+  SonarRecorder( const std::vector<std::string>& topics );
 
-  void write( const sensor_msgs::Range& sonar_msg );
+  void write(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
 private:
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  std::vector<std::string> topics_;
 
 }; // class
 

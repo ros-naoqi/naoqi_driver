@@ -78,6 +78,8 @@
 #include "recorder/imu.hpp"
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
+#include "recorder/laser.hpp"
+#include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
 
 /*
@@ -325,9 +327,12 @@ void Bridge::registerDefaultConverter()
     /** Laser */
     boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
     lp->reset( *nhPtr_ );
+    boost::shared_ptr<recorder::LaserRecorder> lr = boost::make_shared<recorder::LaserRecorder>( "laser" );
+    lr->reset(recorder_);
     boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
     lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
-    registerPublisher( lc, lp );
+    lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::LaserRecorder::write, lr, _1) );
+    registerConverter( lc, lp, lr );
   }
 
   /** Sonar */
@@ -344,9 +349,12 @@ void Bridge::registerDefaultConverter()
   }
   boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
   usp->reset( *nhPtr_ );
-  boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar_converter", 10, sessionPtr_ );
+  boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
+  usr->reset(recorder_);
+  boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
   usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
-  registerPublisher( usc, usp );
+  usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
+  registerConverter( usc, usp, usr );
 
 }
 

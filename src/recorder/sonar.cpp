@@ -25,17 +25,27 @@ namespace alros
 namespace recorder
 {
 
-SonarRecorder::SonarRecorder( const std::string& topic ):
-  BaseRecorder( topic )
+SonarRecorder::SonarRecorder(const std::vector<std::string>& topics ):
+  BaseRecorder( "sonar" ),
+  topics_(topics)
 {}
 
-void SonarRecorder::write(const sensor_msgs::Range& sonar_msg)
+void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
 {
-  if (!sonar_msg.header.stamp.isZero()) {
-    gr_->write(topic_, sonar_msg, sonar_msg.header.stamp);
+  if ( topics_.size() != sonar_msgs.size() )
+  {
+    std::cerr << "Incorrect number of sonar range messages in sonar recorder. " << sonar_msgs.size() << "/" << topics_.size() << std::endl;
+    return;
   }
-  else {
-    gr_->write(topic_, sonar_msg);
+
+  for( size_t i=0; i<sonar_msgs.size(); ++i)
+  {
+    if (!sonar_msgs[i].header.stamp.isZero()) {
+      gr_->write(topics_[i], sonar_msgs[i], sonar_msgs[i].header.stamp);
+    }
+    else {
+      gr_->write(topics_[i], sonar_msgs[i]);
+    }
   }
 }
 
