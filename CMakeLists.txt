@@ -22,6 +22,7 @@ set(
   src/converters/int.cpp
   src/converters/joint_state.cpp
   src/converters/laser.cpp
+  src/converters/sonar.cpp
   src/converters/string.cpp
   )
 qi_create_lib(

@@ -220,35 +220,15 @@ void Bridge::registerDefaultConverter()
   // init global tf2 buffer
   tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
   tf2_buffer_->setUsingDedicatedThread(true);
-//  if (!publishers_.empty())
-//    return;
-//
+
 //  // Info should be at 0 (latched) but somehow that does not work ...
 //  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
 //  registerPublisher( info );
 //
-//  // Define the tf2 buffer
-//  if (info.robot() == alros::PEPPER)
-//  {
-//    alros::publisher::JointStatePublisher publisher("joint_states", "/joint_states", 15, sessionPtr_);
-//    tf2_buffer_ = publisher.getTF2Buffer();
-//    registerPublisher( publisher );
-//  }
-//  if (info.robot() == alros::NAO)
-//  {
-//    alros::publisher::NaoJointStatePublisher publisher( "nao_joint_states", "/joint_states", 15, sessionPtr_);
-//    tf2_buffer_ = publisher.getTF2Buffer();
-//    registerPublisher( publisher );
-//  }
-//
-//  registerPublisher( alros::publisher::OdometryPublisher( "odometry", "/odom", 15, sessionPtr_, tf2_buffer_) );
 //  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
-//  registerPublisher( alros::publisher::SonarPublisher("sonar", "sonar", 10, sessionPtr_) );
 //  registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
-//
 
   alros::Robot robot_type;
-
 
   /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
@@ -298,9 +278,9 @@ void Bridge::registerDefaultConverter()
   registerConverter( ic, *ip, *ir  );
 
   /** Front Camera */
-  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "front_camera", AL::kTopCamera );
+  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front", AL::kTopCamera );
   fcp->reset( *nhPtr_ );
-  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "front_camera" );
+  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front" );
   fcr->reset(recorder_);
   converter::CameraConverter fcc( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
@@ -311,7 +291,7 @@ void Bridge::registerDefaultConverter()
     /** Depth Camera */
     boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth", AL::kDepthCamera );
     dcp->reset( *nhPtr_ );
-    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "depth_camera" );
+    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth" );
     dcr->reset(recorder_);
     converter::CameraConverter dcc( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
     dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
@@ -324,7 +304,7 @@ void Bridge::registerDefaultConverter()
   jsp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
   jsr->reset(recorder_);
-  converter::JointStateConverter jsc( "joint_state", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  converter::JointStateConverter jsc( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc.registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, *jsp, *jsr );
@@ -337,6 +317,24 @@ void Bridge::registerDefaultConverter()
     lc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
     registerPublisher( lc, *lp );
   }
+
+  /** Sonar */
+  std::vector<std::string> sonar_topics;
+  if (robot_type == alros::PEPPER)
+  {
+    sonar_topics.push_back("sonar/front");
+    sonar_topics.push_back("sonar/back");
+  }
+  else
+  {
+    sonar_topics.push_back("sonar/left");
+    sonar_topics.push_back("sonar/right");
+  }
+  boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
+  usp->reset( *nhPtr_ );
+  converter::SonarConverter usc( "sonar_converter", 10, sessionPtr_ );
+  usc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
+  registerPublisher( usc, *usp );
 
 }
 

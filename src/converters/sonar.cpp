@@ -15,8 +15,6 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
 #include <ros/serialization.h>
 
 #include "sonar.hpp"
@@ -60,7 +58,7 @@ SonarConverter::SonarConverter( const std::string& name, float frequency, qi::Se
       msgs_[i].radiation_type = sensor_msgs::Range::ULTRASOUND;
     }
 
-  keys_.arraySetSize(keys.size());
+  keys_.resize(keys.size());
   size_t i = 0;
   for(std::vector<std::string>::const_iterator it = keys.begin(); it != keys.end(); ++it, ++i)
     keys_[i] = *it;
@@ -88,7 +86,7 @@ void SonarConverter::callAll( const std::vector<message_actions::MessageAction>&
     is_subscribed_ = true;
   }
 
-  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", keys_);
+  std::vector<float> values = p_memory_.call<std::vector<float> >("getListData", keys_);
   ros::Time now = ros::Time::now();
   for(size_t i = 0; i < msgs_.size(); ++i)
   {
@@ -98,7 +96,7 @@ void SonarConverter::callAll( const std::vector<message_actions::MessageAction>&
 
   for_each( message_actions::MessageAction action, actions )
   {
-    callbacks_[action]( msg_[0], msg_[1] );
+    callbacks_[action]( msgs_ );
   }
 }
 

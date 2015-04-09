@@ -47,7 +47,7 @@ public:
 
   void registerCallback( message_actions::MessageAction action, Callback_t cb );
 
-  void callAll( std::vector<message_actions::MessageAction>& actions );
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 
 private:
@@ -61,7 +61,7 @@ private:
   bool is_subscribed_;
 
   /** The memory keys of the sonars */
-  AL::ALValue keys_;
+  std::vector<std::string> keys_;
   /** The frames of the sonars */
   std::vector<std::string> frames_;
   /** Pre-filled messges that are sent */
