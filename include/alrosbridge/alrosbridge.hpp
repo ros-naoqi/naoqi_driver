@@ -103,13 +103,12 @@ public:
   /**
    * @brief get all subscribed publishers
    */
-  std::vector<std::string> getSubscribedPublishers();
+  std::vector<std::string> getSubscribedPublishers() const;
 
   std::string _whoIsYourDaddy()
   {
-    return "M.C.";
+    return "K in da house";
   }
-
 
   /**
   * @brief registers a subscriber

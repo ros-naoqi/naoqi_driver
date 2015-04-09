@@ -289,20 +289,21 @@ void Bridge::registerDefaultConverter()
   registerConverter( ic, *ip, *ir  );
 
   /** Front Camera */
-  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front", AL::kTopCamera );
+  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
   fcp->reset( *nhPtr_ );
-  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front" );
+  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front/image_raw" );
   fcr->reset(recorder_);
   converter::CameraConverter fcc( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
   fcc.registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
   registerConverter( fcc, *fcp, *fcr );
+  //registerPublisher( fcc, *fcp );
 
   if(robot_type == alros::PEPPER){
     /** Depth Camera */
-    boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth", AL::kDepthCamera );
+    boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
     dcp->reset( *nhPtr_ );
-    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth" );
+    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth/image_raw" );
     dcr->reset(recorder_);
     converter::CameraConverter dcc( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
     dcc.registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
@@ -389,27 +390,9 @@ std::vector<std::string> Bridge::getAvailableConverters()
   return conv_list;
 }
 
-std::vector<std::string> Bridge::getSubscribedPublishers()
-{
-  std::vector<std::string> pub_list;
-  for_each( const converter::Converter& conv, converters_ )
-  {
-    PubIter it = pub_map_.find(conv.name());
-    if ( it != pub_map_.end() )
-    {
-      if (it->second.isSubscribed())
-      {
-        pub_list.push_back(it->second.topic());
-      }
-    }
-  }
-
-  return pub_list;
-}
 
 void Bridge::init()
 {
-
   // init converters
   conv_queue_ =  std::priority_queue<ScheduledConverter>();
   size_t conv_index = 0;
@@ -480,6 +463,22 @@ void Bridge::stopPublishing()
   publish_enabled_ = false;
 }
 
+std::vector<std::string> Bridge::getSubscribedPublishers() const
+{
+  std::vector<std::string> publisher;
+  for(PubConstIter iterator = pub_map_.begin(); iterator != pub_map_.end(); iterator++)
+  {
+    // iterator->first = key
+    // iterator->second = value
+    // Repeat if you also want to iterate through the second map.
+    if ( iterator->second.isSubscribed() )
+    {
+      publisher.push_back( iterator->second.topic() );
+    }
+  }
+  return publisher;
+}
+
 void Bridge::startRecord()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
@@ -539,6 +538,16 @@ std::string Bridge::stopRecord()
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
-QI_REGISTER_OBJECT( Bridge, _whoIsYourDaddy, startPublishing, stopPublishing, getMasterURI, setMasterURI, setMasterURINet,
-                    getAvailableConverters, getSubscribedPublishers, startRecord, startRecordTopics, stopRecord );
+QI_REGISTER_OBJECT( Bridge,
+                    _whoIsYourDaddy,
+                    startPublishing,
+                    stopPublishing,
+                    getMasterURI,
+                    setMasterURI,
+                    setMasterURINet,
+                    getAvailableConverters,
+                    getSubscribedPublishers,
+                    startRecord,
+                    startRecordTopics,
+                    stopRecord );
 } //alros
