@@ -36,12 +36,20 @@ namespace alros
 namespace recorder
 {
 
-  GlobalRecorder::GlobalRecorder():
+  GlobalRecorder::GlobalRecorder(const std::string& prefix):
     _bag()
   , _processMutex()
   , _nameBag("")
   , _isStarted(false)
   {
+    if (!prefix.empty())
+    {
+      _prefix = "/"+prefix+"/";
+    }
+    else
+    {
+      _prefix = "/";
+    }
   }
 
   void GlobalRecorder::startRecord() {
@@ -110,6 +118,15 @@ namespace recorder
   }
 
   void GlobalRecorder::write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf) {
+    std::string ros_topic;
+    if (topic[0]!='/')
+    {
+      ros_topic = _prefix+topic;
+    }
+    else
+    {
+      ros_topic = topic;
+    }
     tf2_msgs::TFMessage message;
     ros::Time now = ros::Time::now();
     if (!msgtf[0].header.stamp.isZero()) {
@@ -121,7 +138,7 @@ namespace recorder
     }
     boost::mutex::scoped_lock writeLock( _processMutex );
     if (_isStarted) {
-      _bag.write(topic, now, message);
+      _bag.write(ros_topic, now, message);
     }
   }
 
