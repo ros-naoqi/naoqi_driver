@@ -25,6 +25,7 @@
 /*
 * BOOST
 */
+#include <boost/property_tree/ptree.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -167,6 +168,8 @@ public:
    * @brief qicli call function to add on-the-fly some memory keys extractors
    */
   void addMemoryConverters(std::string filepath);
+
+  void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
   void stopService();
 
