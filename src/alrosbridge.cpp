@@ -81,6 +81,7 @@
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
 #include "recorder/laser.hpp"
+#include "recorder/memory_list.hpp"
 #include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
 
@@ -555,15 +556,20 @@ void Bridge::addMemoryConverters(std::string filepath){
   list.push_back("Device/SubDeviceList/Ears/Led/Left/36Deg/Actuator/Value");
   list.push_back("ALMemory/KeyAdded");
 
+  // Create converter, publisher and recorder
   boost::shared_ptr<publisher::MemoryListPublisher> mlp = boost::make_shared<publisher::MemoryListPublisher>( topic );
   mlp->reset( *nhPtr_ );
-  boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, "test", 10, sessionPtr_ );
+  boost::shared_ptr<recorder::MemoryListRecorder> mlr = boost::make_shared<recorder::MemoryListRecorder>( topic );
+  mlr->reset(recorder_);
+  boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, "memoryList", 10, sessionPtr_ );
   mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryListPublisher::publish, mlp, _1) );
-  registerPublisher(mlc, mlp);
+  mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryListRecorder::write, mlr, _1) );
+  registerConverter( mlc, mlp, mlr );
   mlc->reset();
-  int conv_index = conv_queue_.size();
-  std::cout << "Add test with conv_index = " << conv_index << std::endl;
+
+  // Add the converter to the shedule
   boost::mutex::scoped_lock lock( mutex_reinit_ );
+  int conv_index = conv_queue_.size();
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 

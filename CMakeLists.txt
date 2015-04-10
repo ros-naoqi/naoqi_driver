@@ -67,6 +67,7 @@ set(
   src/recorder/joint_state.cpp
   src/recorder/laser.cpp
   src/recorder/log.cpp
+  src/recorder/memory_list.cpp
   src/recorder/sonar.cpp
   src/recorder/string.cpp
   )
