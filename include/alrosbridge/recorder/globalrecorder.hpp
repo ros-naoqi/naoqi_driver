@@ -51,7 +51,7 @@ public:
   /**
   * @brief Constructor for recorder interface
   */
-  GlobalRecorder();
+  GlobalRecorder(const std::string& prefix);
 
   /**
   * @brief Initialize the recording of the ROSbag
@@ -68,10 +68,19 @@ public:
   */
   template <class T>
   void write(const std::string& topic, const T& msg, const ros::Time& time = ros::Time::now() ) {
+    std::string ros_topic;
+    if (topic[0]!='/')
+    {
+      ros_topic = _prefix+topic;
+    }
+    else
+    {
+      ros_topic = topic;
+    }
     ros::Time time_msg = time;
     boost::mutex::scoped_lock writeLock( _processMutex );
     if (_isStarted) {
-      _bag.write(topic, time_msg, msg);
+      _bag.write(ros_topic, time_msg, msg);
     }
   }
 
@@ -83,6 +92,7 @@ public:
   bool isStarted();
 
 private:
+  std::string _prefix;
   boost::mutex _processMutex;
   rosbag::Bag _bag;
   std::string _nameBag;

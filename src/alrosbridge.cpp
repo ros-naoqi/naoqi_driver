@@ -105,10 +105,9 @@ Bridge::Bridge( qi::SessionPtr& session )
   publish_cancelled_(false),
   record_enabled_(false),
   record_cancelled_(false),
-  recorder_(boost::make_shared<recorder::GlobalRecorder>())
+  recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix()))
 {
 }
-
 
 Bridge::~Bridge()
 {

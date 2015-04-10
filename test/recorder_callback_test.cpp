@@ -40,7 +40,7 @@ int main( int argc, char** argv )
 {
   ros::Time::init();
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>();
+  boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
 
   boost::shared_ptr<alros::recorder::IntRecorder> ir = boost::make_shared<alros::recorder::IntRecorder>( "int" );
   ir->reset( gr );
