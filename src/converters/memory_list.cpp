@@ -34,6 +34,8 @@ void MemoryListConverter::reset(){
 void MemoryListConverter::callAll(const std::vector<message_actions::MessageAction> &actions){
   // Get inertial data
   AL::ALValue memData = p_memory_.call<AL::ALValue>("getListData", _key_list);
+  // Reset message
+  _msg = naoqi_msgs::MemoryList();
   for(int i=0; i<memData.getSize(); i++){
     if(memData[i].isFloat())
     {
