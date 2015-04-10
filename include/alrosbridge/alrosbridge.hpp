@@ -107,7 +107,7 @@ public:
 
   std::string _whoIsYourDaddy()
   {
-    return "K in da house";
+    return "A mother fucker";
   }
 
   /**
