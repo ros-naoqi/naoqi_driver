@@ -47,6 +47,7 @@
 #include "converters/int.hpp"
 #include "converters/joint_state.hpp"
 #include "converters/laser.hpp"
+#include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
 /*
@@ -546,6 +547,14 @@ std::string Bridge::stopRecord()
 }
 
 void Bridge::addMemoryConverters(std::string filepath){
+  // Open the file filepath and parse it
+  //--TODO--//
+  std::vector<std::string> list;
+  std::string topic("memoryListTest");
+  list.push_back("Device/SubDeviceList/Ears/Led/Left/36Deg/Actuator/Value");
+  list.push_back("ALMemory/KeyAdded");
+
+  boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, "test", 10, sessionPtr_ );
 }
 
 QI_REGISTER_OBJECT( Bridge,
