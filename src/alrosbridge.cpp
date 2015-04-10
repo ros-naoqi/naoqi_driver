@@ -61,6 +61,7 @@
 #include "publishers/joint_state.hpp"
 #include "publishers/laser.hpp"
 //#include "publishers/log.hpp"
+#include "publishers/memory_list.hpp"
 //#include "publishers/nao_joint_state.hpp"
 //#include "publishers/odometry.hpp"
 #include "publishers/sonar.hpp"
@@ -554,7 +555,16 @@ void Bridge::addMemoryConverters(std::string filepath){
   list.push_back("Device/SubDeviceList/Ears/Led/Left/36Deg/Actuator/Value");
   list.push_back("ALMemory/KeyAdded");
 
+  boost::shared_ptr<publisher::MemoryListPublisher> mlp = boost::make_shared<publisher::MemoryListPublisher>( topic );
+  mlp->reset( *nhPtr_ );
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, "test", 10, sessionPtr_ );
+  mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryListPublisher::publish, mlp, _1) );
+  registerPublisher(mlc, mlp);
+  mlc->reset();
+  int conv_index = conv_queue_.size();
+  std::cout << "Add test with conv_index = " << conv_index << std::endl;
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
+  conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
 QI_REGISTER_OBJECT( Bridge,
