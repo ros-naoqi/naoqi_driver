@@ -545,6 +545,9 @@ std::string Bridge::stopRecord()
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
+void Bridge::addMemoryConverters(std::string filepath){
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     startPublishing,
@@ -554,7 +557,8 @@ QI_REGISTER_OBJECT( Bridge,
                     setMasterURINet,
                     getAvailableConverters,
                     getSubscribedPublishers,
+                    addMemoryConverters,
                     startRecord,
                     startRecordTopics,
-                    stopRecord );
+                    stopRecord )
 } //alros

@@ -163,6 +163,11 @@ public:
   */
   std::string stopRecord();
 
+  /**
+   * @brief qicli call function to add on-the-fly some memory keys extractors
+   */
+  void addMemoryConverters(std::string filepath);
+
   void stopService();
 
 private:
