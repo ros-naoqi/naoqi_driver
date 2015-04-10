@@ -549,6 +549,15 @@ std::string Bridge::stopRecord()
 }
 
 void Bridge::addMemoryConverters(std::string filepath){
+  // Check if the nodeHandle pointer is already initialized
+  if(!nhPtr_){
+    std::cout << BOLDRED << "The connection with the ROS master does not seem to be initialized." << std::endl
+              << BOLDYELLOW << "Please run:" << RESETCOLOR << std::endl
+              << GREEN << "\t$ qicli call BridgeService.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
+              << BOLDYELLOW << "before trying to add converters" << RESETCOLOR << std::endl;
+    return;
+  }
+
   // Open the file filepath and parse it
   //--TODO--//
   std::vector<std::string> list;
