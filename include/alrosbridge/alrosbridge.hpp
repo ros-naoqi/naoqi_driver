@@ -108,7 +108,7 @@ public:
 
   std::string _whoIsYourDaddy()
   {
-    return "A mother fucker";
+    return "ask ya mama";
   }
 
   /**
