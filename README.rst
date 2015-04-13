@@ -10,12 +10,12 @@ NAOqi API.
 What it does
 ============
 
-The **BridgeService** module is in charge of providing some bridge capabilities between ROS and NAOqiOS.
+The **ALROSBridge** module is in charge of providing some bridge capabilities between ROS and NAOqiOS.
 
 How it works
 ============
 
-The **BridgeService** module is a NAOqi module that also acts as a ROS node. As there is no **roscore** on the robot, it needs to be given the IP of the **roscore** in order to be registered as a node in the ROS processing graph. Usually, you will start your **roscore** on your local desktop.
+The **ALROSBridge** module is a NAOqi module that also acts as a ROS node. As there is no **roscore** on the robot, it needs to be given the IP of the **roscore** in order to be registered as a node in the ROS processing graph. Usually, you will start your **roscore** on your local desktop.
 
 Once connected, normal ROS communication is happening between your robot, running NAOqi OS, and your desktop, running ROS.
 
@@ -35,33 +35,73 @@ It also exposes the following higher level NAOqi API services:
 Getting Started
 ===============
 
-Start the **BridgeService** module
+Start the **ALROSBridge** module
 ----------------------------------
 
-This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/bridgeservicepackage/tree/master>`_
+This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/ALROSBridgepackage/tree/master>`_
 
 See instructions on installation `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/2-installation>`_ (Section *C++ Bridge*)
 
-Using the **BridgeService** module
+Using the **ALROSBridge** module
 ----------------------------------
 
 To start using this bridge, you need to communicate your external roscore IP (see instructions `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/start-core-bridge>`_ )
 
+This module povides an API to:
+
+* Publish data
+* Record data
+* Send command to naoqi modules
+
+To learn more, see API section above.
+
 API
-+++
+===
 
-* startPublishing():
+-----------------
 
-  start/enable publishing all registered publisher
+**Environment setup**
+
+In order to get the module to connect to your roscore, you should send it your IP.
+
+* ``void`` ALROSBridge:\:**setMasterURI** ( ``const std::string&`` **uri** )
+
+  Set current master URI. The IP adress given is from defauth *eth0* network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+* ``void`` ALROSBridge:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
+
+  Set current master URI using a given network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+  *param:* **network_interface** - string. For example ``tether``.
+
+* ``const std::string&`` ALROSBridge:\:**getMasterURI** ()
+
+  Set current master URI using a given network interface.
+
+  *param:* **uri** - string in form of ``http://<ip>:11311``
+
+  *param:* **network_interface** - string. For example ``tether``.
+
+-----------------
+
+**Converters API**
+
+* ``const std::vector< std::string >&`` ALROSBridge:\:**getAvailableConverters** ()
   
-* stopPublishing():
+  Get all registered converters in the module.
 
-  stop/disable publishing all registered publisher
+  *return:* list of string of all converter's topic name
 
-* addMemoryConverters(filePath):
+* ``void`` ALROSBridge:\:**addMemoryConverters** ( ``std::string`` **filePath** )
 
-  add some new converters for memory keys. This call requires as argument the path to a JSON file structured as the following one.
+  Add some new converters for memory keys. This call requires as argument the path to a JSON file structured as the following one.
   memKeys and topic must be present and filled. Frequency is optional, and if not there, the default value is 10 Hz.
+
+  *param:* **filePath** - path of the JSON file
 
 ::
 
@@ -73,3 +113,34 @@ API
       "topic": "topicName",
       "frequency": 10
   }
+
+-----------------
+
+**Publishers API**
+
+* ``void`` ALROSBridge:\:**startPublishing** ()
+
+  Start/enable publishing all registered publisher
+  
+* ``void`` ALROSBridge:\:**stopPublishing** ()
+
+  Stop/disable publishing all registered publisher
+
+* ``const std::vector< std::string >&`` ALROSBridge:\:**getSubscribedPublishers** ()
+
+  Get all subscribed publishers.
+
+  *return:* list of string of publisher's topic name
+
+-----------------
+
+**Recorders API**
+
+* ``void`` ALROSBridge:\:**startRecording** ()
+
+  Start/enable recording all registered recorder
+  
+* ``void`` ALROSBridge:\:**stopRecording** ()
+
+  Stop/disable recording all registered recorder
+
