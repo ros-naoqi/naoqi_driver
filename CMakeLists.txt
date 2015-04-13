@@ -23,6 +23,9 @@ set(
   src/converters/joint_state.cpp
   src/converters/laser.cpp
   src/converters/memory_list.cpp
+  src/converters/memory/int.cpp
+  src/converters/memory/float.cpp
+  src/converters/memory/string.cpp
   src/converters/sonar.cpp
   src/converters/string.cpp
   )
@@ -38,6 +41,7 @@ set(
   PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
+  src/publishers/float.cpp
   src/publishers/imu.cpp
   src/publishers/info.cpp
   src/publishers/int.cpp
@@ -61,6 +65,7 @@ set(
   RECORDER
   src/recorder/camera.cpp
   src/recorder/diagnostics.cpp
+  src/recorder/float.cpp
   src/recorder/imu.cpp
   src/recorder/info.cpp
   src/recorder/int.cpp
