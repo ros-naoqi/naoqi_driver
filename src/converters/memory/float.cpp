@@ -16,7 +16,6 @@
 */
 
 #include <ros/serialization.h>
-#include <limits>
 
 #include "float.hpp"
 
@@ -36,25 +35,26 @@ void MemoryFloatConverter::registerCallback( message_actions::MessageAction acti
   callbacks_[action] = cb;
 }
 
-void MemoryFloatConverter::convert()
+bool MemoryFloatConverter::convert()
 {
+  bool success = false;
   AL::ALValue value = p_memory_.call<AL::ALValue>("getData", memory_key_);
   if (value.isFloat())
   {
+    msg_.header.stamp = ros::Time::now();
     msg_.data = static_cast<float>(value);
+    success = true;
   }
-  else
-  {
-    msg_.data = std::numeric_limits<float>::max();
-  }
+  return success;
 }
 
 void MemoryFloatConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  convert();
-  for_each( message_actions::MessageAction action, actions )
-  {
-    callbacks_[action]( msg_ );
+  if (convert()) {
+    for_each( message_actions::MessageAction action, actions )
+    {
+      callbacks_[action]( msg_ );
+    }
   }
 }
 

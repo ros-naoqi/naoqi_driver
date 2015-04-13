@@ -16,7 +16,6 @@
 */
 
 #include <ros/serialization.h>
-#include <limits>
 
 #include "int.hpp"
 
@@ -36,26 +35,26 @@ void MemoryIntConverter::registerCallback( message_actions::MessageAction action
   callbacks_[action] = cb;
 }
 
-void MemoryIntConverter::convert()
+bool MemoryIntConverter::convert()
 {
+  bool success = false;
   AL::ALValue value = p_memory_.call<AL::ALValue>("getData", memory_key_);
   if (value.isInt())
   {
+    msg_.header.stamp = ros::Time::now();
     msg_.data = static_cast<int>(value);
+    success = true;
   }
-  else
-  {
-    msg_.data = std::numeric_limits<int>::max();
-  }
+  return success;
 }
 
 void MemoryIntConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  convert();
-
-  for_each( message_actions::MessageAction action, actions )
-  {
-    callbacks_[action]( msg_ );
+  if (convert()) {
+    for_each( message_actions::MessageAction action, actions )
+    {
+      callbacks_[action]( msg_ );
+    }
   }
 }
 

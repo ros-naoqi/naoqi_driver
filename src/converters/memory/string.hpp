@@ -52,7 +52,7 @@ public:
   void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
-  void convert();
+  bool convert();
 
 private:
   /** Memory key to retrieve data */
