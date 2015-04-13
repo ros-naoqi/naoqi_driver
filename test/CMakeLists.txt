@@ -19,5 +19,11 @@ target_link_libraries(
   recorder_callback_test
   alrosbridge
 )
+qi_create_gtest( converter_memory_test "converter_memory_test.cpp" )
+qi_use_lib( converter_memory_test GTEST QI)
+target_link_libraries(
+  converter_memory_test
+  alrosbridge
+)
 #qi_create_bin(concept_test "concept_test.cpp")
 #qi_use_lib(concept_test BOOST)
