@@ -157,7 +157,7 @@ public:
   /**
   * @brief qicli call function to start recording given topics in a ROSbag
   */
-  void startRecordTopics(const std::vector<std::string>& names);
+  void startRecordConverters(const std::vector<std::string>& names);
 
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag

@@ -508,7 +508,7 @@ void Bridge::startRecord()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordTopics(const std::vector<std::string>& names)
+void Bridge::startRecordConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -645,6 +645,6 @@ QI_REGISTER_OBJECT( Bridge,
                     getSubscribedPublishers,
                     addMemoryConverters,
                     startRecord,
-                    startRecordTopics,
-                    stopRecord )
+                    startRecordConverters,
+                    stopRecord );
 } //alros
