@@ -10,12 +10,12 @@ NAOqi API.
 What it does
 ============
 
-The **BridgeService** module is in charge of providing some bridge capabilities between ROS and NAOqiOS.
+The **ALROSBridge** module is in charge of providing some bridge capabilities between ROS and NAOqiOS.
 
 How it works
 ============
 
-The **BridgeService** module is a NAOqi module that also acts as a ROS node. As there is no **roscore** on the robot, it needs to be given the IP of the **roscore** in order to be registered as a node in the ROS processing graph. Usually, you will start your **roscore** on your local desktop.
+The **ALROSBridge** module is a NAOqi module that also acts as a ROS node. As there is no **roscore** on the robot, it needs to be given the IP of the **roscore** in order to be registered as a node in the ROS processing graph. Usually, you will start your **roscore** on your local desktop.
 
 Once connected, normal ROS communication is happening between your robot, running NAOqi OS, and your desktop, running ROS.
 
@@ -35,14 +35,14 @@ It also exposes the following higher level NAOqi API services:
 Getting Started
 ===============
 
-Start the **BridgeService** module
+Start the **ALROSBridge** module
 ----------------------------------
 
-This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/bridgeservicepackage/tree/master>`_
+This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/ALROSBridgepackage/tree/master>`_
 
 See instructions on installation `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/2-installation>`_ (Section *C++ Bridge*)
 
-Using the **BridgeService** module
+Using the **ALROSBridge** module
 ----------------------------------
 
 To start using this bridge, you need to communicate your external roscore IP (see instructions `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/start-core-bridge>`_ )
@@ -64,13 +64,13 @@ API
 
 In order to get the module to connect to your roscore, you should send it your IP.
 
-* ``void`` BridgeService:\:**setMasterURI** ( ``const std::string&`` **uri** )
+* ``void`` ALROSBridge:\:**setMasterURI** ( ``const std::string&`` **uri** )
 
   Set current master URI. The IP adress given is from defauth *eth0* network interface.
 
   *param:* **uri** - string in form of ``http://<ip>:11311``
 
-* ``void`` BridgeService:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
+* ``void`` ALROSBridge:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
 
   Set current master URI using a given network interface.
 
@@ -78,7 +78,7 @@ In order to get the module to connect to your roscore, you should send it your I
 
   *param:* **network_interface** - string. For example ``tether``.
 
-* ``const std::string&`` BridgeService:\:**getMasterURI** ()
+* ``const std::string&`` ALROSBridge:\:**getMasterURI** ()
 
   Set current master URI using a given network interface.
 
