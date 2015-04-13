@@ -86,18 +86,22 @@ In order to get the module to connect to your roscore, you should send it your I
 
   *param:* **network_interface** - string. For example ``tether``.
 
-* startPublishing():
+-----------------
 
-  start/enable publishing all registered publisher
+**Converters API**
+
+* ``const std::vector< std::string >&`` ALROSBridge:\:**getAvailableConverters** ()
   
-* stopPublishing():
+  Get all registered converters in the module.
 
-  stop/disable publishing all registered publisher
+  *return:* list of string of all converter's topic name
 
-* addMemoryConverters(filePath):
+* ``void`` ALROSBridge:\:**addMemoryConverters** ( ``std::string`` **filePath** )
 
-  add some new converters for memory keys. This call requires as argument the path to a JSON file structured as the following one.
+  Add some new converters for memory keys. This call requires as argument the path to a JSON file structured as the following one.
   memKeys and topic must be present and filled. Frequency is optional, and if not there, the default value is 10 Hz.
+
+  *param:* **filePath** - path of the JSON file
 
 ::
 
@@ -109,3 +113,34 @@ In order to get the module to connect to your roscore, you should send it your I
       "topic": "topicName",
       "frequency": 10
   }
+
+-----------------
+
+**Publishers API**
+
+* ``void`` ALROSBridge:\:**startPublishing** ()
+
+  Start/enable publishing all registered publisher
+  
+* ``void`` ALROSBridge:\:**stopPublishing** ()
+
+  Stop/disable publishing all registered publisher
+
+* ``const std::vector< std::string >&`` ALROSBridge:\:**getSubscribedPublishers** ()
+
+  Get all subscribed publishers.
+
+  *return:* list of string of publisher's topic name
+
+-----------------
+
+**Recorders API**
+
+* ``void`` ALROSBridge:\:**startRecording** ()
+
+  Start/enable recording all registered recorder
+  
+* ``void`` ALROSBridge:\:**stopRecording** ()
+
+  Stop/disable recording all registered recorder
+
