@@ -43,8 +43,17 @@ enum Topics {
   Camera,
   Sonar
 };
+
+enum DataType
+{
+  Float = 0,
+  Int,
+  String
+};
+
 } // alros
 
 QI_TYPE_ENUM_REGISTER(alros::Topics);
+QI_TYPE_ENUM_REGISTER(alros::DataType);
 
 #endif
