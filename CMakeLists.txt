@@ -95,9 +95,9 @@ target_link_libraries(
   alrosbridge
 )
 
-qi_create_bin(alros_bin src/external_registration.cpp)
+qi_create_bin(alrosbridge_bin src/external_registration.cpp)
 target_link_libraries(
-  alros_bin
+  alrosbridge_bin
   alros
 )
 

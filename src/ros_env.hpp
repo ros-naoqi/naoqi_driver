@@ -52,7 +52,7 @@ static std::string getROSIP(std::string network_interface)
 
 static std::string getPrefix()
 {
-  return "alrosconverter";
+  return "alrosbridge";
 }
 
 static void setMasterURI( const std::string& uri, const std::string& network_interface )
