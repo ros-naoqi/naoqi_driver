@@ -16,6 +16,7 @@
 */
 
 #include <ros/serialization.h>
+#include <limits>
 
 #include "float.hpp"
 
@@ -44,7 +45,7 @@ void MemoryFloatConverter::convert()
   }
   else
   {
-    msg_.data = -1.f;
+    msg_.data = std::numeric_limits<float>::max();
   }
 }
 

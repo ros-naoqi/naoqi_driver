@@ -16,6 +16,7 @@
 */
 
 #include <ros/serialization.h>
+#include <limits>
 
 #include "int.hpp"
 
@@ -44,7 +45,7 @@ void MemoryIntConverter::convert()
   }
   else
   {
-    msg_.data = -1;
+    msg_.data = std::numeric_limits<int>::max();
   }
 }
 
