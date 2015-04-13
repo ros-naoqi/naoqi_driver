@@ -58,6 +58,14 @@ void MemoryListConverter::callAll(const std::vector<message_actions::MessageActi
       tmp_msg.data = memData[i];
       _msg.ints.push_back(tmp_msg);
     }
+    else if(memData[i].isBool())
+    {
+      naoqi_msgs::MemoryPairInt tmp_msg;
+      tmp_msg.memoryKey = _key_list[i];
+      bool value = memData[i];
+      tmp_msg.data = (int) value;
+      _msg.ints.push_back(tmp_msg);
+    }
   }
 
   for_each( message_actions::MessageAction action, actions )
