@@ -51,6 +51,9 @@
 #include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
+#include "converters/memory/float.hpp"
+#include "converters/memory/int.hpp"
+#include "converters/memory/string.hpp"
 
 /*
 * PUBLISHERS
@@ -68,6 +71,7 @@
 //#include "publishers/odometry.hpp"
 #include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
+#include "publishers/float.hpp"
 
 /*
  * SUBSCRIBERS
@@ -86,6 +90,7 @@
 #include "recorder/memory_list.hpp"
 #include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
+#include "recorder/float.hpp"
 
 /*
 * STATIC FUNCTIONS INCLUDE
@@ -244,6 +249,55 @@ void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec
 {
   registerConverter( conv );
   registerRecorder(  conv.name(), rec);
+}
+
+void Bridge::registerMemoryConverter( const std::string& key, const DataType& type ) {
+  switch (type) {
+  case 0:
+    {
+      boost::shared_ptr<publisher::FloatPublisher> mfp = boost::make_shared<publisher::FloatPublisher>( key );
+      mfp->reset( *nhPtr_ );
+      boost::shared_ptr<recorder::FloatRecorder> mfr = boost::make_shared<recorder::FloatRecorder>( key );
+      mfr->reset(recorder_);
+      boost::shared_ptr<converter::MemoryFloatConverter> mfc = boost::make_shared<converter::MemoryFloatConverter>( key , 15, sessionPtr_, key );
+      mfc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::FloatPublisher::publish, mfp, _1) );
+      mfc->registerCallback( message_actions::RECORD, boost::bind(&recorder::FloatRecorder::write, mfr, _1) );
+      registerConverter( mfc, mfp, mfr );
+      reinit();
+      break;
+    }
+  case 1:
+    {
+      boost::shared_ptr<publisher::IntPublisher> mip = boost::make_shared<publisher::IntPublisher>( key );
+      mip->reset( *nhPtr_ );
+      boost::shared_ptr<recorder::IntRecorder> mir = boost::make_shared<recorder::IntRecorder>( key );
+      mir->reset(recorder_);
+      boost::shared_ptr<converter::MemoryIntConverter> mic = boost::make_shared<converter::MemoryIntConverter>( key, 15, sessionPtr_, key);
+      mic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, mip, _1) );
+      mic->registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, mir, _1) );
+      registerConverter( mic, mip, mir  );
+      reinit();
+      break;
+    }
+  case 2:
+    {
+      boost::shared_ptr<publisher::StringPublisher> msp = boost::make_shared<publisher::StringPublisher>( key );
+      msp->reset( *nhPtr_ );
+      boost::shared_ptr<recorder::StringRecorder> msr = boost::make_shared<recorder::StringRecorder>( key );
+      msr->reset(recorder_);
+      boost::shared_ptr<converter::MemoryStringConverter> msc = boost::make_shared<converter::MemoryStringConverter>( key, 10, sessionPtr_, key );
+      msc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, msp, _1) );
+      msc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, msr, _1) );
+      registerConverter( msc, msp, msr );
+      reinit();
+      break;
+    }
+  default:
+    {
+      std::cout << "Wrong data type" << std::endl;
+      break;
+    }
+  }
 }
 
 void Bridge::registerDefaultConverter()
@@ -629,6 +683,7 @@ QI_REGISTER_OBJECT( Bridge,
                     getAvailableConverters,
                     getSubscribedPublishers,
                     addMemoryConverters,
+                    registerMemoryConverter,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );

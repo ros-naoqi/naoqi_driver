@@ -44,6 +44,8 @@
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
+#include "tools.hpp"
+
 namespace tf2_ros
 {
   class Buffer;
@@ -109,6 +111,11 @@ public:
    * @brief register a converter with an associated recorder instance
    */
   void registerRecorder(converter::Converter conv, recorder::Recorder rec );
+
+  /**
+   * @brief register a converter for a given memory key
+   */
+  void registerMemoryConverter( const std::string& key, const DataType& type );
 
   /**
    * @brief get all available converters
