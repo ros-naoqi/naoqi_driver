@@ -23,6 +23,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
+#include <naoqi_bridge_msgs/IntStamped.h>
 
 #include <boost/function.hpp>
 
@@ -38,7 +39,7 @@ namespace converter
 
 class MemoryIntConverter : public BaseConverter<MemoryIntConverter>
 {
-  typedef boost::function<void(std_msgs::Int32&)> Callback_t;
+  typedef boost::function<void(naoqi_bridge_msgs::IntStamped&)> Callback_t;
 
 public:
 
@@ -60,7 +61,7 @@ private:
   qi::AnyObject p_memory_;
 
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
-  std_msgs::Int32 msg_;
+  naoqi_bridge_msgs::IntStamped msg_;
 
 }; // class
 

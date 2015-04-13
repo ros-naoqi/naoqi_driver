@@ -49,6 +49,9 @@ set(
   src/publishers/laser.cpp
   src/publishers/log.cpp
   src/publishers/memory_list.cpp
+  src/publishers/memory/int.cpp
+  src/publishers/memory/float.cpp
+  src/publishers/memory/string.cpp
   src/publishers/sonar.cpp
   src/publishers/string.cpp
   #  src/publishers/nao_joint_state.cpp
@@ -73,6 +76,9 @@ set(
   src/recorder/laser.cpp
   src/recorder/log.cpp
   src/recorder/memory_list.cpp
+  src/recorder/memory/int.cpp
+  src/recorder/memory/float.cpp
+  src/recorder/memory/string.cpp
   src/recorder/sonar.cpp
   src/recorder/string.cpp
   )
