@@ -152,17 +152,17 @@ public:
   /**
   * @brief qicli call function to start recording all registered converter in a ROSbag
   */
-  void startRecord();
+  void startRecording();
 
   /**
   * @brief qicli call function to start recording given topics in a ROSbag
   */
-  void startRecordConverters(const std::vector<std::string>& names);
+  void startRecordingConverters(const std::vector<std::string>& names);
 
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
-  std::string stopRecord();
+  std::string stopRecording();
 
   /**
    * @brief qicli call function to add on-the-fly some memory keys extractors

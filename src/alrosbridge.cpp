@@ -490,7 +490,7 @@ std::vector<std::string> Bridge::getSubscribedPublishers() const
   return publisher;
 }
 
-void Bridge::startRecord()
+void Bridge::startRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -508,7 +508,7 @@ void Bridge::startRecord()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordConverters(const std::vector<std::string>& names)
+void Bridge::startRecordingConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -534,7 +534,7 @@ void Bridge::startRecordConverters(const std::vector<std::string>& names)
   record_enabled_ = true;
 }
 
-std::string Bridge::stopRecord()
+std::string Bridge::stopRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -644,7 +644,7 @@ QI_REGISTER_OBJECT( Bridge,
                     getAvailableConverters,
                     getSubscribedPublishers,
                     addMemoryConverters,
-                    startRecord,
-                    startRecordConverters,
-                    stopRecord );
+                    startRecording,
+                    startRecordingConverters,
+                    stopRecording );
 } //alros
