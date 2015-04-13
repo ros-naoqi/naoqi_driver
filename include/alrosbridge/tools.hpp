@@ -46,7 +46,8 @@ enum Topics {
 
 enum DataType
 {
-  Float = 0,
+  None = 0,
+  Float,
   Int,
   String
 };

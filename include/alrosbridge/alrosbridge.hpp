@@ -115,7 +115,7 @@ public:
   /**
    * @brief register a converter for a given memory key
    */
-  void registerMemoryConverter( const std::string& key, const DataType& type );
+  void registerMemoryConverter(const std::string& key, float frequency, const DataType& type );
 
   /**
    * @brief get all available converters
@@ -213,6 +213,7 @@ private:
 
   void rosLoop();
 
+  DataType getDataType(const std::string& key);
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
