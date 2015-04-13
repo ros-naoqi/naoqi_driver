@@ -50,10 +50,26 @@ To start using this bridge, you need to communicate your external roscore IP (se
 API
 +++
 
-* startPublishing:
+* startPublishing():
 
   start/enable publishing all registered publisher
   
-* stopPublishing:
+* stopPublishing():
 
   stop/disable publishing all registered publisher
+
+* addMemoryConverters(filePath):
+
+  add some new converters for memory keys. This call requires as argument the path to a JSON file structured as the following one.
+  memKeys and topic must be present and filled. Frequency is optional, and if not there, the default value is 10 Hz.
+
+::
+
+  {
+      "memKeys": [
+                  "KeyName1",
+                  "KeyName2"
+                 ],
+      "topic": "topicName",
+      "frequency": 10
+  }
