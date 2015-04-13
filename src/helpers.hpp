@@ -26,9 +26,9 @@ namespace alros
 namespace helpers
 {
 
-inline bool hasSameName( const publisher::Publisher& first, const publisher::Publisher& second )
+inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Publisher& second )
 {
-  if ( first.name() == second.name() )
+  if ( first.topic() == second.topic() )
     return true;
   else
     return false;

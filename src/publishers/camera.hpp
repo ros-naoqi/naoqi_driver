@@ -33,11 +33,11 @@ namespace publisher
 class CameraPublisher : public BasePublisher<CameraPublisher>
 {
 public:
-  CameraPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session, int camera_source, int resolution );
+  CameraPublisher( const std::string& topic, int camera_source );
 
   ~CameraPublisher();
 
-  void publish();
+  void publish( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
   void reset( ros::NodeHandle& nh );
 
@@ -51,21 +51,7 @@ private:
   //image_transport::ImageTransport it_;
   image_transport::CameraPublisher pub_;
 
-  /** VideoDevice (Proxy) configurations */
-  qi::AnyObject p_video_;
   int camera_source_;
-  int resolution_;
-  int colorspace_;
-  std::string handle_;
-
-  // string indicating image transport encoding
-  // goes along with colorspace_
-  std::string msg_colorspace_;
-  int cv_mat_type_;
-  // msg frame id
-  std::string msg_frameid_;
-  sensor_msgs::CameraInfo camera_info_;
-  sensor_msgs::ImagePtr msg_;
 };
 
 } //publisher

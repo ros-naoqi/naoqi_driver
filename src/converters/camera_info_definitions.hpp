@@ -20,9 +20,10 @@
 
 #include <sensor_msgs/CameraInfo.h>
 #include <boost/assign/list_of.hpp>
+
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 namespace camera_info_definitions
 {

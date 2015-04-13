@@ -27,8 +27,8 @@ int main(int argc, char** argv)
   //app.session()->loadService( "alros.BridgeService" );
   //app.session()->registerService("BridgeService",
   // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
-  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("BridgeService", app.session()).asSharedPtr();
-  app.session()->registerService("BridgeService", bs);
+  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
+  app.session()->registerService("ALRosBridge", bs);
 
   //! @note Must call ow._stopService when the application stops to do the clean-up
   app.atStop(boost::function<void()>(

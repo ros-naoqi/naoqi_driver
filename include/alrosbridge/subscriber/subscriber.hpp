@@ -51,7 +51,7 @@ public:
   template<typename T>
   Subscriber( T sub ):
     subPtr_( boost::make_shared<SubscriberModel<T> >(sub) )
-  {};
+  {}
 
   /**
   * @brief checks if the subscriber is correctly initialized on the ros-master
@@ -112,7 +112,7 @@ private:
   */
   struct SubscriberConcept
   {
-    virtual ~SubscriberConcept(){};
+    virtual ~SubscriberConcept(){}
     virtual bool isInitialized() const = 0;
     virtual void reset( ros::NodeHandle& nh ) = 0;
     virtual std::string name() const = 0;
@@ -133,27 +133,27 @@ private:
 
     std::string name() const
     {
-      return subscriber_.name();
+      return subscriber_->name();
     }
 
     std::string topic() const
     {
-      return subscriber_.topic();
+      return subscriber_->topic();
     }
 
     Robot robot() const
     {
-      return subscriber_.robot();
+      return subscriber_->robot();
     }
 
     bool isInitialized() const
     {
-      return subscriber_.isInitialized();
+      return subscriber_->isInitialized();
     }
 
     void reset( ros::NodeHandle& nh )
     {
-      subscriber_.reset( nh );
+      subscriber_->reset( nh );
     }
 
     T subscriber_;

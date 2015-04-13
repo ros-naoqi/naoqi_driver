@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.1" uuid="alrosbridge">
+<package version="0.0.2" uuid="alrosbridge">
  <services>
   <service autorun="false" execStart="./run.sh" name="alrosbridge"/>
   <!-- <service autorun="true" execStart="./bin/alros_bin" name="alrosbridge"/> -->

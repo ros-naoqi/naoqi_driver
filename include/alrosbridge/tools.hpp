@@ -19,6 +19,16 @@
 #ifndef ALROS_TOOLS_HPP
 #define ALROS_TOOLS_HPP
 
+#define RESETCOLOR "\033[0m"
+#define GREEN "\033[32m"
+#define HIGHGREEN "\033[92m"
+#define BOLDRED "\033[1m\033[31m"
+#define YELLOW "\033[33m"
+#define BOLDYELLOW "\033[1m\033[33m"
+#define BOLDCYAN "\033[1m\033[36m"
+
+# include <qi/anyobject.hpp>
+
 namespace alros
 {
 enum Robot
@@ -27,6 +37,14 @@ enum Robot
   NAO,
   PEPPER
 };
+
+enum Topics {
+  Laser = 0,
+  Camera,
+  Sonar
+};
 } // alros
+
+QI_TYPE_ENUM_REGISTER(alros::Topics);
 
 #endif

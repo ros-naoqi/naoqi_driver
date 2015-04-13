@@ -25,6 +25,8 @@
 #include <alvalue/alvalue.h>
 #include <qi/session.hpp>
 
+#include <ros/ros.h>
+
 #include <alrosbridge/tools.hpp>
 
 namespace alros
@@ -38,82 +40,40 @@ class BasePublisher
 {
 
 public:
-  BasePublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr session ):
-    name_( name ),
+  BasePublisher( const std::string& topic ):
     topic_( topic ),
-    frequency_( frequency ),
-    is_initialized_( false ),
-    robot_( UNIDENTIFIED ),
-    session_(session)
+    is_initialized_( false )
   {}
 
-  virtual ~BasePublisher() {};
-
-  inline std::string name() const
-  {
-    return name_;
-  }
+  virtual ~BasePublisher() {}
 
   inline std::string topic() const
   {
     return topic_;
   }
-
-  inline float frequency() const
-  {
-    return frequency_;
-  }
-
+  
   inline bool isInitialized() const
   {
     return is_initialized_;
   }
 
-  /** Function that returns the type of a robot
-   */
-  inline Robot robot() const
+  virtual inline bool isSubscribed() const
   {
-    if (robot_ != UNIDENTIFIED)
-      return robot_;
+    if (is_initialized_ == false) return false;
+      return pub_.getNumSubscribers() > 0;
 
-    qi::AnyObject p_memory = session_->service("ALMemory");
-    std::string robot = p_memory.call<AL::ALValue>("getData", "RobotConfig/Body/Type" );
-    std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
-    std::cout << "found robot variable " << robot << std::endl;
-    if (std::string(robot) == "nao")
-    {
-      robot_ = NAO;
-      return robot_;
-    }
-    else if (std::string(robot) == "pepper" || std::string(robot) == "juliette")
-    {
-      robot_ = PEPPER;
-      return robot_;
-    }
-    else
-    {
-      robot_ = UNIDENTIFIED;
-      return robot_;
-    }
   }
 
-  virtual bool isSubscribed() const = 0;
-
 protected:
-  std::string name_, topic_;
+  std::string topic_;
 
   bool is_initialized_;
 
-  /** Frequency at which the publisher should publish. This is informative */
-  float frequency_;
-  /** The type of the robot */
-  mutable Robot robot_;
-
-  /** Pointer to a session from which we can create proxies */
-  qi::SessionPtr session_;
+  /** Publisher */
+  ros::Publisher pub_;
 }; // class
 
-} //publisher
+} // publisher
 } // alros
 
 #endif

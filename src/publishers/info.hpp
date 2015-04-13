@@ -19,7 +19,6 @@
 #define PUBLISHER_INFO_HPP
 
 #include <ros/ros.h>
-#include <qi/anyobject.hpp>
 
 #include "publisher_base.hpp"
 
@@ -31,28 +30,11 @@ namespace publisher
 class InfoPublisher : public BasePublisher<InfoPublisher>
 {
 public:
-  InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
+  InfoPublisher( const std::string& topic );
 
-  void publish();
+  void publish( const std_msgs::String& info_msg );
 
   void reset( ros::NodeHandle& nh );
-
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
-
-private:
-  ros::Publisher pub_;
-
-  /** Memory (Proxy) configurations */
-  qi::AnyObject p_memory_;
-
-  /** The keys to get from ALMemory */
-  std::vector<std::string> keys_;
-  /** The memory keys of the info */
-  AL::ALValue alvalues_;
 };
 
 } //publisher

@@ -19,6 +19,7 @@
 #define INT_PUBLISHER_HPP
 
 #include <ros/ros.h>
+#include <std_msgs/Int32.h>
 
 #include "publisher_base.hpp"
 #include <qi/anyobject.hpp>
@@ -32,20 +33,12 @@ class IntPublisher : public BasePublisher<IntPublisher>
 {
 
 public:
-  IntPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  IntPublisher( const std::string& topic );
 
-  void publish();
+  void publish( const std_msgs::Int32& msg );
 
   void reset( ros::NodeHandle& nh );
 
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
-
-private:
-  ros::Publisher pub_;
 }; // class
 
 } //publisher

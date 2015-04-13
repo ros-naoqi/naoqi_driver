@@ -27,6 +27,6 @@
 * @brief starter code for registrating the ALRosBridge module via the autoload.ini.
 */
 void registerRosBridge(qi::ModuleBuilder* mb) {
-  mb->advertiseFactory<alros::Bridge, qi::SessionPtr>("BridgeService");
+  mb->advertiseFactory<alros::Bridge, qi::SessionPtr>("ALRosBridge");
 }
 QI_REGISTER_MODULE("alros", &registerRosBridge);

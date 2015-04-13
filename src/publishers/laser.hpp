@@ -21,8 +21,6 @@
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 
-#include <qi/anyobject.hpp>
-
 #include "publisher_base.hpp"
 
 namespace alros
@@ -34,22 +32,11 @@ class LaserPublisher : public BasePublisher<LaserPublisher>
 {
 
 public:
-  LaserPublisher( const std::string& name, const std::string& topic, float frequency, qi::SessionPtr& session );
+  LaserPublisher( const std::string& topic );
 
-  void publish();
+  void publish( const sensor_msgs::LaserScan& laser_msg );
 
   void reset( ros::NodeHandle& nh );
-
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
-
-private:
-  qi::AnyObject p_memory_;
-  ros::Publisher pub_;
-  sensor_msgs::LaserScan msg_;
 }; // class
 
 } //publisher

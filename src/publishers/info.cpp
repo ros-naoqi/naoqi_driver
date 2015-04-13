@@ -27,51 +27,20 @@ namespace alros
 namespace publisher
 {
 
-InfoPublisher::InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& session )
-  : BasePublisher( name, topic, frequency, session ),
-    p_memory_( session->service("ALMemory") )
+InfoPublisher::InfoPublisher( const std::string& topic )
+  : BasePublisher( topic )
 {
-  keys_.push_back("RobotConfig/Head/FullHeadId");
-  keys_.push_back("Device/DeviceList/ChestBoard/BodyId");
-  keys_.push_back("Device/DeviceList/BatteryFuelGauge/SerialNumber");
-  keys_.push_back("Device/DeviceList/BatteryFuelGauge/FirmwareVersion");
-  keys_.push_back("RobotConfig/Body/Type");
-  keys_.push_back("RobotConfig/Body/BaseVersion");
-  keys_.push_back("RobotConfig/Body/Device/LeftArm/Version");
-  keys_.push_back("RobotConfig/Body/Device/RightArm/Version");
-  keys_.push_back("RobotConfig/Body/Device/Hand/Left/Version");
-  keys_.push_back("RobotConfig/Body/Device/Platform/Version");
-  keys_.push_back("RobotConfig/Body/Device/Brakes/Version");
-  keys_.push_back("RobotConfig/Body/Device/Wheel/Version");
-  keys_.push_back("RobotConfig/Body/Version");
-  keys_.push_back("RobotConfig/Body/SoftwareRequirement");
-  keys_.push_back("RobotConfig/Body/Device/Legs/Version");
-  keys_.push_back("RobotConfig/Mode/Slave");
-
-  alvalues_.arraySetSize(keys_.size());
-  size_t i = 0;
-  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
-    alvalues_[i] = *it;
 }
 
-void InfoPublisher::publish()
+void InfoPublisher::publish( const std_msgs::String& info_msg )
 {
-  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", alvalues_);
-  std_msgs::String msg;
-  for(size_t i = 0; i < keys_.size(); ++i)
-  {
-    msg.data += keys_[i] + ": " + std::string(values[i]);
-    if (i != keys_.size()-1)
-      msg.data += " ; ";
-  }
-
-  pub_.publish(msg);
+  pub_.publish( info_msg );
 }
 
 void InfoPublisher::reset( ros::NodeHandle& nh )
 {
   // We latch as we only publish once
-  pub_ = nh.advertise<std_msgs::String>( "info", 1, true );
+  pub_ = nh.advertise<std_msgs::String>( topic_, 1, true );
 
   is_initialized_ = true;
 }

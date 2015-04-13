@@ -25,6 +25,7 @@
 /*
 * BOOST
 */
+#include <boost/property_tree/ptree.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -37,8 +38,11 @@
 /*
 * PUBLIC INTERFACE
 */
+#include <alrosbridge/converter/converter.hpp>
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
+#include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace tf2_ros
 {
@@ -48,6 +52,10 @@ namespace tf2_ros
 namespace alros
 {
 
+namespace recorder
+{
+  class GlobalRecorder;
+}
 /**
 * @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
 * once the external roscore ip is set, this class will advertise and publish ros messages
@@ -68,13 +76,40 @@ public:
   ~Bridge();
 
   /**
-  * @brief registers a publisher
-  * @param publisher to register
-  * @see Publisher
-  * @note it will be called by value to expose that internally there will be a copy,
-  * eventually this should be replaced by move semantics C++11
-  */
-  void registerPublisher( publisher::Publisher pub );
+   * @brief registers generall converter units
+   * they are connected via callbacks to various actions such as record, log, publish
+   */
+  void registerConverter( const converter::Converter& conv );
+
+  /**
+   * @brief register a converter with an associated publisher and recorder
+   */
+  void registerConverter( const converter::Converter& conv, const publisher::Publisher& pub, const recorder::Recorder& rec );
+
+  /**
+   * @brief register a converter with an associated publisher instance
+   */
+  void registerPublisher( const converter::Converter& conv, const publisher::Publisher& pub );
+
+  /**
+   * @brief register a converter with an associated recorder instance
+   */
+  void registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec );
+
+  /**
+   * @brief get all available converters
+   */
+  std::vector<std::string> getAvailableConverters();
+
+  /**
+   * @brief get all subscribed publishers
+   */
+  std::vector<std::string> getSubscribedPublishers() const;
+
+  std::string _whoIsYourDaddy()
+  {
+    return "ask ya mama";
+  }
 
   /**
   * @brief registers a subscriber
@@ -114,17 +149,45 @@ public:
   */
   void stopPublishing();
 
+  /**
+  * @brief qicli call function to start recording all registered converter in a ROSbag
+  */
+  void startRecording();
+
+  /**
+  * @brief qicli call function to start recording given topics in a ROSbag
+  */
+  void startRecordingConverters(const std::vector<std::string>& names);
+
+  /**
+  * @brief qicli call function to stop recording all registered publisher in a ROSbag
+  */
+  std::string stopRecording();
+
+  /**
+   * @brief qicli call function to add on-the-fly some memory keys extractors
+   */
+  void addMemoryConverters(std::string filepath);
+
+  void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
+
   void stopService();
 
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
   bool publish_cancelled_;
+
+  bool record_enabled_;
+  bool record_cancelled_;
+
   const size_t freq_;
   boost::thread publisherThread_;
   //ros::Rate r_;
 
-  void registerDefaultPublisher();
+  boost::shared_ptr<recorder::GlobalRecorder> recorder_;
+
+  void registerDefaultConverter();
   void registerDefaultSubscriber();
   void init();
 
@@ -134,27 +197,36 @@ private:
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
 
-  std::vector< publisher::Publisher > publishers_;
-  std::vector< subscriber::Subscriber> subscribers_;
+  boost::mutex mutex_record_;
+
+  std::vector< converter::Converter > converters_;
+  std::map< std::string, publisher::Publisher > pub_map_;
+  std::map< std::string, recorder::Recorder > rec_map_;
+  typedef std::map< std::string, publisher::Publisher>::const_iterator PubConstIter;
+  typedef std::map< std::string, publisher::Publisher>::iterator PubIter;
+  typedef std::map< std::string, recorder::Recorder>::const_iterator RecConstIter;
+  typedef std::map< std::string, recorder::Recorder>::iterator RecIter;
+
+  std::vector< subscriber::Subscriber > subscribers_;
 
   /** Pub Publisher to execute at a specific time */
-  struct ScheduledPublish {
-    ScheduledPublish(const ros::Time& schedule, size_t pub_index) :
-       schedule_(schedule), pub_index_(pub_index)
+  struct ScheduledConverter {
+    ScheduledConverter(const ros::Time& schedule, size_t conv_index) :
+       schedule_(schedule), conv_index_(conv_index)
     {
     }
 
-    bool operator < (const ScheduledPublish& sp_in) const {
+    bool operator < (const ScheduledConverter& sp_in) const {
       return schedule_ > sp_in.schedule_;
     }
     /** Time at which the publisher will be called */
     ros::Time schedule_;
     /** Time at which the publisher will be called */
-    size_t pub_index_;
+    size_t conv_index_;
   };
 
   /** Priority queue to process the publishers according to their frequency */
-  std::priority_queue<ScheduledPublish> pub_queue_;
+  std::priority_queue<ScheduledConverter> conv_queue_;
 
   /** tf2 buffer that will be shared between different publishers/subscribers
    * This is only for performance improvements
