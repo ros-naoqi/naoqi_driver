@@ -22,6 +22,7 @@ set(
   src/converters/int.cpp
   src/converters/joint_state.cpp
   src/converters/laser.cpp
+  src/converters/memory_list.cpp
   src/converters/sonar.cpp
   src/converters/string.cpp
   )
@@ -43,6 +44,7 @@ set(
   src/publishers/joint_state.cpp
   src/publishers/laser.cpp
   src/publishers/log.cpp
+  src/publishers/memory_list.cpp
   src/publishers/sonar.cpp
   src/publishers/string.cpp
   #  src/publishers/nao_joint_state.cpp
@@ -65,6 +67,7 @@ set(
   src/recorder/joint_state.cpp
   src/recorder/laser.cpp
   src/recorder/log.cpp
+  src/recorder/memory_list.cpp
   src/recorder/sonar.cpp
   src/recorder/string.cpp
   )

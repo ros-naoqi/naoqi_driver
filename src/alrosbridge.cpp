@@ -27,6 +27,7 @@
 */
 #include <boost/foreach.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #define for_each BOOST_FOREACH
 /*
 * ROS
@@ -47,6 +48,7 @@
 #include "converters/int.hpp"
 #include "converters/joint_state.hpp"
 #include "converters/laser.hpp"
+#include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
 /*
@@ -60,6 +62,7 @@
 #include "publishers/joint_state.hpp"
 #include "publishers/laser.hpp"
 //#include "publishers/log.hpp"
+#include "publishers/memory_list.hpp"
 //#include "publishers/nao_joint_state.hpp"
 //#include "publishers/odometry.hpp"
 #include "publishers/sonar.hpp"
@@ -79,6 +82,7 @@
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
 #include "recorder/laser.hpp"
+#include "recorder/memory_list.hpp"
 #include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
 
@@ -545,6 +549,91 @@ std::string Bridge::stopRecord()
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
+void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){
+  // Open json file and parse it
+  std::ifstream json_file;
+  json_file.open(filepath.c_str(), std::ios_base::in);
+
+  boost::property_tree::json_parser::read_json(json_file, pt);
+  json_file.close();
+}
+
+void Bridge::addMemoryConverters(std::string filepath){
+  // Check if the nodeHandle pointer is already initialized
+  if(!nhPtr_){
+    std::cout << BOLDRED << "The connection with the ROS master does not seem to be initialized." << std::endl
+              << BOLDYELLOW << "Please run:" << RESETCOLOR << std::endl
+              << GREEN << "\t$ qicli call BridgeService.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
+              << BOLDYELLOW << "before trying to add converters" << RESETCOLOR << std::endl;
+    return;
+  }
+
+  // Open the file filepath and parse it
+  boost::property_tree::ptree pt;
+  parseJsonFile(filepath, pt);
+
+
+  // Get the frequency requested (default to 10 Hz)
+  float frequency = 10.0f;
+  try{
+    frequency = pt.get<float>("frequency");
+  }
+  catch(const boost::property_tree::ptree_bad_data& e){
+    std::cout << "\"frequency\" could not be interpreted as float: " <<  e.what() << std::endl;
+    std::cout << "Default to 10 Hz" << std::endl;
+  }
+  catch(const boost::property_tree::ptree_bad_path& e){
+    std::cout << "\"frequency\" was not found: " <<  e.what() << std::endl;
+    std::cout << "Default to 10 Hz" << std::endl;
+  }
+
+  // Get the topic name requested
+  std::string topic;
+  try{
+    topic = pt.get<std::string>("topic");
+  }
+  catch(const boost::property_tree::ptree_error& e){
+    std::cout << "\"topic\" could not be retrieved: " <<  e.what() << std::endl
+              << "Cannot add new converters" << std::endl;
+    return;
+  }
+
+  std::vector<std::string> list;
+  try{
+    BOOST_FOREACH(boost::property_tree::ptree::value_type &v, pt.get_child("memKeys"))
+    {
+      std::string topic = v.second.get_value<std::string>();
+      list.push_back(topic);
+    }
+  }
+  catch(const boost::property_tree::ptree_error& e){
+    std::cout << "A problem occured during the reading of the mem keys list: " << e.what() << std::endl
+              << "Cannot add new converters" << std::endl;
+    return;
+  }
+
+  if(list.empty()){
+    std::cout << "The list of keys to add is empty. " << std::endl;
+    return;
+  }
+
+  // Create converter, publisher and recorder
+  boost::shared_ptr<publisher::MemoryListPublisher> mlp = boost::make_shared<publisher::MemoryListPublisher>( topic );
+  mlp->reset( *nhPtr_ );
+  boost::shared_ptr<recorder::MemoryListRecorder> mlr = boost::make_shared<recorder::MemoryListRecorder>( topic );
+  mlr->reset(recorder_);
+  boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
+  mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryListPublisher::publish, mlp, _1) );
+  mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryListRecorder::write, mlr, _1) );
+  registerConverter( mlc, mlp, mlr );
+  mlc->reset();
+
+  // Add the converter to the shedule
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
+  int conv_index = conv_queue_.size();
+  conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     startPublishing,
@@ -554,7 +643,8 @@ QI_REGISTER_OBJECT( Bridge,
                     setMasterURINet,
                     getAvailableConverters,
                     getSubscribedPublishers,
+                    addMemoryConverters,
                     startRecord,
                     startRecordTopics,
-                    stopRecord );
+                    stopRecord )
 } //alros

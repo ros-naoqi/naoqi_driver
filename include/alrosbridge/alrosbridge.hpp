@@ -25,6 +25,7 @@
 /*
 * BOOST
 */
+#include <boost/property_tree/ptree.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -107,7 +108,7 @@ public:
 
   std::string _whoIsYourDaddy()
   {
-    return "K in da house";
+    return "A mother fucker";
   }
 
   /**
@@ -162,6 +163,13 @@ public:
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
   std::string stopRecord();
+
+  /**
+   * @brief qicli call function to add on-the-fly some memory keys extractors
+   */
+  void addMemoryConverters(std::string filepath);
+
+  void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
   void stopService();
 
