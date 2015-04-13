@@ -1,2 +1,2 @@
 source setup.bash
-exec bin/alros_bin
+exec bin/alrosbridge_bin
