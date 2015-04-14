@@ -354,7 +354,6 @@ void Bridge::registerDefaultConverter()
   usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
   registerConverter( usc, usp, usr );
 
-
 }
 
 // public interface here
@@ -398,16 +397,6 @@ std::vector<std::string> Bridge::getAvailableConverters()
   return conv_list;
 }
 
-
-void Bridge::init()
-{
-  // init subscribers
-  for_each( subscriber::Subscriber& sub, subscribers_ )
-  {
-  }
-}
-
-
 /*
 * EXPOSED FUNCTIONS
 */
@@ -441,8 +430,6 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   // register publishers, that will not start them
   registerDefaultConverter();
   registerDefaultSubscriber();
-  // initialize the publishers and subscribers with nodehandle
-  init();
   // Start publishing again
   startPublishing();
 }

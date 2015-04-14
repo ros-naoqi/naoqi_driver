@@ -203,7 +203,6 @@ private:
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
-  void init();
 
   void rosLoop();
 
