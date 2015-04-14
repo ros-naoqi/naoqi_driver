@@ -51,6 +51,7 @@
 #include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
+
 /*
 * PUBLISHERS
 */
@@ -203,7 +204,10 @@ void Bridge::rosLoop()
 
 void Bridge::registerConverter( const converter::Converter& conv )
 {
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
+  int conv_index = conv_queue_.size();
   converters_.push_back( conv );
+  conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
 void Bridge::registerConverter( const converter::Converter& conv, const publisher::Publisher& pub, const recorder::Recorder& rec )
@@ -255,6 +259,7 @@ void Bridge::registerDefaultConverter()
   sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   registerConverter( sc, sp, sr );
+  sc->reset();
 
   robot_type = sc->robot();
 
@@ -268,6 +273,7 @@ void Bridge::registerDefaultConverter()
   imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
   imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imutr, _1) );
   registerConverter( imutc, imutp, imutr );
+  imutc->reset();
 
   if(robot_type == alros::PEPPER){
     /** IMU BASE **/
@@ -280,6 +286,7 @@ void Bridge::registerDefaultConverter()
     imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
     imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imubr, _1) );
     registerConverter( imubc, imubp, imubr );
+    imubc->reset();
 
   }
 
@@ -292,6 +299,7 @@ void Bridge::registerDefaultConverter()
   ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
   ic->registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
   registerConverter( ic, ip, ir  );
+  ic->reset();
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
@@ -303,6 +311,7 @@ void Bridge::registerDefaultConverter()
   fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
   registerConverter( fcc, fcp, fcr );
   //registerPublisher( fcc, *fcp );
+  fcc->reset();
 
   if(robot_type == alros::PEPPER){
     /** Depth Camera */
@@ -314,6 +323,7 @@ void Bridge::registerDefaultConverter()
     dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
     dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
     registerConverter( dcc, dcp, dcr );
+    dcc->reset();
   }
 
   /** Joint States */
@@ -325,6 +335,7 @@ void Bridge::registerDefaultConverter()
   jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, jsp, jsr );
+  jsc->reset();
 
   if(robot_type == alros::PEPPER){
     /** Laser */
@@ -336,6 +347,7 @@ void Bridge::registerDefaultConverter()
     lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
     lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::LaserRecorder::write, lr, _1) );
     registerConverter( lc, lp, lr );
+    lc->reset();
   }
 
   /** Sonar */
@@ -358,6 +370,7 @@ void Bridge::registerDefaultConverter()
   usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
   usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
   registerConverter( usc, usp, usr );
+  usc->reset();
 
 }
 
@@ -404,17 +417,6 @@ std::vector<std::string> Bridge::getAvailableConverters()
 
 void Bridge::init()
 {
-  // init converters
-  conv_queue_ =  std::priority_queue<ScheduledConverter>();
-  size_t conv_index = 0;
-  for_each( converter::Converter& conv, converters_ )
-  {
-    conv.reset();
-    // Schedule it for the next publish
-    conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
-    ++conv_index;
-  }
-
   // init subscribers
   for_each( subscriber::Subscriber& sub, subscribers_ )
   {
