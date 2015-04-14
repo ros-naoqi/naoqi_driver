@@ -82,6 +82,20 @@ public:
   void registerConverter( converter::Converter& conv );
 
   /**
+   * @brief prepare and register a publisher
+   * @param conv_name the name of the converter related to the publisher
+   * @param pub       the publisher to add
+   */
+  void registerPublisher( const std::string& conv_name, publisher::Publisher& pub);
+
+  /**
+   * @brief prepare and register a recorder
+   * @param conv_name the name of the converter related to the recorder
+   * @param rec       the recorder to add
+   */
+  void registerRecorder( const std::string& conv_name, recorder::Recorder& rec);
+
+  /**
    * @brief register a converter with an associated publisher and recorder
    */
   void registerConverter(converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec );

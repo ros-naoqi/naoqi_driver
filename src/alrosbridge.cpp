@@ -211,33 +211,39 @@ void Bridge::registerConverter( converter::Converter& conv )
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
+void Bridge::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
+{
+  pub.reset(*nhPtr_);
+  // Concept classes don't have any default constructors needed by operator[]
+  // Cannot use this operator here. So we use insert
+  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
+}
+
+void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder& rec)
+{
+  // Concept classes don't have any default constructors needed by operator[]
+  // Cannot use this operator here. So we use insert
+  rec.reset(recorder_);
+  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
+}
+
 void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
 {
   registerConverter( conv );
-  // Concept classes don't have any default constructors needed by operator[]
-  // Cannot use this operator here. So we use insert
-  pub.reset(*nhPtr_);
-  rec.reset(recorder_);
-  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
-  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
+  registerPublisher( conv.name(), pub);
+  registerRecorder(  conv.name(), rec);
 }
 
 void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher pub )
 {
   registerConverter( conv );
-  // Concept classes don't have any default constructors needed by operator[]
-  // Cannot use this operator here. So we use insert
-  pub.reset(*nhPtr_);
-  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
+  registerPublisher(conv.name(), pub);
 }
 
 void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
-  // Concept classes don't have any default constructors needed by operator[]
-  // Cannot use this operator here. So we use insert
-  rec.reset(recorder_);
-  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
+  registerRecorder(  conv.name(), rec);
 }
 
 void Bridge::registerDefaultConverter()
