@@ -79,22 +79,36 @@ public:
    * @brief registers generall converter units
    * they are connected via callbacks to various actions such as record, log, publish
    */
-  void registerConverter( const converter::Converter& conv );
+  void registerConverter( converter::Converter& conv );
+
+  /**
+   * @brief prepare and register a publisher
+   * @param conv_name the name of the converter related to the publisher
+   * @param pub       the publisher to add
+   */
+  void registerPublisher( const std::string& conv_name, publisher::Publisher& pub);
+
+  /**
+   * @brief prepare and register a recorder
+   * @param conv_name the name of the converter related to the recorder
+   * @param rec       the recorder to add
+   */
+  void registerRecorder( const std::string& conv_name, recorder::Recorder& rec);
 
   /**
    * @brief register a converter with an associated publisher and recorder
    */
-  void registerConverter( const converter::Converter& conv, const publisher::Publisher& pub, const recorder::Recorder& rec );
+  void registerConverter(converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec );
 
   /**
    * @brief register a converter with an associated publisher instance
    */
-  void registerPublisher( const converter::Converter& conv, const publisher::Publisher& pub );
+  void registerPublisher(converter::Converter conv, publisher::Publisher pub );
 
   /**
    * @brief register a converter with an associated recorder instance
    */
-  void registerRecorder( const converter::Converter& conv, const recorder::Recorder& rec );
+  void registerRecorder(converter::Converter conv, recorder::Recorder rec );
 
   /**
    * @brief get all available converters
@@ -189,7 +203,6 @@ private:
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
-  void init();
 
   void rosLoop();
 
