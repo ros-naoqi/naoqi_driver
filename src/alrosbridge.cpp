@@ -639,12 +639,6 @@ void Bridge::addMemoryConverters(std::string filepath){
   mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryListPublisher::publish, mlp, _1) );
   mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryListRecorder::write, mlr, _1) );
   registerConverter( mlc, mlp, mlr );
-  mlc->reset();
-
-  // Add the converter to the shedule
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
-  int conv_index = conv_queue_.size();
-  conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
 QI_REGISTER_OBJECT( Bridge,
