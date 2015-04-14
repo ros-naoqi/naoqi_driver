@@ -510,28 +510,49 @@ void Bridge::startRecording()
 
 void Bridge::startRecordingConverters(const std::vector<std::string>& names)
 {
-  boost::mutex::scoped_lock lock_record( mutex_record_ );
-  recorder_->startRecord();
-  for_each( const std::string& name, names)
+  bool success = false;
+  int index = 0;
+  while (!success && (index<names.size()))
   {
-    RecIter it = rec_map_.find(name);
-    if ( it != rec_map_.end() )
+    if (rec_map_.find(names[index]) != rec_map_.end())
     {
-      it->second.subscribe(true);
-      std::cout << HIGHGREEN << "Topic "
-                << BOLDCYAN << name << RESETCOLOR
-                << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+      success = true;
     }
-    else
-    {
-      std::cout << BOLDRED << "Could not find topic "
-                << BOLDCYAN << name
-                << BOLDRED << " in recorders" << RESETCOLOR << std::endl
-                << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-                << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
-    }
+    ++index;
   }
-  record_enabled_ = true;
+
+  if (success)
+  {
+    boost::mutex::scoped_lock lock_record( mutex_record_ );
+    recorder_->startRecord();
+
+    for_each( const std::string& name, names)
+    {
+      RecIter it = rec_map_.find(name);
+      if ( it != rec_map_.end() )
+      {
+        it->second.subscribe(true);
+        std::cout << HIGHGREEN << "Topic "
+                  << BOLDCYAN << name << RESETCOLOR
+                  << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+      }
+      else
+      {
+        std::cout << BOLDRED << "Could not find topic "
+                  << BOLDCYAN << name
+                  << BOLDRED << " in recorders" << RESETCOLOR << std::endl
+                  << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+                  << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+      }
+    }
+    record_enabled_ = true;
+  }
+  else
+  {
+    std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
+              << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+              << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+  }
 }
 
 std::string Bridge::stopRecording()
