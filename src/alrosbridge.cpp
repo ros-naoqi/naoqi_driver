@@ -264,7 +264,12 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
       data_type = getDataType(key);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
-                   << BOLDCYAN << key << RESETCOLOR << std::endl;
+                << BOLDCYAN << key << RESETCOLOR << std::endl
+                << BOLDRED << "You can enter it yourself, available types are:" << std::endl
+                << "\t > 0 - None" << std::endl
+                << "\t > 1 - Int" << std::endl
+                << "\t > 2 - Float" << std::endl
+                << "\t > 3 - String" << RESETCOLOR << std::endl;
       return;
     }
   }
@@ -274,48 +279,16 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
 
   switch (data_type) {
   case 0:
-    {
       break;
-    }
   case 1:
-    {
-      boost::shared_ptr<publisher::MemoryFloatPublisher> mfp = boost::make_shared<publisher::MemoryFloatPublisher>( key );
-      mfp->reset( *nhPtr_ );
-      boost::shared_ptr<recorder::MemoryFloatRecorder> mfr = boost::make_shared<recorder::MemoryFloatRecorder>( key );
-      mfr->reset(recorder_);
-      boost::shared_ptr<converter::MemoryFloatConverter> mfc = boost::make_shared<converter::MemoryFloatConverter>( key , frequency, sessionPtr_, key );
-      mfc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryFloatPublisher::publish, mfp, _1) );
-      mfc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryFloatRecorder::write, mfr, _1) );
-      registerConverter( mfc, mfp, mfr );
-      reinit();
+      _registerMemoryConverter<publisher::MemoryFloatPublisher,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
       break;
-    }
   case 2:
-    {
-      boost::shared_ptr<publisher::MemoryIntPublisher> mip = boost::make_shared<publisher::MemoryIntPublisher>( key );
-      mip->reset( *nhPtr_ );
-      boost::shared_ptr<recorder::MemoryIntRecorder> mir = boost::make_shared<recorder::MemoryIntRecorder>( key );
-      mir->reset(recorder_);
-      boost::shared_ptr<converter::MemoryIntConverter> mic = boost::make_shared<converter::MemoryIntConverter>( key, frequency, sessionPtr_, key);
-      mic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryIntPublisher::publish, mip, _1) );
-      mic->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryIntRecorder::write, mir, _1) );
-      registerConverter( mic, mip, mir  );
-      reinit();
+      _registerMemoryConverter<publisher::MemoryIntPublisher,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
       break;
-    }
   case 3:
-    {
-      boost::shared_ptr<publisher::MemoryStringPublisher> msp = boost::make_shared<publisher::MemoryStringPublisher>( key );
-      msp->reset( *nhPtr_ );
-      boost::shared_ptr<recorder::MemoryStringRecorder> msr = boost::make_shared<recorder::MemoryStringRecorder>( key );
-      msr->reset(recorder_);
-      boost::shared_ptr<converter::MemoryStringConverter> msc = boost::make_shared<converter::MemoryStringConverter>( key, frequency, sessionPtr_, key );
-      msc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryStringPublisher::publish, msp, _1) );
-      msc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryStringRecorder::write, msr, _1) );
-      registerConverter( msc, msp, msr );
-      reinit();
+      _registerMemoryConverter<publisher::MemoryStringPublisher,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
       break;
-    }
   default:
     {
       std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
