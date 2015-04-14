@@ -369,6 +369,7 @@ void Bridge::registerSubscriber( subscriber::Subscriber sub )
   {
     sub_index = subscribers_.size();
     subscribers_.push_back( sub );
+    sub.reset(*nhPtr_);
     std::cout << "registered subscriber:\t" << sub.name() << std::endl;
   }
   // if found, re-init them
@@ -403,7 +404,6 @@ void Bridge::init()
   // init subscribers
   for_each( subscriber::Subscriber& sub, subscribers_ )
   {
-    sub.reset( *nhPtr_ );
   }
 }
 
