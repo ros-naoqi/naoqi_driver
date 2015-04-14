@@ -79,22 +79,22 @@ public:
    * @brief registers generall converter units
    * they are connected via callbacks to various actions such as record, log, publish
    */
-  void registerConverter( converter::Converter conv );
+  void registerConverter( converter::Converter& conv );
 
   /**
    * @brief register a converter with an associated publisher and recorder
    */
-  void registerConverter( converter::Converter conv, const publisher::Publisher& pub, const recorder::Recorder& rec );
+  void registerConverter(converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec );
 
   /**
    * @brief register a converter with an associated publisher instance
    */
-  void registerPublisher( converter::Converter conv, const publisher::Publisher& pub );
+  void registerPublisher(converter::Converter conv, publisher::Publisher pub );
 
   /**
    * @brief register a converter with an associated recorder instance
    */
-  void registerRecorder( converter::Converter conv, const recorder::Recorder& rec );
+  void registerRecorder(converter::Converter conv, recorder::Recorder rec );
 
   /**
    * @brief get all available converters

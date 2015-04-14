@@ -211,12 +211,13 @@ void Bridge::registerConverter( converter::Converter& conv )
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
-void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, const recorder::Recorder& rec )
+void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
 {
   registerConverter( conv );
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
   pub.reset(*nhPtr_);
+  rec.reset(recorder_);
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
 }
@@ -230,11 +231,12 @@ void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher 
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
 }
 
-void Bridge::registerRecorder( converter::Converter conv, const recorder::Recorder& rec )
+void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
+  rec.reset(recorder_);
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
 }
 
@@ -256,7 +258,6 @@ void Bridge::registerDefaultConverter()
   /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
   boost::shared_ptr<recorder::StringRecorder> sr = boost::make_shared<recorder::StringRecorder>( "string" );
-  sr->reset(recorder_);
   boost::shared_ptr<converter::StringConverter> sc = boost::make_shared<converter::StringConverter>( "string", 10, sessionPtr_ );
   sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
@@ -267,7 +268,6 @@ void Bridge::registerDefaultConverter()
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
   boost::shared_ptr<recorder::ImuRecorder> imutr = boost::make_shared<recorder::ImuRecorder>( "imu_torso" );
-  imutr->reset(recorder_);
 
   boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
   imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imutp, _1) );
@@ -278,7 +278,6 @@ void Bridge::registerDefaultConverter()
     /** IMU BASE **/
     boost::shared_ptr<publisher::ImuPublisher> imubp = boost::make_shared<publisher::ImuPublisher>( "imu_base" );
     boost::shared_ptr<recorder::ImuRecorder> imubr = boost::make_shared<recorder::ImuRecorder>( "imu_base" );
-    imubr->reset(recorder_);
 
     boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
     imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::ImuPublisher::publish, imubp, _1) );
@@ -289,7 +288,6 @@ void Bridge::registerDefaultConverter()
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
   boost::shared_ptr<recorder::IntRecorder> ir = boost::make_shared<recorder::IntRecorder>( "int" );
-  ir->reset(recorder_);
   boost::shared_ptr<converter::IntConverter> ic = boost::make_shared<converter::IntConverter>( "int", 15, sessionPtr_);
   ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::IntPublisher::publish, ip, _1) );
   ic->registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
@@ -298,7 +296,6 @@ void Bridge::registerDefaultConverter()
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
   boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front/image_raw" );
-  fcr->reset(recorder_);
   boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
   fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
@@ -308,7 +305,6 @@ void Bridge::registerDefaultConverter()
     /** Depth Camera */
     boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
     boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth/image_raw" );
-    dcr->reset(recorder_);
     boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
     dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
     dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
@@ -318,7 +314,6 @@ void Bridge::registerDefaultConverter()
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
-  jsr->reset(recorder_);
   boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
   jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
@@ -328,7 +323,6 @@ void Bridge::registerDefaultConverter()
     /** Laser */
     boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
     boost::shared_ptr<recorder::LaserRecorder> lr = boost::make_shared<recorder::LaserRecorder>( "laser" );
-    lr->reset(recorder_);
     boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
     lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LaserPublisher::publish, lp, _1) );
     lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::LaserRecorder::write, lr, _1) );
@@ -349,7 +343,6 @@ void Bridge::registerDefaultConverter()
   }
   boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
   boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
-  usr->reset(recorder_);
   boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
   usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
   usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
@@ -627,7 +620,6 @@ void Bridge::addMemoryConverters(std::string filepath){
   // Create converter, publisher and recorder
   boost::shared_ptr<publisher::MemoryListPublisher> mlp = boost::make_shared<publisher::MemoryListPublisher>( topic );
   boost::shared_ptr<recorder::MemoryListRecorder> mlr = boost::make_shared<recorder::MemoryListRecorder>( topic );
-  mlr->reset(recorder_);
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
   mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::MemoryListPublisher::publish, mlp, _1) );
   mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryListRecorder::write, mlr, _1) );
