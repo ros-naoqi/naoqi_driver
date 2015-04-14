@@ -202,7 +202,7 @@ void Bridge::rosLoop()
   }
 }
 
-void Bridge::registerConverter( converter::Converter conv )
+void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_reinit_ );
   int conv_index = conv_queue_.size();
@@ -211,20 +211,22 @@ void Bridge::registerConverter( converter::Converter conv )
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
-void Bridge::registerConverter( converter::Converter conv, const publisher::Publisher& pub, const recorder::Recorder& rec )
+void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, const recorder::Recorder& rec )
 {
   registerConverter( conv );
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
+  pub.reset(*nhPtr_);
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv.name(), rec) );
 }
 
-void Bridge::registerPublisher( converter::Converter conv, const publisher::Publisher& pub )
+void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher pub )
 {
   registerConverter( conv );
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
+  pub.reset(*nhPtr_);
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv.name(), pub) );
 }
 
@@ -253,7 +255,6 @@ void Bridge::registerDefaultConverter()
 
   /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
-  sp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::StringRecorder> sr = boost::make_shared<recorder::StringRecorder>( "string" );
   sr->reset(recorder_);
   boost::shared_ptr<converter::StringConverter> sc = boost::make_shared<converter::StringConverter>( "string", 10, sessionPtr_ );
@@ -265,7 +266,6 @@ void Bridge::registerDefaultConverter()
 
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
-  imutp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::ImuRecorder> imutr = boost::make_shared<recorder::ImuRecorder>( "imu_torso" );
   imutr->reset(recorder_);
 
@@ -277,7 +277,6 @@ void Bridge::registerDefaultConverter()
   if(robot_type == alros::PEPPER){
     /** IMU BASE **/
     boost::shared_ptr<publisher::ImuPublisher> imubp = boost::make_shared<publisher::ImuPublisher>( "imu_base" );
-    imubp->reset( *nhPtr_ );
     boost::shared_ptr<recorder::ImuRecorder> imubr = boost::make_shared<recorder::ImuRecorder>( "imu_base" );
     imubr->reset(recorder_);
 
@@ -289,7 +288,6 @@ void Bridge::registerDefaultConverter()
 
   /** Int Publisher */
   boost::shared_ptr<publisher::IntPublisher> ip = boost::make_shared<publisher::IntPublisher>( "int" );
-  ip->reset( *nhPtr_ );
   boost::shared_ptr<recorder::IntRecorder> ir = boost::make_shared<recorder::IntRecorder>( "int" );
   ir->reset(recorder_);
   boost::shared_ptr<converter::IntConverter> ic = boost::make_shared<converter::IntConverter>( "int", 15, sessionPtr_);
@@ -299,7 +297,6 @@ void Bridge::registerDefaultConverter()
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
-  fcp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front/image_raw" );
   fcr->reset(recorder_);
   boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
@@ -310,7 +307,6 @@ void Bridge::registerDefaultConverter()
   if(robot_type == alros::PEPPER){
     /** Depth Camera */
     boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
-    dcp->reset( *nhPtr_ );
     boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth/image_raw" );
     dcr->reset(recorder_);
     boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
@@ -321,7 +317,6 @@ void Bridge::registerDefaultConverter()
 
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
-  jsp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
   jsr->reset(recorder_);
   boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
@@ -332,7 +327,6 @@ void Bridge::registerDefaultConverter()
   if(robot_type == alros::PEPPER){
     /** Laser */
     boost::shared_ptr<publisher::LaserPublisher> lp = boost::make_shared<publisher::LaserPublisher>( "laser" );
-    lp->reset( *nhPtr_ );
     boost::shared_ptr<recorder::LaserRecorder> lr = boost::make_shared<recorder::LaserRecorder>( "laser" );
     lr->reset(recorder_);
     boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
@@ -354,13 +348,13 @@ void Bridge::registerDefaultConverter()
     sonar_topics.push_back("sonar/right");
   }
   boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
-  usp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
   usr->reset(recorder_);
   boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
   usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
   usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
   registerConverter( usc, usp, usr );
+
 
 }
 
@@ -632,7 +626,6 @@ void Bridge::addMemoryConverters(std::string filepath){
 
   // Create converter, publisher and recorder
   boost::shared_ptr<publisher::MemoryListPublisher> mlp = boost::make_shared<publisher::MemoryListPublisher>( topic );
-  mlp->reset( *nhPtr_ );
   boost::shared_ptr<recorder::MemoryListRecorder> mlr = boost::make_shared<recorder::MemoryListRecorder>( topic );
   mlr->reset(recorder_);
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
