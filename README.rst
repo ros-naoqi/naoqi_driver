@@ -113,6 +113,7 @@ In order to get the module to connect to your roscore, you should send it your I
     * 1 - Int
     * 2 - Float
     * 3 - String
+    * 4 - Bool
 
 * ``void`` ALRosBridge:\:**addMemoryConverters** ( ``std::string`` **filePath** )
 
@@ -161,4 +162,3 @@ In order to get the module to connect to your roscore, you should send it your I
 * ``void`` ALRosBridge:\:**stopRecording** ()
 
   Stop/disable recording all registered recorder
-
