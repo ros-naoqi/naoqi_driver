@@ -15,10 +15,6 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
-#include <ros/serialization.h>
-
 #include "sonar.hpp"
 
 namespace alros

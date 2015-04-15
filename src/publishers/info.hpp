@@ -18,8 +18,21 @@
 #ifndef PUBLISHER_INFO_HPP
 #define PUBLISHER_INFO_HPP
 
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
+#include <ros/serialization.h>
+#include <std_msgs/String.h>
 
+/**
+* ALDEBARAN includes
+*/
+#include <alvalue/alvalue.h>
+
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
 
 namespace alros

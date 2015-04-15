@@ -18,11 +18,27 @@
 #ifndef INT_PUBLISHER_HPP
 #define INT_PUBLISHER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 
-#include "publisher_base.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "publisher_base.hpp"
+
 
 namespace alros
 {

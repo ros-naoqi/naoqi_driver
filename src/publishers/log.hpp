@@ -18,16 +18,41 @@
 #ifndef PUBLISHER_LOG_HPP
 #define PUBLISHER_LOG_HPP
 
+/**
+* STANDARD includes
+*/
+
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <rosgraph_msgs/Log.h>
+#include <ros/serialization.h>
+#include <std_msgs/String.h>
 
-#include "publisher_base.hpp"
-
+/**
+* BOOST includes
+*/
+#include <boost/algorithm/string.hpp>
 #include <boost/thread/mutex.hpp>
 
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+#include <qicore/logmessage.hpp>
 #include <qicore/logmanager.hpp>
 #include <qicore/loglistener.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "publisher_base.hpp"
+
+
+
+
 
 namespace alros
 {

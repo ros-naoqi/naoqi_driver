@@ -19,6 +19,14 @@
 #define JOINT_STATES_PUBLISHER_HPP
 
 /**
+* STANDARD includes
+*/
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <vector>
+
+/**
 * ROS includes
 */
 #include <geometry_msgs/Transform.h>
@@ -33,8 +41,9 @@
 */
 #include <qi/anyobject.hpp>
 
-#include <vector>
-
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
 
 namespace alros

@@ -15,11 +15,6 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
-#include <ros/serialization.h>
-#include <std_msgs/String.h>
-
 #include "info.hpp"
 
 namespace alros

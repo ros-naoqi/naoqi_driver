@@ -18,11 +18,14 @@
 #ifndef IMU_PUBLISHER_HPP
 #define IMU_PUBLISHER_HPP
 
-/*
- * ROS
- */
+/**
+* ROS includes
+*/
 #include <sensor_msgs/Imu.h>
 
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
 
 namespace alros {

@@ -18,12 +18,27 @@
 #ifndef MEMORY_FLOAT_PUBLISHER_HPP
 #define MEMORY_FLOAT_PUBLISHER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 #include <naoqi_bridge_msgs/FloatStamped.h>
 
-#include "../publisher_base.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "../publisher_base.hpp"
 
 namespace alros
 {
