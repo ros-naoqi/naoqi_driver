@@ -120,10 +120,9 @@ namespace alros
 Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
   freq_(15),
-  publish_enabled_(false),
-  publish_cancelled_(false),
+  publish_enabled_(true),
   record_enabled_(false),
-  record_cancelled_(false),
+  keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix()))
 {
 }
@@ -140,10 +139,7 @@ Bridge::~Bridge()
 }
 
 void Bridge::stopService() {
-  publish_cancelled_ = true;
-  stopPublishing();
-  if (publisherThread_.get_id() !=  boost::thread::id())
-    publisherThread_.join();
+  stopRosLoop();
   converters_.clear();
   subscribers_.clear();
 }
@@ -153,12 +149,12 @@ void Bridge::rosLoop()
 {
   static std::vector<message_actions::MessageAction> actions;
 
-  while( !publish_cancelled_ && !record_cancelled_ )
+  while( keep_looping )
   {
     // clear the callback triggers
     actions.clear();
     {
-      boost::mutex::scoped_lock lock( mutex_reinit_ );
+      boost::mutex::scoped_lock lock( mutex_conv_queue_ );
       if (!conv_queue_.empty())
       {
         // Wait for the next Publisher to be ready
@@ -218,7 +214,7 @@ void Bridge::rosLoop()
 
 void Bridge::registerConverter( converter::Converter& conv )
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
+  boost::mutex::scoped_lock lock( mutex_conv_queue_ );
   int conv_index = conv_queue_.size();
   converters_.push_back( conv );
   conv.reset();
@@ -475,37 +471,34 @@ void Bridge::setMasterURI( const std::string& uri)
 }
 void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
-  // Stopping publishing
-  stopPublishing();
+  // To avoid two calls to this function happening at the same time
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
 
-  // Reinitializing ROS
+  // Stopping the loop if there is any
+  stopRosLoop();
+
+  // Reinitializing ROS Node
   {
-    boost::mutex::scoped_lock lock( mutex_reinit_ );
     nhPtr_.reset();
     std::cout << "nodehandle reset " << std::endl;
     ros_env::setMasterURI( uri, network_interface );
     nhPtr_.reset( new ros::NodeHandle("~") );
   }
-  // Create the publishing thread if needed
-  if (publisherThread_.get_id() ==  boost::thread::id())
-    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
 
   // register publishers, that will not start them
   registerDefaultConverter();
   registerDefaultSubscriber();
   // Start publishing again
-  startPublishing();
+  startRosLoop();
 }
 
 void Bridge::startPublishing()
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
 }
 
 void Bridge::stopPublishing()
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = false;
 }
 
@@ -603,6 +596,21 @@ std::string Bridge::stopRecording()
     }
   }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+}
+
+void Bridge::startRosLoop()
+{
+  // Create the publishing thread if needed
+  keep_looping = true;
+  if (publisherThread_.get_id() ==  boost::thread::id())
+    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+}
+
+void Bridge::stopRosLoop()
+{
+  keep_looping = false;
+  if (publisherThread_.get_id() !=  boost::thread::id())
+    publisherThread_.join();
 }
 
 void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){
