@@ -23,6 +23,7 @@ set(
   src/converters/joint_state.cpp
   src/converters/laser.cpp
   src/converters/memory_list.cpp
+  src/converters/memory/bool.cpp
   src/converters/memory/int.cpp
   src/converters/memory/float.cpp
   src/converters/memory/string.cpp
@@ -49,6 +50,7 @@ set(
   src/publishers/laser.cpp
   src/publishers/log.cpp
   src/publishers/memory_list.cpp
+  src/publishers/memory/bool.cpp
   src/publishers/memory/int.cpp
   src/publishers/memory/float.cpp
   src/publishers/memory/string.cpp
@@ -76,6 +78,7 @@ set(
   src/recorder/laser.cpp
   src/recorder/log.cpp
   src/recorder/memory_list.cpp
+  src/recorder/memory/bool.cpp
   src/recorder/memory/int.cpp
   src/recorder/memory/float.cpp
   src/recorder/memory/string.cpp

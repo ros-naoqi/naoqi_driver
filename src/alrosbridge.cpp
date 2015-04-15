@@ -51,6 +51,7 @@
 #include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
+#include "converters/memory/bool.hpp"
 #include "converters/memory/float.hpp"
 #include "converters/memory/int.hpp"
 #include "converters/memory/string.hpp"
@@ -72,6 +73,7 @@
 #include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
 #include "publishers/float.hpp"
+#include "publishers/memory/bool.hpp"
 #include "publishers/memory/int.hpp"
 #include "publishers/memory/float.hpp"
 #include "publishers/memory/string.hpp"
@@ -94,6 +96,7 @@
 #include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
 #include "recorder/float.hpp"
+#include "recorder/memory/bool.hpp"
 #include "recorder/memory/int.hpp"
 #include "recorder/memory/float.hpp"
 #include "recorder/memory/string.hpp"
@@ -269,7 +272,8 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
                 << "\t > 0 - None" << std::endl
                 << "\t > 1 - Int" << std::endl
                 << "\t > 2 - Float" << std::endl
-                << "\t > 3 - String" << RESETCOLOR << std::endl;
+                << "\t > 3 - String" << std::endl
+                << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       return;
     }
   }
@@ -279,23 +283,27 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
 
   switch (data_type) {
   case 0:
-      break;
+    break;
   case 1:
-      _registerMemoryConverter<publisher::MemoryFloatPublisher,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
-      break;
+    _registerMemoryConverter<publisher::MemoryFloatPublisher,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
+    break;
   case 2:
-      _registerMemoryConverter<publisher::MemoryIntPublisher,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
-      break;
+    _registerMemoryConverter<publisher::MemoryIntPublisher,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
+    break;
   case 3:
-      _registerMemoryConverter<publisher::MemoryStringPublisher,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
-      break;
+    _registerMemoryConverter<publisher::MemoryStringPublisher,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
+    break;
+  case 4:
+    _registerMemoryConverter<publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder,converter::MemoryBoolConverter>(key,frequency);
+    break;
   default:
     {
       std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
                    << "\t > 0 - None" << std::endl
                    << "\t > 1 - Int" << std::endl
                    << "\t > 2 - Float" << std::endl
-                   << "\t > 3 - String" << RESETCOLOR << std::endl;
+                   << "\t > 3 - String" << std::endl
+                   << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       break;
     }
   }
@@ -687,6 +695,9 @@ dataType::DataType Bridge::getDataType(const std::string& key)
   }
   else if (value.isString()) {
     type = dataType::String;
+  }
+  else if (value.isBool()) {
+    type = dataType::Bool;
   }
   else {
     throw std::runtime_error("Cannot get a valid type.");
