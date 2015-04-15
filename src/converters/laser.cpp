@@ -15,17 +15,7 @@
  *
 */
 
-
-#include <iostream>
-#include <cmath>
-
-#include <sensor_msgs/LaserScan.h>
-
-#include <alvalue/alvalue.h>
-
 #include "laser.hpp"
-
-#include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 namespace alros
 {

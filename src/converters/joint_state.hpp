@@ -19,6 +19,14 @@
 #define JOINT_STATES_CONVERTER_HPP
 
 /**
+* STANDARD includes
+*/
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <vector>
+
+/**
 * ROS includes
 */
 #include <ros/ros.h>
@@ -33,18 +41,21 @@
 * ALDEBARAN includes
 */
 #include <qi/anyobject.hpp>
+#include <qi/path.hpp>
 
-#include <vector>
 /**
 * BOOST includes
 */
 #include <boost/shared_ptr.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 /**
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include "../tools/robot_description.hpp"
+
 
 namespace alros
 {

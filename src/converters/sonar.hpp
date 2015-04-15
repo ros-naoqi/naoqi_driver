@@ -18,13 +18,22 @@
 #ifndef SONAR_CONVERTER_HPP
 #define SONAR_CONVERTER_HPP
 
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
-#include <qi/anyobject.hpp>
-
+#include <ros/serialization.h>
 #include <sensor_msgs/Range.h>
 
-#include <alrosbridge/message_actions.h>
+/**
+* ALDEBARAN includes
+*/
+#include <qi/anyobject.hpp>
 
+/**
+* LOCAL includes
+*/
+#include <alrosbridge/message_actions.h>
 #include "converter_base.hpp"
 
 namespace alros

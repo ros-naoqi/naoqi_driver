@@ -15,8 +15,6 @@
  *
 */
 
-#include <iostream>
-
 #include "string.hpp"
 
 namespace alros

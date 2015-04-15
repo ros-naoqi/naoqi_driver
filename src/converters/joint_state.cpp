@@ -15,16 +15,7 @@
  *
 */
 
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-
-#include <qi/path.hpp>
-
-#include "boost/filesystem.hpp"
 #include "joint_state.hpp"
-
-#include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
 namespace alros

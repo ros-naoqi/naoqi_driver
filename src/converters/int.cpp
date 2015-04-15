@@ -14,9 +14,6 @@
  * limitations under the License.
  *
 */
-#include <iostream>
-
-#include <boost/foreach.hpp>
 
 #include "int.hpp"
 

@@ -18,12 +18,38 @@
 #ifndef CONVERTER_CAMERA_HPP
 #define CONVERTER_CAMERA_HPP
 
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
+#include <ros/master.h>
+#include <ros/serialization.h>
+#include <ros/this_node.h>
 #include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
 #include <image_transport/image_transport.h>
-#include <qi/anyobject.hpp>
+#include <XmlRpcValue.h>
 
+/**
+* CV includes
+*/
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+/**
+* ALDEBARAN includes
+*/
+#include <qi/anyobject.hpp>
+#include <alvision/alvisiondefinitions.h> // for kTop...
+#include <alvision/alimage.h>
+#include <alvalue/alvalue.h>
+#include <alvision/alimage_opencv.h>
+
+/**
+* LOCAL includes
+*/
 #include "converter_base.hpp"
+#include "camera_info_definitions.hpp"
 
 namespace alros
 {

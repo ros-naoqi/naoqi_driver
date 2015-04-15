@@ -15,8 +15,6 @@
  *
 */
 
-#include <ros/serialization.h>
-
 #include "bool.hpp"
 
 namespace alros

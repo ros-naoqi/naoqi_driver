@@ -18,9 +18,15 @@
 #ifndef MEMORY_LIST_CONVERTER_HPP
 #define MEMORY_LIST_CONVERTER_HPP
 
-#include "converter_base.hpp"
-
+/**
+* ROS includes
+*/
 #include <naoqi_msgs/MemoryList.h>
+
+/**
+* LOCAL includes
+*/
+#include "converter_base.hpp"
 
 namespace alros {
 

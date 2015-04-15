@@ -18,18 +18,21 @@
 #ifndef IMU_CONVERTER_HPP
 #define IMU_CONVERTER_HPP
 
-/*
- * ROS
- */
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
 #include <tf/transform_datatypes.h>
 
-/*
- * ALDEBARAN
- */
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
 
+/**
+* LOCAL includes
+*/
 #include "converter_base.hpp"
 
 namespace alros

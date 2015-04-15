@@ -15,22 +15,7 @@
  *
 */
 
-#include <sensor_msgs/image_encodings.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-#include <alvision/alvisiondefinitions.h> // for kTop...
-#include <alvision/alimage.h>
-#include <alvalue/alvalue.h>
-#include <alvision/alimage_opencv.h>
-
 #include "camera.hpp"
-#include "camera_info_definitions.hpp"
-
-#include <XmlRpcValue.h>
-#include <ros/master.h>
-#include <ros/serialization.h>
-#include <ros/this_node.h>
 
 namespace alros
 {

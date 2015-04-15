@@ -15,8 +15,6 @@
  *
 */
 
-#include <ros/serialization.h>
-
 #include "sonar.hpp"
 
 namespace alros

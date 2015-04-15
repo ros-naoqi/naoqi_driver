@@ -18,17 +18,33 @@
 #ifndef MEMORY_STRING_CONVERTER_HPP
 #define MEMORY_STRING_CONVERTER_HPP
 
+/**
+* STANDARD includes
+*/
 #include <map>
 #include <vector>
 
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <naoqi_bridge_msgs/StringStamped.h>
+#include <ros/serialization.h>
 
+/**
+* BOOST includes
+*/
 #include <boost/function.hpp>
 
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
 
+/**
+* LOCAL includes
+*/
 #include <alrosbridge/message_actions.h>
 #include "../converter_base.hpp"
 
