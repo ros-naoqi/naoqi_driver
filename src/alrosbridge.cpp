@@ -79,6 +79,11 @@
 #include "publishers/memory/string.hpp"
 
 /*
+ * TOOLS
+ */
+#include "tools/robot_description.hpp"
+
+/*
  * SUBSCRIBERS
  */
 #include "subscribers/teleop.hpp"
@@ -120,10 +125,9 @@ namespace alros
 Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
   freq_(15),
-  publish_enabled_(false),
-  publish_cancelled_(false),
+  publish_enabled_(true),
   record_enabled_(false),
-  record_cancelled_(false),
+  keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix()))
 {
 }
@@ -140,10 +144,7 @@ Bridge::~Bridge()
 }
 
 void Bridge::stopService() {
-  publish_cancelled_ = true;
-  stopPublishing();
-  if (publisherThread_.get_id() !=  boost::thread::id())
-    publisherThread_.join();
+  stopRosLoop();
   converters_.clear();
   subscribers_.clear();
 }
@@ -153,12 +154,12 @@ void Bridge::rosLoop()
 {
   static std::vector<message_actions::MessageAction> actions;
 
-  while( !publish_cancelled_ && !record_cancelled_ )
+  while( keep_looping )
   {
     // clear the callback triggers
     actions.clear();
     {
-      boost::mutex::scoped_lock lock( mutex_reinit_ );
+      boost::mutex::scoped_lock lock( mutex_conv_queue_ );
       if (!conv_queue_.empty())
       {
         // Wait for the next Publisher to be ready
@@ -218,7 +219,7 @@ void Bridge::rosLoop()
 
 void Bridge::registerConverter( converter::Converter& conv )
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
+  boost::mutex::scoped_lock lock( mutex_conv_queue_ );
   int conv_index = conv_queue_.size();
   converters_.push_back( conv );
   conv.reset();
@@ -383,7 +384,7 @@ void Bridge::registerDefaultConverter()
   /** Joint States */
   boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
   boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
-  boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_, *nhPtr_ );
+  boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_ );
   jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
   jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
   registerConverter( jsc, jsp, jsr );
@@ -475,37 +476,63 @@ void Bridge::setMasterURI( const std::string& uri)
 }
 void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
-  // Stopping publishing
-  stopPublishing();
+  // To avoid two calls to this function happening at the same time
+  boost::mutex::scoped_lock lock( mutex_reinit_ );
 
-  // Reinitializing ROS
+  // Stopping the loop if there is any
+  stopRosLoop();
+
+  // Reinitializing ROS Node
   {
-    boost::mutex::scoped_lock lock( mutex_reinit_ );
     nhPtr_.reset();
     std::cout << "nodehandle reset " << std::endl;
     ros_env::setMasterURI( uri, network_interface );
     nhPtr_.reset( new ros::NodeHandle("~") );
   }
-  // Create the publishing thread if needed
-  if (publisherThread_.get_id() ==  boost::thread::id())
-    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
 
-  // register publishers, that will not start them
-  registerDefaultConverter();
-  registerDefaultSubscriber();
+  if(converters_.empty())
+  {
+    // If there is no converters, create them
+    // (converters only depends on Naoqi, resetting the
+    // Ros node has no impact on them)
+    registerDefaultConverter();
+    registerDefaultSubscriber();
+//    startRosLoop();
+  }
+  else
+  {
+    // If some converters are already there, then
+    // we just need to reset the registered publisher
+    // using the new ROS node handler.
+    typedef std::map< std::string, publisher::Publisher > publisher_map;
+    for_each( publisher_map::value_type &pub, pub_map_ )
+    {
+      pub.second.reset(*nhPtr_);
+    }
+
+    for_each( subscriber::Subscriber& sub, subscribers_ )
+    {
+      sub.reset( *nhPtr_ );
+    }
+  }
+  if(!converters_.empty())
+  {
+    // upload to param server
+    std::string robot_desc = alros::tools::getRobotDescription(converters_[0].robot());
+    nhPtr_->setParam("/robot_description", robot_desc);
+    std::cout << "load robot description from file" << std::endl;
+  }
   // Start publishing again
-  startPublishing();
+  startRosLoop();
 }
 
 void Bridge::startPublishing()
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = true;
 }
 
 void Bridge::stopPublishing()
 {
-  boost::mutex::scoped_lock lock( mutex_reinit_ );
   publish_enabled_ = false;
 }
 
@@ -603,6 +630,21 @@ std::string Bridge::stopRecording()
     }
   }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+}
+
+void Bridge::startRosLoop()
+{
+  // Create the publishing thread if needed
+  keep_looping = true;
+  if (publisherThread_.get_id() ==  boost::thread::id())
+    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+}
+
+void Bridge::stopRosLoop()
+{
+  keep_looping = false;
+  if (publisherThread_.get_id() !=  boost::thread::id())
+    publisherThread_.join();
 }
 
 void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){

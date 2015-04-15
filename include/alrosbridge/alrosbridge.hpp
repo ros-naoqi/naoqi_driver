@@ -197,10 +197,8 @@ public:
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
-  bool publish_cancelled_;
-
   bool record_enabled_;
-  bool record_cancelled_;
+  bool keep_looping;
 
   const size_t freq_;
   boost::thread publisherThread_;
@@ -224,12 +222,14 @@ private:
   }
 
   void rosLoop();
+  void startRosLoop();
+  void stopRosLoop();
 
   dataType::DataType getDataType(const std::string& key);
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
-
+  boost::mutex mutex_conv_queue_;
   boost::mutex mutex_record_;
 
   std::vector< converter::Converter > converters_;
