@@ -485,9 +485,31 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
     nhPtr_.reset( new ros::NodeHandle("~") );
   }
 
-  // register publishers, that will not start them
-  registerDefaultConverter();
-  registerDefaultSubscriber();
+  if(converters_.empty())
+  {
+    // If there is no converters, create them
+    // (converters only depends on Naoqi, resetting the
+    // Ros node has no impact on them)
+    registerDefaultConverter();
+    registerDefaultSubscriber();
+//    startRosLoop();
+  }
+  else
+  {
+    // If some converters are already there, then
+    // we just need to reset the registered publisher
+    // using the new ROS node handler.
+    typedef std::map< std::string, publisher::Publisher > publisher_map;
+    for_each( publisher_map::value_type &pub, pub_map_ )
+    {
+      pub.second.reset(*nhPtr_);
+    }
+
+    for_each( subscriber::Subscriber& sub, subscribers_ )
+    {
+      sub.reset( *nhPtr_ );
+    }
+  }
   // Start publishing again
   startRosLoop();
 }
