@@ -19,14 +19,15 @@
 #define IMU_RECORDER_HPP
 
 /**
-* ROS includes
-*/
-#include <sensor_msgs/Imu.h>
-
-/**
 * LOCAL includes
 */
 #include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* ROS includes
+*/
+#include <sensor_msgs/Imu.h>
 
 namespace alros{
 

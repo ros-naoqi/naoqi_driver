@@ -39,6 +39,8 @@
 * LOCAL includes
 */
 #include "../recorderbase.hpp"
+#include <alrosbridge/tools.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace alros
 {

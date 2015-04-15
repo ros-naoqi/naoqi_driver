@@ -15,6 +15,9 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "camera.hpp"
 
 namespace alros

@@ -19,26 +19,28 @@
 #define MEMORY_STRING_RECORDER_HPP
 
 /**
+* LOCAL includes
+*/
+#include "../recorderbase.hpp"
+//#include <alrosbridge/tools.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
 * STANDARD includes
 */
-#include <iostream>
+//#include <iostream>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
-#include <std_msgs/String.h>
+//#include <ros/ros.h>
+//#include <std_msgs/String.h>
 #include <naoqi_bridge_msgs/StringStamped.h>
 
 /**
 * ALDEBARAN includes
 */
-#include <qi/anyobject.hpp>
-
-/**
-* LOCAL includes
-*/
-#include "../recorderbase.hpp"
+//#include <qi/anyobject.hpp>
 
 namespace alros
 {

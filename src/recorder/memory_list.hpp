@@ -19,14 +19,15 @@
 #define MEMORY_LIST_RECORDER_HPP
 
 /**
-* ROS includes
-*/
-#include <naoqi_msgs/MemoryList.h>
-
-/**
 * LOCAL includes
 */
 #include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* ROS includes
+*/
+#include <naoqi_msgs/MemoryList.h>
 
 namespace alros{
 

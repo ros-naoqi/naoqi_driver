@@ -16,6 +16,11 @@
 */
 
 /**
+* LOCAL includes
+*/
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
 * STANDARD includes
 */
 #include <ctime>
@@ -26,21 +31,22 @@
 */
 #include <std_msgs/Int32.h>
 #include <tf2_msgs/TFMessage.h>
+#include <ros/ros.h>
+#include <rosbag/bag.h>
+#include <rosbag/view.h>
+#include <geometry_msgs/TransformStamped.h>
 
 /**
 * BOOST includes
 */
 #include <boost/filesystem.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
 /**
 * ALDEBARAN includes
 */
 #include <qi/log.hpp>
-
-/**
-* LOCAL includes
-*/
-#include <alrosbridge/recorder/globalrecorder.hpp>
 
 qiLogCategory("ros.Recorder");
 

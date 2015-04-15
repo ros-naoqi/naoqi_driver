@@ -34,6 +34,7 @@
 */
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 /*
 * PUBLIC INTERFACE

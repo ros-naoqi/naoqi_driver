@@ -19,25 +19,20 @@
 #define LASER_RECORDER_HPP
 
 /**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
 * STANDARD includes
 */
-#include <iostream>
+#include <string>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-/**
-* LOCAL includes
-*/
-#include "recorderbase.hpp"
 
 
 namespace alros
