@@ -15,21 +15,34 @@
  *
 */
 
-/* ROS */
-#include <std_msgs/Int32.h>
-#include <tf2_msgs/TFMessage.h>
-
-/* QI */
-#include <qi/log.hpp>
-qiLogCategory("ros.Recorder");
-
-/* BOOST */
-#include <boost/filesystem.hpp>
-
+/**
+* STANDARD includes
+*/
 #include <ctime>
 #include <sstream>
 
+/**
+* ROS includes
+*/
+#include <std_msgs/Int32.h>
+#include <tf2_msgs/TFMessage.h>
+
+/**
+* BOOST includes
+*/
+#include <boost/filesystem.hpp>
+
+/**
+* ALDEBARAN includes
+*/
+#include <qi/log.hpp>
+
+/**
+* LOCAL includes
+*/
 #include <alrosbridge/recorder/globalrecorder.hpp>
+
+qiLogCategory("ros.Recorder");
 
 namespace alros
 {

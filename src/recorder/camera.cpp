@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "camera.hpp"
 
 namespace alros

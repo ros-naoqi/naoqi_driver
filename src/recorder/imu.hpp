@@ -18,8 +18,14 @@
 #ifndef IMU_RECORDER_HPP
 #define IMU_RECORDER_HPP
 
+/**
+* ROS includes
+*/
 #include <sensor_msgs/Imu.h>
 
+/**
+* LOCAL includes
+*/
 #include "recorderbase.hpp"
 
 namespace alros{

@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "float.hpp"
 
 namespace alros

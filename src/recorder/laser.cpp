@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "laser.hpp"
 
 namespace alros

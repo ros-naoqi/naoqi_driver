@@ -18,11 +18,26 @@
 #ifndef JOINT_STATE_RECORDER_HPP
 #define JOINT_STATE_RECORDER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 
-#include "recorderbase.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
 
 namespace alros
 {

@@ -18,12 +18,27 @@
 #ifndef MEMORY_STRING_RECORDER_HPP
 #define MEMORY_STRING_RECORDER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <naoqi_bridge_msgs/StringStamped.h>
 
-#include "../recorderbase.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "../recorderbase.hpp"
 
 namespace alros
 {

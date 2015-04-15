@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "bool.hpp"
 
 namespace alros

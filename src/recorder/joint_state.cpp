@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "joint_state.hpp"
 
 namespace alros

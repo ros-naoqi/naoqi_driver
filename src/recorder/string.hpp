@@ -18,11 +18,27 @@
 #ifndef STRING_RECORDER_HPP
 #define STRING_RECORDER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-#include "recorderbase.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+
 
 namespace alros
 {

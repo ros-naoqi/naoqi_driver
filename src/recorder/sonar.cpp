@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "sonar.hpp"
 
 namespace alros

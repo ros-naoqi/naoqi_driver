@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "int.hpp"
 
 namespace alros
