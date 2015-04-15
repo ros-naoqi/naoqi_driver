@@ -44,6 +44,7 @@ enum Topics {
   Sonar
 };
 
+namespace dataType {
 enum DataType
 {
   None = 0,
@@ -51,10 +52,11 @@ enum DataType
   Int,
   String
 };
+}
 
 } // alros
 
 QI_TYPE_ENUM_REGISTER(alros::Topics);
-QI_TYPE_ENUM_REGISTER(alros::DataType);
+QI_TYPE_ENUM_REGISTER(alros::dataType::DataType);
 
 #endif

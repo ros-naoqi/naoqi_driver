@@ -257,9 +257,9 @@ void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec
   registerRecorder(  conv.name(), rec);
 }
 
-void Bridge::registerMemoryConverter( const std::string& key, float frequency, const DataType& type ) {
-  DataType data_type;
-  if (type==None) {
+void Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
+  dataType::DataType data_type;
+  if (type==dataType::None) {
     try {
       data_type = getDataType(key);
     } catch (const std::exception& e) {
@@ -674,19 +674,19 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
-DataType Bridge::getDataType(const std::string& key)
+dataType::DataType Bridge::getDataType(const std::string& key)
 {
-  DataType type;
+  dataType::DataType type;
   qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
   AL::ALValue value = p_memory.call<AL::ALValue>("getData", key);
   if (value.isInt()) {
-    type = Int;
+    type = dataType::Int;
   }
   else if (value.isFloat()) {
-    type = Float;
+    type = dataType::Float;
   }
   else if (value.isString()) {
-    type = String;
+    type = dataType::String;
   }
   else {
     throw std::runtime_error("Cannot get a valid type.");
