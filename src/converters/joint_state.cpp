@@ -23,6 +23,7 @@
 
 #include "boost/filesystem.hpp"
 #include "joint_state.hpp"
+#include "robot_description.hpp"
 
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
@@ -32,39 +33,12 @@ namespace alros
 namespace converter
 {
 
-JointStateConverter::JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session, const ros::NodeHandle& nh ):
+JointStateConverter::JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session ):
   BaseConverter( name, frequency, session ),
   p_motion_( session->service("ALMotion") ),
   tf2_buffer_(tf2_buffer)
 {
-  std::string urdf_path;
-  if ( robot() == PEPPER)
-  {
-    urdf_path = qi::path::findData("/urdf/", "pepper_robot.urdf");
-    std::cout << "share folder found in " << urdf_path << std::endl;
-  }
-  else if ( robot() == NAO )
-  {
-    urdf_path = qi::path::findData("/urdf/", "nao_robot.urdf");
-    std::cout << "share folder found in " << urdf_path << std::endl;
-  }
-  else
-  {
-    std::cerr << " could not load urdf file from disk " << std::endl;
-    return;
-  }
-
-  std::ifstream stream( (urdf_path).c_str() );
-  if (!stream)
-  {
-    std::cerr << "failed to load robot description in joint_state_publisher: " << urdf_path << std::endl;
-    return;
-  }
-  robot_desc_ = std::string( (std::istreambuf_iterator<char>(stream)),
-                             std::istreambuf_iterator<char>());
-  // upload to param server
-  nh.setParam("/robot_description", robot_desc_);
-  std::cout << "load robot description from file" << std::endl;
+  robot_desc_ = alros::getRobotDescription(robot());
 }
 
 JointStateConverter::~JointStateConverter()

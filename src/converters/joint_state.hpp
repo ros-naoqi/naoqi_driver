@@ -52,7 +52,7 @@ class JointStateConverter : public BaseConverter<JointStateConverter>
   typedef boost::shared_ptr<tf2_ros::Buffer> BufferPtr;
 
 public:
-  JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session, const ros::NodeHandle& nh );
+  JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session );
 
   ~JointStateConverter();
 
