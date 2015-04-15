@@ -23,6 +23,10 @@ set(
   src/converters/joint_state.cpp
   src/converters/laser.cpp
   src/converters/memory_list.cpp
+  src/converters/memory/bool.cpp
+  src/converters/memory/int.cpp
+  src/converters/memory/float.cpp
+  src/converters/memory/string.cpp
   src/converters/sonar.cpp
   src/converters/string.cpp
   )
@@ -38,6 +42,7 @@ set(
   PUBLISHER
   src/publishers/camera.cpp
   src/publishers/diagnostics.cpp
+  src/publishers/float.cpp
   src/publishers/imu.cpp
   src/publishers/info.cpp
   src/publishers/int.cpp
@@ -45,6 +50,10 @@ set(
   src/publishers/laser.cpp
   src/publishers/log.cpp
   src/publishers/memory_list.cpp
+  src/publishers/memory/bool.cpp
+  src/publishers/memory/int.cpp
+  src/publishers/memory/float.cpp
+  src/publishers/memory/string.cpp
   src/publishers/sonar.cpp
   src/publishers/string.cpp
   #  src/publishers/nao_joint_state.cpp
@@ -61,6 +70,7 @@ set(
   RECORDER
   src/recorder/camera.cpp
   src/recorder/diagnostics.cpp
+  src/recorder/float.cpp
   src/recorder/imu.cpp
   src/recorder/info.cpp
   src/recorder/int.cpp
@@ -68,6 +78,10 @@ set(
   src/recorder/laser.cpp
   src/recorder/log.cpp
   src/recorder/memory_list.cpp
+  src/recorder/memory/bool.cpp
+  src/recorder/memory/int.cpp
+  src/recorder/memory/float.cpp
+  src/recorder/memory/string.cpp
   src/recorder/sonar.cpp
   src/recorder/string.cpp
   )

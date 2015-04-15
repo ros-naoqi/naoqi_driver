@@ -51,6 +51,10 @@
 #include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
 #include "converters/string.hpp"
+#include "converters/memory/bool.hpp"
+#include "converters/memory/float.hpp"
+#include "converters/memory/int.hpp"
+#include "converters/memory/string.hpp"
 
 /*
 * PUBLISHERS
@@ -68,6 +72,11 @@
 //#include "publishers/odometry.hpp"
 #include "publishers/sonar.hpp"
 #include "publishers/string.hpp"
+#include "publishers/float.hpp"
+#include "publishers/memory/bool.hpp"
+#include "publishers/memory/int.hpp"
+#include "publishers/memory/float.hpp"
+#include "publishers/memory/string.hpp"
 
 /*
  * SUBSCRIBERS
@@ -86,6 +95,11 @@
 #include "recorder/memory_list.hpp"
 #include "recorder/sonar.hpp"
 #include "recorder/string.hpp"
+#include "recorder/float.hpp"
+#include "recorder/memory/bool.hpp"
+#include "recorder/memory/int.hpp"
+#include "recorder/memory/float.hpp"
+#include "recorder/memory/string.hpp"
 
 /*
 * STATIC FUNCTIONS INCLUDE
@@ -244,6 +258,55 @@ void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec
 {
   registerConverter( conv );
   registerRecorder(  conv.name(), rec);
+}
+
+void Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
+  dataType::DataType data_type;
+  if (type==dataType::None) {
+    try {
+      data_type = getDataType(key);
+    } catch (const std::exception& e) {
+      std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
+                << BOLDCYAN << key << RESETCOLOR << std::endl
+                << BOLDRED << "You can enter it yourself, available types are:" << std::endl
+                << "\t > 0 - None" << std::endl
+                << "\t > 1 - Int" << std::endl
+                << "\t > 2 - Float" << std::endl
+                << "\t > 3 - String" << std::endl
+                << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return;
+    }
+  }
+  else {
+    data_type = type;
+  }
+
+  switch (data_type) {
+  case 0:
+    break;
+  case 1:
+    _registerMemoryConverter<publisher::MemoryFloatPublisher,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
+    break;
+  case 2:
+    _registerMemoryConverter<publisher::MemoryIntPublisher,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
+    break;
+  case 3:
+    _registerMemoryConverter<publisher::MemoryStringPublisher,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
+    break;
+  case 4:
+    _registerMemoryConverter<publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder,converter::MemoryBoolConverter>(key,frequency);
+    break;
+  default:
+    {
+      std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
+                   << "\t > 0 - None" << std::endl
+                   << "\t > 1 - Int" << std::endl
+                   << "\t > 2 - Float" << std::endl
+                   << "\t > 3 - String" << std::endl
+                   << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      break;
+    }
+  }
 }
 
 void Bridge::registerDefaultConverter()
@@ -619,6 +682,29 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
+dataType::DataType Bridge::getDataType(const std::string& key)
+{
+  dataType::DataType type;
+  qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
+  AL::ALValue value = p_memory.call<AL::ALValue>("getData", key);
+  if (value.isInt()) {
+    type = dataType::Int;
+  }
+  else if (value.isFloat()) {
+    type = dataType::Float;
+  }
+  else if (value.isString()) {
+    type = dataType::String;
+  }
+  else if (value.isBool()) {
+    type = dataType::Bool;
+  }
+  else {
+    throw std::runtime_error("Cannot get a valid type.");
+  }
+  return type;
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     startPublishing,
@@ -629,6 +715,7 @@ QI_REGISTER_OBJECT( Bridge,
                     getAvailableConverters,
                     getSubscribedPublishers,
                     addMemoryConverters,
+                    registerMemoryConverter,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );

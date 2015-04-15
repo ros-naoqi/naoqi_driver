@@ -16,48 +16,29 @@
 */
 
 
-#ifndef ALROS_TOOLS_HPP
-#define ALROS_TOOLS_HPP
+#include <iostream>
 
-#define RESETCOLOR "\033[0m"
-#define GREEN "\033[32m"
-#define HIGHGREEN "\033[92m"
-#define BOLDRED "\033[1m\033[31m"
-#define YELLOW "\033[33m"
-#define BOLDYELLOW "\033[1m\033[33m"
-#define BOLDCYAN "\033[1m\033[36m"
-
-# include <qi/anyobject.hpp>
+#include "float.hpp"
 
 namespace alros
 {
-enum Robot
+namespace recorder
 {
-  UNIDENTIFIED,
-  NAO,
-  PEPPER
-};
 
-enum Topics {
-  Laser = 0,
-  Camera,
-  Sonar
-};
+MemoryFloatRecorder::MemoryFloatRecorder( const std::string& topic ):
+  BaseRecorder( topic )
+{}
 
-namespace dataType {
-enum DataType
+void MemoryFloatRecorder::write(const naoqi_bridge_msgs::FloatStamped &msg)
 {
-  None = 0,
-  Float,
-  Int,
-  String,
-  Bool
-};
+  gr_->write(topic_, msg);
 }
 
+void MemoryFloatRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+{
+  gr_ = gr;
+  is_initialized_ = true;
+}
+
+} //publisher
 } // alros
-
-QI_TYPE_ENUM_REGISTER(alros::Topics);
-QI_TYPE_ENUM_REGISTER(alros::dataType::DataType);
-
-#endif

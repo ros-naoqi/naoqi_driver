@@ -44,6 +44,8 @@
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
+#include "tools.hpp"
+
 namespace tf2_ros
 {
   class Buffer;
@@ -109,6 +111,11 @@ public:
    * @brief register a converter with an associated recorder instance
    */
   void registerRecorder(converter::Converter conv, recorder::Recorder rec );
+
+  /**
+   * @brief register a converter for a given memory key
+   */
+  void registerMemoryConverter(const std::string& key, float frequency, const dataType::DataType& type );
 
   /**
    * @brief get all available converters
@@ -204,8 +211,21 @@ private:
   void registerDefaultConverter();
   void registerDefaultSubscriber();
 
+  template <typename T1, typename T2, typename T3>
+  void _registerMemoryConverter( const std::string& key, float frequency ) {
+    boost::shared_ptr<T1> mfp = boost::make_shared<T1>( key );
+    mfp->reset( *nhPtr_ );
+    boost::shared_ptr<T2> mfr = boost::make_shared<T2>( key );
+    mfr->reset(recorder_);
+    boost::shared_ptr<T3> mfc = boost::make_shared<T3>( key , frequency, sessionPtr_, key );
+    mfc->registerCallback( message_actions::PUBLISH, boost::bind(&T1::publish, mfp, _1) );
+    mfc->registerCallback( message_actions::RECORD, boost::bind(&T2::write, mfr, _1) );
+    registerConverter( mfc, mfp, mfr );
+  }
+
   void rosLoop();
 
+  dataType::DataType getDataType(const std::string& key);
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
