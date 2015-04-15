@@ -79,6 +79,11 @@
 #include "publishers/memory/string.hpp"
 
 /*
+ * TOOLS
+ */
+#include "tools/robot_description.hpp"
+
+/*
  * SUBSCRIBERS
  */
 #include "subscribers/teleop.hpp"
@@ -106,7 +111,6 @@
 */
 #include "ros_env.hpp"
 #include "helpers.hpp"
-#include "converters/robot_description.hpp"
 
 /*
  * ROS
@@ -514,7 +518,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   if(!converters_.empty())
   {
     // upload to param server
-    std::string robot_desc = alros::getRobotDescription(converters_[0].robot());
+    std::string robot_desc = alros::tools::getRobotDescription(converters_[0].robot());
     nhPtr_->setParam("/robot_description", robot_desc);
     std::cout << "load robot description from file" << std::endl;
   }

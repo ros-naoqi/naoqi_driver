@@ -15,14 +15,11 @@
  *
 */
 
-#ifndef ROBOT_DESCRIPTION_HPP
-#define ROBOT_DESCRIPTION_HPP
-
-#include <string>
-#include <alrosbridge/tools.hpp>
+#include "robot_description.hpp"
 
 namespace alros{
 
+namespace tools{
 
 std::string getRobotDescription(Robot robot){
     std::string urdf_path;
@@ -56,6 +53,6 @@ std::string getRobotDescription(Robot robot){
     return robot_desc;
 }
 
-} // alros
+} // tools
 
-#endif // ROBOT_DESCRIPTION_HPP
+} // alros

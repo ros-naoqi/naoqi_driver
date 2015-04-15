@@ -23,13 +23,13 @@
 
 #include "boost/filesystem.hpp"
 #include "joint_state.hpp"
-#include "robot_description.hpp"
 
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
 namespace alros
 {
+
 namespace converter
 {
 
@@ -38,7 +38,7 @@ JointStateConverter::JointStateConverter( const std::string& name, const float& 
   p_motion_( session->service("ALMotion") ),
   tf2_buffer_(tf2_buffer)
 {
-  robot_desc_ = alros::getRobotDescription(robot());
+  robot_desc_ = alros::tools::getRobotDescription(robot());
 }
 
 JointStateConverter::~JointStateConverter()

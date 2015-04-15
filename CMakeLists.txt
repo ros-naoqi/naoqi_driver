@@ -86,6 +86,11 @@ set(
   src/recorder/string.cpp
   )
 
+set(
+  TOOLS
+  src/tools/robot_description.cpp
+  )
+
 qi_create_lib(
   alrosbridge
   SHARED
@@ -94,6 +99,7 @@ qi_create_lib(
   ${PUBLISHER}
   ${SUBSCRIBER}
   ${RECORDER}
+  ${TOOLS}
 )
 
 qi_stage_lib( alrosbridge )
