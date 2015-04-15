@@ -46,6 +46,8 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
 {
   pub_joint_states_ = nh.advertise<sensor_msgs::JointState>( topic_, 10 );
 
+  tf_broadcaster_ = tf2_ros::TransformBroadcaster();
+
   is_initialized_ = true;
 }
 
@@ -54,7 +56,6 @@ bool JointStatePublisher::isSubscribed() const
   // assume JS and TF as essential, so publish always
   return true;
 }
-
 
 } //publisher
 } // alros
