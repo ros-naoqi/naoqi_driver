@@ -18,14 +18,16 @@
 #ifndef BASE_SUBSCRIBER_HPP
 #define BASE_SUBSCRIBER_HPP
 
-#include <algorithm>
-#include <iostream>
-#include <string>
-
-#include <alvalue/alvalue.h>
+/**
+ * ALDEBARAN includes
+ */
 #include <qi/session.hpp>
 
+/**
+ * LOCAL includes
+ */
 #include <alrosbridge/tools.hpp>
+#include <alvalue/alvalue.h>
 
 namespace alros
 {
@@ -46,7 +48,7 @@ public:
     session_(session)
   {}
 
-  virtual ~BaseSubscriber() {};
+  virtual ~BaseSubscriber() {}
 
   inline std::string name() const
   {

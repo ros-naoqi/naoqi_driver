@@ -20,9 +20,9 @@
 #define TELEOP_SUBSCRIBER_HPP
 
 /**
- * STANDARD includes
+ * LOCAL includes
  */
-#include <math.h>
+#include "subscriber_base.hpp"
 
 /**
  * ROS includes
@@ -30,15 +30,6 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 
-/**
- * ALDEBARAN includes
- */
-#include <qi/anyobject.hpp>
-
-/**
- * LOCAL includes
- */
-#include "subscriber_base.hpp"
 namespace alros
 {
 namespace subscriber
