@@ -15,7 +15,16 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "float.hpp"
+
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {

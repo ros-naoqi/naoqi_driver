@@ -19,34 +19,15 @@
 #define LASER_CONVERTER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <iostream>
-#include <cmath>
+#include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/LaserScan.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-#include <alvalue/alvalue.h>
-
-/**
-* BOOST includes
-*/
-#include <boost/foreach.hpp>
-
-/**
-* LOCAL includes
-*/
-#include <alrosbridge/message_actions.h>
-#include "converter_base.hpp"
 
 namespace alros
 {

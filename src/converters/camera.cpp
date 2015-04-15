@@ -15,7 +15,32 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "camera.hpp"
+#include "camera_info_definitions.hpp"
+
+/**
+* ROS includes
+*/
+#include <cv_bridge/cv_bridge.h>
+
+/**
+* CV includes
+*/
+#include <opencv2/imgproc/imgproc.hpp>
+
+/**
+* ALDEBARAN includes
+*/
+#include <alvision/alvisiondefinitions.h> // for kTop...
+
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {

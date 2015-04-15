@@ -19,34 +19,15 @@
 #define MEMORY_BOOL_CONVERTER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <map>
-#include <vector>
+#include "../converter_base.hpp"
+#include <alrosbridge/message_actions.h>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
-#include <std_msgs/Int32.h>
 #include <naoqi_bridge_msgs/BoolStamped.h>
-#include <ros/serialization.h>
-
-/**
-* BOOST includes
-*/
-#include <boost/function.hpp>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-/**
-* LOCAL includes
-*/
-#include <alrosbridge/message_actions.h>
-#include "../converter_base.hpp"
 
 namespace alros
 {

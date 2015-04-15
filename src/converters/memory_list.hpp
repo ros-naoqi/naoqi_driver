@@ -19,14 +19,15 @@
 #define MEMORY_LIST_CONVERTER_HPP
 
 /**
-* ROS includes
-*/
-#include <naoqi_msgs/MemoryList.h>
-
-/**
 * LOCAL includes
 */
 #include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <naoqi_msgs/MemoryList.h>
 
 namespace alros {
 

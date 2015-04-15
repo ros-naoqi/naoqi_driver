@@ -19,43 +19,17 @@
 #define JOINT_STATES_CONVERTER_HPP
 
 /**
-* STANDARD includes
-*/
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <vector>
-
-/**
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <robot_state_publisher/robot_state_publisher.h>
-#include <geometry_msgs/Transform.h>
-#include <tf2_ros/buffer.h>
-#include <kdl_parser/kdl_parser.hpp>
-#include <kdl/tree.hpp>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-#include <qi/path.hpp>
-
-/**
-* BOOST includes
-*/
-#include <boost/shared_ptr.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
-
-/**
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include "../tools/robot_description.hpp"
+#include <alrosbridge/message_actions.h>
 
+/**
+* ROS includes
+*/
+#include <sensor_msgs/JointState.h>
+#include <robot_state_publisher/robot_state_publisher.h>
 
 namespace alros
 {

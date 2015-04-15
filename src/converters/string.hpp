@@ -19,21 +19,15 @@
 #define STRING_CONVERTER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <iostream>
+#include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
 #include <std_msgs/String.h>
-
-/**
-* LOCAL includes
-*/
-#include <alrosbridge/message_actions.h>
-#include "converter_base.hpp"
 
 namespace alros
 {
