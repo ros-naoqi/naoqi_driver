@@ -15,9 +15,6 @@
  *
 */
 
-
-#include <iostream>
-
 #include "log.hpp"
 
 namespace alros

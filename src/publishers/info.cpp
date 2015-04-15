@@ -15,11 +15,9 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
-#include <ros/serialization.h>
-#include <std_msgs/String.h>
-
+/**
+* LOCAL includes
+*/
 #include "info.hpp"
 
 namespace alros

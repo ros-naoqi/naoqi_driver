@@ -18,11 +18,16 @@
 #ifndef INT_PUBLISHER_HPP
 #define INT_PUBLISHER_HPP
 
-#include <ros/ros.h>
+/**
+* LOCAL includes
+*/
+#include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
 #include <std_msgs/Int32.h>
 
-#include "publisher_base.hpp"
-#include <qi/anyobject.hpp>
 
 namespace alros
 {

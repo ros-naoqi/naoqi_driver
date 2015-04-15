@@ -18,12 +18,16 @@
 #ifndef CONVERTER_CAMERA_HPP
 #define CONVERTER_CAMERA_HPP
 
-#include <ros/ros.h>
-#include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
-#include <qi/anyobject.hpp>
-
+/**
+* LOCAL includes
+*/
 #include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <image_transport/image_transport.h>
 
 namespace alros
 {

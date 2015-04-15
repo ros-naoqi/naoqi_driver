@@ -15,9 +15,9 @@
  *
 */
 
-
-#include <iostream>
-
+/**
+* LOCAL includes
+*/
 #include "float.hpp"
 
 namespace alros

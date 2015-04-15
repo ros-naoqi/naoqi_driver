@@ -18,11 +18,16 @@
 #ifndef STRING_RECORDER_HPP
 #define STRING_RECORDER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-
+/**
+* LOCAL includes
+*/
 #include "recorderbase.hpp"
-#include <qi/anyobject.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* ROS includes
+*/
+#include <std_msgs/String.h>
 
 namespace alros
 {

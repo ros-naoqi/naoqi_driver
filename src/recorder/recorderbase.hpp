@@ -18,15 +18,7 @@
 #ifndef BASE_RECORDER_HPP
 #define BASE_RECORDER_HPP
 
-#include <algorithm>
-#include <iostream>
 #include <string>
-
-#include <alvalue/alvalue.h>
-#include <qi/session.hpp>
-
-#include <alrosbridge/tools.hpp>
-#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace alros
 {

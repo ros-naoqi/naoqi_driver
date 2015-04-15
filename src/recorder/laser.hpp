@@ -18,11 +18,22 @@
 #ifndef LASER_RECORDER_HPP
 #define LASER_RECORDER_HPP
 
-#include <ros/ros.h>
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* STANDARD includes
+*/
+#include <string>
+
+/**
+* ROS includes
+*/
 #include <sensor_msgs/LaserScan.h>
 
-#include "recorderbase.hpp"
-#include <qi/anyobject.hpp>
 
 namespace alros
 {

@@ -15,13 +15,15 @@
  *
 */
 
-// in main.cpp
-#include <qi/applicationsession.hpp>
-#include <qi/anyobject.hpp>
-#include <qi/anymodule.hpp>
-#include <qi/session.hpp>
-
+/**
+ * LOCAL includes
+ */
 #include <alrosbridge/alrosbridge.hpp>
+
+/**
+ * ALDEBARAN includes
+ */
+#include <qi/anymodule.hpp>
 
 /*
 * @brief starter code for registrating the ALRosBridge module via the autoload.ini.

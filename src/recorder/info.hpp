@@ -18,11 +18,28 @@
 #ifndef INFO_RECORDER_HPP
 #define INFO_RECORDER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 
-#include "recorderbase.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+#include <alrosbridge/tools.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace alros
 {

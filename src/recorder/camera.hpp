@@ -18,12 +18,17 @@
 #ifndef CAMERA_RECORDER_HPP
 #define CAMERA_RECORDER_HPP
 
-#include <ros/ros.h>
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* ROS includes
+*/
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Image.h>
-
-#include "recorderbase.hpp"
-#include <qi/anyobject.hpp>
 
 namespace alros
 {

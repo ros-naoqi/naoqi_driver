@@ -18,10 +18,15 @@
 #ifndef STRING_PUBLISHER_HPP
 #define STRING_PUBLISHER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <std_msgs/String.h>
 
 namespace alros
 {

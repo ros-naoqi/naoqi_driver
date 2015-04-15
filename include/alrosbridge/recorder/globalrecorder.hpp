@@ -18,18 +18,29 @@
 #ifndef GLOBALRECORDER_HPP
 #define GLOBALRECORDER_HPP
 
+/**
+* LOCAL includes
+*/
+#include <alrosbridge/tools.hpp>
+
+/**
+* STANDARD includes
+*/
 #include <string>
 
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
+/**
+* BOOST includes
+*/
 # include <boost/thread/mutex.hpp>
 
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <rosbag/bag.h>
-#include <rosbag/view.h>
 #include <geometry_msgs/TransformStamped.h>
 
-#include <alrosbridge/tools.hpp>
+
 
 namespace alros
 {

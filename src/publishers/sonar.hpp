@@ -18,11 +18,15 @@
 #ifndef PUBLISHER_SONAR_HPP
 #define PUBLISHER_SONAR_HPP
 
-#include <ros/ros.h>
-
-#include <sensor_msgs/Range.h>
-
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <sensor_msgs/Range.h>
 
 namespace alros
 {

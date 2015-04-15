@@ -44,8 +44,6 @@
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-#include "tools.hpp"
-
 namespace tf2_ros
 {
   class Buffer;

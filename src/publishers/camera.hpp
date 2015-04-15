@@ -18,12 +18,15 @@
 #ifndef PUBLISHER_CAMERA_HPP
 #define PUBLISHER_CAMERA_HPP
 
-#include <ros/ros.h>
-#include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
-#include <qi/anyobject.hpp>
-
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <image_transport/image_transport.h>
 
 namespace alros
 {

@@ -18,11 +18,15 @@
 #ifndef MEMORY_BOOL_PUBLISHER_HPP
 #define MEMORY_BOOL_PUBLISHER_HPP
 
-#include <ros/ros.h>
-#include <naoqi_bridge_msgs/BoolStamped.h>
-
+/**
+* LOCAL includes
+*/
 #include "../publisher_base.hpp"
-#include <qi/anyobject.hpp>
+
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/BoolStamped.h>
 
 namespace alros
 {

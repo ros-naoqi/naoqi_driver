@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2015 Aldebaran
  *
@@ -16,6 +15,9 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "memory_list.hpp"
 
 namespace alros {

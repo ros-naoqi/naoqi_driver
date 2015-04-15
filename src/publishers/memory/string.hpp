@@ -18,11 +18,15 @@
 #ifndef MEMORY_STRING_PUBLISHER_HPP
 #define MEMORY_STRING_PUBLISHER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-#include <naoqi_bridge_msgs/StringStamped.h>
-
+/**
+* LOCAL includes
+*/
 #include "../publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/StringStamped.h>
 
 namespace alros
 {

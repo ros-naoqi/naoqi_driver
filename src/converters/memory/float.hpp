@@ -18,19 +18,16 @@
 #ifndef MEMORY_FLOAT_CONVERTER_HPP
 #define MEMORY_FLOAT_CONVERTER_HPP
 
-#include <map>
-#include <vector>
-
-#include <ros/ros.h>
-#include <std_msgs/Float32.h>
-#include <naoqi_bridge_msgs/FloatStamped.h>
-
-#include <boost/function.hpp>
-
-#include <qi/anyobject.hpp>
-
-#include <alrosbridge/message_actions.h>
+/**
+* LOCAL includes
+*/
 #include "../converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/FloatStamped.h>
 
 namespace alros
 {

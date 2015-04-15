@@ -18,18 +18,16 @@
 #ifndef INT_CONVERTER_HPP
 #define INT_CONVERTER_HPP
 
-#include <map>
-#include <vector>
-
-#include <ros/ros.h>
-#include <std_msgs/Int32.h>
-
-#include <boost/function.hpp>
-
-#include <qi/anyobject.hpp>
-
-#include <alrosbridge/message_actions.h>
+/**
+* LOCAL includes
+*/
 #include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <std_msgs/Int32.h>
 
 namespace alros
 {

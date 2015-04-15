@@ -15,8 +15,9 @@
  *
 */
 
-#include <iostream>
-
+/**
+* LOCAL includes
+*/
 #include "string.hpp"
 
 namespace alros

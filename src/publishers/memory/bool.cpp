@@ -15,9 +15,9 @@
  *
 */
 
-
-#include <iostream>
-
+/**
+* LOCAL includes
+*/
 #include "bool.hpp"
 
 namespace alros

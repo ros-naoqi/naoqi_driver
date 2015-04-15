@@ -15,18 +15,17 @@
  *
 */
 
-
-#include <iostream>
-#include <cmath>
-
-#include <sensor_msgs/LaserScan.h>
-
-#include <alvalue/alvalue.h>
-
+/**
+* LOCAL includes
+*/
 #include "laser.hpp"
 
+/**
+* BOOST includes
+*/
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
+
 namespace alros
 {
 namespace converter

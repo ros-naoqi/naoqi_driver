@@ -20,21 +20,17 @@
 #define MOVETO_SUBSCRIBER_HPP
 
 /**
+ * LOCAL includes
+ */
+#include "subscriber_base.hpp"
+
+/**
  * ROS includes
  */
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <tf2_ros/buffer.h>
 
-/**
- * Aldebaran includes
- */
-#include <qi/anyobject.hpp>
-
-#include "subscriber_base.hpp"
-namespace tf2_ros
-{
-  class Buffer;
-}
 namespace alros
 {
 namespace subscriber

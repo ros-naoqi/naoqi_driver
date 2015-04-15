@@ -15,13 +15,14 @@
  *
 */
 
+/**
+ * LOCAL includes
+ */
 #include "moveto.hpp"
 
-#include <math.h>
-
-#include <geometry_msgs/TransformStamped.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <tf2_ros/buffer.h>
+/**
+ * ROS includes
+ */
 #include <tf/transform_datatypes.h>
 
 namespace alros

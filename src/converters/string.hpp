@@ -18,11 +18,16 @@
 #ifndef STRING_CONVERTER_HPP
 #define STRING_CONVERTER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-
-#include <alrosbridge/message_actions.h>
+/**
+* LOCAL includes
+*/
 #include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <std_msgs/String.h>
 
 namespace alros
 {

@@ -18,18 +18,17 @@
 #ifndef BASE_CONVERTER_HPP
 #define BASE_CONVERTER_HPP
 
-#include <algorithm>
-#include <iostream>
-#include <string>
-
-#include <alvalue/alvalue.h>
-#include <qi/session.hpp>
-
+/**
+* LOCAL includes
+*/
 #include <alrosbridge/tools.hpp>
-#include <alrosbridge/message_actions.h>
 
-#include <boost/foreach.hpp>
-#define for_each BOOST_FOREACH
+/**
+* ALDEBARAN includes
+*/
+#include <qi/session.hpp>
+#include <qi/anyobject.hpp>
+#include <alvalue/alvalue.h>
 
 namespace alros
 {

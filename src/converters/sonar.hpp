@@ -18,14 +18,16 @@
 #ifndef SONAR_CONVERTER_HPP
 #define SONAR_CONVERTER_HPP
 
-#include <ros/ros.h>
-#include <qi/anyobject.hpp>
-
-#include <sensor_msgs/Range.h>
-
+/**
+* LOCAL includes
+*/
+#include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-#include "converter_base.hpp"
+/**
+* ROS includes
+*/
+#include <sensor_msgs/Range.h>
 
 namespace alros
 {

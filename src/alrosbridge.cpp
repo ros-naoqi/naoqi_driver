@@ -15,26 +15,6 @@
  *
 */
 
-#include <iostream>
-
-/*
-* NAOQI
-*/
-#include <qi/anyobject.hpp>
-#include <alvision/alvisiondefinitions.h> // for kTop...
-/*
-* BOOST
-*/
-#include <boost/foreach.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#define for_each BOOST_FOREACH
-/*
-* ROS
-*/
-#include <std_msgs/Int32.h>
-#include <std_msgs/String.h>
-
 /*
 * PUBLIC INTERFACE
 */
@@ -116,6 +96,20 @@
  * ROS
  */
 #include <tf2_ros/buffer.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
+/**
+* ALDEBARAN
+*/
+#include <alvision/alvisiondefinitions.h> // for kTop...
+
+/*
+* BOOST
+*/
+#include <boost/foreach.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#define for_each BOOST_FOREACH
+
 
 #define DEBUG 0
 

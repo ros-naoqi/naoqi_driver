@@ -15,16 +15,15 @@
  *
 */
 
-#include <sensor_msgs/image_encodings.h>
-
-#include <alvision/alvisiondefinitions.h> // for kTop...
-
+/**
+* LOCAL includes
+*/
 #include "camera.hpp"
 
-#include <XmlRpcValue.h>
-#include <ros/master.h>
-#include <ros/serialization.h>
-#include <ros/this_node.h>
+/**
+* ALDEBARAN includes
+*/
+#include <alvision/alvisiondefinitions.h> // for kTop...
 
 namespace alros
 {

@@ -15,22 +15,32 @@
  *
 */
 
-#include <sensor_msgs/image_encodings.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-#include <alvision/alvisiondefinitions.h> // for kTop...
-#include <alvision/alimage.h>
-#include <alvalue/alvalue.h>
-#include <alvision/alimage_opencv.h>
-
+/**
+* LOCAL includes
+*/
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
 
-#include <XmlRpcValue.h>
-#include <ros/master.h>
-#include <ros/serialization.h>
-#include <ros/this_node.h>
+/**
+* ROS includes
+*/
+#include <cv_bridge/cv_bridge.h>
+
+/**
+* CV includes
+*/
+#include <opencv2/imgproc/imgproc.hpp>
+
+/**
+* ALDEBARAN includes
+*/
+#include <alvision/alvisiondefinitions.h> // for kTop...
+
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {

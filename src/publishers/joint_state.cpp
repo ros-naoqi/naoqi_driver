@@ -15,10 +15,9 @@
  *
 */
 
-#include <iostream>
-#include <fstream>
-#include <stdio.h>
-
+/**
+* LOCAL includes
+*/
 #include "joint_state.hpp"
 
 namespace alros

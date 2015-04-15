@@ -18,12 +18,16 @@
 #ifndef MEMORY_BOOL_RECORDER_HPP
 #define MEMORY_BOOL_RECORDER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/Int32.h>
-#include <naoqi_bridge_msgs/BoolStamped.h>
-
+/**
+* LOCAL includes
+*/
 #include "../recorderbase.hpp"
-#include <qi/anyobject.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/BoolStamped.h>
 
 namespace alros
 {

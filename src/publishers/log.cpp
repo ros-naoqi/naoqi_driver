@@ -15,14 +15,10 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "log.hpp"
-
-#include <qicore/logmessage.hpp>
-
-#include <ros/serialization.h>
-#include <std_msgs/String.h>
-
-#include <boost/algorithm/string.hpp>
 
 namespace alros
 {

@@ -18,19 +18,16 @@
 #ifndef MEMORY_INT_CONVERTER_HPP
 #define MEMORY_INT_CONVERTER_HPP
 
-#include <map>
-#include <vector>
-
-#include <ros/ros.h>
-#include <std_msgs/Int32.h>
-#include <naoqi_bridge_msgs/IntStamped.h>
-
-#include <boost/function.hpp>
-
-#include <qi/anyobject.hpp>
-
-#include <alrosbridge/message_actions.h>
+/**
+* LOCAL includes
+*/
 #include "../converter_base.hpp"
+#include <alrosbridge/message_actions.h>
+
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/IntStamped.h>
 
 namespace alros
 {

@@ -18,14 +18,16 @@
 #ifndef LASER_CONVERTER_HPP
 #define LASER_CONVERTER_HPP
 
-#include <ros/ros.h>
-#include <sensor_msgs/LaserScan.h>
-
+/**
+* LOCAL includes
+*/
+#include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-#include <qi/anyobject.hpp>
-
-#include "converter_base.hpp"
+/**
+* ROS includes
+*/
+#include <sensor_msgs/LaserScan.h>
 
 namespace alros
 {

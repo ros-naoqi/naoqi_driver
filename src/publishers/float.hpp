@@ -18,11 +18,15 @@
 #ifndef FLOAT_PUBLISHER_HPP
 #define FLOAT_PUBLISHER_HPP
 
-#include <ros/ros.h>
-#include <std_msgs/Float32.h>
-
+/**
+* LOCAL includes
+*/
 #include "publisher_base.hpp"
-#include <qi/anyobject.hpp>
+
+/**
+* ROS includes
+*/
+#include <std_msgs/Float32.h>
 
 namespace alros
 {

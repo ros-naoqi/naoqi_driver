@@ -19,29 +19,21 @@
 #define JOINT_STATES_PUBLISHER_HPP
 
 /**
+* LOCAL includes
+*/
+#include "publisher_base.hpp"
+
+/**
 * ROS includes
 */
 #include <geometry_msgs/Transform.h>
-#include <robot_state_publisher/robot_state_publisher.h>
-#include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_broadcaster.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-#include <vector>
-
-#include "publisher_base.hpp"
 
 namespace alros
 {
 namespace publisher
 {
-
 
 class JointStatePublisher : public BasePublisher<JointStatePublisher>
 {

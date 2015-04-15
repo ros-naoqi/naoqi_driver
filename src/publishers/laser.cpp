@@ -15,12 +15,9 @@
  *
 */
 
-
-#include <iostream>
-#include <cmath>
-
-#include <sensor_msgs/LaserScan.h>
-
+/**
+* LOCAL includes
+*/
 #include "laser.hpp"
 
 namespace alros

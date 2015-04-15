@@ -23,6 +23,8 @@
 
 #include "recorderbase.hpp"
 #include <qi/anyobject.hpp>
+#include <alrosbridge/tools.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace alros
 {

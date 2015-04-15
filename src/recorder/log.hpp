@@ -18,11 +18,29 @@
 #ifndef INT_RECORDER_HPP
 #define INT_RECORDER_HPP
 
+/**
+* STANDARD includes
+*/
+#include <iostream>
+
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
 #include <rosgraph_msgs/Log.h>
 
-#include "recorderbase.hpp"
+/**
+* ALDEBARAN includes
+*/
 #include <qi/anyobject.hpp>
+
+/**
+* LOCAL includes
+*/
+#include "recorderbase.hpp"
+#include <alrosbridge/tools.hpp>
+#include <alrosbridge/recorder/globalrecorder.hpp>
+
 
 namespace alros
 {

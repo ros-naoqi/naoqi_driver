@@ -14,7 +14,22 @@
  * limitations under the License.
  *
 */
+
+/**
+* LOCAL includes
+*/
 #include "imu.hpp"
+
+/**
+* BOOST includes
+*/
+#include <tf/transform_datatypes.h>
+
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {

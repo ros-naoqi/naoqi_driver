@@ -15,10 +15,9 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
-#include <ros/serialization.h>
-
+/**
+* LOCAL includes
+*/
 #include "sonar.hpp"
 
 namespace alros

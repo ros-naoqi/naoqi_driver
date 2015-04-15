@@ -14,13 +14,18 @@
  * limitations under the License.
  *
 */
-#include <iostream>
 
-#include <boost/foreach.hpp>
-
+/**
+* LOCAL includes
+*/
 #include "int.hpp"
 
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
+
 namespace alros
 {
 namespace converter
