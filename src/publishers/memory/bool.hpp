@@ -19,25 +19,14 @@
 #define MEMORY_BOOL_PUBLISHER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <iostream>
+#include "../publisher_base.hpp"
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
 #include <naoqi_bridge_msgs/BoolStamped.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-/**
-* LOCAL includes
-*/
-#include "../publisher_base.hpp"
 
 namespace alros
 {

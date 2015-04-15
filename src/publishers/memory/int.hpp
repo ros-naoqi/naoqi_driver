@@ -19,26 +19,14 @@
 #define MEMORY_INT_PUBLISHER_HPP
 
 /**
-* STANDARD includes
-*/
-#include <iostream>
-
-/**
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <naoqi_bridge_msgs/IntStamped.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-/**
 * LOCAL includes
 */
 #include "../publisher_base.hpp"
 
+/**
+* ROS includes
+*/
+#include <naoqi_bridge_msgs/IntStamped.h>
 
 namespace alros
 {

@@ -20,14 +20,14 @@
 #define MEMORY_LIST_PUBLISHER_HPP
 
 /**
-* ROS includes
-*/
-#include <naoqi_msgs/MemoryList.h>
-
-/**
 * LOCAL includes
 */
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <naoqi_msgs/MemoryList.h>
 
 namespace alros {
 

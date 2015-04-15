@@ -15,7 +15,15 @@
  *
 */
 
+/**
+* LOCAL includes
+*/
 #include "camera.hpp"
+
+/**
+* ALDEBARAN includes
+*/
+#include <alvision/alvisiondefinitions.h> // for kTop...
 
 namespace alros
 {

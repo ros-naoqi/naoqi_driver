@@ -17,22 +17,16 @@
 
 #ifndef LASER_PUBLISHER_HPP
 #define LASER_PUBLISHER_HPP
-/**
-* STANDARD includes
-*/
-#include <iostream>
-#include <cmath>
-
-/**
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <sensor_msgs/LaserScan.h>
 
 /**
 * LOCAL includes
 */
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <sensor_msgs/LaserScan.h>
 
 namespace alros
 {

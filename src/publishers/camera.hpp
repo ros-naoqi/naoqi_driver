@@ -19,27 +19,14 @@
 #define PUBLISHER_CAMERA_HPP
 
 /**
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <ros/master.h>
-#include <ros/serialization.h>
-#include <ros/this_node.h>
-#include <XmlRpcValue.h>
-#include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
-#include <sensor_msgs/image_encodings.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-#include <alvision/alvisiondefinitions.h> // for kTop...
-
-/**
 * LOCAL includes
 */
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <image_transport/image_transport.h>
 
 namespace alros
 {

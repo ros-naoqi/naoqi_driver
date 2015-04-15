@@ -18,16 +18,15 @@
 #ifndef BASE_PUBLISHER_HPP
 #define BASE_PUBLISHER_HPP
 
-#include <algorithm>
-#include <iostream>
+/**
+* STANDARD includes
+*/
 #include <string>
 
-#include <alvalue/alvalue.h>
-#include <qi/session.hpp>
-
+/**
+* ROS includes
+*/
 #include <ros/ros.h>
-
-#include <alrosbridge/tools.hpp>
 
 namespace alros
 {

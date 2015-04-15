@@ -19,20 +19,14 @@
 #define STRING_PUBLISHER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <iostream>
+#include "publisher_base.hpp"
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
 #include <std_msgs/String.h>
-
-/**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
 
 namespace alros
 {

@@ -19,21 +19,14 @@
 #define PUBLISHER_SONAR_HPP
 
 /**
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <ros/serialization.h>
-#include <sensor_msgs/Range.h>
-
-/**
-* ALDEBARAN includes
-*/
-#include <alvalue/alvalue.h>
-
-/**
 * LOCAL includes
 */
 #include "publisher_base.hpp"
+
+/**
+* ROS includes
+*/
+#include <sensor_msgs/Range.h>
 
 namespace alros
 {
