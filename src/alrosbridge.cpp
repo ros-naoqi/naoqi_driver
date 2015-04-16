@@ -76,6 +76,7 @@
  * RECORDERS
  */
 #include "recorder/camera.hpp"
+#include "recorder/diagnostics.hpp"
 #include "recorder/imu.hpp"
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
@@ -340,8 +341,10 @@ void Bridge::registerDefaultConverter()
   /** DIAGNOSTICS */
   boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
   boost::shared_ptr<publisher::DiagnosticsPublisher> dp = boost::make_shared<publisher::DiagnosticsPublisher>( "/diagnostics_agg" );
+  boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
   dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::DiagnosticsPublisher::publish, dp, _1) );
-  registerPublisher( dc, dp );
+  dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
+  registerConverter( dc, dp, dr );
 
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
