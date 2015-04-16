@@ -29,11 +29,6 @@
 */
 #include <diagnostic_msgs/DiagnosticArray.h>
 
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
 namespace alros
 {
 namespace converter
