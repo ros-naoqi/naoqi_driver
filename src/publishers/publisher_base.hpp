@@ -59,6 +59,17 @@ public:
       return pub_.getNumSubscribers() > 0;
   }
 
+  virtual void publish( const T& msg )
+  {
+    pub_.publish( msg );
+  }
+
+  virtual void reset( ros::NodeHandle& nh )
+  {
+    pub_ = nh.advertise<T>( this->topic_, 10 );
+    is_initialized_ = true;
+  }
+
 protected:
   std::string topic_;
 

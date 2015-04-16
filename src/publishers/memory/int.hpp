@@ -33,7 +33,7 @@ namespace alros
 namespace publisher
 {
 
-class MemoryIntPublisher : public BasePublisher<MemoryIntPublisher>
+class MemoryIntPublisher : public BasePublisher<naoqi_bridge_msgs::IntStamped>
 {
 
 public:

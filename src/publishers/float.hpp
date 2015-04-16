@@ -33,7 +33,7 @@ namespace alros
 namespace publisher
 {
 
-class FloatPublisher : public BasePublisher<FloatPublisher>
+class FloatPublisher : public BasePublisher<std_msgs::Float32>
 {
 
 public:

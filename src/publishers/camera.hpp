@@ -33,7 +33,7 @@ namespace alros
 namespace publisher
 {
 
-class CameraPublisher : public BasePublisher<CameraPublisher>
+class CameraPublisher : public BasePublisher<sensor_msgs::Image>
 {
 public:
   CameraPublisher( const std::string& topic, int camera_source );

@@ -30,11 +30,6 @@ InfoPublisher::InfoPublisher( const std::string& topic )
 {
 }
 
-void InfoPublisher::publish( const std_msgs::String& info_msg )
-{
-  pub_.publish( info_msg );
-}
-
 void InfoPublisher::reset( ros::NodeHandle& nh )
 {
   // We latch as we only publish once

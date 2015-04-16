@@ -59,16 +59,13 @@ namespace alros
 namespace publisher
 {
 
-class LogPublisher : public BasePublisher<LogPublisher>
+class LogPublisher : public BasePublisher<rosgraph_msgs::Log>
 {
 public:
   LogPublisher( );
 
   // check whether a real copy of the log message should be more safe
   // remove const ref here
-  void publish( const rosgraph_msgs::Log& log_msgs );
-
-  void reset( ros::NodeHandle& nh );
 
   inline bool isSubscribed() const
   {

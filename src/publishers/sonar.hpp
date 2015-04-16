@@ -33,7 +33,7 @@ namespace alros
 namespace publisher
 {
 
-class SonarPublisher : public BasePublisher<SonarPublisher>
+class SonarPublisher : public BasePublisher<sensor_msgs::Range>
 {
 public:
   SonarPublisher( const std::vector<std::string>& topics );

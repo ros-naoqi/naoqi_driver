@@ -35,7 +35,7 @@ namespace alros
 namespace publisher
 {
 
-class JointStatePublisher : public BasePublisher<JointStatePublisher>
+class JointStatePublisher : public BasePublisher<sensor_msgs::JointState>
 {
 
 public:
