@@ -15,59 +15,71 @@
  *
 */
 
-#include <ros/serialization.h>
-#include <std_msgs/String.h>
-
+/**
+* LOCAL includes
+*/
 #include "info.hpp"
+
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-InfoPublisher::InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& session )
-  : BasePublisher( name, topic, frequency, session ),
+InfoConverter::InfoConverter( const std::string& name, float frequency, const qi::SessionPtr& session )
+  : BaseConverter( name, frequency, session ),
     p_memory_( session->service("ALMemory") )
 {
   keys_.push_back("RobotConfig/Head/FullHeadId");
   keys_.push_back("Device/DeviceList/ChestBoard/BodyId");
-  keys_.push_back("Device/DeviceList/BatteryFuelGauge/SerialNumber");
-  keys_.push_back("Device/DeviceList/BatteryFuelGauge/FirmwareVersion");
   keys_.push_back("RobotConfig/Body/Type");
   keys_.push_back("RobotConfig/Body/BaseVersion");
   keys_.push_back("RobotConfig/Body/Device/LeftArm/Version");
   keys_.push_back("RobotConfig/Body/Device/RightArm/Version");
   keys_.push_back("RobotConfig/Body/Device/Hand/Left/Version");
-  keys_.push_back("RobotConfig/Body/Device/Platform/Version");
-  keys_.push_back("RobotConfig/Body/Device/Brakes/Version");
-  keys_.push_back("RobotConfig/Body/Device/Wheel/Version");
   keys_.push_back("RobotConfig/Body/Version");
   keys_.push_back("RobotConfig/Body/SoftwareRequirement");
   keys_.push_back("RobotConfig/Body/Device/Legs/Version");
-  keys_.push_back("RobotConfig/Mode/Slave");
+  if(robot() == PEPPER)
+  {
+    keys_.push_back("Device/DeviceList/BatteryFuelGauge/SerialNumber");
+    keys_.push_back("Device/DeviceList/BatteryFuelGauge/FirmwareVersion");
+    keys_.push_back("RobotConfig/Body/Device/Platform/Version");
+    keys_.push_back("RobotConfig/Body/Device/Brakes/Version");
+    keys_.push_back("RobotConfig/Body/Device/Wheel/Version");
+  }
 }
 
-void InfoPublisher::publish()
+void InfoConverter::reset()
 {
-  std::vector<std::string> values = p_memory_.call<std::vector<std::string> >("getListData", alvalues_);
+}
+
+void InfoConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+void InfoConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
+{
+  std::vector<std::string> values = p_memory_.call<std::vector<std::string> >("getListData", keys_);
   std_msgs::String msg;
+
   for(size_t i = 0; i < keys_.size(); ++i)
   {
     msg.data += keys_[i] + ": " + values[i];
     if (i != keys_.size()-1)
-      msg.data += " ; ";
+    msg.data += " ; ";
   }
-
-  pub_.publish(msg);
+  for_each( const message_actions::MessageAction& action, actions )
+  {
+    callbacks_[action](msg);
+  }
 }
 
-void InfoPublisher::reset( ros::NodeHandle& nh )
-{
-  // We latch as we only publish once
-  pub_ = nh.advertise<std_msgs::String>( "info", 1, true );
-
-  is_initialized_ = true;
-}
-
-} // publisher
+} // converter
 } //alros

@@ -15,45 +15,52 @@
  *
 */
 
-#ifndef PUBLISHER_INFO_HPP
-#define PUBLISHER_INFO_HPP
+#ifndef INFO_CONVERTER_HPP
+#define INFO_CONVERTER_HPP
 
-#include <ros/ros.h>
-#include <qi/anyobject.hpp>
+/**
+* LOCAL includes
+*/
+#include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
 
-#include "publisher_base.hpp"
+/**
+* ROS includes
+*/
+#include <std_msgs/String.h>
+
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class InfoPublisher : public BasePublisher<InfoPublisher>
+class InfoConverter : public BaseConverter<InfoConverter>
 {
+
+  typedef boost::function<void(std_msgs::String)> Callback_t;
+
 public:
-  InfoPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
+  InfoConverter( const std::string& name, float frequency, const qi::SessionPtr& sessions );
 
-  void publish();
+  void reset();
 
-  void reset( ros::NodeHandle& nh );
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  inline bool isSubscribed() const
-  {
-    if (is_initialized_ == false) return false;
-    return pub_.getNumSubscribers() > 0;
-  }
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
-  ros::Publisher pub_;
-
   /** Memory (Proxy) configurations */
   qi::AnyObject p_memory_;
 
   /** The keys to get from ALMemory */
   std::vector<std::string> keys_;
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
+
+  std_msgs::String msg_;
 };
 
-} //publisher
+} //converter
 } //alros
 
 #endif

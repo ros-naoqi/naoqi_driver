@@ -14,6 +14,10 @@
  * limitations under the License.
  *
 */
+
+/**
+* LOCAL includes
+*/
 #include "info.hpp"
 
 namespace alros
@@ -36,5 +40,5 @@ void InfoRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
   is_initialized_ = true;
 }
 
-} //publisher
+} //recorder
 } // alros

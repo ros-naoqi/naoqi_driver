@@ -27,6 +27,7 @@
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
+#include "converters/info.hpp"
 #include "converters/int.hpp"
 #include "converters/joint_state.hpp"
 #include "converters/laser.hpp"
@@ -46,7 +47,7 @@
 #include "publishers/diagnostics.hpp"
 #include "publishers/imu.hpp"
 #include "publishers/int.hpp"
-//#include "publishers/info.hpp"
+#include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
 #include "publishers/laser.hpp"
 #include "publishers/log.hpp"
@@ -78,6 +79,7 @@
 #include "recorder/camera.hpp"
 #include "recorder/diagnostics.hpp"
 #include "recorder/imu.hpp"
+#include "recorder/info.hpp"
 #include "recorder/int.hpp"
 #include "recorder/joint_state.hpp"
 #include "recorder/laser.hpp"
@@ -316,11 +318,16 @@ void Bridge::registerDefaultConverter()
 //  // Info should be at 0 (latched) but somehow that does not work ...
 //  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
 //  registerPublisher( info );
-//
-//  registerPublisher( alros::publisher::DiagnosticsPublisher("diagnostics", 1, sessionPtr_) );
-//  registerPublisher( alros::publisher::LogPublisher("logger", "", 5, sessionPtr_) );
+  /** Info publisher **/
+  boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" );
+  boost::shared_ptr<recorder::InfoRecorder> inr = boost::make_shared<recorder::InfoRecorder>( "info" );
+  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0.1, sessionPtr_ );
+  inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
+  inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::InfoRecorder::write, inr, _1) );
+  registerConverter( inc, inp, inr );
 
   alros::Robot robot_type;
+  robot_type = inc->robot();
 
   /** String Publisher */
   boost::shared_ptr<publisher::StringPublisher> sp = boost::make_shared<publisher::StringPublisher>( "string" );
@@ -329,8 +336,6 @@ void Bridge::registerDefaultConverter()
   sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::StringPublisher::publish, sp, _1) );
   sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   registerConverter( sc, sp, sr );
-
-  robot_type = sc->robot();
 
   /** LOGS */
   boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
@@ -428,7 +433,6 @@ void Bridge::registerDefaultConverter()
   usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
   usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
   registerConverter( usc, usp, usr );
-
 }
 
 // public interface here
