@@ -15,9 +15,11 @@
  *
  */
 
+/**
+* STANDARD includes
+*/
 #include "diagnostics.hpp"
 
-#include <iostream>
 /** This file defines a Diagnostic publisher
  * It does not use the DiagnostricsUpdater for optimization.
  * A full diagnostic_msgs/DiagnosticArray is built and published
@@ -28,8 +30,8 @@ namespace alros
 namespace publisher
 {
 
-DiagnosticsPublisher::DiagnosticsPublisher( ):
-    BasePublisher( "/diagnostics" )
+DiagnosticsPublisher::DiagnosticsPublisher( const std::string& topic ):
+    BasePublisher( topic )
 {
 }
 
@@ -41,7 +43,7 @@ void DiagnosticsPublisher::publish( diagnostic_msgs::DiagnosticArray& msg )
 
 void DiagnosticsPublisher::reset( ros::NodeHandle& nh)
 {
-  pub_ = nh.advertise< diagnostic_msgs::DiagnosticArray >( "/diagnostics_agg", 1 );
+  pub_ = nh.advertise< diagnostic_msgs::DiagnosticArray >( topic_, 1 );
   is_initialized_ = true;
 }
 

@@ -18,13 +18,15 @@
 #ifndef DIAGNOSTICS_PUBLISHER_HPP
 #define DIAGNOSTICS_PUBLISHER_HPP
 
+/**
+* STANDARD includes
+*/
 #include "publisher_base.hpp"
 
 /**
 * ROS includes
 */
 #include <ros/ros.h>
-
 #include <diagnostic_msgs/DiagnosticArray.h>
 
 namespace alros
@@ -36,7 +38,7 @@ class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
 {
 
 public:
-  DiagnosticsPublisher( );
+  DiagnosticsPublisher( const std::string& topic );
 
   void publish( diagnostic_msgs::DiagnosticArray& msg );
 
@@ -44,8 +46,8 @@ public:
 
   inline bool isSubscribed() const
   {
-    // Should always be publishe: it is the convention
-    // and it a low frame rate
+    // Should always be published: it is the convention
+    // and it has a low frame rate
     return true;
   }
 

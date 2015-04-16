@@ -15,17 +15,19 @@
  *
  */
 
-#ifndef DIAGNOSTICS_PUBLISHER_HPP
-#define DIAGNOSTICS_PUBLISHER_HPP
+#ifndef DIAGNOSTICS_CONVERTER_HPP
+#define DIAGNOSTICS_CONVERTER_HPP
 
-#include "publisher_base.hpp"
+/**
+* LOCAL includes
+*/
+#include "converter_base.hpp"
+#include <alrosbridge/message_actions.h>
 
 /**
 * ROS includes
 */
-#include <ros/ros.h>
-
-#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_msgs/DiagnosticArray.h>
 
 /**
 * ALDEBARAN includes
@@ -34,30 +36,24 @@
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class DiagnosticsPublisher : public BasePublisher<DiagnosticsPublisher>
+class DiagnosticsConverter : public BaseConverter<DiagnosticsConverter>
 {
+
+  typedef boost::function<void(diagnostic_msgs::DiagnosticArray&) > Callback_t;
 
 public:
-  DiagnosticsPublisher( const std::string& name, float frequency, qi::SessionPtr& session );
+  DiagnosticsConverter(const std::string& name, float frequency, const qi::SessionPtr &session );
 
-  void publish();
+  void reset();
 
-  void reset( ros::NodeHandle& nh );
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
-  inline bool isSubscribed() const
-  {
-    // Should always be publishe: it is the convention
-    // and it a low frame rate
-    return true;
-  }
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
 private:
-  ros::Publisher pub_;
-  ros::Publisher pub2_;
-
   /** The names of the joints in the order given by the motion proxy */
   std::vector<std::string> joint_names_;
   /** The list of the ALMemory keys for joint temperatures */
@@ -74,9 +70,12 @@ private:
 
   float temperature_warn_level_;
   float temperature_error_level_;
-}; // class
 
-} //publisher
+  /** Registered Callbacks **/
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
+};
+
+} //converter
 } // alros
 
 #endif
