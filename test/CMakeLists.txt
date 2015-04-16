@@ -25,5 +25,11 @@ target_link_libraries(
   converter_memory_test
   alrosbridge
 )
+qi_create_gtest( event_registration_test "event_registration_test.cpp" )
+qi_use_lib( event_registration_test GTEST QI)
+target_link_libraries(
+  event_registration_test
+  alrosbridge
+)
 #qi_create_bin(concept_test "concept_test.cpp")
 #qi_use_lib(concept_test BOOST)
