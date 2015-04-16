@@ -28,14 +28,14 @@ namespace publisher {
     BasePublisher( topic )
   {}
 
-  void MemoryListPublisher::publish(const naoqi_msgs::MemoryList &_msg)
+  void MemoryListPublisher::publish(const naoqi_bridge_msgs::MemoryList &_msg)
   {
     pub_.publish(_msg);
   }
 
   void MemoryListPublisher::reset( ros::NodeHandle& nh )
   {
-    pub_ = nh.advertise<naoqi_msgs::MemoryList>(topic_,5);
+    pub_ = nh.advertise<naoqi_bridge_msgs::MemoryList>(topic_,5);
     is_initialized_ = true;
   }
 }

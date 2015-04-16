@@ -45,32 +45,32 @@ void MemoryListConverter::callAll(const std::vector<message_actions::MessageActi
   // Get inertial data
   AL::ALValue memData = p_memory_.call<AL::ALValue>("getListData", _key_list);
   // Reset message
-  _msg = naoqi_msgs::MemoryList();
+  _msg = naoqi_bridge_msgs::MemoryList();
   for(int i=0; i<memData.getSize(); i++){
     if(memData[i].isFloat())
     {
-      naoqi_msgs::MemoryPairFloat tmp_msg;
+      naoqi_bridge_msgs::MemoryPairFloat tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
       tmp_msg.data = memData[i];
       _msg.floats.push_back(tmp_msg);
     }
     else if(memData[i].isString())
     {
-      naoqi_msgs::MemoryPairString tmp_msg;
+      naoqi_bridge_msgs::MemoryPairString tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
       tmp_msg.data = memData[i].toString();
       _msg.strings.push_back(tmp_msg);
     }
     else if(memData[i].isInt())
     {
-      naoqi_msgs::MemoryPairInt tmp_msg;
+      naoqi_bridge_msgs::MemoryPairInt tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
       tmp_msg.data = memData[i];
       _msg.ints.push_back(tmp_msg);
     }
     else if(memData[i].isBool())
     {
-      naoqi_msgs::MemoryPairInt tmp_msg;
+      naoqi_bridge_msgs::MemoryPairInt tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
       bool value = memData[i];
       tmp_msg.data = (int) value;

@@ -27,7 +27,7 @@
 /**
 * ROS includes
 */
-#include <naoqi_msgs/MemoryList.h>
+#include <naoqi_bridge_msgs/MemoryList.h>
 
 namespace alros {
 
@@ -35,7 +35,7 @@ namespace converter {
 
 class MemoryListConverter : public BaseConverter<MemoryListConverter>
 {
-  typedef boost::function<void(naoqi_msgs::MemoryList&) > Callback_t;
+  typedef boost::function<void(naoqi_bridge_msgs::MemoryList&) > Callback_t;
 
 public:
   MemoryListConverter(const std::vector<std::string>& key_list, const std::string& name, const float& frequency, const qi::SessionPtr& session);
@@ -48,7 +48,7 @@ public:
 
 private:
   std::vector<std::string> _key_list;
-  naoqi_msgs::MemoryList _msg;
+  naoqi_bridge_msgs::MemoryList _msg;
   qi::AnyObject p_memory_;
   std::vector<std::string> data_names_list_;
 

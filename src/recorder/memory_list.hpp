@@ -27,7 +27,7 @@
 /**
 * ROS includes
 */
-#include <naoqi_msgs/MemoryList.h>
+#include <naoqi_bridge_msgs/MemoryList.h>
 
 namespace alros{
 
@@ -38,7 +38,7 @@ class MemoryListRecorder : public BaseRecorder<MemoryListRecorder>
 public:
   MemoryListRecorder(const std::string& topic);
 
-  void write( const naoqi_msgs::MemoryList& msg);
+  void write( const naoqi_bridge_msgs::MemoryList& msg);
 
   void reset (boost::shared_ptr<alros::recorder::GlobalRecorder> gr);
 

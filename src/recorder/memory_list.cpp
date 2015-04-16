@@ -28,7 +28,7 @@ MemoryListRecorder::MemoryListRecorder(const std::string &topic):
   BaseRecorder(topic)
 {}
 
-void MemoryListRecorder::write(const naoqi_msgs::MemoryList& msg)
+void MemoryListRecorder::write(const naoqi_bridge_msgs::MemoryList& msg)
 {
   gr_->write(topic_, msg);
 }

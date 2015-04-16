@@ -27,7 +27,7 @@
 /**
 * ROS includes
 */
-#include <naoqi_msgs/MemoryList.h>
+#include <naoqi_bridge_msgs/MemoryList.h>
 
 namespace alros {
 
@@ -38,7 +38,7 @@ class MemoryListPublisher: public BasePublisher<MemoryListPublisher>
 public:
   MemoryListPublisher(const std::string& topic);
 
-  virtual void publish( const naoqi_msgs::MemoryList& _msg);
+  virtual void publish( const naoqi_bridge_msgs::MemoryList& _msg);
 
   virtual void reset( ros::NodeHandle& nh );
 
