@@ -15,45 +15,41 @@
  *
 */
 
-#ifndef PUBLISHER_LOG_HPP
-#define PUBLISHER_LOG_HPP
+#ifndef CONVERTERS_LOG_HPP
+#define CONVERTERS_LOG_HPP
 
-#include <ros/ros.h>
 #include <rosgraph_msgs/Log.h>
 
-#include "publisher_base.hpp"
+#include <alrosbridge/message_actions.h>
+#include "converter_base.hpp"
 
-#include <boost/thread/mutex.hpp>
-
-#include <qi/anyobject.hpp>
 #include <qicore/logmanager.hpp>
 #include <qicore/loglistener.hpp>
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-class LogPublisher : public BasePublisher<LogPublisher>
+class LogConverter : public BaseConverter<LogConverter>
 {
+
+  typedef boost::function<void(rosgraph_msgs::Log&) > Callback_t;
+
 public:
-  LogPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& sessions );
+  LogConverter( const std::string& name, float frequency, const qi::SessionPtr& sessions );
 
-  void publish();
+  void reset( );
 
-  void reset( ros::NodeHandle& nh );
+  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  inline bool isSubscribed() const
-  {
-    // We assume it is essential
-    return true;
-  }
+  void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
-  ros::Publisher pub_;
-
   qi::LogManagerPtr logger_;
   qi::LogListenerPtr listener_;
+
+  std::map<message_actions::MessageAction, Callback_t> callbacks_;
 };
 
 } //publisher

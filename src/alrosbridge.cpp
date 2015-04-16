@@ -16,10 +16,11 @@
 */
 
 /*
-* PUBLIC INTERFACE
-*/
+ * PUBLIC INTERFACE
+ */
 #include <alrosbridge/alrosbridge.hpp>
 #include <alrosbridge/message_actions.h>
+
 /*
  * CONVERTERS
  */
@@ -35,10 +36,11 @@
 #include "converters/memory/float.hpp"
 #include "converters/memory/int.hpp"
 #include "converters/memory/string.hpp"
+#include "converters/log.hpp"
 
 /*
-* PUBLISHERS
-*/
+ * PUBLISHERS
+ */
 #include "publishers/camera.hpp"
 //#include "publishers/diagnostics.hpp"
 #include "publishers/imu.hpp"
@@ -46,7 +48,7 @@
 //#include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
 #include "publishers/laser.hpp"
-//#include "publishers/log.hpp"
+#include "publishers/log.hpp"
 #include "publishers/memory_list.hpp"
 //#include "publishers/nao_joint_state.hpp"
 //#include "publishers/odometry.hpp"
@@ -87,8 +89,8 @@
 #include "recorder/memory/string.hpp"
 
 /*
-* STATIC FUNCTIONS INCLUDE
-*/
+ * STATIC FUNCTIONS INCLUDE
+ */
 #include "ros_env.hpp"
 #include "helpers.hpp"
 
@@ -98,18 +100,17 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-/**
-* ALDEBARAN
-*/
+/*
+ * ALDEBARAN
+ */
 #include <alvision/alvisiondefinitions.h> // for kTop...
 
 /*
-* BOOST
-*/
+ * BOOST
+ */
 #include <boost/foreach.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #define for_each BOOST_FOREACH
-
 
 #define DEBUG 0
 
@@ -328,6 +329,13 @@ void Bridge::registerDefaultConverter()
   registerConverter( sc, sp, sr );
 
   robot_type = sc->robot();
+
+  /** Logs */
+  boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
+  boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( );
+  lp->reset( *nhPtr_ );
+  lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
+  registerPublisher( lc, lp );
 
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );

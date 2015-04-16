@@ -19,6 +19,7 @@
 * LOCAL includes
 */
 #include "memory_list.hpp"
+#include <alvalue/alvalue.h>
 
 /**
 * BOOST includes

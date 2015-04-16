@@ -66,7 +66,7 @@ public:
 
   // check whether a real copy of the log message should be more safe
   // remove const ref here
-  void publish( std::list<rosgraph_msgs::Log>& log_msgs );
+  void publish( const rosgraph_msgs::Log& log_msgs );
 
   void reset( ros::NodeHandle& nh );
 

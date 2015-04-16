@@ -93,7 +93,7 @@ void SonarConverter::callAll( const std::vector<message_actions::MessageAction>&
     is_subscribed_ = true;
   }
 
-  std::vector<float> values = p_memory_.call<AL::ALValue >("getListData", keys_);
+  std::vector<float> values = p_memory_.call<std::vector<float> >("getListData", keys_);
   ros::Time now = ros::Time::now();
   for(size_t i = 0; i < msgs_.size(); ++i)
   {

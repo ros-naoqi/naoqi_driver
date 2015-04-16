@@ -30,7 +30,6 @@
 /**
 * ALDEBARAN includes
 */
-#include <alvalue/alvalue.h>
 #include <qi/anyobject.hpp>
 
 namespace alros

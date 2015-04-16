@@ -729,8 +729,8 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color: 255; 0; 0
+      Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -780,15 +780,15 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.00216575
-        Y: 0.369297
-        Z: 1.22095
+        X: 0.202885
+        Y: 0.741895
+        Z: 0.702972
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.470398
+      Pitch: 0.920398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.79041
+      Yaw: 2.44541
     Saved: ~
 Window Geometry:
   Displays:

@@ -19,14 +19,16 @@
 
 #include <qicore/logmessage.hpp>
 
-#include <ros/serialization.h>
 #include <std_msgs/String.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
 /** mutex to change the logs list */
@@ -62,8 +64,8 @@ void logCallback(const qi::LogMessage& msg)
   }
 }
 
-LogPublisher::LogPublisher( const std::string& name, const std::string& topic, float frequency, const qi::SessionPtr& session )
-  : BasePublisher( name, topic, frequency, session ),
+LogConverter::LogConverter( const std::string& name, float frequency, const qi::SessionPtr& session )
+  : BaseConverter( name, frequency, session ),
     logger_( session->service("LogManager") )
 {
   float levels[] = {rosgraph_msgs::Log::DEBUG, rosgraph_msgs::Log::FATAL, rosgraph_msgs::Log::ERROR,
@@ -74,11 +76,20 @@ LogPublisher::LogPublisher( const std::string& name, const std::string& topic, f
   listener_->onLogMessage.connect(logCallback);
 }
 
-void LogPublisher::publish()
+void LogConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+void LogConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   while ( !LOGS.empty() )
   {
-    pub_.publish(LOGS.front());
+    rosgraph_msgs::Log& log_msg = LOGS.front();
+    for_each( const message_actions::MessageAction& action, actions)
+    {
+      callbacks_[action](log_msg);
+    }
     {
       boost::mutex::scoped_lock lock( MUTEX_LOGS );
       LOGS.pop_front();
@@ -87,12 +98,8 @@ void LogPublisher::publish()
   last_log_update_ = ros::Time::now();
 }
 
-void LogPublisher::reset( ros::NodeHandle& nh )
+void LogConverter::reset( )
 {
-  // We latch as we only publish once
-  pub_ = nh.advertise<rosgraph_msgs::Log>( "/rosout", 1 );
-
-  is_initialized_ = true;
 }
 
 } // publisher

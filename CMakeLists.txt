@@ -29,6 +29,7 @@ set(
   src/converters/memory/string.cpp
   src/converters/sonar.cpp
   src/converters/string.cpp
+  src/converters/log.cpp
   )
 qi_create_lib(
   alrosconverters

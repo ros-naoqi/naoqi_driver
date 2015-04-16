@@ -45,12 +45,17 @@ void MemoryFloatConverter::registerCallback( message_actions::MessageAction acti
 bool MemoryFloatConverter::convert()
 {
   bool success = false;
-  AL::ALValue value = p_memory_.call<AL::ALValue>("getData", memory_key_);
-  if (value.isFloat())
+  float value = p_memory_.call<float>("getData", memory_key_);
+  try
   {
     msg_.header.stamp = ros::Time::now();
-    msg_.data = static_cast<float>(value);
+    msg_.data = value;
     success = true;
+  }
+  catch( const std::exception& e )
+  {
+    std::cerr << "Exception caught in MemoryFloatConverter " << e.what() << std::endl;
+    success = false;
   }
   return success;
 }

@@ -30,15 +30,9 @@ LogPublisher::LogPublisher( )
 {
 }
 
-void LogPublisher::publish( std::list<rosgraph_msgs::Log>& log_msgs )
+void LogPublisher::publish( const rosgraph_msgs::Log& log_msg )
 {
-  while ( !log_msgs.empty() )
-  {
-    pub_.publish( log_msgs.front() );
-    {
-      log_msgs.pop_front();
-    }
-  }
+  pub_.publish( log_msg );
 }
 
 void LogPublisher::reset( ros::NodeHandle& nh )

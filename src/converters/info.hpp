@@ -51,8 +51,6 @@ private:
 
   /** The keys to get from ALMemory */
   std::vector<std::string> keys_;
-  /** The memory keys of the info */
-  AL::ALValue alvalues_;
 };
 
 } //publisher

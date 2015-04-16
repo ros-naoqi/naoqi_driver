@@ -15,8 +15,6 @@
  *
 */
 
-#include <alvalue/alvalue.h>
-
 #include <ros/serialization.h>
 #include <std_msgs/String.h>
 
@@ -47,20 +45,15 @@ InfoPublisher::InfoPublisher( const std::string& name, const std::string& topic,
   keys_.push_back("RobotConfig/Body/SoftwareRequirement");
   keys_.push_back("RobotConfig/Body/Device/Legs/Version");
   keys_.push_back("RobotConfig/Mode/Slave");
-
-  alvalues_.arraySetSize(keys_.size());
-  size_t i = 0;
-  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
-    alvalues_[i] = *it;
 }
 
 void InfoPublisher::publish()
 {
-  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", alvalues_);
+  std::vector<std::string> values = p_memory_.call<std::vector<std::string> >("getListData", alvalues_);
   std_msgs::String msg;
   for(size_t i = 0; i < keys_.size(); ++i)
   {
-    msg.data += keys_[i] + ": " + std::string(values[i]);
+    msg.data += keys_[i] + ": " + values[i];
     if (i != keys_.size()-1)
       msg.data += " ; ";
   }

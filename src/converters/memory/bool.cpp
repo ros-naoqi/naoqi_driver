@@ -45,13 +45,10 @@ void MemoryBoolConverter::registerCallback( message_actions::MessageAction actio
 bool MemoryBoolConverter::convert()
 {
   bool success = false;
-  AL::ALValue value = p_memory_.call<AL::ALValue>("getData", memory_key_);
-  if (value.isInt())
-  {
-    msg_.header.stamp = ros::Time::now();
-    msg_.data = static_cast<int>(value);
-    success = true;
-  }
+  bool value = p_memory_.call<bool>("getData", memory_key_);
+  msg_.header.stamp = ros::Time::now();
+  msg_.data = value;
+  success = true;
   return success;
 }
 

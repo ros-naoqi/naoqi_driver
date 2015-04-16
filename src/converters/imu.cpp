@@ -42,29 +42,29 @@ namespace converter {
   {
     if(location == IMU::TORSO){
       msg_imu_.header.frame_id = "base_link";
-      data_names_list_ = AL::ALValue::array("DCM/Time",
-             "Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/AngleZ/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/GyroscopeZ/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/AccelerometerX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/AccelerometerY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value");
+      data_names_list_.push_back("DCM/Time");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AngleZ/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/GyroscopeX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/GyroscopeY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/GyroscopeZ/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AccelerometerX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AccelerometerY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AccelerometerZ/Sensor/Value");
     }
     else if(location == IMU::BASE){
       msg_imu_.header.frame_id = "base_footprint";
-      data_names_list_ = AL::ALValue::array("DCM/Time",
-             "Device/SubDeviceList/InertialSensorBase/AngleX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/AngleY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/AngleZ/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/GyroscopeX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/GyroscopeY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/GyroscopeZ/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/AccelerometerX/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/AccelerometerY/Sensor/Value",
-             "Device/SubDeviceList/InertialSensorBase/AccelerometerZ/Sensor/Value");
+      data_names_list_.push_back("DCM/Time");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AngleX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AngleY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AngleZ/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/GyroscopeX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/GyroscopeY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/GyroscopeZ/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AccelerometerX/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AccelerometerY/Sensor/Value");
+      data_names_list_.push_back("Device/SubDeviceList/InertialSensorBase/AccelerometerZ/Sensor/Value");
     }
   }
 
@@ -86,7 +86,7 @@ namespace converter {
   void ImuConverter::callAll(const std::vector<message_actions::MessageAction>& actions)
   {
     // Get inertial data
-    std::vector<float> memData = p_memory_.call<AL::ALValue>("getListData", data_names_list_);
+    std::vector<float> memData = p_memory_.call<std::vector<float> >("getListData", data_names_list_);
     // angle (X,Y,Z) = memData(1,2,3);
     // gyro  (X,Y,Z) = memData(4,5,6);
     // acc   (X,Y,Z) = memData(7,8,9);

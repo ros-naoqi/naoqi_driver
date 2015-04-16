@@ -18,6 +18,11 @@
 /**
 * LOCAL includes
 */
+#include <iostream>
+#include <cmath>
+
+#include <sensor_msgs/LaserScan.h>
+
 #include "laser.hpp"
 
 /**
@@ -140,17 +145,16 @@ void LaserConverter::registerCallback( message_actions::MessageAction action, Ca
 
 void LaserConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  static const AL::ALValue laser_keys_value(laserMemoryKeys, 90);
+  static const std::vector<std::string> laser_keys_value(laserMemoryKeys, laserMemoryKeys+90);
 
-  AL::ALValue result_value = p_memory_.call<AL::ALValue>("getListData", laser_keys_value);
+  std::vector<float> result_value = p_memory_.call<std::vector<float> >("getListData", laser_keys_value);
   msg_.header.stamp = ros::Time::now();
-//  prepare the right sensor frame
+  //  prepare the right sensor frame
   size_t pos = 0;
-
 
   /**
    * there are two things done here:
-   * 1.) we have to reorder the array indices 
+   * 1.) we have to reorder the array indices
    * since there are ordered from left-to-right, ros laserscans are ordered from
    * 2.) in order to combine all lasers into one message,
    * we transform (statically) from laser frame into base_footprint

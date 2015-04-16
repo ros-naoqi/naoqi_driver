@@ -61,7 +61,7 @@ public:
 private:
   sensor_msgs::Imu msg_imu_;
   qi::AnyObject p_memory_;
-  AL::ALValue data_names_list_;
+  std::vector<std::string> data_names_list_;
 
   /** Registered Callbacks **/
   std::map<message_actions::MessageAction, Callback_t> callbacks_;

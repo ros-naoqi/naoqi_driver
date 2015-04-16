@@ -18,9 +18,6 @@
 #ifndef BASE_PUBLISHER_HPP
 #define BASE_PUBLISHER_HPP
 
-/**
-* STANDARD includes
-*/
 #include <string>
 
 /**
@@ -50,7 +47,7 @@ public:
   {
     return topic_;
   }
-  
+
   inline bool isInitialized() const
   {
     return is_initialized_;
@@ -60,7 +57,6 @@ public:
   {
     if (is_initialized_ == false) return false;
       return pub_.getNumSubscribers() > 0;
-
   }
 
 protected:
