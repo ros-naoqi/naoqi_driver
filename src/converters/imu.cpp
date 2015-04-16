@@ -21,7 +21,7 @@
 #include "imu.hpp"
 
 /**
-* BOOST includes
+* ROS includes
 */
 #include <tf/transform_datatypes.h>
 

@@ -15,29 +15,34 @@
  *
  */
 
+/**
+* LOCAL includes
+*/
 #include "diagnostics.hpp"
 
-#include <iostream>
-
+/**
+* ROS includes
+*/
 #include <diagnostic_updater/DiagnosticStatusWrapper.h>
-#include <diagnostic_msgs/DiagnosticStatus.h>
-#include <diagnostic_msgs/DiagnosticArray.h>
-#include <std_msgs/String.h>
 
-#include <qi/type/metaobject.hpp>
+/**
+* BOOST includes
+*/
+#include <boost/foreach.hpp>
+#define for_each BOOST_FOREACH
 
-/** This file defines a Diagnostic publisher
+/** This file defines a Diagnostic converter
  * It does not use the DiagnostricsUpdater for optimization.
- * A full diagnostic_msgs/DiagnosticArray is built and published
+ * A full diagnostic_msgs/DiagnosticArray is built and sent to requesting nodes
  */
 
 namespace alros
 {
-namespace publisher
+namespace converter
 {
 
-DiagnosticsPublisher::DiagnosticsPublisher( const std::string& name, float frequency, qi::SessionPtr& session ):
-    BasePublisher( name, "/diagnostics", frequency, session ),
+DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequency, const qi::SessionPtr& session ):
+    BaseConverter( name, frequency, session ),
     p_memory_(session->service("ALMemory")),
     temperature_warn_level_(68),
     temperature_error_level_(74)
@@ -72,14 +77,14 @@ DiagnosticsPublisher::DiagnosticsPublisher( const std::string& name, float frequ
     all_keys_[i] = *it;
 }
 
-void DiagnosticsPublisher::publish()
+void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   diagnostic_msgs::DiagnosticArray msg;
   msg.header.stamp = ros::Time::now();
 
   // Get all the keys
   //qi::details::printMetaObject(std::cout, p_memory_.metaObject());
-  AL::ALValue values = p_memory_.call<AL::ALValue>("getListData", all_keys_ );
+  std::vector<float> values = p_memory_.call<std::vector<float> >("getListData", all_keys_ );
 
   // Fill the temperature message for the joints
   size_t val = 0;
@@ -202,18 +207,24 @@ void DiagnosticsPublisher::publish()
   }
 
   // TODO: CPU information should be obtained from system files like done in Python
-  
+
   // TODO: wifi and ethernet statuses should be obtained from DBUS
 
-  // Publish
-  pub_.publish(msg);
+  for_each( message_actions::MessageAction action, actions )
+  {
+    callbacks_[action]( msg);
+  }
+
 }
 
-void DiagnosticsPublisher::reset( ros::NodeHandle& nh)
+void DiagnosticsConverter::reset()
 {
-  pub_ = nh.advertise< diagnostic_msgs::DiagnosticArray >( "/diagnostics_agg", 1 );
-  is_initialized_ = true;
 }
 
-} //publisher
+void DiagnosticsConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+{
+  callbacks_[action] = cb;
+}
+
+} //converter
 } // alros

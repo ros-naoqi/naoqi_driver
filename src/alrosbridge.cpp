@@ -25,6 +25,7 @@
  * CONVERTERS
  */
 #include "converters/camera.hpp"
+#include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
 #include "converters/int.hpp"
 #include "converters/joint_state.hpp"
@@ -42,7 +43,7 @@
  * PUBLISHERS
  */
 #include "publishers/camera.hpp"
-//#include "publishers/diagnostics.hpp"
+#include "publishers/diagnostics.hpp"
 #include "publishers/imu.hpp"
 #include "publishers/int.hpp"
 //#include "publishers/info.hpp"
@@ -330,12 +331,17 @@ void Bridge::registerDefaultConverter()
 
   robot_type = sc->robot();
 
-  /** Logs */
+  /** LOGS */
   boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
   boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( );
-  lp->reset( *nhPtr_ );
   lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
   registerPublisher( lc, lp );
+
+  /** DIAGNOSTICS */
+  boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
+  boost::shared_ptr<publisher::DiagnosticsPublisher> dp = boost::make_shared<publisher::DiagnosticsPublisher>( "/diagnostics_agg" );
+  dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::DiagnosticsPublisher::publish, dp, _1) );
+  registerPublisher( dc, dp );
 
   /** IMU TORSO **/
   boost::shared_ptr<publisher::ImuPublisher> imutp = boost::make_shared<publisher::ImuPublisher>( "imu_torso" );
