@@ -296,16 +296,28 @@ void Bridge::registerDefaultConverter()
 //  // Info should be at 0 (latched) but somehow that does not work ...
 //  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
 //  registerPublisher( info );
+
+  alros::Robot robot_type;
+
   /** Info publisher **/
-  boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" );
+  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
+  robot_type = inc->robot();
+
+  /*
+   * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
+   * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
+   * return true).
+   * A message is therefore published through InfoPublisher, even if there is nobody to receive it.
+   * Then, InfoConverter will never be called again, because of its 0Hz frequency. But if a new user subscribes to the "info"
+   * topic, he/she will receive the information published before, as the publisher is latched.
+   */
+
+  boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
   boost::shared_ptr<recorder::BasicRecorder<std_msgs::String> > inr = boost::make_shared<recorder::BasicRecorder<std_msgs::String> >( "info" );
-  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0.1, sessionPtr_ );
   inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
   inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::String>::write, inr, _1) );
   registerConverter( inc, inp, inr );
 
-  alros::Robot robot_type;
-  robot_type = inc->robot();
 
   /** String Publisher */
   boost::shared_ptr<publisher::BasicPublisher<std_msgs::String> > sp = boost::make_shared<publisher::BasicPublisher<std_msgs::String> >( "string" );
@@ -508,13 +520,6 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
     {
       sub.reset( *nhPtr_ );
     }
-  }
-  if(!converters_.empty())
-  {
-    // upload to param server
-    std::string robot_desc = alros::tools::getRobotDescription(converters_[0].robot());
-    nhPtr_->setParam("/robot_description", robot_desc);
-    std::cout << "load robot description from file" << std::endl;
   }
   // Start publishing again
   startRosLoop();
