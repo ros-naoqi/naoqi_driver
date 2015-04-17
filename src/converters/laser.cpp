@@ -147,7 +147,13 @@ void LaserConverter::callAll( const std::vector<message_actions::MessageAction>&
 {
   static const std::vector<std::string> laser_keys_value(laserMemoryKeys, laserMemoryKeys+90);
 
-  std::vector<float> result_value = p_memory_.call<std::vector<float> >("getListData", laser_keys_value);
+  std::vector<float> result_value;
+  try {
+    result_value = p_memory_.call<std::vector<float> >("getListData", laser_keys_value);
+  } catch (const std::exception& e) {
+    std::cerr << "Exception caught in LaserConverter: " << e.what() << std::endl;
+    return;
+  }
   msg_.header.stamp = ros::Time::now();
   //  prepare the right sensor frame
   size_t pos = 0;

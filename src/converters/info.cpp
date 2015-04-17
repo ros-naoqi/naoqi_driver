@@ -23,6 +23,7 @@
 /**
 * BOOST includes
 */
+#include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
