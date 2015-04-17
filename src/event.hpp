@@ -77,6 +77,8 @@ private:
   qi::SignalLink signalID_;
   std::string key_;
 
+  boost::mutex mutex_;
+
   bool isLooping_;
   bool isPublishing_;
   bool isRecording_;
