@@ -66,7 +66,14 @@ void InfoConverter::registerCallback( const message_actions::MessageAction actio
 
 void InfoConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  std::vector<std::string> values = p_memory_.call<std::vector<std::string> >("getListData", keys_);
+  std::vector<std::string> values;
+  try {
+    values = p_memory_.call<std::vector<std::string> >("getListData", keys_);
+  } catch (const std::exception& e) {
+    std::cerr << "Exception caught in InfoConverter: " << e.what() << std::endl;
+    return;
+  }
+
   std_msgs::String msg;
 
   for(size_t i = 0; i < keys_.size(); ++i)
