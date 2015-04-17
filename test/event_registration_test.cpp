@@ -12,6 +12,7 @@
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Range.h>
 #include <sensor_msgs/image_encodings.h>
+#include <naoqi_bridge_msgs/BoolStamped.h>
 
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -32,13 +33,13 @@
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
+#include "../src/publishers/basic.hpp"
+
 #include "../src/converters/memory/float.hpp"
 #include "../src/recorder/memory/float.hpp"
-#include "../src/publishers/memory/float.hpp"
 
 #include "../src/converters/memory/bool.hpp"
 #include "../src/recorder/memory/bool.hpp"
-#include "../src/publishers/memory/bool.hpp"
 
 #include "../src/event.hpp"
 
@@ -60,7 +61,7 @@ int main( int argc, char** argv )
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
 
   qi::SessionPtr sessionPtr = app.session();
-  alros::EventRegister<alros::converter::MemoryBoolConverter,alros::publisher::MemoryBoolPublisher,alros::recorder::MemoryBoolRecorder> event_register("MiddleTactilTouched", sessionPtr);
+  alros::EventRegister<alros::converter::MemoryBoolConverter,alros::publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,alros::recorder::MemoryBoolRecorder> event_register("MiddleTactilTouched", sessionPtr);
   event_register.reset(n, gr);
 
   gr->startRecord();
