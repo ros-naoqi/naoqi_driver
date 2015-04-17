@@ -317,7 +317,7 @@ void Bridge::registerDefaultConverter()
 
   /** LOGS */
   boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
-  boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( );
+  boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( "/rosout" );
   lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
   registerPublisher( lc, lp );
 

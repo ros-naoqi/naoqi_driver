@@ -25,8 +25,8 @@ namespace alros
 namespace publisher
 {
 
-LogPublisher::LogPublisher( )
-  : BasicPublisher( "/rosout" )
+LogPublisher::LogPublisher(const std::string &topic )
+  : BasicPublisher( topic )
 {
 }
 
