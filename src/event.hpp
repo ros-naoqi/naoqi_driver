@@ -62,11 +62,10 @@ public:
   void isRecording(bool state);
   void isPublishing(bool state);
 
+private:
   void registerCallback();
   void unregisterCallback();
   void onEvent();
-
-  void test();
 
 private:
   boost::shared_ptr<Converter> converter_;

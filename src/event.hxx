@@ -98,18 +98,6 @@ void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::test()
-{
-  std::vector<message_actions::MessageAction> actions;
-  actions.push_back(message_actions::PUBLISH);
-  actions.push_back(message_actions::RECORD);
-  if (actions.size() >0)
-  {
-    converter_->callAll( actions );
-  }
-}
-
-template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::registerCallback()
 {
   std::cout << "In registerCallback function" << std::endl;
