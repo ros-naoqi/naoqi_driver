@@ -24,6 +24,7 @@
 /*
  * CONVERTERS
  */
+#include "converters/audio.hpp"
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
@@ -326,6 +327,11 @@ void Bridge::registerDefaultConverter()
   sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<std_msgs::String>::publish, sp, _1) );
   sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::String>::write, sr, _1) );
   registerConverter( sc, sp, sr );
+  /** AUDIO **/
+  boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
+  boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
+  ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
+  registerPublisher( ac, ap );
 
   /** LOGS */
   boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
