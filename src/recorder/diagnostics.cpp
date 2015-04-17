@@ -26,7 +26,9 @@ namespace recorder
 {
 
 DiagnosticsRecorder::DiagnosticsRecorder( const std::string& topic ):
-  BaseRecorder( topic )
+  topic_( topic ),
+  is_initialized_( false ),
+  is_subscribed_( false )
 {}
 
 void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)

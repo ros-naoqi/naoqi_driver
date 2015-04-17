@@ -35,7 +35,7 @@
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 #include "../src/converters/memory/float.hpp"
-#include "../src/recorder/float.hpp"
+#include "../src/recorder/basic.hpp"
 #include "../src/publishers/basic.hpp"
 
 int main( int argc, char** argv )

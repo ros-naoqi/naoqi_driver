@@ -15,13 +15,12 @@
  *
 */
 
-#ifndef LASER_RECORDER_HPP
-#define LASER_RECORDER_HPP
+#ifndef BASIC_RECORDER_HPP
+#define BASIC_RECORDER_HPP
 
 /**
 * LOCAL includes
 */
-#include "recorderbase.hpp"
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 /**
@@ -29,33 +28,66 @@
 */
 #include <string>
 
-/**
-* ROS includes
-*/
-#include <sensor_msgs/LaserScan.h>
-
-
 namespace alros
 {
 namespace recorder
 {
 
-class LaserRecorder : public BaseRecorder<LaserRecorder>
+template<class T>
+class BasicRecorder
 {
 
 public:
-  LaserRecorder( const std::string& topic );
+  BasicRecorder( const std::string& topic ):
+    topic_( topic ),
+    is_initialized_( false ),
+    is_subscribed_( false )
+  {}
 
-  void write( const sensor_msgs::LaserScan& laser_msg );
+  virtual ~BasicRecorder() {}
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  inline std::string topic() const
+  {
+    return topic_;
+  }
 
-private:
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
+
+  inline void subscribe( bool state)
+  {
+    is_subscribed_ = state;
+  }
+
+  inline bool isSubscribed() const
+  {
+    return is_subscribed_;
+  }
+
+  virtual void write(const T& msg)
+  {
+    gr_->write(topic_, msg);
+  }
+
+  virtual void reset(boost::shared_ptr<GlobalRecorder> gr)
+  {
+    gr_ = gr;
+    is_initialized_ = true;
+  }
+
+protected:
+  std::string topic_;
+
+  bool is_initialized_;
+  bool is_subscribed_;
+
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
 
 }; // class
 
-} //publisher
+} // publisher
 } // alros
 
 #endif

@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef BASE_PUBLISHER_HPP
-#define BASE_PUBLISHER_HPP
+#ifndef BASIC_PUBLISHER_HPP
+#define BASIC_PUBLISHER_HPP
 
 #include <string>
 

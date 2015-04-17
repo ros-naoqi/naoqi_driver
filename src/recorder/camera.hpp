@@ -21,7 +21,6 @@
 /**
 * LOCAL includes
 */
-#include "recorderbase.hpp"
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 /**
@@ -35,7 +34,7 @@ namespace alros
 namespace recorder
 {
 
-class CameraRecorder : public BaseRecorder<CameraRecorder>
+class CameraRecorder
 {
 
 public:
@@ -45,7 +44,30 @@ public:
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
-private:
+  inline std::string topic() const
+  {
+    return topic_img_;
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
+
+  inline void subscribe( bool state)
+  {
+    is_subscribed_ = state;
+  }
+
+  inline bool isSubscribed() const
+  {
+    return is_subscribed_;
+  }
+
+protected:
+  bool is_initialized_;
+  bool is_subscribed_;
+
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
   std::string topic_info_;
   std::string topic_img_;
