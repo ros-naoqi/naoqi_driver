@@ -70,6 +70,8 @@
 #include "recorder/joint_state.hpp"
 #include "recorder/sonar.hpp"
 
+#include "event.hpp"
+
 /*
  * STATIC FUNCTIONS INCLUDE
  */
@@ -238,6 +240,12 @@ void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder&
   // Cannot use this operator here. So we use insert
   rec.reset(recorder_, frequency);
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
+}
+
+void Bridge::insertEventConverter(const std::string& key, event::Event event)
+{
+  event.reset(*nhPtr_, recorder_);
+  event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
 }
 
 void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
@@ -585,6 +593,13 @@ void Bridge::startRecording()
                 << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
     }
   }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isRecording(true);
+    std::cout << HIGHGREEN << "Topic "
+              << BOLDCYAN << iterator->first << RESETCOLOR
+              << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+  }
   record_enabled_ = true;
 }
 
@@ -646,6 +661,10 @@ std::string Bridge::stopRecording()
     {
       it->second.subscribe(false);
     }
+  }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isRecording(false);
   }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
@@ -762,6 +781,20 @@ dataType::DataType Bridge::getDataType(const std::string& key)
   return type;
 }
 
+void Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
+{
+  // SWITCH HERE
+  boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder> > event_register =
+      boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder> >( key, sessionPtr_ );
+  insertEventConverter(key, event_register);
+  if (keep_looping) {
+    event_map_.find(key)->second.startProcess();
+  }
+  if (publish_enabled_) {
+    event_map_.find(key)->second.isPublishing(true);
+  }
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
@@ -774,6 +807,7 @@ QI_REGISTER_OBJECT( Bridge,
                     getSubscribedPublishers,
                     addMemoryConverters,
                     registerMemoryConverter,
+                    registerEventConverter,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );
