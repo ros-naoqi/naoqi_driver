@@ -49,7 +49,6 @@ qi_stage_lib( alrosconverters )
 set(
   PUBLISHER
   src/publishers/camera.cpp
-  src/publishers/float.cpp
   src/publishers/info.cpp
   src/publishers/joint_state.cpp
   src/publishers/log.cpp
