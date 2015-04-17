@@ -40,7 +40,7 @@ template <typename Converter, typename Publisher, typename Recorder>
 EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string& key, const qi::SessionPtr& session )
   : key_(key),
     p_memory_( session->service("ALMemory") ),
-    isLooping_(false),
+    isStarted_(false),
     isPublishing_(false),
     isRecording_(false)
 {
@@ -71,18 +71,24 @@ template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::startProcess()
 {
   std::cout << "In startProcess function" << std::endl;
-  boost::mutex::scoped_lock stop_lock(mutex_);
-  registerCallback();
-  isLooping_ = true;
+  boost::mutex::scoped_lock start_lock(mutex_);
+  if (!isStarted_)
+  {
+    registerCallback();
+    isStarted_ = true;
+  }
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 {
-  std::cout << "In startProcess function" << std::endl;
-  boost::mutex::scoped_lock start_lock(mutex_);
-  unregisterCallback();
-  isLooping_ = false;
+  std::cout << "In stopProcess function" << std::endl;
+  boost::mutex::scoped_lock stop_lock(mutex_);
+  if (isStarted_)
+  {
+    unregisterCallback();
+    isStarted_ = false;
+  }
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
@@ -122,7 +128,7 @@ void EventRegister<Converter, Publisher, Recorder>::onEvent()
   std::vector<message_actions::MessageAction> actions;
   std::cout << "In callback function" << std::endl;
   boost::mutex::scoped_lock callback_lock(mutex_);
-  if (isLooping_) {
+  if (isStarted_) {
     // CHECK FOR PUBLISH
     if ( isPublishing_ && publisher_->isSubscribed() )
     {

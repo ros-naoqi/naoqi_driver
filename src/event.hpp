@@ -79,7 +79,7 @@ private:
 
   boost::mutex mutex_;
 
-  bool isLooping_;
+  bool isStarted_;
   bool isPublishing_;
   bool isRecording_;
 
