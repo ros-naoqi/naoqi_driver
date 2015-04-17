@@ -30,18 +30,17 @@ namespace alros
 namespace publisher
 {
 
-// CRTP
 template<class T>
-class BasePublisher
+class BasicPublisher
 {
 
 public:
-  BasePublisher( const std::string& topic ):
+  BasicPublisher( const std::string& topic ):
     topic_( topic ),
     is_initialized_( false )
   {}
 
-  virtual ~BasePublisher() {}
+  virtual ~BasicPublisher() {}
 
   inline std::string topic() const
   {

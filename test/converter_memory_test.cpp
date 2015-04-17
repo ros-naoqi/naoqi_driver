@@ -36,7 +36,7 @@
 
 #include "../src/converters/memory/float.hpp"
 #include "../src/recorder/float.hpp"
-#include "../src/publishers/publisher_base.hpp"
+#include "../src/publishers/basic.hpp"
 
 int main( int argc, char** argv )
 {
@@ -54,7 +54,7 @@ int main( int argc, char** argv )
   }
 
   alros::converter::MemoryFloatConverter conv("name", 5, app.session(), "DarknessDetection/DarknessValue");
-  alros::publisher::BasePublisher<std_msgs::Float32> pub = alros::publisher::BasePublisher<std_msgs::Float32>( "DarknessDetection/DarknessValue" );
+  alros::publisher::BasicPublisher<std_msgs::Float32> pub = alros::publisher::BasicPublisher<std_msgs::Float32>( "DarknessDetection/DarknessValue" );
   pub.reset( n );
 
   //std::cout << conv.convert() << std::endl;

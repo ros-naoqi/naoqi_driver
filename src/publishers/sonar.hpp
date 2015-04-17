@@ -19,13 +19,9 @@
 #define PUBLISHER_SONAR_HPP
 
 /**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
-
-/**
 * ROS includes
 */
+#include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 
 namespace alros

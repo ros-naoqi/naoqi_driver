@@ -19,13 +19,9 @@
 #define PUBLISHER_CAMERA_HPP
 
 /**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
-
-/**
 * ROS includes
 */
+#include <ros/ros.h>
 #include <image_transport/image_transport.h>
 
 namespace alros

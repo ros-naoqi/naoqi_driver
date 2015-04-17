@@ -43,6 +43,7 @@
 /*
  * PUBLISHERS
  */
+#include "publishers/basic.hpp"
 #include "publishers/camera.hpp"
 #include "publishers/info.hpp"
 #include "publishers/joint_state.hpp"
@@ -272,16 +273,16 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
   case 0:
     break;
   case 1:
-    _registerMemoryConverter<publisher::BasePublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
+    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder,converter::MemoryFloatConverter>(key,frequency);
     break;
   case 2:
-    _registerMemoryConverter<publisher::BasePublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
+    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder,converter::MemoryIntConverter>(key,frequency);
     break;
   case 3:
-    _registerMemoryConverter<publisher::BasePublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
+    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder,converter::MemoryStringConverter>(key,frequency);
     break;
   case 4:
-    _registerMemoryConverter<publisher::BasePublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder,converter::MemoryBoolConverter>(key,frequency);
+    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder,converter::MemoryBoolConverter>(key,frequency);
     break;
   default:
     {
@@ -317,10 +318,10 @@ void Bridge::registerDefaultConverter()
   robot_type = inc->robot();
 
   /** String Publisher */
-  boost::shared_ptr<publisher::BasePublisher<std_msgs::String> > sp = boost::make_shared<publisher::BasePublisher<std_msgs::String> >( "string" );
+  boost::shared_ptr<publisher::BasicPublisher<std_msgs::String> > sp = boost::make_shared<publisher::BasicPublisher<std_msgs::String> >( "string" );
   boost::shared_ptr<recorder::StringRecorder> sr = boost::make_shared<recorder::StringRecorder>( "string" );
   boost::shared_ptr<converter::StringConverter> sc = boost::make_shared<converter::StringConverter>( "string", 10, sessionPtr_ );
-  sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<std_msgs::String>::publish, sp, _1) );
+  sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<std_msgs::String>::publish, sp, _1) );
   sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::StringRecorder::write, sr, _1) );
   registerConverter( sc, sp, sr );
 
@@ -332,37 +333,37 @@ void Bridge::registerDefaultConverter()
 
   /** DIAGNOSTICS */
   boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
-  boost::shared_ptr<publisher::BasePublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasePublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
+  boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
   boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
-  dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
+  dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
   dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
   registerConverter( dc, dp, dr );
 
   /** IMU TORSO **/
-  boost::shared_ptr<publisher::BasePublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasePublisher<sensor_msgs::Imu> >( "imu_torso" );
+  boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
   boost::shared_ptr<recorder::ImuRecorder> imutr = boost::make_shared<recorder::ImuRecorder>( "imu_torso" );
 
   boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
-  imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<sensor_msgs::Imu>::publish, imutp, _1) );
+  imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
   imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imutr, _1) );
   registerConverter( imutc, imutp, imutr );
 
   if(robot_type == alros::PEPPER){
     /** IMU BASE **/
-    boost::shared_ptr<publisher::BasePublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasePublisher<sensor_msgs::Imu> >( "imu_base" );
+    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
     boost::shared_ptr<recorder::ImuRecorder> imubr = boost::make_shared<recorder::ImuRecorder>( "imu_base" );
 
     boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
-    imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<sensor_msgs::Imu>::publish, imubp, _1) );
+    imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
     imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::ImuRecorder::write, imubr, _1) );
     registerConverter( imubc, imubp, imubr );
   }
 
   /** Int Publisher */
-  boost::shared_ptr<publisher::BasePublisher<std_msgs::Int32> > ip = boost::make_shared<publisher::BasePublisher<std_msgs::Int32> >( "int" );
+  boost::shared_ptr<publisher::BasicPublisher<std_msgs::Int32> > ip = boost::make_shared<publisher::BasicPublisher<std_msgs::Int32> >( "int" );
   boost::shared_ptr<recorder::IntRecorder> ir = boost::make_shared<recorder::IntRecorder>( "int" );
   boost::shared_ptr<converter::IntConverter> ic = boost::make_shared<converter::IntConverter>( "int", 15, sessionPtr_);
-  ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<std_msgs::Int32>::publish, ip, _1) );
+  ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<std_msgs::Int32>::publish, ip, _1) );
   ic->registerCallback( message_actions::RECORD, boost::bind(&recorder::IntRecorder::write, ir, _1) );
   registerConverter( ic, ip, ir  );
 
@@ -395,10 +396,10 @@ void Bridge::registerDefaultConverter()
 
   if(robot_type == alros::PEPPER){
     /** Laser */
-    boost::shared_ptr<publisher::BasePublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasePublisher<sensor_msgs::LaserScan> >( "laser" );
+    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
     boost::shared_ptr<recorder::LaserRecorder> lr = boost::make_shared<recorder::LaserRecorder>( "laser" );
     boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
-    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
+    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
     lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::LaserRecorder::write, lr, _1) );
     registerConverter( lc, lp, lr );
   }
@@ -719,10 +720,10 @@ void Bridge::addMemoryConverters(std::string filepath){
   }
 
   // Create converter, publisher and recorder
-  boost::shared_ptr<publisher::BasePublisher<naoqi_bridge_msgs::MemoryList> > mlp = boost::make_shared<publisher::BasePublisher<naoqi_bridge_msgs::MemoryList> >( topic );
+  boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> > mlp = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> >( topic );
   boost::shared_ptr<recorder::MemoryListRecorder> mlr = boost::make_shared<recorder::MemoryListRecorder>( topic );
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
-  mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasePublisher<naoqi_bridge_msgs::MemoryList>::publish, mlp, _1) );
+  mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList>::publish, mlp, _1) );
   mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::MemoryListRecorder::write, mlr, _1) );
   registerConverter( mlc, mlp, mlr );
 }

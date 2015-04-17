@@ -48,7 +48,7 @@
 /**
 * LOCAL includes
 */
-#include "publisher_base.hpp"
+#include "basic.hpp"
 
 
 
@@ -59,7 +59,7 @@ namespace alros
 namespace publisher
 {
 
-class LogPublisher : public BasePublisher<rosgraph_msgs::Log>
+class LogPublisher : public BasicPublisher<rosgraph_msgs::Log>
 {
 public:
   LogPublisher( );

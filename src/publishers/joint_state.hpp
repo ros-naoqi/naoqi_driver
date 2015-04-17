@@ -19,13 +19,9 @@
 #define JOINT_STATES_PUBLISHER_HPP
 
 /**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
-
-/**
 * ROS includes
 */
+#include <ros/ros.h>
 #include <geometry_msgs/Transform.h>
 #include <sensor_msgs/JointState.h>
 #include <tf2_ros/transform_broadcaster.h>

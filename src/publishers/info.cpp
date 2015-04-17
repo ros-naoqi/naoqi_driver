@@ -26,7 +26,7 @@ namespace publisher
 {
 
 InfoPublisher::InfoPublisher( const std::string& topic )
-  : BasePublisher( topic )
+  : BasicPublisher( topic )
 {
 }
 

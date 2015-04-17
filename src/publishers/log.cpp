@@ -26,7 +26,7 @@ namespace publisher
 {
 
 LogPublisher::LogPublisher( )
-  : BasePublisher( "/rosout" )
+  : BasicPublisher( "/rosout" )
 {
 }
 
