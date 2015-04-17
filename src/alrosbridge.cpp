@@ -811,10 +811,69 @@ dataType::DataType Bridge::getDataType(const std::string& key)
 
 void Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
 {
-  // SWITCH HERE
-  boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder> > event_register =
-      boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::MemoryBoolPublisher,recorder::MemoryBoolRecorder> >( key, sessionPtr_ );
-  insertEventConverter(key, event_register);
+  dataType::DataType data_type;
+  if (type==dataType::None) {
+    try {
+      data_type = getDataType(key);
+    } catch (const std::exception& e) {
+      std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
+                << BOLDCYAN << key << RESETCOLOR << std::endl
+                << BOLDRED << "You can enter it yourself, available types are:" << std::endl
+                << "\t > 0 - None" << std::endl
+                << "\t > 1 - Int" << std::endl
+                << "\t > 2 - Float" << std::endl
+                << "\t > 3 - String" << std::endl
+                << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return;
+    }
+  }
+  else {
+    data_type = type;
+  }
+
+  switch (data_type) {
+  case 0:
+    break;
+  case 1:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder> > event_register =
+          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder> >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 2:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder> > event_register =
+          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder> >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 3:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder> > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder> >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 4:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder> > event_register =
+          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder> >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  default:
+    {
+      std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
+                   << "\t > 0 - None" << std::endl
+                   << "\t > 1 - Int" << std::endl
+                   << "\t > 2 - Float" << std::endl
+                   << "\t > 3 - String" << std::endl
+                   << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return;
+    }
+  }
+
   if (keep_looping) {
     event_map_.find(key)->second.startProcess();
   }
