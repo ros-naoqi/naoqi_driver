@@ -21,7 +21,6 @@
 /**
 * LOCAL includes
 */
-#include "recorderbase.hpp"
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 /**
@@ -34,7 +33,7 @@ namespace alros
 namespace recorder
 {
 
-class SonarRecorder : public BaseRecorder<SonarRecorder>
+class SonarRecorder
 {
 
 public:
@@ -44,7 +43,32 @@ public:
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
-private:
+  inline std::string topic() const
+  {
+    return "sonar";
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
+
+  inline void subscribe( bool state)
+  {
+    is_subscribed_ = state;
+  }
+
+  inline bool isSubscribed() const
+  {
+    return is_subscribed_;
+  }
+
+protected:
+  std::string topic_;
+
+  bool is_initialized_;
+  bool is_subscribed_;
+
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
   std::vector<std::string> topics_;
 

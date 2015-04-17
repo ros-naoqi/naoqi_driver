@@ -25,8 +25,7 @@ namespace alros
 namespace recorder
 {
 
-CameraRecorder::CameraRecorder( const std::string& topic ):
-  BaseRecorder( topic )
+CameraRecorder::CameraRecorder( const std::string& topic_ )
 {
   topic_info_ = topic_ + "/camera_info";
   topic_img_ = topic_ + "/image";

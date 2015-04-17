@@ -32,8 +32,7 @@
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-#include "../src/recorder/int.hpp"
-#include "../src/recorder/string.hpp"
+#include "../src/recorder/basic.hpp"
 #include "../src/recorder/camera.hpp"
 
 int main( int argc, char** argv )
@@ -42,10 +41,10 @@ int main( int argc, char** argv )
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
 
-  boost::shared_ptr<alros::recorder::IntRecorder> ir = boost::make_shared<alros::recorder::IntRecorder>( "int" );
+  boost::shared_ptr<alros::recorder::BasicRecorder<std_msgs::Int32> > ir = boost::make_shared<alros::recorder::BasicRecorder<std_msgs::Int32> >( "int" );
   ir->reset( gr );
   ir->subscribe(true);
-  boost::shared_ptr<alros::recorder::StringRecorder> sr = boost::make_shared<alros::recorder::StringRecorder>( "string" );
+  boost::shared_ptr<alros::recorder::BasicRecorder<std_msgs::String> > sr = boost::make_shared<alros::recorder::BasicRecorder<std_msgs::String> >( "string" );
   sr->reset( gr );
   sr->subscribe(true);
   boost::shared_ptr<alros::recorder::CameraRecorder> cr = boost::make_shared<alros::recorder::CameraRecorder>( "camera" );

@@ -19,9 +19,9 @@
 #define INT_RECORDER_HPP
 
 /**
-* STANDARD includes
+* LOCAL includes
 */
-#include <iostream>
+#include <alrosbridge/recorder/globalrecorder.hpp>
 
 /**
 * ROS includes
@@ -29,25 +29,12 @@
 #include <ros/ros.h>
 #include <rosgraph_msgs/Log.h>
 
-/**
-* ALDEBARAN includes
-*/
-#include <qi/anyobject.hpp>
-
-/**
-* LOCAL includes
-*/
-#include "recorderbase.hpp"
-#include <alrosbridge/tools.hpp>
-#include <alrosbridge/recorder/globalrecorder.hpp>
-
-
 namespace alros
 {
 namespace recorder
 {
 
-class LogRecorder : public BaseRecorder<LogRecorder>
+class LogRecorder
 {
 
 public:
@@ -57,7 +44,32 @@ public:
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
-private:
+  inline std::string topic() const
+  {
+    return topic_;
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
+
+  inline void subscribe( bool state)
+  {
+    is_subscribed_ = state;
+  }
+
+  inline bool isSubscribed() const
+  {
+    return is_subscribed_;
+  }
+
+protected:
+  std::string topic_;
+
+  bool is_initialized_;
+  bool is_subscribed_;
+
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
 
 }; // class

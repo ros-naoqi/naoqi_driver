@@ -23,7 +23,7 @@ namespace recorder
 {
 
 LogRecorder::LogRecorder( const std::string& topic ):
-  BaseRecorder( topic )
+  topic_( topic )
 {}
 
 void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)

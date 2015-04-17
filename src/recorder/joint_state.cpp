@@ -26,7 +26,9 @@ namespace recorder
 {
 
 JointStateRecorder::JointStateRecorder( const std::string& topic ):
-  BaseRecorder( "/joint_states" )
+  topic_( topic ),
+  is_initialized_( false ),
+  is_subscribed_( false )
 {}
 
 void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,

@@ -26,7 +26,6 @@ namespace recorder
 {
 
 SonarRecorder::SonarRecorder(const std::vector<std::string>& topics ):
-  BaseRecorder( "sonar" ),
   topics_(topics)
 {}
 
