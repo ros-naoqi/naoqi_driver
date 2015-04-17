@@ -42,6 +42,7 @@
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/event/event.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace tf2_ros

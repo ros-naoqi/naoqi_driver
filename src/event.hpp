@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef EVENT_HPP
-#define EVENT_HPP
+#ifndef EVENT_REGISTER_HPP
+#define EVENT_REGISTER_HPP
 
 #include <string>
 
