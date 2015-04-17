@@ -33,7 +33,7 @@ namespace alros
 namespace publisher
 {
 
-class MemoryFloatPublisher : public BasePublisher<MemoryFloatPublisher>
+class MemoryFloatPublisher : public BasePublisher<naoqi_bridge_msgs::FloatStamped>
 {
 
 public:

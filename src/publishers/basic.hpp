@@ -30,18 +30,17 @@ namespace alros
 namespace publisher
 {
 
-// CRTP
 template<class T>
-class BasePublisher
+class BasicPublisher
 {
 
 public:
-  BasePublisher( const std::string& topic ):
+  BasicPublisher( const std::string& topic ):
     topic_( topic ),
     is_initialized_( false )
   {}
 
-  virtual ~BasePublisher() {}
+  virtual ~BasicPublisher() {}
 
   inline std::string topic() const
   {
@@ -57,6 +56,17 @@ public:
   {
     if (is_initialized_ == false) return false;
       return pub_.getNumSubscribers() > 0;
+  }
+
+  virtual void publish( const T& msg )
+  {
+    pub_.publish( msg );
+  }
+
+  virtual void reset( ros::NodeHandle& nh )
+  {
+    pub_ = nh.advertise<T>( this->topic_, 10 );
+    is_initialized_ = true;
   }
 
 protected:

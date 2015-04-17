@@ -26,21 +26,8 @@ namespace publisher
 {
 
 LogPublisher::LogPublisher( )
-  : BasePublisher( "/rosout" )
+  : BasicPublisher( "/rosout" )
 {
-}
-
-void LogPublisher::publish( const rosgraph_msgs::Log& log_msg )
-{
-  pub_.publish( log_msg );
-}
-
-void LogPublisher::reset( ros::NodeHandle& nh )
-{
-  // We latch as we only publish once
-  pub_ = nh.advertise<rosgraph_msgs::Log>( "/rosout", 1 );
-
-  is_initialized_ = true;
 }
 
 } // publisher

@@ -19,13 +19,9 @@
 #define PUBLISHER_CAMERA_HPP
 
 /**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
-
-/**
 * ROS includes
 */
+#include <ros/ros.h>
 #include <image_transport/image_transport.h>
 
 namespace alros
@@ -33,12 +29,22 @@ namespace alros
 namespace publisher
 {
 
-class CameraPublisher : public BasePublisher<CameraPublisher>
+class CameraPublisher
 {
 public:
   CameraPublisher( const std::string& topic, int camera_source );
 
   ~CameraPublisher();
+
+  inline std::string topic() const
+  {
+    return topic_;
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
 
   void publish( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
@@ -51,6 +57,10 @@ public:
   }
 
 private:
+  std::string topic_;
+
+  bool is_initialized_;
+
   //image_transport::ImageTransport it_;
   image_transport::CameraPublisher pub_;
 

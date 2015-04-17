@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Float32.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/CameraInfo.h>
@@ -35,7 +36,7 @@
 
 #include "../src/converters/memory/float.hpp"
 #include "../src/recorder/float.hpp"
-#include "../src/publishers/float.hpp"
+#include "../src/publishers/basic.hpp"
 
 int main( int argc, char** argv )
 {
@@ -53,7 +54,7 @@ int main( int argc, char** argv )
   }
 
   alros::converter::MemoryFloatConverter conv("name", 5, app.session(), "DarknessDetection/DarknessValue");
-  alros::publisher::FloatPublisher pub = alros::publisher::FloatPublisher( "DarknessDetection/DarknessValue" );
+  alros::publisher::BasicPublisher<std_msgs::Float32> pub = alros::publisher::BasicPublisher<std_msgs::Float32>( "DarknessDetection/DarknessValue" );
   pub.reset( n );
 
   //std::cout << conv.convert() << std::endl;

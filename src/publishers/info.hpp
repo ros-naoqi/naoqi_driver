@@ -21,7 +21,7 @@
 /**
 * LOCAL includes
 */
-#include "publisher_base.hpp"
+#include "basic.hpp"
 
 /**
 * ROS includes
@@ -34,12 +34,10 @@ namespace alros
 namespace publisher
 {
 
-class InfoPublisher : public BasePublisher<InfoPublisher>
+class InfoPublisher : public BasicPublisher<std_msgs::String>
 {
 public:
   InfoPublisher( const std::string& topic );
-
-  void publish( const std_msgs::String& info_msg );
 
   void reset( ros::NodeHandle& nh );
 };

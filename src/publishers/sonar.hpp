@@ -19,13 +19,9 @@
 #define PUBLISHER_SONAR_HPP
 
 /**
-* LOCAL includes
-*/
-#include "publisher_base.hpp"
-
-/**
 * ROS includes
 */
+#include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 
 namespace alros
@@ -33,10 +29,20 @@ namespace alros
 namespace publisher
 {
 
-class SonarPublisher : public BasePublisher<SonarPublisher>
+class SonarPublisher
 {
 public:
   SonarPublisher( const std::vector<std::string>& topics );
+
+  inline std::string topic() const
+  {
+    return "sonar";
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
 
   void publish( const std::vector<sensor_msgs::Range>& sonar_msgs );
 
@@ -54,6 +60,7 @@ public:
 private:
   std::vector<std::string> topics_;
   std::vector<ros::Publisher> pubs_;
+  bool is_initialized_;
 
 };
 

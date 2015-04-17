@@ -26,13 +26,8 @@ namespace publisher
 {
 
 InfoPublisher::InfoPublisher( const std::string& topic )
-  : BasePublisher( topic )
+  : BasicPublisher( topic )
 {
-}
-
-void InfoPublisher::publish( const std_msgs::String& info_msg )
-{
-  pub_.publish( info_msg );
 }
 
 void InfoPublisher::reset( ros::NodeHandle& nh )

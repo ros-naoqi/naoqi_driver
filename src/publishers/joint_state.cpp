@@ -26,7 +26,8 @@ namespace publisher
 {
 
 JointStatePublisher::JointStatePublisher( const std::string& topic ):
-  BasePublisher( topic )
+  topic_( topic ),
+  is_initialized_( false )
 {}
 
 void JointStatePublisher::publish( const sensor_msgs::JointState& js_msg,

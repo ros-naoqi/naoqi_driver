@@ -44,23 +44,11 @@ qi_stage_lib( alrosconverters )
 set(
   PUBLISHER
   src/publishers/camera.cpp
-  src/publishers/diagnostics.cpp
   src/publishers/float.cpp
-  src/publishers/imu.cpp
   src/publishers/info.cpp
-  src/publishers/int.cpp
   src/publishers/joint_state.cpp
-  src/publishers/laser.cpp
   src/publishers/log.cpp
-  src/publishers/memory_list.cpp
-  src/publishers/memory/bool.cpp
-  src/publishers/memory/int.cpp
-  src/publishers/memory/float.cpp
-  src/publishers/memory/string.cpp
   src/publishers/sonar.cpp
-  src/publishers/string.cpp
-  #  src/publishers/nao_joint_state.cpp
-  #  src/publishers/odometry.cpp
   )
 
 set(
