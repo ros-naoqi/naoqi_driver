@@ -84,7 +84,13 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
 
   // Get all the keys
   //qi::details::printMetaObject(std::cout, p_memory_.metaObject());
-  std::vector<float> values = p_memory_.call<std::vector<float> >("getListData", all_keys_ );
+  std::vector<float> values;
+  try {
+    values = p_memory_.call<std::vector<float> >("getListData", all_keys_ );
+  } catch (const std::exception& e) {
+    std::cerr << "Exception caught in DiagnosticsConverter: " << e.what() << std::endl;
+    return;
+  }
 
   // Fill the temperature message for the joints
   size_t val = 0;
