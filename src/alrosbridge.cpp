@@ -121,6 +121,7 @@ void Bridge::stopService() {
   stopRosLoop();
   converters_.clear();
   subscribers_.clear();
+  event_map_.clear();
 }
 
 
@@ -490,6 +491,10 @@ std::vector<std::string> Bridge::getAvailableConverters()
   {
     conv_list.push_back(conv.name());
   }
+  for(EventConstIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    conv_list.push_back( iterator->first );
+  }
 
   return conv_list;
 }
@@ -548,6 +553,13 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
       sub.reset( *nhPtr_ );
     }
   }
+  if (!event_map_.empty()) {
+    typedef std::map< std::string, event::Event > event_map;
+    for_each( event_map::value_type &event, event_map_ )
+    {
+      event.second.reset(*nhPtr_, recorder_);
+    }
+  }
   // Start publishing again
   startRosLoop();
 }
@@ -555,11 +567,19 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
 void Bridge::startPublishing()
 {
   publish_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isPublishing(true);
+  }
 }
 
 void Bridge::stopPublishing()
 {
   publish_enabled_ = false;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isPublishing(false);
+  }
 }
 
 std::vector<std::string> Bridge::getSubscribedPublishers() const
@@ -675,6 +695,10 @@ void Bridge::startRosLoop()
   keep_looping = true;
   if (publisherThread_.get_id() ==  boost::thread::id())
     publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.startProcess();
+  }
 }
 
 void Bridge::stopRosLoop()
@@ -682,6 +706,10 @@ void Bridge::stopRosLoop()
   keep_looping = false;
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.stopProcess();
+  }
 }
 
 void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){

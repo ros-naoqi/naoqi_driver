@@ -123,7 +123,6 @@ public:
    */
   void registerEventConverter(const std::string& key, const dataType::DataType& type);
 
-  void insertEventConverter(const std::string& key, event::Event event);
 
   /**
    * @brief get all available converters
@@ -217,6 +216,7 @@ private:
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
+  void insertEventConverter(const std::string& key, event::Event event);
 
   template <typename T1, typename T2, typename T3>
   void _registerMemoryConverter( const std::string& key, float frequency ) {
