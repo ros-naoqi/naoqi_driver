@@ -47,6 +47,7 @@ void SonarPublisher::publish( const std::vector<sensor_msgs::Range>& sonar_msgs 
 
 void SonarPublisher::reset( ros::NodeHandle& nh )
 {
+  pubs_ = std::vector<ros::Publisher>();
   for( size_t i=0; i<topics_.size(); ++i)
   {
     pubs_.push_back( nh.advertise<sensor_msgs::Range>(topics_[i], 1) );
