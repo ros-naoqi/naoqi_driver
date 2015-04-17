@@ -33,10 +33,15 @@ set(
   src/converters/string.cpp
   src/converters/log.cpp
   )
+set(
+  TOOLS
+  src/tools/robot_description.cpp
+  )
 qi_create_lib(
   alrosconverters
   SHARED
   ${CONVERTERS}
+  ${TOOLS}
   )
 qi_use_lib( alrosconverters QI QICORE ALCOMMON ALVISION ROS )
 qi_stage_lib( alrosconverters )
@@ -75,11 +80,6 @@ set(
   src/recorder/memory/string.cpp
   src/recorder/sonar.cpp
   src/recorder/string.cpp
-  )
-
-set(
-  TOOLS
-  src/tools/robot_description.cpp
   )
 
 qi_create_lib(
