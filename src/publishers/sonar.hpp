@@ -33,10 +33,20 @@ namespace alros
 namespace publisher
 {
 
-class SonarPublisher : public BasePublisher<sensor_msgs::Range>
+class SonarPublisher
 {
 public:
   SonarPublisher( const std::vector<std::string>& topics );
+
+  inline std::string topic() const
+  {
+    return "sonar";
+  }
+
+  inline bool isInitialized() const
+  {
+    return is_initialized_;
+  }
 
   void publish( const std::vector<sensor_msgs::Range>& sonar_msgs );
 
@@ -54,6 +64,7 @@ public:
 private:
   std::vector<std::string> topics_;
   std::vector<ros::Publisher> pubs_;
+  bool is_initialized_;
 
 };
 

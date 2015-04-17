@@ -30,8 +30,9 @@ namespace alros
 namespace publisher
 {
 
-CameraPublisher::CameraPublisher( const std::string& topic, int camera_source )
-  : BasePublisher( topic ),
+CameraPublisher::CameraPublisher( const std::string& topic, int camera_source ):
+  topic_( topic ),
+  is_initialized_(false),
   camera_source_( camera_source )
 {
 }

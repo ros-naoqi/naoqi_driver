@@ -26,7 +26,7 @@ namespace publisher
 {
 
 SonarPublisher::SonarPublisher( const std::vector<std::string>& topics )
-  : BasePublisher( "sonar" ),
+  : is_initialized_(false),
   topics_(topics)
 {
 }

@@ -35,11 +35,21 @@ namespace alros
 namespace publisher
 {
 
-class JointStatePublisher : public BasePublisher<sensor_msgs::JointState>
+class JointStatePublisher
 {
 
 public:
   JointStatePublisher( const std::string& topic = "/joint_states" );
+
+  inline std::string topic() const
+  {
+  return topic_;
+  }
+
+  inline bool isInitialized() const
+  {
+  return is_initialized_;
+  }
 
   virtual void publish( const sensor_msgs::JointState& js_msg,
                         const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
@@ -53,6 +63,10 @@ private:
 
   /** initialize separate publishers for js and odom */
   ros::Publisher pub_joint_states_;
+
+  std::string topic_;
+
+  bool is_initialized_;
 
 }; // class
 
