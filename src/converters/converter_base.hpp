@@ -28,7 +28,6 @@
 */
 #include <qi/session.hpp>
 #include <qi/anyobject.hpp>
-#include <alvalue/alvalue.h>
 
 namespace alros
 {

@@ -56,7 +56,7 @@ private:
   /** The list of the ALMemory keys for the battery */
   std::vector<std::string> battery_keys_;
   /** all the keys to check. It is a concatenation of joint_temperatures_keys_, battery_keys_ */
-  AL::ALValue all_keys_;
+  std::vector<std::string> all_keys_;
   /** Keys for the battery status */
   std::vector<std::string> battery_status_keys_;
 

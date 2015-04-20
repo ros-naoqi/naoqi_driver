@@ -69,7 +69,7 @@ DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequ
   // TODO get ID from Device/DeviceList/ChestBoard/BodyId
 
   // Concatenate the keys in all_keys_
-  all_keys_.arraySetSize(joint_temperatures_keys_.size() + battery_keys_.size());
+  all_keys_.resize(joint_temperatures_keys_.size() + battery_keys_.size());
   size_t i = 0;
   for(std::vector<std::string>::const_iterator it = joint_temperatures_keys_.begin(); it != joint_temperatures_keys_.end(); ++it, ++i)
     all_keys_[i] = *it;
@@ -101,7 +101,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     status.name = std::string("/Joints/") + joint_names_[i];
 
     status.hardware_id = joint_names_[i];
-    float temperature = float(values[val]);
+    float temperature = values[val];
     status.add("Temperature", float(values[val]));
     if (temperature < temperature_warn_level_)
     {

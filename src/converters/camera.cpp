@@ -34,6 +34,7 @@
 /**
 * ALDEBARAN includes
 */
+#include <alvalue/alvalue.h>
 #include <alvision/alvisiondefinitions.h> // for kTop...
 
 /**

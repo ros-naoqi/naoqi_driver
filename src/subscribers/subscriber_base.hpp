@@ -27,7 +27,6 @@
  * LOCAL includes
  */
 #include <alrosbridge/tools.hpp>
-#include <alvalue/alvalue.h>
 
 namespace alros
 {
