@@ -19,14 +19,16 @@
 * LOCAL includes
 */
 #include "info.hpp"
+#include "../tools/robot_description.hpp"
 
 namespace alros
 {
 namespace publisher
 {
 
-InfoPublisher::InfoPublisher( const std::string& topic )
-  : BasicPublisher( topic )
+InfoPublisher::InfoPublisher(const std::string& topic , Robot robot_type)
+  : BasicPublisher( topic ),
+    robot_(robot_type)
 {
 }
 
@@ -34,6 +36,10 @@ void InfoPublisher::reset( ros::NodeHandle& nh )
 {
   // We latch as we only publish once
   pub_ = nh.advertise<std_msgs::String>( topic_, 1, true );
+
+  std::string robot_desc = alros::tools::getRobotDescription(robot_);
+  nh.setParam("/robot_description", robot_desc);
+  std::cout << "load robot description from file" << std::endl;
 
   is_initialized_ = true;
 }

@@ -22,6 +22,7 @@
 * LOCAL includes
 */
 #include "basic.hpp"
+#include <alrosbridge/tools.hpp>
 
 /**
 * ROS includes
@@ -37,9 +38,17 @@ namespace publisher
 class InfoPublisher : public BasicPublisher<std_msgs::String>
 {
 public:
-  InfoPublisher( const std::string& topic );
+  InfoPublisher( const std::string& topic, Robot robot_type );
 
   void reset( ros::NodeHandle& nh );
+
+  virtual inline bool isSubscribed() const
+  {
+    return true;
+  }
+
+protected:
+  Robot robot_;
 };
 
 } //publisher
