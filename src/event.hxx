@@ -62,7 +62,6 @@ EventRegister<Converter, Publisher, Recorder>::~EventRegister()
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::reset(  ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
 {
-  std::cout << "In init function" << std::endl;
   publisher_->reset(nh);
   recorder_->reset(gr);
 }
@@ -70,7 +69,6 @@ void EventRegister<Converter, Publisher, Recorder>::reset(  ros::NodeHandle& nh,
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::startProcess()
 {
-  std::cout << "In startProcess function" << std::endl;
   boost::mutex::scoped_lock start_lock(mutex_);
   if (!isStarted_)
   {
@@ -82,7 +80,6 @@ void EventRegister<Converter, Publisher, Recorder>::startProcess()
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 {
-  std::cout << "In stopProcess function" << std::endl;
   boost::mutex::scoped_lock stop_lock(mutex_);
   if (isStarted_)
   {
@@ -94,7 +91,6 @@ void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::isRecording(bool state)
 {
-  std::cout << "In isRecording function" << std::endl;
   boost::mutex::scoped_lock rec_lock(mutex_);
   isRecording_ = state;
 }
@@ -102,7 +98,6 @@ void EventRegister<Converter, Publisher, Recorder>::isRecording(bool state)
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 {
-  std::cout << "In isPublishing function" << std::endl;
   boost::mutex::scoped_lock pub_lock(mutex_);
   isPublishing_ = state;
 }
@@ -110,7 +105,6 @@ void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::registerCallback()
 {
-  std::cout << "In registerCallback function" << std::endl;
   signalID_ = signal_.connect("signal", (boost::function<void(AL::ALValue)>(boost::bind(&EventRegister<Converter, Publisher, Recorder>::onEvent,
                                                                             this))));
 }
@@ -118,7 +112,6 @@ void EventRegister<Converter, Publisher, Recorder>::registerCallback()
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::unregisterCallback()
 {
-  std::cout << "In unregisterCallback function" << std::endl;
   signal_.disconnect(signalID_);
 }
 
@@ -126,7 +119,6 @@ template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::onEvent()
 {
   std::vector<message_actions::MessageAction> actions;
-  std::cout << "In callback function" << std::endl;
   boost::mutex::scoped_lock callback_lock(mutex_);
   if (isStarted_) {
     // CHECK FOR PUBLISH
