@@ -34,12 +34,9 @@
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 #include "../src/publishers/basic.hpp"
-
+#include "../src/recorder/basic.hpp"
 #include "../src/converters/memory/float.hpp"
-#include "../src/recorder/memory/float.hpp"
-
 #include "../src/converters/memory/bool.hpp"
-#include "../src/recorder/memory/bool.hpp"
 
 #include "../src/event.hpp"
 
@@ -61,7 +58,9 @@ int main( int argc, char** argv )
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
 
   qi::SessionPtr sessionPtr = app.session();
-  alros::EventRegister<alros::converter::MemoryBoolConverter,alros::publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,alros::recorder::MemoryBoolRecorder> event_register("MiddleTactilTouched", sessionPtr);
+  alros::EventRegister<alros::converter::MemoryBoolConverter,
+      alros::publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,
+      alros::recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > event_register("MiddleTactilTouched", sessionPtr);
   event_register.reset(n, gr);
 
   gr->startRecord();

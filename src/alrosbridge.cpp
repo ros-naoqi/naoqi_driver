@@ -836,29 +836,29 @@ void Bridge::registerEventConverter(const std::string& key, const dataType::Data
     break;
   case 1:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder> > event_register =
-          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::MemoryFloatRecorder> >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 2:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder> > event_register =
-          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::MemoryIntRecorder> >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 3:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder> > event_register =
-          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::MemoryStringRecorder> >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 4:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder> > event_register =
-          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::MemoryBoolRecorder> >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
