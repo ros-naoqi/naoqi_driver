@@ -90,6 +90,8 @@ In order to get the module to connect to your roscore, you should send it your I
 
 **Converters API**
 
+The converters are responsible for operating conversion between NAOqi messages and ROS messages, in accordance with given frequency.
+
 * ``const std::vector< std::string >&`` ALRosBridge:\:**getAvailableConverters** ()
   
   Get all registered converters in the module.
@@ -149,7 +151,7 @@ In order to get the module to connect to your roscore, you should send it your I
 
   Get all subscribed publishers.
 
-  *return:* list of string of publisher's topic name
+  *return:* vector of string of publisher's topic name
 
 -----------------
 
@@ -157,8 +159,11 @@ In order to get the module to connect to your roscore, you should send it your I
 
 * ``void`` ALRosBridge:\:**startRecording** ()
 
-  Start/enable recording all registered recorder
+  Start/enable recording all registered recorder.
+  
+  This will record all topics in one ROSbag, named after current date & time. The ROSbag is stored in the exact path where the **ALRosBridge** module is launched (meaning that it will be stored on the robot if it's launched from here).
   
 * ``void`` ALRosBridge:\:**stopRecording** ()
 
-  Stop/disable recording all registered recorder
+  Stop/disable recording all registered recorder.
+  
