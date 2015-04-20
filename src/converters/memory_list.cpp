@@ -60,7 +60,7 @@ void MemoryListConverter::callAll(const std::vector<message_actions::MessageActi
     {
       naoqi_bridge_msgs::MemoryPairString tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
-      tmp_msg.data = memData[i].toString();
+      tmp_msg.data = std::string(memData[i]);
       _msg.strings.push_back(tmp_msg);
     }
     else if(memData[i].isInt())
