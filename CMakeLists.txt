@@ -17,6 +17,7 @@ qi_stage_lib( alros )
 
 set(
   CONVERTERS
+  src/converters/audio.cpp
   src/converters/camera.cpp
   src/converters/diagnostics.cpp
   src/converters/imu.cpp
