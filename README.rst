@@ -36,16 +36,49 @@ Getting Started
 ===============
 
 Start the **ALRosBridge** module
-----------------------------------
+--------------------------------
 
-This module is provided in a binary package `here <https://gitlab.aldebaran.lan/ros/ALRosBridgepackage/tree/master>`_
+**Requirement:**
 
-See instructions on installation `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/2-installation>`_ (Section *C++ Bridge*)
+* qiBuild package (see `here <https://github.com/aldebaran/qibuild>`_ )
+* libqi library (see `here <https://github.com/aldebaran/libqi>`_ )
+
+**Get the code from gitlab**::
+  
+  $ git clone git@gitlab.aldebaran.lan:kknese/alrosbridge.git
+  $ qisrc add ./alrosbridge
+
+**Run from your computer:**
+
+Build with your linux64 toolchain::
+
+  $ cd alrosbridge
+  $ qibuild configure -c atom alrosbridge
+  $ qibuild make -c atom alrosbridge
+
+Register the BridgeService on your robot::
+
+  $ source /opt/ros/<you_installed_rosdistro>/setup.sh
+  $ ./build-linux64/sdk/bin/alrosbridge-bin --qi-url=tcp://<yourRobotIP>:9559
 
 Using the **ALRosBridge** module
 ----------------------------------
 
-To start using this bridge, you need to communicate your external roscore IP (see instructions `here <https://sites.google.com/a/aldebaran-robotics.com/ros/home/start-core-bridge>`_ )
+To start using this bridge, you need to start a roscore locally on our desktop computer and then, to communicate your external roscore IP on your robot.
+
+**Start a ROScore**::
+
+  $ ROS_IP=<yourDesktopIP> roscore
+
+We start the roscore with a prefixed IP of our desktop computer. This is needed so that we can later tell the robot how to find and connect to this roscore.
+
+**Set the master IP**::
+
+  $ qicli call ALRosBridge.setMasterURI http://<yourDesktopIP>:11311
+
+We have to tell the robot the computer IP, where to find the roscore we started before.
+
+**Functionalities**:
 
 This module povides an API to:
 
@@ -96,7 +129,7 @@ The converters are responsible for operating conversion between NAOqi messages a
   
   Get all registered converters in the module.
 
-  *return:* list of string of all converter's topic name
+  *return:* vector of string of all converter's topic name
 
 * ``void`` ALRosBridge:\:**registerMemoryConverter** ( ``const std::string&`` **key**, ``float`` **frequency**, ``int`` **type** )
 
