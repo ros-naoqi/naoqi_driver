@@ -46,6 +46,8 @@ void MemoryListConverter::callAll(const std::vector<message_actions::MessageActi
   AL::ALValue memData = p_memory_.call<AL::ALValue>("getListData", _key_list);
   // Reset message
   _msg = naoqi_bridge_msgs::MemoryList();
+  ros::Time now = ros::Time::now();
+  _msg.header.stamp = now;
   for(int i=0; i<memData.getSize(); i++){
     if(memData[i].isFloat())
     {
