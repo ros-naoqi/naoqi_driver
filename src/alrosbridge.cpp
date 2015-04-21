@@ -53,6 +53,7 @@
  * TOOLS
  */
 #include "tools/robot_description.hpp"
+#include "tools/alvisiondefinitions.h" // for kTop...
 
 /*
  * SUBSCRIBERS
@@ -80,11 +81,6 @@
  */
 #include <tf2_ros/buffer.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-
-/*
- * ALDEBARAN
- */
-#include <alvision/alvisiondefinitions.h> // for kTop...
 
 /*
  * BOOST

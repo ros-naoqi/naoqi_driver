@@ -42,7 +42,7 @@ qi_create_lib(
   ${CONVERTERS}
   ${TOOLS}
   )
-qi_use_lib( alrosconverters QI QICORE ALCOMMON ALVISION ROS )
+qi_use_lib( alrosconverters QI QICORE ROS )
 qi_stage_lib( alrosconverters )
 
 set(
@@ -82,7 +82,7 @@ qi_create_lib(
 
 qi_stage_lib( alrosbridge )
 qi_use_lib(alros QI ROS)
-qi_use_lib(alrosbridge QICORE QI ALCOMMON ALVISION ROS)
+qi_use_lib(alrosbridge QICORE QI ROS)
 target_link_libraries(
   alrosbridge
   alrosconverters

@@ -20,6 +20,7 @@
 */
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
+#include "../tools/alvisiondefinitions.h" // for kTop...
 
 /**
 * ROS includes
@@ -30,11 +31,6 @@
 * CV includes
 */
 #include <opencv2/imgproc/imgproc.hpp>
-
-/**
-* ALDEBARAN includes
-*/
-#include <alvision/alvisiondefinitions.h> // for kTop...
 
 /**
 * BOOST includes
