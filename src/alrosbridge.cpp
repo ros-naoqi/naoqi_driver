@@ -715,18 +715,15 @@ dataType::DataType Bridge::getDataType(const std::string& key)
 {
   dataType::DataType type;
   qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
-  AL::ALValue value = p_memory.call<AL::ALValue>("getData", key);
-  if (value.isInt()) {
+  qi::AnyValue value = p_memory.call<qi::AnyValue>("getData", key);
+  if (value.kind() == qi::TypeKind_Int) {
     type = dataType::Int;
   }
-  else if (value.isFloat()) {
+  else if (value.kind() == qi::TypeKind_Float) {
     type = dataType::Float;
   }
-  else if (value.isString()) {
+  else if (value.kind() == qi::TypeKind_String) {
     type = dataType::String;
-  }
-  else if (value.isBool()) {
-    type = dataType::Bool;
   }
   else {
     throw std::runtime_error("Cannot get a valid type.");
