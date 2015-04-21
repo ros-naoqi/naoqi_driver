@@ -196,7 +196,7 @@ void Bridge::rosLoop()
 void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
-  int conv_index = conv_queue_.size();
+  int conv_index = converters_.size();
   converters_.push_back( conv );
   conv.reset();
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
