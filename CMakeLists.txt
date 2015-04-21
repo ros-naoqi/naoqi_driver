@@ -22,7 +22,6 @@ set(
   src/converters/diagnostics.cpp
   src/converters/imu.cpp
   src/converters/info.cpp
-  src/converters/int.cpp
   src/converters/joint_state.cpp
   src/converters/laser.cpp
   src/converters/memory_list.cpp
@@ -31,7 +30,6 @@ set(
   src/converters/memory/float.cpp
   src/converters/memory/string.cpp
   src/converters/sonar.cpp
-  src/converters/string.cpp
   src/converters/log.cpp
   )
 set(

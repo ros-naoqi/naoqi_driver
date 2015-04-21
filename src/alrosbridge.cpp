@@ -29,12 +29,10 @@
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
 #include "converters/info.hpp"
-#include "converters/int.hpp"
 #include "converters/joint_state.hpp"
 #include "converters/laser.hpp"
 #include "converters/memory_list.hpp"
 #include "converters/sonar.hpp"
-#include "converters/string.hpp"
 #include "converters/memory/bool.hpp"
 #include "converters/memory/float.hpp"
 #include "converters/memory/int.hpp"
@@ -319,14 +317,6 @@ void Bridge::registerDefaultConverter()
   inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::String>::write, inr, _1) );
   registerConverter( inc, inp, inr );
 
-
-  /** String Publisher */
-  boost::shared_ptr<publisher::BasicPublisher<std_msgs::String> > sp = boost::make_shared<publisher::BasicPublisher<std_msgs::String> >( "string" );
-  boost::shared_ptr<recorder::BasicRecorder<std_msgs::String> > sr = boost::make_shared<recorder::BasicRecorder<std_msgs::String> >( "string" );
-  boost::shared_ptr<converter::StringConverter> sc = boost::make_shared<converter::StringConverter>( "string", 10, sessionPtr_ );
-  sc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<std_msgs::String>::publish, sp, _1) );
-  sc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::String>::write, sr, _1) );
-  registerConverter( sc, sp, sr );
   /** AUDIO **/
   boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
   boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
@@ -366,14 +356,6 @@ void Bridge::registerDefaultConverter()
     imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
     registerConverter( imubc, imubp, imubr );
   }
-
-  /** Int Publisher */
-  boost::shared_ptr<publisher::BasicPublisher<std_msgs::Int32> > ip = boost::make_shared<publisher::BasicPublisher<std_msgs::Int32> >( "int" );
-  boost::shared_ptr<recorder::BasicRecorder<std_msgs::Int32> > ir = boost::make_shared<recorder::BasicRecorder<std_msgs::Int32> >( "int" );
-  boost::shared_ptr<converter::IntConverter> ic = boost::make_shared<converter::IntConverter>( "int", 15, sessionPtr_);
-  ic->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<std_msgs::Int32>::publish, ip, _1) );
-  ic->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::Int32>::write, ir, _1) );
-  registerConverter( ic, ip, ir  );
 
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
