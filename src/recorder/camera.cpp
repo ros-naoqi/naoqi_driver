@@ -28,7 +28,7 @@ namespace recorder
 CameraRecorder::CameraRecorder( const std::string& topic_ )
 {
   topic_info_ = topic_ + "/camera_info";
-  topic_img_ = topic_ + "/image";
+  topic_img_ = topic_ + "/image_raw";
 }
 
 void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info)
