@@ -19,7 +19,6 @@
 * LOCAL includes
 */
 #include "memory_list.hpp"
-#include <alvalue/alvalue.h>
 
 /**
 * BOOST includes
@@ -43,40 +42,37 @@ void MemoryListConverter::reset(){
 
 void MemoryListConverter::callAll(const std::vector<message_actions::MessageAction> &actions){
   // Get inertial data
-  AL::ALValue memData = p_memory_.call<AL::ALValue>("getListData", _key_list);
+  qi::AnyValue memData_anyvalue = p_memory_.call<qi::AnyValue>("getListData", _key_list);
+
   // Reset message
   _msg = naoqi_bridge_msgs::MemoryList();
   ros::Time now = ros::Time::now();
   _msg.header.stamp = now;
-  for(int i=0; i<memData.getSize(); i++){
-    if(memData[i].isFloat())
+
+  qi::AnyReferenceVector memData_anyref = memData_anyvalue.asListValuePtr();
+
+  for(int i=0; i<memData_anyref.size();i++)
+  {
+    if(memData_anyref[i].content().kind() == qi::TypeKind_Int)
     {
-      naoqi_bridge_msgs::MemoryPairFloat tmp_msg;
+      naoqi_bridge_msgs::MemoryPairInt tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
-      tmp_msg.data = memData[i];
-      _msg.floats.push_back(tmp_msg);
+      tmp_msg.data = memData_anyref[i].content().asInt32();
+      _msg.ints.push_back(tmp_msg);
     }
-    else if(memData[i].isString())
+    else if(memData_anyref[i].content().kind() == qi::TypeKind_Float)
+    {
+        naoqi_bridge_msgs::MemoryPairFloat tmp_msg;
+        tmp_msg.memoryKey = _key_list[i];
+        tmp_msg.data = memData_anyref[i].content().asFloat();
+        _msg.floats.push_back(tmp_msg);
+    }
+    else if(memData_anyref[i].content().kind() == qi::TypeKind_String)
     {
       naoqi_bridge_msgs::MemoryPairString tmp_msg;
       tmp_msg.memoryKey = _key_list[i];
-      tmp_msg.data = std::string(memData[i]);
+      tmp_msg.data = memData_anyref[i].content().asString();
       _msg.strings.push_back(tmp_msg);
-    }
-    else if(memData[i].isInt())
-    {
-      naoqi_bridge_msgs::MemoryPairInt tmp_msg;
-      tmp_msg.memoryKey = _key_list[i];
-      tmp_msg.data = memData[i];
-      _msg.ints.push_back(tmp_msg);
-    }
-    else if(memData[i].isBool())
-    {
-      naoqi_bridge_msgs::MemoryPairInt tmp_msg;
-      tmp_msg.memoryKey = _key_list[i];
-      bool value = memData[i];
-      tmp_msg.data = (int) value;
-      _msg.ints.push_back(tmp_msg);
     }
   }
 
