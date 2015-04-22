@@ -68,7 +68,12 @@ public:
 
   virtual void write(const T& msg)
   {
-    gr_->write(topic_, msg);
+    if (!msg.header.stamp.isZero()) {
+      gr_->write(topic_, msg, msg.header.stamp);
+    }
+    else {
+      gr_->write(topic_, msg);
+    }
   }
 
   virtual void reset(boost::shared_ptr<GlobalRecorder> gr)
