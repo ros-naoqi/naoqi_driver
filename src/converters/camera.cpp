@@ -186,7 +186,15 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   }
 
   qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
-  qi::AnyReferenceVector image_anyref = image_anyvalue.asListValuePtr();
+  qi::AnyReferenceVector image_anyref;
+  try{
+    image_anyref = image_anyvalue.asListValuePtr();
+  }
+  catch(std::runtime_error& e)
+  {
+    std::cout << "Cannot retrieve image" << std::endl;
+    return;
+  }
 
   int width, height;
   void* image_buffer;
