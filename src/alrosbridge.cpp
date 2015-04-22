@@ -308,9 +308,9 @@ void Bridge::registerDefaultConverter()
    */
 
   boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
-  boost::shared_ptr<recorder::BasicRecorder<std_msgs::String> > inr = boost::make_shared<recorder::BasicRecorder<std_msgs::String> >( "info" );
+  boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
   inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
-  inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<std_msgs::String>::write, inr, _1) );
+  inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
   registerConverter( inc, inp, inr );
 
   /** AUDIO **/
