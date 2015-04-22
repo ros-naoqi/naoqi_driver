@@ -45,7 +45,16 @@ void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
 void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
+  buffer_size_ = static_cast<size_t>(10*frequency);
+  buffer_.resize(buffer_size_);
   is_initialized_ = true;
+}
+
+void LogRecorder::bufferize( std::list<rosgraph_msgs::Log>& log_msgs )
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  buffer_.pop_front();
+  buffer_.push_back(log_msgs);
 }
 
 } //publisher

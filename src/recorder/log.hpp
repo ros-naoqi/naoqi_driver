@@ -44,6 +44,7 @@ public:
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
+  void bufferize( std::list<rosgraph_msgs::Log>& log_msgs );
   inline std::string topic() const
   {
     return topic_;
@@ -66,6 +67,11 @@ public:
 
 protected:
   std::string topic_;
+
+  std::list< std::list<rosgraph_msgs::Log> > buffer_;
+  size_t buffer_size_;
+
+  boost::mutex mutex_;
 
   bool is_initialized_;
   bool is_subscribed_;

@@ -46,7 +46,20 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
 void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
+  buffer_size_ = static_cast<size_t>(10*frequency);
+  bufferJoinState_.resize(buffer_size_);
+  bufferTF_.resize(buffer_size_);
   is_initialized_ = true;
+}
+
+void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
+                const std::vector<geometry_msgs::TransformStamped>& tf_transforms )
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  bufferJoinState_.pop_front();
+  bufferTF_.pop_front();
+  bufferJoinState_.push_back(js_msg);
+  bufferTF_.push_back(tf_transforms);
 }
 
 } //publisher

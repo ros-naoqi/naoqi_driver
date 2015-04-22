@@ -44,6 +44,8 @@ public:
 
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
+  void bufferize( const sensor_msgs::JointState& js_msg,
+                  const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
   inline std::string topic() const
   {
     return topic_;
@@ -66,6 +68,12 @@ public:
 
 protected:
   std::string topic_;
+
+  std::list<sensor_msgs::JointState> bufferJoinState_;
+  std::list< std::vector<geometry_msgs::TransformStamped> > bufferTF_;
+  size_t buffer_size_;
+
+  boost::mutex mutex_;
 
   bool is_initialized_;
   bool is_subscribed_;

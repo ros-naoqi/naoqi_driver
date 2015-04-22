@@ -44,7 +44,16 @@ void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
 void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
+  buffer_size_ = static_cast<size_t>(10*frequency);
+  buffer_.resize(buffer_size_);
   is_initialized_ = true;
+}
+
+void DiagnosticsRecorder::bufferize(diagnostic_msgs::DiagnosticArray& msg )
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  buffer_.pop_front();
+  buffer_.push_back(msg);
 }
 
 } //publisher

@@ -76,14 +76,27 @@ public:
     }
   }
 
+  virtual void bufferize(const T& msg)
+  {
+    boost::mutex::scoped_lock lock_bufferize( mutex_ );
+    buffer_.pop_front();
+    buffer_.push_back(msg);
+  }
+
   virtual void reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
   {
     gr_ = gr;
+    buffer_size_ = static_cast<size_t>(10*frequency);
+    buffer_.resize(buffer_size_);
     is_initialized_ = true;
   }
 
 protected:
   std::string topic_;
+
+  std::list<T> buffer_;
+  size_t buffer_size_;
+  boost::mutex mutex_;
 
   bool is_initialized_;
   bool is_subscribed_;
