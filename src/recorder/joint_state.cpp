@@ -43,7 +43,7 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
   gr_->write("/tf", tf_transforms);
 }
 
-void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
   is_initialized_ = true;

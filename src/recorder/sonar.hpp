@@ -41,7 +41,7 @@ public:
 
   void write(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
   inline std::string topic() const
   {

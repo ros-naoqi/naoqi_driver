@@ -41,7 +41,7 @@ public:
 
   void write(diagnostic_msgs::DiagnosticArray& msg );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
   inline std::string topic() const
   {

@@ -48,7 +48,7 @@ void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
   }
 }
 
-void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
   is_initialized_ = true;

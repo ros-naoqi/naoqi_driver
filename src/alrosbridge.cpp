@@ -206,11 +206,11 @@ void Bridge::registerPublisher( const std::string& conv_name, publisher::Publish
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
 }
 
-void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder& rec)
+void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder& rec, float frequency)
 {
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
-  rec.reset(recorder_);
+  rec.reset(recorder_, frequency);
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
 }
 
@@ -218,7 +218,7 @@ void Bridge::registerConverter( converter::Converter conv, publisher::Publisher 
 {
   registerConverter( conv );
   registerPublisher( conv.name(), pub);
-  registerRecorder(  conv.name(), rec);
+  registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
 void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher pub )
@@ -230,7 +230,7 @@ void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher 
 void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
-  registerRecorder(  conv.name(), rec);
+  registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
 void Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {

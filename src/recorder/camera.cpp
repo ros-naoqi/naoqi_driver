@@ -47,7 +47,7 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
   }
 }
 
-void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency_conv)
 {
   gr_ = gr;
   is_initialized_ = true;

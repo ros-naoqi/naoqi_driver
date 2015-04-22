@@ -76,7 +76,7 @@ public:
     }
   }
 
-  virtual void reset(boost::shared_ptr<GlobalRecorder> gr)
+  virtual void reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
   {
     gr_ = gr;
     is_initialized_ = true;

@@ -42,7 +42,7 @@ void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
   }
 }
 
-void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
   is_initialized_ = true;

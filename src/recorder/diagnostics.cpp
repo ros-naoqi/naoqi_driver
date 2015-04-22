@@ -41,7 +41,7 @@ void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
   }
 }
 
-void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;
   is_initialized_ = true;
