@@ -149,7 +149,20 @@ void LaserConverter::callAll( const std::vector<message_actions::MessageAction>&
 
   std::vector<float> result_value;
   try {
-    result_value = p_memory_.call<std::vector<float> >("getListData", laser_keys_value);
+      qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getListData", laser_keys_value);
+      qi::AnyReferenceVector anyrefs = anyvalues.asListValuePtr();
+
+      for(int i=0; i<anyrefs.size();i++)
+      {
+        try
+        {
+          result_value.push_back(anyrefs[i].content().toFloat());
+        }
+        catch(std::runtime_error& e)
+        {
+          std::cout << "A value retrieved for laser could not be cast as float" << std::endl;
+        }
+      }
   } catch (const std::exception& e) {
     std::cerr << "Exception caught in LaserConverter: " << e.what() << std::endl;
     return;

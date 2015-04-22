@@ -86,7 +86,20 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   //qi::details::printMetaObject(std::cout, p_memory_.metaObject());
   std::vector<float> values;
   try {
-    values = p_memory_.call<std::vector<float> >("getListData", all_keys_ );
+      qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getListData", all_keys_);
+      qi::AnyReferenceVector anyrefs = anyvalues.asListValuePtr();
+
+      for(int i=0; i<anyrefs.size();i++)
+      {
+        try
+        {
+          values.push_back(anyrefs[i].content().toFloat());
+        }
+        catch(std::runtime_error& e)
+        {
+          std::cout << "A value retrieved for diagnostics could not be cast as float" << std::endl;
+        }
+      }
   } catch (const std::exception& e) {
     std::cerr << "Exception caught in DiagnosticsConverter: " << e.what() << std::endl;
     return;

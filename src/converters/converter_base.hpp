@@ -68,7 +68,15 @@ public:
       return robot_;
 
     qi::AnyObject p_memory = session_->service("ALMemory");
-    std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
+    std::string robot;
+    try{
+      robot = p_memory.call<qi::AnyValue>("getData", "RobotConfig/Body/Type" ).toString();
+    }
+    catch(std::runtime_error& e)
+    {
+      return UNIDENTIFIED;
+    }
+
     std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
     std::cout << "found robot variable " << robot << std::endl;
     if (std::string(robot) == "nao")

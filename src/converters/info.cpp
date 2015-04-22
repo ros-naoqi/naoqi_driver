@@ -69,7 +69,20 @@ void InfoConverter::callAll( const std::vector<message_actions::MessageAction>& 
 {
   std::vector<std::string> values;
   try {
-    values = p_memory_.call<std::vector<std::string> >("getListData", keys_);
+      qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getListData", keys_);
+      qi::AnyReferenceVector anyrefs = anyvalues.asListValuePtr();
+
+      for(int i=0; i<anyrefs.size();i++)
+      {
+        try
+        {
+          values.push_back(anyrefs[i].content().toString());
+        }
+        catch(std::runtime_error& e)
+        {
+          std::cout << "A value retrieved for info could not be cast as string" << std::endl;
+        }
+      }
   } catch (const std::exception& e) {
     std::cerr << "Exception caught in InfoConverter: " << e.what() << std::endl;
     return;
