@@ -45,6 +45,9 @@ public:
   void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency_conv );
 
   void bufferize( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
+
+  void writeDump();
+
   inline std::string topic() const
   {
     return topic_img_;

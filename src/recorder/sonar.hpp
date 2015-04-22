@@ -44,6 +44,9 @@ public:
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
   void bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs );
+
+  void writeDump();
+
   inline std::string topic() const
   {
     return "sonar";

@@ -49,6 +49,19 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
   }
 }
 
+void CameraRecorder::writeDump()
+{
+  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
+  for (it = buffer_.begin(); it != buffer_.end(); it++)
+  {
+    if (it->first != NULL)
+    {
+      write(it->first, it->second);
+    }
+  }
+}
+
 void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency_conv)
 {
   gr_ = gr;

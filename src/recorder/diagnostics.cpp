@@ -41,6 +41,21 @@ void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
   }
 }
 
+void DiagnosticsRecorder::writeDump()
+{
+  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  std::list<diagnostic_msgs::DiagnosticArray>::iterator it;
+  for (it = buffer_.begin(); it != buffer_.end(); it++)
+  {
+    if (!it->header.stamp.isZero()) {
+      gr_->write(topic_, *it, it->header.stamp);
+    }
+    else {
+      gr_->write(topic_, *it);
+    }
+  }
+}
+
 void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;

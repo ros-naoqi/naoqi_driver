@@ -95,6 +95,11 @@ public:
     recPtr_->reset( gr, frequency );
   }
 
+  void writeDump()
+  {
+    recPtr_->writeDump();
+  }
+
   friend bool operator==( const Recorder& lhs, const Recorder& rhs )
   {
     // decision made for OR-comparison since we want to be more restrictive
@@ -115,6 +120,7 @@ private:
     virtual void subscribe(bool state) = 0;
     virtual bool isSubscribed() const = 0;
     virtual std::string topic() const = 0;
+    virtual void writeDump() = 0;
     virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency ) = 0;
   };
 
@@ -152,6 +158,11 @@ private:
     std::string topic() const
     {
       return recorder_->topic();
+    }
+
+    void writeDump()
+    {
+      return recorder_->writeDump();
     }
 
     T recorder_;

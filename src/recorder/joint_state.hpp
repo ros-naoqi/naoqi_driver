@@ -46,6 +46,9 @@ public:
 
   void bufferize( const sensor_msgs::JointState& js_msg,
                   const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
+
+  void writeDump();
+
   inline std::string topic() const
   {
     return topic_;

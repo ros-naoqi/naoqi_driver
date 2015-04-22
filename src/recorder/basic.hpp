@@ -76,6 +76,21 @@ public:
     }
   }
 
+  virtual void writeDump()
+  {
+    boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+    typename std::list<T>::iterator it;
+    for (it = buffer_.begin(); it != buffer_.end(); it++)
+    {
+      if (!it->header.stamp.isZero()) {
+        gr_->write(topic_, *it, it->header.stamp);
+      }
+      else {
+        gr_->write(topic_, *it);
+      }
+    }
+  }
+
   virtual void bufferize(const T& msg)
   {
     boost::mutex::scoped_lock lock_bufferize( mutex_ );

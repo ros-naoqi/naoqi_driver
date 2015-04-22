@@ -48,6 +48,16 @@ void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
   }
 }
 
+void SonarRecorder::writeDump()
+{
+  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  std::list< std::vector<sensor_msgs::Range> >::iterator it;
+  for (it = buffer_.begin(); it != buffer_.end(); it++)
+  {
+    write(*it);
+  }
+}
+
 void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 {
   gr_ = gr;

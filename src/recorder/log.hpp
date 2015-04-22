@@ -45,6 +45,9 @@ public:
   void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
 
   void bufferize( std::list<rosgraph_msgs::Log>& log_msgs );
+
+  void writeDump();
+
   inline std::string topic() const
   {
     return topic_;
