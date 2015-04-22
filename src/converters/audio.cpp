@@ -83,7 +83,6 @@ void AudioConverter::stop(){
 }
 
 void AudioConverter::processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer){
-    //    Try this instead of ALValue:    std::vector<unsigned char>
     naoqi_msgs::AudioBuffer msg = naoqi_msgs::AudioBuffer();
     msg.header.stamp = ros::Time::now();
     msg.frequency = 48000;
