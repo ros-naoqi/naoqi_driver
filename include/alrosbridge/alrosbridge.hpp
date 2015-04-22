@@ -75,6 +75,8 @@ public:
   */
   ~Bridge();
 
+  void minidump();
+
   /**
    * @brief registers generall converter units
    * they are connected via callbacks to various actions such as record, log, publish

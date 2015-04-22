@@ -196,6 +196,25 @@ void Bridge::rosLoop()
   }
 }
 
+void Bridge::minidump()
+{
+  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  if (record_enabled_)
+  {
+    stopRecording();
+  }
+
+  // WRITE ALL BUFFER INTO THE ROSBAG
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
+  recorder_->startRecord(); // MAYBE ADD NAME ARGUMENT
+  // for each recorder, call write_dump function
+  for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
+  {
+    iterator->second.writeDump();
+  }
+  recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+}
+
 void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -745,6 +764,7 @@ dataType::DataType Bridge::getDataType(const std::string& key)
 
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
+                    minidump,
                     startPublishing,
                     stopPublishing,
                     getMasterURI,
