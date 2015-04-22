@@ -17,7 +17,7 @@
 
 /*
  * You can also find this document at the following location:
- * http://doc.aldebaran.com/1-14/ref/libalvision/alvisiondefinitions_8h_source.html
+ * http://doc.aldebaran.com/2-1/ref/libalvision/a00012_source.html
 */
 
 #pragma once
@@ -30,6 +30,8 @@ namespace AL
 
   const int kOV7670  = 1;
   const int kMT9M114 = 2;
+  const int kOV5640  = 3;
+  const int kXTION   = 4;
 
   const int kTopCamera = 0;
   const int kBottomCamera = 1;
@@ -40,11 +42,17 @@ namespace AL
   const float kApertureH_MT9M114 = 60.9f;
   const float kApertureV_MT9M114 = 47.6f;
 
-  const int k960p  = 3;  //1280*960
-  const int k4VGA  = 3;  //1280*960
-  const int kVGA   = 2;  // 640*480
-  const int kQVGA  = 1;  // 320*240
   const int kQQVGA = 0;  // 160*120
+  const int kQVGA  = 1;  // 320*240
+  const int kVGA   = 2;  // 640*480
+  const int k4VGA  = 3;  //1280*960
+  const int k960p  = k4VGA;  //deprecated
+  const int k16VGA = 4;  //2560*1920
+  const int k1920p = k16VGA;  //2560*1920
+  const int k720p = 5;  //1280*720
+  const int k1080p = 6;  //1920*1080
+  const int kQQQVGA = 7;  // 80*60
+  const int kQQQQVGA = 8;  // 40*30
 
   const int kYuvColorSpace = 0;
   const int kyUvColorSpace = 1;
@@ -66,6 +74,9 @@ namespace AL
   const int kHSMixedColorSpace = 16; // HS and (H +S)/2
   const int kDepthColorSpace = 17;
   const int kARGBColorSpace = 18;
+  const int kXYZColorSpace = 19;
+  const int kInfraredColorSpace = 20;
+  const int kDistanceColorSpace = 21; 
 
   const int kCameraBrightnessID       = 0;
   const int kCameraContrastID         = 1;
@@ -103,12 +114,23 @@ namespace AL
   const int kCameraBlcGrID            = 32;
   const int kCameraWhiteBalanceID     = 33;
   const int kCameraBacklightCompensationID = 34;
+  const int kCameraKeepAliveID        = 35; 
+  const int kCameraDepthConfidenceThresholdID = 36; 
+  const int kCameraDepthFastFilterID  = 37; 
+  const int kCameraTemperatureID      = 38; 
+  const int kCameraAverageLuminanceID = 39; 
+  const int kCameraAutoFocusID = 40; 
 
   bool isResolutionValid(const int resIndex);
+
   void setSizeFromResolution(const int resIndex, int& outWidth, int& outHeight);
+
   int getResolutionFromSize(const int width, const int height);
+
   bool isColorSpaceValid(const int colorspace);
+
   int getNumLayersInColorSpace(const int colorSpace);
+
   inline float convertAngleValToNormalizedImgVal(const float& radValue,
                                                  const float& imageRadMin,
                                                  const float& imageRadMax)
