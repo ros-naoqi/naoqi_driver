@@ -1,6 +1,6 @@
 <!-- in qiproject.xml -->
 <project version="3">
   <qibuild name="alrosbridge" >
-    <depends buildtime="true" runtime="true" names="libnaoqi libqicore ros" />
+    <depends buildtime="true" runtime="true" names="libqicore ros" />
   </qibuild>
 </project>

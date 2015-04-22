@@ -20,6 +20,7 @@
 */
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
+#include "../tools/alvisiondefinitions.h" // for kTop...
 
 /**
 * ROS includes
@@ -30,12 +31,6 @@
 * CV includes
 */
 #include <opencv2/imgproc/imgproc.hpp>
-
-/**
-* ALDEBARAN includes
-*/
-#include <alvalue/alvalue.h>
-#include <alvision/alvisiondefinitions.h> // for kTop...
 
 /**
 * BOOST includes
@@ -153,7 +148,7 @@ CameraConverter::~CameraConverter()
   if (!handle_.empty())
   {
     std::cout << "Unsubscribe camera handle " << handle_ << std::endl;
-    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    p_video_.call<qi::AnyValue>("unsubscribe", handle_);
     handle_.clear();
   }
 }
@@ -162,7 +157,7 @@ void CameraConverter::reset()
 {
   if (!handle_.empty())
   {
-    p_video_.call<AL::ALValue>("unsubscribe", handle_);
+    p_video_.call<qi::AnyValue>("unsubscribe", handle_);
     handle_.clear();
   }
 
@@ -190,16 +185,17 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     return;
   }
 
-  // THIS WILL CRASH IN THE FUTURE
-  AL::ALValue value = p_video_.call<AL::ALValue>("getImageRemote", handle_);
-  if (!value.isArray())
-  {
-    std::cout << "Cannot retrieve image" << std::endl;
-    return;
-  }
+  qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
+  qi::AnyReferenceVector image_anyref = image_anyvalue.asListValuePtr();
+
+  int width, height;
+  void* image_buffer;
 
   // Create a cv::Mat of the right dimensions
-  cv::Mat cv_img(value[1], value[0], cv_mat_type_, const_cast<void*>(value[6].GetBinary()));
+  width = image_anyref[0].content().asInt32();
+  height = image_anyref[1].content().asInt32();
+  image_buffer = (void*)(image_anyref[6].content().asRaw().first);
+  cv::Mat cv_img(height, width, cv_mat_type_, image_buffer);
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 

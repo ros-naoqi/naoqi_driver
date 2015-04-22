@@ -82,14 +82,17 @@ void AudioConverter::stop(){
   std::cout << "Audio Extractor: Stop" << std::endl;
 }
 
-void AudioConverter::processRemote(int nbOfChannels, int samplesByChannel, AL::ALValue altimestamp, AL::ALValue buffer){
+void AudioConverter::processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer){
     //    Try this instead of ALValue:    std::vector<unsigned char>
     naoqi_msgs::AudioBuffer msg = naoqi_msgs::AudioBuffer();
     msg.header.stamp = ros::Time::now();
     msg.frequency = 48000;
     msg.channelMap = channelMap;
-    int16_t* remoteBuffer = (int16_t*)buffer.GetBinary();
-    int bufferSize = nbOfChannels * samplesByChannel * sizeof(qi::int16_t)/sizeof(int16_t);
+
+    std::pair<char*, size_t> buffer_pointer = buffer.asRaw();
+
+    int16_t* remoteBuffer = (int16_t*)buffer_pointer.first;
+    int bufferSize = nbOfChannels * samplesByChannel;
     msg.data = std::vector<int16_t>(remoteBuffer, remoteBuffer+bufferSize);
 
     for_each( message_actions::MessageAction action, actions_ )

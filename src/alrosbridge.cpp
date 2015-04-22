@@ -53,6 +53,7 @@
  * TOOLS
  */
 #include "tools/robot_description.hpp"
+#include "tools/alvisiondefinitions.h" // for kTop...
 
 /*
  * SUBSCRIBERS
@@ -80,11 +81,6 @@
  */
 #include <tf2_ros/buffer.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-
-/*
- * ALDEBARAN
- */
-#include <alvision/alvisiondefinitions.h> // for kTop...
 
 /*
  * BOOST
@@ -196,7 +192,7 @@ void Bridge::rosLoop()
 void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
-  int conv_index = conv_queue_.size();
+  int conv_index = converters_.size();
   converters_.push_back( conv );
   conv.reset();
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
@@ -715,18 +711,15 @@ dataType::DataType Bridge::getDataType(const std::string& key)
 {
   dataType::DataType type;
   qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
-  AL::ALValue value = p_memory.call<AL::ALValue>("getData", key);
-  if (value.isInt()) {
+  qi::AnyValue value = p_memory.call<qi::AnyValue>("getData", key);
+  if (value.kind() == qi::TypeKind_Int) {
     type = dataType::Int;
   }
-  else if (value.isFloat()) {
+  else if (value.kind() == qi::TypeKind_Float) {
     type = dataType::Float;
   }
-  else if (value.isString()) {
+  else if (value.kind() == qi::TypeKind_String) {
     type = dataType::String;
-  }
-  else if (value.isBool()) {
-    type = dataType::Bool;
   }
   else {
     throw std::runtime_error("Cannot get a valid type.");

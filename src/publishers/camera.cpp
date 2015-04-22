@@ -23,7 +23,7 @@
 /**
 * ALDEBARAN includes
 */
-#include <alvision/alvisiondefinitions.h> // for kTop...
+#include "../tools/alvisiondefinitions.h" // for kTop...
 
 namespace alros
 {

@@ -37,7 +37,6 @@
 /**
 * ALDEBARAN includes
 */
-#include <alvalue/alvalue.h>
 #include <qi/anymodule.hpp>
 
 namespace alros{
@@ -54,7 +53,7 @@ public:
 
   ~AudioConverter();
 
-  void processRemote(int nbOfChannels, int samplesByChannel, AL::ALValue altimestamp, AL::ALValue buffer);
+  void processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer);
 
   virtual void reset();
 
