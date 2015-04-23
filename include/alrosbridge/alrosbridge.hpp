@@ -42,6 +42,7 @@
 #include <alrosbridge/publisher/publisher.hpp>
 #include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
+#include <alrosbridge/event/event.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
 namespace tf2_ros
@@ -113,9 +114,15 @@ public:
   void registerRecorder(converter::Converter conv, recorder::Recorder rec );
 
   /**
-   * @brief register a converter for a given memory key
+   * @brief qicli call function to register a converter for a given memory key
    */
   void registerMemoryConverter(const std::string& key, float frequency, const dataType::DataType& type );
+
+  /**
+   * @brief qicli call function to register a converter for a given memory event
+   */
+  void registerEventConverter(const std::string& key, const dataType::DataType& type);
+
 
   /**
    * @brief get all available converters
@@ -192,6 +199,7 @@ public:
 
   void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
+
   void stopService();
 
 private:
@@ -208,6 +216,7 @@ private:
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
+  void insertEventConverter(const std::string& key, event::Event event);
 
   template <typename T1, typename T2, typename T3>
   void _registerMemoryConverter( const std::string& key, float frequency ) {
@@ -223,8 +232,6 @@ private:
   void startRosLoop();
   void stopRosLoop();
 
-  dataType::DataType getDataType(const std::string& key);
-
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
   boost::mutex mutex_conv_queue_;
@@ -233,10 +240,13 @@ private:
   std::vector< converter::Converter > converters_;
   std::map< std::string, publisher::Publisher > pub_map_;
   std::map< std::string, recorder::Recorder > rec_map_;
+  std::map< std::string, event::Event > event_map_;
   typedef std::map< std::string, publisher::Publisher>::const_iterator PubConstIter;
   typedef std::map< std::string, publisher::Publisher>::iterator PubIter;
   typedef std::map< std::string, recorder::Recorder>::const_iterator RecConstIter;
   typedef std::map< std::string, recorder::Recorder>::iterator RecIter;
+  typedef std::map< std::string, event::Event>::const_iterator EventConstIter;
+  typedef std::map< std::string, event::Event>::iterator EventIter;
 
   std::vector< subscriber::Subscriber > subscribers_;
 

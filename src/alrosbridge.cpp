@@ -70,6 +70,8 @@
 #include "recorder/joint_state.hpp"
 #include "recorder/sonar.hpp"
 
+#include "event.hpp"
+
 /*
  * STATIC FUNCTIONS INCLUDE
  */
@@ -119,6 +121,7 @@ void Bridge::stopService() {
   stopRosLoop();
   converters_.clear();
   subscribers_.clear();
+  event_map_.clear();
 }
 
 
@@ -240,6 +243,12 @@ void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder&
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
 }
 
+void Bridge::insertEventConverter(const std::string& key, event::Event event)
+{
+  event.reset(*nhPtr_, recorder_);
+  event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
+}
+
 void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
 {
   registerConverter( conv );
@@ -263,7 +272,7 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
   dataType::DataType data_type;
   if (type==dataType::None) {
     try {
-      data_type = getDataType(key);
+      data_type = helpers::getDataType(sessionPtr_, key);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -482,6 +491,10 @@ std::vector<std::string> Bridge::getAvailableConverters()
   {
     conv_list.push_back(conv.name());
   }
+  for(EventConstIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    conv_list.push_back( iterator->first );
+  }
 
   return conv_list;
 }
@@ -540,6 +553,13 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
       sub.reset( *nhPtr_ );
     }
   }
+  if (!event_map_.empty()) {
+    typedef std::map< std::string, event::Event > event_map;
+    for_each( event_map::value_type &event, event_map_ )
+    {
+      event.second.reset(*nhPtr_, recorder_);
+    }
+  }
   // Start publishing again
   startRosLoop();
 }
@@ -547,11 +567,19 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
 void Bridge::startPublishing()
 {
   publish_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isPublishing(true);
+  }
 }
 
 void Bridge::stopPublishing()
 {
   publish_enabled_ = false;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isPublishing(false);
+  }
 }
 
 std::vector<std::string> Bridge::getSubscribedPublishers() const
@@ -584,6 +612,13 @@ void Bridge::startRecording()
                 << BOLDCYAN << conv.name() << RESETCOLOR
                 << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
     }
+  }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isRecording(true);
+    std::cout << HIGHGREEN << "Topic "
+              << BOLDCYAN << iterator->first << RESETCOLOR
+              << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
   }
   record_enabled_ = true;
 }
@@ -647,6 +682,10 @@ std::string Bridge::stopRecording()
       it->second.subscribe(false);
     }
   }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isRecording(false);
+  }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
@@ -656,6 +695,10 @@ void Bridge::startRosLoop()
   keep_looping = true;
   if (publisherThread_.get_id() ==  boost::thread::id())
     publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.startProcess();
+  }
 }
 
 void Bridge::stopRosLoop()
@@ -663,6 +706,10 @@ void Bridge::stopRosLoop()
   keep_looping = false;
   if (publisherThread_.get_id() !=  boost::thread::id())
     publisherThread_.join();
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.stopProcess();
+  }
 }
 
 void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){
@@ -742,24 +789,77 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
-dataType::DataType Bridge::getDataType(const std::string& key)
+void Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
 {
-  dataType::DataType type;
-  qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
-  qi::AnyValue value = p_memory.call<qi::AnyValue>("getData", key);
-  if (value.kind() == qi::TypeKind_Int) {
-    type = dataType::Int;
-  }
-  else if (value.kind() == qi::TypeKind_Float) {
-    type = dataType::Float;
-  }
-  else if (value.kind() == qi::TypeKind_String) {
-    type = dataType::String;
+  dataType::DataType data_type;
+  if (type==dataType::None) {
+    try {
+      data_type = helpers::getDataType(sessionPtr_, key);
+    } catch (const std::exception& e) {
+      std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
+                << BOLDCYAN << key << RESETCOLOR << std::endl
+                << BOLDRED << "You can enter it yourself, available types are:" << std::endl
+                << "\t > 0 - None" << std::endl
+                << "\t > 1 - Int" << std::endl
+                << "\t > 2 - Float" << std::endl
+                << "\t > 3 - String" << std::endl
+                << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return;
+    }
   }
   else {
-    throw std::runtime_error("Cannot get a valid type.");
+    data_type = type;
   }
-  return type;
+
+  switch (data_type) {
+  case 0:
+    break;
+  case 1:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 2:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 3:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  case 4:
+    {
+      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+    }
+  default:
+    {
+      std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
+                   << "\t > 0 - None" << std::endl
+                   << "\t > 1 - Int" << std::endl
+                   << "\t > 2 - Float" << std::endl
+                   << "\t > 3 - String" << std::endl
+                   << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return;
+    }
+  }
+
+  if (keep_looping) {
+    event_map_.find(key)->second.startProcess();
+  }
+  if (publish_enabled_) {
+    event_map_.find(key)->second.isPublishing(true);
+  }
 }
 
 QI_REGISTER_OBJECT( Bridge,
@@ -774,6 +874,7 @@ QI_REGISTER_OBJECT( Bridge,
                     getSubscribedPublishers,
                     addMemoryConverters,
                     registerMemoryConverter,
+                    registerEventConverter,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );

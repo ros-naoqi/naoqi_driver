@@ -20,6 +20,8 @@
 #define HELPERS_HPP
 
 #include <alrosbridge/publisher/publisher.hpp>
+#include <alrosbridge/tools.hpp>
+#include <qi/session.hpp>
 
 namespace alros
 {
@@ -34,7 +36,25 @@ inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Pu
     return false;
 }
 
-
+inline dataType::DataType getDataType(const qi::SessionPtr& session, const std::string& key)
+{
+  dataType::DataType type;
+  qi::AnyObject p_memory = session->service("ALMemory");
+  qi::AnyValue value = p_memory.call<qi::AnyValue>("getData", key);
+  if (value.kind() == qi::TypeKind_Int) {
+    type = dataType::Int;
+  }
+  else if (value.kind() == qi::TypeKind_Float) {
+    type = dataType::Float;
+  }
+  else if (value.kind() == qi::TypeKind_String) {
+    type = dataType::String;
+  }
+  else {
+    throw std::runtime_error("Cannot get a valid type.");
+  }
+  return type;
+}
 
 } //helpers
 } // alros
