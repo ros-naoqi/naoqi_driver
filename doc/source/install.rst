@@ -41,4 +41,8 @@ Download this project and compile it ::
   $ qibuild configure -c <tc_name>
   $ qibuild make -c <tc_name>
 
+Once compilation is over, the resulting binary will be in *~/qibuild_ws/alrosbridge/build-<tcname>/sdk/bin/alrosbridge_bin*
+
 If you encounter any compilation issue, (unable to find some dependencies), you might need to install them (through *apt-get install* for instance)
+
+Once you successfully compiled the module, you can learn how to use it on the `next page <start.rst>`_

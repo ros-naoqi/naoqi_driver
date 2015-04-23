@@ -9,3 +9,4 @@ Table of content
 ================
 
 1. `How to install it <install.rst>`_
+2. `Getting started <start.rst>`_
