@@ -23,7 +23,6 @@
 #include <ros/ros.h>
 
 #include <qi/anyobject.hpp>
-#include <alvalue/alvalue.h>
 
 #include <alrosbridge/recorder/globalrecorder.hpp>
 #include <alrosbridge/message_actions.h>
@@ -105,7 +104,7 @@ void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::registerCallback()
 {
-  signalID_ = signal_.connect("signal", (boost::function<void(AL::ALValue)>(boost::bind(&EventRegister<Converter, Publisher, Recorder>::onEvent,
+  signalID_ = signal_.connect("signal", (boost::function<void(qi::AnyValue)>(boost::bind(&EventRegister<Converter, Publisher, Recorder>::onEvent,
                                                                             this))));
 }
 
