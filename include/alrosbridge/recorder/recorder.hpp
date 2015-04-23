@@ -90,9 +90,14 @@ public:
   * this will be called at first for initialization or again when master uri has changed
   * @param ros NodeHandle to advertise the recorder on
   */
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr)
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency)
   {
-    recPtr_->reset( gr );
+    recPtr_->reset( gr, frequency );
+  }
+
+  void writeDump()
+  {
+    recPtr_->writeDump();
   }
 
   friend bool operator==( const Recorder& lhs, const Recorder& rhs )
@@ -115,7 +120,8 @@ private:
     virtual void subscribe(bool state) = 0;
     virtual bool isSubscribed() const = 0;
     virtual std::string topic() const = 0;
-    virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr ) = 0;
+    virtual void writeDump() = 0;
+    virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency ) = 0;
   };
 
 
@@ -129,9 +135,9 @@ private:
       recorder_( other )
     {}
 
-    void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+    void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency )
     {
-      recorder_->reset( gr );
+      recorder_->reset( gr, frequency );
     }
 
     bool isInitialized() const
@@ -152,6 +158,11 @@ private:
     std::string topic() const
     {
       return recorder_->topic();
+    }
+
+    void writeDump()
+    {
+      return recorder_->writeDump();
     }
 
     T recorder_;

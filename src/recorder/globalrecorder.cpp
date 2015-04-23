@@ -137,27 +137,30 @@ namespace recorder
   }
 
   void GlobalRecorder::write(const std::string& topic, const std::vector<geometry_msgs::TransformStamped>& msgtf) {
-    std::string ros_topic;
-    if (topic[0]!='/')
+    if (!msgtf.empty())
     {
-      ros_topic = _prefix+topic;
-    }
-    else
-    {
-      ros_topic = topic;
-    }
-    tf2_msgs::TFMessage message;
-    ros::Time now = ros::Time::now();
-    if (!msgtf[0].header.stamp.isZero()) {
-      now = msgtf[0].header.stamp;
-    }
-    for (std::vector<geometry_msgs::TransformStamped>::const_iterator it = msgtf.begin(); it != msgtf.end(); ++it)
-    {
-      message.transforms.push_back(*it);
-    }
-    boost::mutex::scoped_lock writeLock( _processMutex );
-    if (_isStarted) {
-      _bag.write(ros_topic, now, message);
+      std::string ros_topic;
+      if (topic[0]!='/')
+      {
+        ros_topic = _prefix+topic;
+      }
+      else
+      {
+        ros_topic = topic;
+      }
+      tf2_msgs::TFMessage message;
+      ros::Time now = ros::Time::now();
+      if (!msgtf[0].header.stamp.isZero()) {
+        now = msgtf[0].header.stamp;
+      }
+      for (std::vector<geometry_msgs::TransformStamped>::const_iterator it = msgtf.begin(); it != msgtf.end(); ++it)
+      {
+        message.transforms.push_back(*it);
+      }
+      boost::mutex::scoped_lock writeLock( _processMutex );
+      if (_isStarted) {
+        _bag.write(ros_topic, now, message);
+      }
     }
   }
 

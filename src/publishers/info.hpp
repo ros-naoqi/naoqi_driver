@@ -28,14 +28,14 @@
 * ROS includes
 */
 #include <ros/ros.h>
-#include <std_msgs/String.h>
+#include <naoqi_bridge_msgs/StringStamped.h>
 
 namespace alros
 {
 namespace publisher
 {
 
-class InfoPublisher : public BasicPublisher<std_msgs::String>
+class InfoPublisher : public BasicPublisher<naoqi_bridge_msgs::StringStamped>
 {
 public:
   InfoPublisher( const std::string& topic, Robot robot_type );

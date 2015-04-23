@@ -22,8 +22,9 @@ namespace alros
 namespace recorder
 {
 
-LogRecorder::LogRecorder( const std::string& topic ):
-  topic_( topic )
+LogRecorder::LogRecorder(const std::string& topic , float buffer_frequency):
+  topic_( topic ),
+  buffer_frequency_(buffer_frequency)
 {}
 
 void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
@@ -42,10 +43,46 @@ void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
   }
 }
 
-void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void LogRecorder::writeDump()
+{
+  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  std::list< std::list<rosgraph_msgs::Log> >::iterator it;
+  for (it = buffer_.begin(); it != buffer_.end(); it++)
+  {
+    write(*it);
+  }
+}
+
+void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  if (buffer_frequency_ != 0)
+  {
+    max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+  }
+  else
+  {
+    max_counter_ = 1;
+    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+  }
+  buffer_.resize(buffer_size_);
   is_initialized_ = true;
+}
+
+void LogRecorder::bufferize( std::list<rosgraph_msgs::Log>& log_msgs )
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  if (counter_ < max_counter_)
+  {
+    counter_++;
+  }
+  else
+  {
+    counter_ = 1;
+    buffer_.pop_front();
+    buffer_.push_back(log_msgs);
+  }
 }
 
 } //publisher

@@ -4,6 +4,8 @@
 #include <ros/ros.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
+#include <naoqi_bridge_msgs/IntStamped.h>
+#include <naoqi_bridge_msgs/StringStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <sensor_msgs/CameraInfo.h>
@@ -41,14 +43,17 @@ int main( int argc, char** argv )
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
 
-  boost::shared_ptr<alros::recorder::BasicRecorder<std_msgs::Int32> > ir = boost::make_shared<alros::recorder::BasicRecorder<std_msgs::Int32> >( "int" );
-  ir->reset( gr );
+  boost::shared_ptr<alros::recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > ir =
+      boost::make_shared<alros::recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> >( "int" );
+  ir->reset( gr, 1 );
   ir->subscribe(true);
-  boost::shared_ptr<alros::recorder::BasicRecorder<std_msgs::String> > sr = boost::make_shared<alros::recorder::BasicRecorder<std_msgs::String> >( "string" );
-  sr->reset( gr );
+  boost::shared_ptr<alros::recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > sr =
+      boost::make_shared<alros::recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "string" );
+  sr->reset( gr, 1 );
   sr->subscribe(true);
-  boost::shared_ptr<alros::recorder::CameraRecorder> cr = boost::make_shared<alros::recorder::CameraRecorder>( "camera" );
-  cr->reset( gr );
+  boost::shared_ptr<alros::recorder::CameraRecorder> cr =
+      boost::make_shared<alros::recorder::CameraRecorder>( "camera", 1 );
+  cr->reset( gr, 1 );
   cr->subscribe(true);
 
   gr->startRecord();
@@ -56,12 +61,12 @@ int main( int argc, char** argv )
   int count = 10;
   while (gr->isStarted()) {
     // Int
-    std_msgs::Int32 i_msg;
+    naoqi_bridge_msgs::IntStamped i_msg;
     i_msg.data = 123;
     ir->write(i_msg);
 
     // String
-    std_msgs::String s_msg;
+    naoqi_bridge_msgs::StringStamped s_msg;
     s_msg.data = "Hello World";
     sr->write(s_msg);
 

@@ -38,10 +38,11 @@ class BasicRecorder
 {
 
 public:
-  BasicRecorder( const std::string& topic ):
+  BasicRecorder( const std::string& topic, float buffer_frequency = 0 ):
     topic_( topic ),
     is_initialized_( false ),
-    is_subscribed_( false )
+    is_subscribed_( false ),
+    buffer_frequency_(buffer_frequency)
   {}
 
   virtual ~BasicRecorder() {}
@@ -68,22 +69,76 @@ public:
 
   virtual void write(const T& msg)
   {
-    gr_->write(topic_, msg);
+    if (!msg.header.stamp.isZero()) {
+      gr_->write(topic_, msg, msg.header.stamp);
+    }
+    else {
+      gr_->write(topic_, msg);
+    }
   }
 
-  virtual void reset(boost::shared_ptr<GlobalRecorder> gr)
+  virtual void writeDump()
+  {
+    boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+    typename std::list<T>::iterator it;
+    for (it = buffer_.begin(); it != buffer_.end(); it++)
+    {
+      if (!it->header.stamp.isZero()) {
+        gr_->write(topic_, *it, it->header.stamp);
+      }
+      else {
+        gr_->write(topic_, *it);
+      }
+    }
+  }
+
+  virtual void bufferize(const T& msg)
+  {
+    boost::mutex::scoped_lock lock_bufferize( mutex_ );
+    if (counter_ < max_counter_)
+    {
+      counter_++;
+    }
+    else
+    {
+      counter_ = 1;
+      buffer_.pop_front();
+      buffer_.push_back(msg);
+    }
+  }
+
+  virtual void reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
   {
     gr_ = gr;
+    if (buffer_frequency_ != 0)
+    {
+      max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+      buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+    }
+    else
+    {
+      max_counter_ = 1;
+      buffer_size_ = static_cast<size_t>(10*conv_frequency);
+    }
+    buffer_.resize(buffer_size_);
     is_initialized_ = true;
   }
 
 protected:
   std::string topic_;
 
+  std::list<T> buffer_;
+  size_t buffer_size_;
+  boost::mutex mutex_;
+
   bool is_initialized_;
   bool is_subscribed_;
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+  float buffer_frequency_;
+  int counter_;
+  int max_counter_;
 
 }; // class
 

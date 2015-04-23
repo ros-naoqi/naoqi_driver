@@ -75,6 +75,8 @@ public:
   */
   ~Bridge();
 
+  void minidump();
+
   /**
    * @brief registers generall converter units
    * they are connected via callbacks to various actions such as record, log, publish
@@ -93,7 +95,7 @@ public:
    * @param conv_name the name of the converter related to the recorder
    * @param rec       the recorder to add
    */
-  void registerRecorder( const std::string& conv_name, recorder::Recorder& rec);
+  void registerRecorder(const std::string& conv_name, recorder::Recorder& rec, float frequency);
 
   /**
    * @brief register a converter with an associated publisher and recorder

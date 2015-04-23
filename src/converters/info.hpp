@@ -27,7 +27,7 @@
 /**
 * ROS includes
 */
-#include <std_msgs/String.h>
+#include <naoqi_bridge_msgs/StringStamped.h>
 
 
 namespace alros
@@ -38,7 +38,7 @@ namespace converter
 class InfoConverter : public BaseConverter<InfoConverter>
 {
 
-  typedef boost::function<void(std_msgs::String)> Callback_t;
+  typedef boost::function<void(naoqi_bridge_msgs::StringStamped)> Callback_t;
 
 public:
   InfoConverter( const std::string& name, float frequency, const qi::SessionPtr& sessions );
@@ -57,7 +57,7 @@ private:
   std::vector<std::string> keys_;
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
 
-  std_msgs::String msg_;
+  naoqi_bridge_msgs::StringStamped msg_;
 };
 
 } //converter

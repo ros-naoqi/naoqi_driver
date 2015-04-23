@@ -25,7 +25,9 @@ namespace alros
 namespace recorder
 {
 
-CameraRecorder::CameraRecorder( const std::string& topic_ )
+CameraRecorder::CameraRecorder( const std::string& topic_, float buffer_frequency ):
+  buffer_frequency_(buffer_frequency),
+  counter_(1)
 {
   topic_info_ = topic_ + "/camera_info";
   topic_img_ = topic_ + "/image_raw";
@@ -47,10 +49,41 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
   }
 }
 
-void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr)
+void CameraRecorder::writeDump()
+{
+  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
+  for (it = buffer_.begin(); it != buffer_.end(); it++)
+  {
+    if (it->first != NULL)
+    {
+      write(it->first, it->second);
+    }
+  }
+}
+
+void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+  buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+  buffer_.resize(buffer_size_);
   is_initialized_ = true;
+}
+
+void CameraRecorder::bufferize( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info )
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  if (counter_ < max_counter_)
+  {
+    counter_++;
+  }
+  else
+  {
+    counter_ = 1;
+    buffer_.pop_front();
+    buffer_.push_back(std::make_pair(img, camera_info));
+  }
 }
 
 } //publisher

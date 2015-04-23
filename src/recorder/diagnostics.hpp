@@ -37,11 +37,15 @@ class DiagnosticsRecorder
 {
 
 public:
-  DiagnosticsRecorder( const std::string& topic );
+  DiagnosticsRecorder( const std::string& topic, float buffer_frequency = 0 );
 
   void write(diagnostic_msgs::DiagnosticArray& msg );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
+
+  void bufferize(diagnostic_msgs::DiagnosticArray& msg );
+
+  void writeDump();
 
   inline std::string topic() const
   {
@@ -66,10 +70,19 @@ public:
 protected:
   std::string topic_;
 
+  std::list<diagnostic_msgs::DiagnosticArray> buffer_;
+  size_t buffer_size_;
+
+  boost::mutex mutex_;
+
   bool is_initialized_;
   bool is_subscribed_;
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+  float buffer_frequency_;
+  int counter_;
+  int max_counter_;
 
 }; // class
 

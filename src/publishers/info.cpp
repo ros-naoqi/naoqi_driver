@@ -35,7 +35,7 @@ InfoPublisher::InfoPublisher(const std::string& topic , Robot robot_type)
 void InfoPublisher::reset( ros::NodeHandle& nh )
 {
   // We latch as we only publish once
-  pub_ = nh.advertise<std_msgs::String>( topic_, 1, true );
+  pub_ = nh.advertise<naoqi_bridge_msgs::StringStamped>( topic_, 1, true );
 
   std::string robot_desc = alros::tools::getRobotDescription(robot_);
   nh.setParam("/robot_description", robot_desc);
