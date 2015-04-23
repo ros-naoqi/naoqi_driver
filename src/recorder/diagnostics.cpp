@@ -25,11 +25,14 @@ namespace alros
 namespace recorder
 {
 
-DiagnosticsRecorder::DiagnosticsRecorder( const std::string& topic ):
+DiagnosticsRecorder::DiagnosticsRecorder( const std::string& topic, float buffer_frequency ):
   topic_( topic ),
   is_initialized_( false ),
-  is_subscribed_( false )
-{}
+  is_subscribed_( false ),
+  buffer_frequency_(buffer_frequency)
+{
+  std::cout << "Buffer frequency = " << buffer_frequency_ << std::endl;
+}
 
 void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
 {
@@ -56,10 +59,19 @@ void DiagnosticsRecorder::writeDump()
   }
 }
 
-void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
+void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
-  buffer_size_ = static_cast<size_t>(10*frequency);
+  if (buffer_frequency_ != 0)
+  {
+    max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+  }
+  else
+  {
+    max_counter_ = 1;
+    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+  }
   buffer_.resize(buffer_size_);
   is_initialized_ = true;
 }
@@ -67,8 +79,16 @@ void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float freq
 void DiagnosticsRecorder::bufferize(diagnostic_msgs::DiagnosticArray& msg )
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_.pop_front();
-  buffer_.push_back(msg);
+  if (counter_ < max_counter_)
+  {
+    counter_++;
+  }
+  else
+  {
+    counter_ = 1;
+    buffer_.pop_front();
+    buffer_.push_back(msg);
+  }
 }
 
 } //publisher

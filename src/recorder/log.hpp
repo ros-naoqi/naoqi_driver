@@ -38,11 +38,11 @@ class LogRecorder
 {
 
 public:
-  LogRecorder( const std::string& topic );
+  LogRecorder( const std::string& topic, float buffer_frequency = 0 );
 
   void write( std::list<rosgraph_msgs::Log>& log_msgs );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
+  void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( std::list<rosgraph_msgs::Log>& log_msgs );
 
@@ -80,6 +80,10 @@ protected:
   bool is_subscribed_;
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+  float buffer_frequency_;
+  int counter_;
+  int max_counter_;
 
 }; // class
 

@@ -25,8 +25,8 @@ namespace alros
 namespace recorder
 {
 
-CameraRecorder::CameraRecorder( const std::string& topic_, float frequency_buffer ):
-  frequency_buffer_(frequency_buffer),
+CameraRecorder::CameraRecorder( const std::string& topic_, float buffer_frequency ):
+  buffer_frequency_(buffer_frequency),
   counter_(1)
 {
   topic_info_ = topic_ + "/camera_info";
@@ -62,11 +62,11 @@ void CameraRecorder::writeDump()
   }
 }
 
-void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency_conv)
+void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
-  max_counter_ = static_cast<int>(frequency_conv/frequency_buffer_);
-  buffer_size_ = static_cast<size_t>(10*frequency_buffer_);
+  max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+  buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
   buffer_.resize(buffer_size_);
   is_initialized_ = true;
 }

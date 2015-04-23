@@ -37,12 +37,12 @@ class JointStateRecorder
 {
 
 public:
-  JointStateRecorder( const std::string& topic );
+  JointStateRecorder( const std::string& topic, float buffer_frequency = 0 );
 
   void write( const sensor_msgs::JointState& js_msg,
               const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( const sensor_msgs::JointState& js_msg,
                   const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
@@ -82,6 +82,10 @@ protected:
   bool is_subscribed_;
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+
+  float buffer_frequency_;
+  int counter_;
+  int max_counter_;
 
 }; // class
 

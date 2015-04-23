@@ -25,10 +25,11 @@ namespace alros
 namespace recorder
 {
 
-JointStateRecorder::JointStateRecorder( const std::string& topic ):
+JointStateRecorder::JointStateRecorder( const std::string& topic, float buffer_frequency ):
   topic_( topic ),
   is_initialized_( false ),
-  is_subscribed_( false )
+  is_subscribed_( false ),
+  buffer_frequency_(buffer_frequency)
 {}
 
 void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
@@ -63,10 +64,19 @@ void JointStateRecorder::writeDump()
   }
 }
 
-void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
+void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
-  buffer_size_ = static_cast<size_t>(10*frequency);
+  if (buffer_frequency_ != 0)
+  {
+    max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+  }
+  else
+  {
+    max_counter_ = 1;
+    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+  }
   bufferJoinState_.resize(buffer_size_);
   bufferTF_.resize(buffer_size_);
   is_initialized_ = true;
@@ -76,10 +86,18 @@ void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
                 const std::vector<geometry_msgs::TransformStamped>& tf_transforms )
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  bufferJoinState_.pop_front();
-  bufferTF_.pop_front();
-  bufferJoinState_.push_back(js_msg);
-  bufferTF_.push_back(tf_transforms);
+  if (counter_ < max_counter_)
+  {
+    counter_++;
+  }
+  else
+  {
+    counter_ = 1;
+    bufferJoinState_.pop_front();
+    bufferTF_.pop_front();
+    bufferJoinState_.push_back(js_msg);
+    bufferTF_.push_back(tf_transforms);
+  }
 }
 
 } //publisher

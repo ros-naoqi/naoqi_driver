@@ -38,11 +38,11 @@ class CameraRecorder
 {
 
 public:
-  CameraRecorder( const std::string& topic, float frequency_buffer );
+  CameraRecorder(const std::string& topic, float buffer_frequency );
 
   void write( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
-  void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency_conv );
+  void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
@@ -81,7 +81,7 @@ protected:
   std::string topic_info_;
   std::string topic_img_;
 
-  float frequency_buffer_;
+  float buffer_frequency_;
   int counter_;
   int max_counter_;
 

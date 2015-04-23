@@ -25,8 +25,9 @@ namespace alros
 namespace recorder
 {
 
-SonarRecorder::SonarRecorder(const std::vector<std::string>& topics ):
-  topics_(topics)
+SonarRecorder::SonarRecorder(const std::vector<std::string>& topics, float buffer_frequency ):
+  topics_(topics),
+  buffer_frequency_(buffer_frequency)
 {}
 
 void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
@@ -58,10 +59,19 @@ void SonarRecorder::writeDump()
   }
 }
 
-void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
+void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
-  buffer_size_ = static_cast<size_t>(10*frequency);
+  if (buffer_frequency_ != 0)
+  {
+    max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+  }
+  else
+  {
+    max_counter_ = 1;
+    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+  }
   buffer_.resize(buffer_size_);
   is_initialized_ = true;
 }
@@ -69,8 +79,16 @@ void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float frequency)
 void SonarRecorder::bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs )
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_.pop_front();
-  buffer_.push_back(sonar_msgs);
+  if (counter_ < max_counter_)
+  {
+    counter_++;
+  }
+  else
+  {
+    counter_ = 1;
+    buffer_.pop_front();
+    buffer_.push_back(sonar_msgs);
+  }
 }
 
 } //publisher

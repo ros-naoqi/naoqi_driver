@@ -37,11 +37,11 @@ class SonarRecorder
 {
 
 public:
-  SonarRecorder( const std::vector<std::string>& topics );
+  SonarRecorder( const std::vector<std::string>& topics, float buffer_frequency = 0 );
 
   void write(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency );
+  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
@@ -80,6 +80,10 @@ protected:
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
   std::vector<std::string> topics_;
+
+  float buffer_frequency_;
+  int counter_;
+  int max_counter_;
 
 }; // class
 
