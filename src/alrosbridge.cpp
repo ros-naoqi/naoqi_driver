@@ -272,7 +272,7 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
   dataType::DataType data_type;
   if (type==dataType::None) {
     try {
-      data_type = getDataType(key);
+      data_type = helpers::getDataType(sessionPtr_, key);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -789,32 +789,12 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
-dataType::DataType Bridge::getDataType(const std::string& key)
-{
-  dataType::DataType type;
-  qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
-  qi::AnyValue value = p_memory.call<qi::AnyValue>("getData", key);
-  if (value.kind() == qi::TypeKind_Int) {
-    type = dataType::Int;
-  }
-  else if (value.kind() == qi::TypeKind_Float) {
-    type = dataType::Float;
-  }
-  else if (value.kind() == qi::TypeKind_String) {
-    type = dataType::String;
-  }
-  else {
-    throw std::runtime_error("Cannot get a valid type.");
-  }
-  return type;
-}
-
 void Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
 {
   dataType::DataType data_type;
   if (type==dataType::None) {
     try {
-      data_type = getDataType(key);
+      data_type = helpers::getDataType(sessionPtr_, key);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl

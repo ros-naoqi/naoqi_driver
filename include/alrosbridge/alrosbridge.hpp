@@ -232,8 +232,6 @@ private:
   void startRosLoop();
   void stopRosLoop();
 
-  dataType::DataType getDataType(const std::string& key);
-
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
   boost::mutex mutex_conv_queue_;
