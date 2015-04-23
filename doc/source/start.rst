@@ -1,6 +1,7 @@
 Getting Started
 ===============
 
+
 Start the **ALRosBridge** module
 --------------------------------
 
@@ -80,8 +81,8 @@ On your desktop, you can use ROS as you would normally do. For instance ::
 
 
 This module also provides an API on the robot side to:
-* Publish data
-* Record data
-* Send command to naoqi modules
+ * Publish data
+ * Record data
+ * Send command to naoqi modules
 
-You can find more about it on the `next page <api.rst>`_
+You can find more about it on the `API page <api.rst>`_, or you can go back to the `main menu <index.rst>`_.

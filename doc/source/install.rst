@@ -45,4 +45,4 @@ Once compilation is over, the resulting binary will be in *~/qibuild_ws/alrosbri
 
 If you encounter any compilation issue, (unable to find some dependencies), you might need to install them (through *apt-get install* for instance)
 
-Once you successfully compiled the module, you can learn how to use it on the `next page <start.rst>`_
+Once you successfully compiled the module, you can learn how to use it on the `Install page <start.rst>`_ or you can go back to the `main menu <index.rst>`_.
