@@ -4,7 +4,7 @@ Getting Started
 Start the **ALRosBridge** module
 --------------------------------
 
-**Run from your computer:**
+**Run from your computer:** ::
 
   $ path/to/alrosbridge-bin --qi-url=<yourRobotIP>
 
