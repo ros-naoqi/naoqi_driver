@@ -24,6 +24,7 @@
  * ROS includes
  */
 #include <tf/transform_datatypes.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace alros
 {

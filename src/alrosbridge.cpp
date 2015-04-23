@@ -82,7 +82,6 @@
  * ROS
  */
 #include <tf2_ros/buffer.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 /*
  * BOOST
