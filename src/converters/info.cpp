@@ -80,7 +80,8 @@ void InfoConverter::callAll( const std::vector<message_actions::MessageAction>& 
         }
         catch(std::runtime_error& e)
         {
-          std::cout << "A value retrieved for info could not be cast as string" << std::endl;
+          values.push_back("Not available");
+          std::cout << "A value retrieved for info could not be cast as string: " << keys_[i] << std::endl;
         }
       }
   } catch (const std::exception& e) {
