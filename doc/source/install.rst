@@ -15,13 +15,13 @@ To set up your environment and start using qiBuild, run the following commands: 
 
 If you encounter any issue, please refer to `qiBuild documentation <http://doc.aldebaran.com/qibuild/>`_.
 
-Create a toolchain: ::
+When qiBuild compiles, it will only look for dependencies within a toolchain, so one needs to be created: ::
 
   # Create the toolchain
   $ qitoolchain create <tc_name>
   $ qibuild add-config <tc_name> -t <tc_name>
 
-  # Update it with a package that redirects qibuild towards your local ROS installation
+  # Add a package that will find your local ROS installation
   $ cd ~/qibuild_ws
   $ git clone https://github.com/ros-naoqi/ros-toolchain.git
   $ ./ros-toolchain/update_toolchain.sh local_ros <tc_name>
@@ -45,4 +45,4 @@ Once compilation is over, the resulting binary will be in *~/qibuild_ws/alrosbri
 
 If you encounter any compilation issue, (unable to find some dependencies), you might need to install them (through *apt-get install* for instance)
 
-Once you successfully compiled the module, you can learn how to use it on the `Install page <start.rst>`_ or you can go back to the `main menu <index.rst>`_.
+Once you successfully compiled the module, you can learn how to use it on the `Getting started page <start.rst>`_ or you can go back to the `main menu <index.rst>`_.
