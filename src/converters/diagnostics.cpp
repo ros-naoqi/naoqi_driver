@@ -19,6 +19,7 @@
 * LOCAL includes
 */
 #include "diagnostics.hpp"
+#include "../tools/from_any_value.hpp"
 
 /**
 * ROS includes
@@ -87,19 +88,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   std::vector<float> values;
   try {
       qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getListData", all_keys_);
-      qi::AnyReferenceVector anyrefs = anyvalues.asListValuePtr();
-
-      for(int i=0; i<anyrefs.size();i++)
-      {
-        try
-        {
-          values.push_back(anyrefs[i].content().toFloat());
-        }
-        catch(std::runtime_error& e)
-        {
-          std::cout << "A value retrieved for diagnostics could not be cast as float" << std::endl;
-        }
-      }
+      tools::fromAnyValueToFloatVector(anyvalues, values);
   } catch (const std::exception& e) {
     std::cerr << "Exception caught in DiagnosticsConverter: " << e.what() << std::endl;
     return;

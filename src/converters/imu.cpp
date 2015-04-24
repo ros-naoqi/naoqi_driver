@@ -19,6 +19,7 @@
 * LOCAL includes
 */
 #include "imu.hpp"
+#include "../tools/from_any_value.hpp"
 
 /**
 * ROS includes
@@ -89,19 +90,7 @@ namespace converter {
     std::vector<float> memData;
     try {
         qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getListData", data_names_list_);
-        qi::AnyReferenceVector anyrefs = anyvalues.asListValuePtr();
-
-        for(int i=0; i<anyrefs.size();i++)
-        {
-          try
-          {
-            memData.push_back(anyrefs[i].content().toFloat());
-          }
-          catch(std::runtime_error& e)
-          {
-            std::cout << "A value retrieved for IMU could not be cast as float" << std::endl;
-          }
-        }
+        tools::fromAnyValueToFloatVector(anyvalues, memData);
     } catch (const std::exception& e) {
       std::cerr << "Exception caught in ImuConverter: " << e.what() << std::endl;
       return;

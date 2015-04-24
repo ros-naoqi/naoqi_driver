@@ -21,6 +21,7 @@
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
 #include "../tools/alvisiondefinitions.h" // for kTop...
+#include "../tools/from_any_value.hpp"
 
 /**
 * ROS includes
@@ -186,9 +187,9 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   }
 
   qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
-  qi::AnyReferenceVector image_anyref;
+  tools::NaoqiImage image;
   try{
-    image_anyref = image_anyvalue.asListValuePtr();
+      image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
   }
   catch(std::runtime_error& e)
   {
@@ -196,14 +197,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     return;
   }
 
-  int width, height;
-  void* image_buffer;
-
   // Create a cv::Mat of the right dimensions
-  width = image_anyref[0].content().asInt32();
-  height = image_anyref[1].content().asInt32();
-  image_buffer = (void*)(image_anyref[6].content().asRaw().first);
-  cv::Mat cv_img(height, width, cv_mat_type_, image_buffer);
+  cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 

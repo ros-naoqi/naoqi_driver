@@ -35,6 +35,7 @@ set(
 set(
   TOOLS
   src/tools/robot_description.cpp
+  src/tools/from_any_value.cpp
   )
 qi_create_lib(
   alrosconverters
