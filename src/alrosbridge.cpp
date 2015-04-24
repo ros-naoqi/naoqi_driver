@@ -267,11 +267,21 @@ void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec
   registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
-void Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
+bool Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
   dataType::DataType data_type;
+  qi::AnyValue value;
+  try {
+    qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
+    value = p_memory.call<qi::AnyValue>("getData", key);
+  } catch (const std::exception& e) {
+    std::cout << BOLDRED << "Could not get data in memory for the key: "
+              << BOLDCYAN << key << RESETCOLOR << std::endl;
+    return false;
+  }
+
   if (type==dataType::None) {
     try {
-      data_type = helpers::getDataType(sessionPtr_, key);
+      data_type = helpers::getDataType(value);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -281,7 +291,7 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
                 << "\t > 2 - Float" << std::endl
                 << "\t > 3 - String" << std::endl
                 << "\t > 4 - Bool" << RESETCOLOR << std::endl;
-      return;
+      return false;
     }
   }
   else {
@@ -290,6 +300,7 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
 
   switch (data_type) {
   case 0:
+    return false;
     break;
   case 1:
     _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped>,converter::MemoryFloatConverter>(key,frequency);
@@ -311,9 +322,11 @@ void Bridge::registerMemoryConverter( const std::string& key, float frequency, c
                    << "\t > 2 - Float" << std::endl
                    << "\t > 3 - String" << std::endl
                    << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+      return false;
       break;
     }
   }
+  return true;
 }
 
 void Bridge::registerDefaultConverter()
@@ -788,12 +801,22 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
-void Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
+bool Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
 {
   dataType::DataType data_type;
+  qi::AnyValue value;
+  try {
+    qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
+    value = p_memory.call<qi::AnyValue>("getData", key);
+  } catch (const std::exception& e) {
+    std::cout << BOLDRED << "Could not get data in memory for the key: "
+              << BOLDCYAN << key << RESETCOLOR << std::endl;
+    return false;
+  }
+
   if (type==dataType::None) {
     try {
-      data_type = helpers::getDataType(sessionPtr_, key);
+      data_type = helpers::getDataType(value);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -803,7 +826,7 @@ void Bridge::registerEventConverter(const std::string& key, const dataType::Data
                 << "\t > 2 - Float" << std::endl
                 << "\t > 3 - String" << std::endl
                 << "\t > 4 - Bool" << RESETCOLOR << std::endl;
-      return;
+      return false;
     }
   }
   else {
@@ -812,6 +835,7 @@ void Bridge::registerEventConverter(const std::string& key, const dataType::Data
 
   switch (data_type) {
   case 0:
+    return false;
     break;
   case 1:
     {
@@ -849,7 +873,7 @@ void Bridge::registerEventConverter(const std::string& key, const dataType::Data
                    << "\t > 2 - Float" << std::endl
                    << "\t > 3 - String" << std::endl
                    << "\t > 4 - Bool" << RESETCOLOR << std::endl;
-      return;
+      return false;
     }
   }
 
@@ -859,6 +883,8 @@ void Bridge::registerEventConverter(const std::string& key, const dataType::Data
   if (publish_enabled_) {
     event_map_.find(key)->second.isPublishing(true);
   }
+
+  return true;
 }
 
 QI_REGISTER_OBJECT( Bridge,
