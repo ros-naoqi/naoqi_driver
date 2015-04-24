@@ -116,12 +116,12 @@ public:
   /**
    * @brief qicli call function to register a converter for a given memory key
    */
-  void registerMemoryConverter(const std::string& key, float frequency, const dataType::DataType& type );
+  bool registerMemoryConverter(const std::string& key, float frequency, const dataType::DataType& type );
 
   /**
    * @brief qicli call function to register a converter for a given memory event
    */
-  void registerEventConverter(const std::string& key, const dataType::DataType& type);
+  bool registerEventConverter(const std::string& key, const dataType::DataType& type);
 
 
   /**
