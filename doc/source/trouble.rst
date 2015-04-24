@@ -20,3 +20,6 @@ In order to synchronize the two, you need to update the NTP server on both:
 .. code-block:: sh
 
   TODO
+
+
+Go back to the `main menu <index.rst>`_.

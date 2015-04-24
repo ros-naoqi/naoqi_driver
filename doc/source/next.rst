@@ -19,3 +19,5 @@ To get things faster:
 
   - check how DCM access is done with B-Human: https://github.com/bhuman/BHumanCodeRelease/blob/master/Src/libbhuman/bhuman.cpp#L768
 
+
+Go back to the `main menu <index.rst>`_.

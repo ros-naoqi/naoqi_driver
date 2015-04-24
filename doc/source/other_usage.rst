@@ -22,3 +22,6 @@ Then start motion on your robot:
   $ qicli call ALRobotPosture.goToPosture Stand 1
 
 You can now control your robot with the app.
+
+
+Go back to the `main menu <index.rst>`_.
