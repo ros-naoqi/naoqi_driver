@@ -14,6 +14,7 @@ Table of content
 1. `How to install it <install.rst>`_
 2. `Getting started <start.rst>`_
 3. `API <api.rst>`_
-4. `Troubleshooting <trouble.rst>`_
-5. `Next step <next.rst>`_
-6. `Extra use-cases <other_usage.rst>`_
+4. `Topic list <topics.rst>`_
+5. `Troubleshooting <trouble.rst>`_
+6. `Next step <next.rst>`_
+7. `Extra use-cases <other_usage.rst>`_
