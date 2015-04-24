@@ -21,11 +21,9 @@ In order to get the module to connect to your roscore, you should send it your I
 
 * ``const std::string&`` ALRosBridge:\:**getMasterURI** ()
 
-  Set current master URI using a given network interface.
+  Get current master URI using a given network interface.
 
-  *param:* **uri** - string in form of ``http://<ip>:11311``
-
-  *param:* **network_interface** - string. For example ``tether``.
+  *return:* string in form of ``http://<ip>:11311``
 
 -----------------
 
