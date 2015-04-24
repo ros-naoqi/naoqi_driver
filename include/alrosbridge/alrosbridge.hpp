@@ -230,6 +230,7 @@ private:
     boost::shared_ptr<T3> mfc = boost::make_shared<T3>( key , frequency, sessionPtr_, key );
     mfc->registerCallback( message_actions::PUBLISH, boost::bind(&T1::publish, mfp, _1) );
     mfc->registerCallback( message_actions::RECORD, boost::bind(&T2::write, mfr, _1) );
+    mfc->registerCallback( message_actions::LOG, boost::bind(&T2::bufferize, mfr, _1) );
     registerConverter( mfc, mfp, mfr );
   }
 

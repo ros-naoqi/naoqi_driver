@@ -296,8 +296,8 @@ bool Bridge::registerMemoryConverter( const std::string& key, float frequency, c
                 << BOLDCYAN << key << RESETCOLOR << std::endl
                 << BOLDRED << "You can enter it yourself, available types are:" << std::endl
                 << "\t > 0 - None" << std::endl
-                << "\t > 1 - Int" << std::endl
-                << "\t > 2 - Float" << std::endl
+                << "\t > 1 - Float" << std::endl
+                << "\t > 2 - Int" << std::endl
                 << "\t > 3 - String" << std::endl
                 << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       return false;
@@ -327,8 +327,8 @@ bool Bridge::registerMemoryConverter( const std::string& key, float frequency, c
     {
       std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
                    << "\t > 0 - None" << std::endl
-                   << "\t > 1 - Int" << std::endl
-                   << "\t > 2 - Float" << std::endl
+                   << "\t > 1 - Float" << std::endl
+                   << "\t > 2 - Int" << std::endl
                    << "\t > 3 - String" << std::endl
                    << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       return false;
@@ -831,8 +831,8 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
                 << BOLDCYAN << key << RESETCOLOR << std::endl
                 << BOLDRED << "You can enter it yourself, available types are:" << std::endl
                 << "\t > 0 - None" << std::endl
-                << "\t > 1 - Int" << std::endl
-                << "\t > 2 - Float" << std::endl
+                << "\t > 1 - Float" << std::endl
+                << "\t > 2 - Int" << std::endl
                 << "\t > 3 - String" << std::endl
                 << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       return false;
@@ -878,8 +878,8 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
     {
       std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
                    << "\t > 0 - None" << std::endl
-                   << "\t > 1 - Int" << std::endl
-                   << "\t > 2 - Float" << std::endl
+                   << "\t > 1 - Float" << std::endl
+                   << "\t > 2 - Int" << std::endl
                    << "\t > 3 - String" << std::endl
                    << "\t > 4 - Bool" << RESETCOLOR << std::endl;
       return false;
