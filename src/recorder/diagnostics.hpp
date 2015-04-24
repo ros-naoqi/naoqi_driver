@@ -47,6 +47,8 @@ public:
 
   void writeDump();
 
+  void setBufferDuration(float duration);
+
   inline std::string topic() const
   {
     return topic_;
@@ -72,6 +74,7 @@ protected:
 
   std::list<diagnostic_msgs::DiagnosticArray> buffer_;
   size_t buffer_size_;
+  float buffer_duration_;
 
   boost::mutex mutex_;
 

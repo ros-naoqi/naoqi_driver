@@ -76,7 +76,12 @@ public:
   */
   ~Bridge();
 
+  /**
+   * @brief Write a ROSbag with the last bufferized data (10s by default)
+   */
   void minidump();
+
+  void setBufferDuration(float duration);
 
   /**
    * @brief registers generall converter units

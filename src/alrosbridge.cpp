@@ -217,6 +217,15 @@ void Bridge::minidump()
   recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
+void Bridge::setBufferDuration(float duration)
+{
+  // LOOP AGAINST ALL RECORDERS
+  for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
+  {
+    iterator->second.setBufferDuration(duration);
+  }
+}
+
 void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -890,6 +899,7 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
+                    setBufferDuration,
                     startPublishing,
                     stopPublishing,
                     getMasterURI,

@@ -48,6 +48,8 @@ public:
 
   void writeDump();
 
+  void setBufferDuration(float duration);
+
   inline std::string topic() const
   {
     return topic_;
@@ -73,6 +75,7 @@ protected:
 
   std::list< std::list<rosgraph_msgs::Log> > buffer_;
   size_t buffer_size_;
+  float buffer_duration_;
 
   boost::mutex mutex_;
 

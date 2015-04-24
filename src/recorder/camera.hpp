@@ -48,6 +48,8 @@ public:
 
   void writeDump();
 
+  void setBufferDuration(float duration);
+
   inline std::string topic() const
   {
     return topic_img_;
@@ -74,6 +76,7 @@ protected:
 
   std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> > buffer_;
   size_t buffer_size_;
+  float buffer_duration_;
 
   boost::mutex mutex_;
 
