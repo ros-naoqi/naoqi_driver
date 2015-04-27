@@ -49,6 +49,8 @@ public:
 
   void writeDump();
 
+  void setBufferDuration(float duration);
+
   inline std::string topic() const
   {
     return topic_;
@@ -75,6 +77,7 @@ protected:
   std::list<sensor_msgs::JointState> bufferJoinState_;
   std::list< std::vector<geometry_msgs::TransformStamped> > bufferTF_;
   size_t buffer_size_;
+  float buffer_duration_;
 
   boost::mutex mutex_;
 

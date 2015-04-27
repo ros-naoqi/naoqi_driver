@@ -27,9 +27,11 @@ namespace recorder
 
 JointStateRecorder::JointStateRecorder( const std::string& topic, float buffer_frequency ):
   topic_( topic ),
+  buffer_duration_(10.f),
   is_initialized_( false ),
   is_subscribed_( false ),
-  buffer_frequency_(buffer_frequency)
+  buffer_frequency_(buffer_frequency),
+  counter_(1)
 {}
 
 void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
@@ -70,12 +72,12 @@ void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
   }
   else
   {
     max_counter_ = 1;
-    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*conv_frequency);
   }
   bufferJoinState_.resize(buffer_size_);
   bufferTF_.resize(buffer_size_);
@@ -98,6 +100,15 @@ void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
     bufferJoinState_.push_back(js_msg);
     bufferTF_.push_back(tf_transforms);
   }
+}
+
+void JointStateRecorder::setBufferDuration(float duration)
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_duration_ = duration;
+  bufferJoinState_.resize(buffer_size_);
+  bufferTF_.resize(buffer_size_);
 }
 
 } //publisher

@@ -27,7 +27,9 @@ namespace recorder
 
 SonarRecorder::SonarRecorder(const std::vector<std::string>& topics, float buffer_frequency ):
   topics_(topics),
-  buffer_frequency_(buffer_frequency)
+  buffer_duration_(10.f),
+  buffer_frequency_(buffer_frequency),
+  counter_(1)
 {}
 
 void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
@@ -65,12 +67,12 @@ void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequ
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-    buffer_size_ = static_cast<size_t>(10*buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
   }
   else
   {
     max_counter_ = 1;
-    buffer_size_ = static_cast<size_t>(10*conv_frequency);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*conv_frequency);
   }
   buffer_.resize(buffer_size_);
   is_initialized_ = true;
@@ -89,6 +91,14 @@ void SonarRecorder::bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs 
     buffer_.pop_front();
     buffer_.push_back(sonar_msgs);
   }
+}
+
+void SonarRecorder::setBufferDuration(float duration)
+{
+  boost::mutex::scoped_lock lock_bufferize( mutex_ );
+  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_duration_ = duration;
+  buffer_.resize(buffer_size_);
 }
 
 } //publisher
