@@ -36,6 +36,7 @@ namespace AL
   const int kTopCamera = 0;
   const int kBottomCamera = 1;
   const int kDepthCamera = 2;
+  const int kInfraredCamera = 3;
 
   const float kApertureH_OV7670  = 47.8f;
   const float kApertureV_OV7670  = 36.8f;
@@ -76,7 +77,7 @@ namespace AL
   const int kARGBColorSpace = 18;
   const int kXYZColorSpace = 19;
   const int kInfraredColorSpace = 20;
-  const int kDistanceColorSpace = 21; 
+  const int kDistanceColorSpace = 21;
 
   const int kCameraBrightnessID       = 0;
   const int kCameraContrastID         = 1;
@@ -114,12 +115,12 @@ namespace AL
   const int kCameraBlcGrID            = 32;
   const int kCameraWhiteBalanceID     = 33;
   const int kCameraBacklightCompensationID = 34;
-  const int kCameraKeepAliveID        = 35; 
-  const int kCameraDepthConfidenceThresholdID = 36; 
-  const int kCameraDepthFastFilterID  = 37; 
-  const int kCameraTemperatureID      = 38; 
-  const int kCameraAverageLuminanceID = 39; 
-  const int kCameraAutoFocusID = 40; 
+  const int kCameraKeepAliveID        = 35;
+  const int kCameraDepthConfidenceThresholdID = 36;
+  const int kCameraDepthFastFilterID  = 37;
+  const int kCameraTemperatureID      = 38;
+  const int kCameraAverageLuminanceID = 39;
+  const int kCameraAutoFocusID = 40;
 
   bool isResolutionValid(const int resIndex);
 

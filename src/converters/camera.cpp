@@ -47,6 +47,12 @@ namespace converter
 namespace camera_info_definitions
 {
 
+const sensor_msgs::CameraInfo& getEmptyInfo()
+{
+  static const sensor_msgs::CameraInfo cam_info_msg;
+  return cam_info_msg;
+}
+
 const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution )
 {
   /** RETURN VALUE OPTIMIZATION (RVO)
@@ -69,9 +75,6 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoTOPQQVGA();
       return cam_info_msg;
     }
-    else{
-      std::cout << "no camera information found for camera_source " << camera_source << " and res: " << resolution << std::endl;
-    }
   }
   else if ( camera_source == AL::kBottomCamera )
   {
@@ -89,9 +92,6 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
     {
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoBOTTOMQQVGA();
       return cam_info_msg;
-    }
-    else{
-      std::cout << "no camera information found for camera_source " << camera_source << " and res: " << resolution << std::endl;
     }
   }
   else if ( camera_source == AL::kDepthCamera )
@@ -111,9 +111,10 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQVGA();
       return cam_info_msg;
     }
-    else{
-      std::cout << "no camera information found for camera_source " << camera_source << " and res: " << resolution << std::endl;
-    }
+  }
+  else{
+    std::cout << "no camera information found for camera_source " << camera_source << " and res: " << resolution << std::endl;
+    return getEmptyInfo();
   }
 }
 
@@ -141,6 +142,16 @@ CameraConverter::CameraConverter( const std::string& name, const float& frequenc
   else if (camera_source_ == AL::kDepthCamera )
   {
     msg_frameid_ = "CameraDepth_optical_frame";
+  }
+  // Overwrite the parameters for the infrared
+  else if (camera_source_ == AL::kInfraredCamera )
+  {
+    // Reset to kDepth since it's the same device handle
+    camera_source_ = AL::kDepthCamera;
+    msg_frameid_ = "CameraDepth_optical_frame";
+    colorspace_ = AL::kInfraredColorSpace;
+    msg_colorspace_ = "16UC1";
+    cv_mat_type_ = CV_16U;
   }
 }
 
@@ -182,7 +193,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
 
   if (handle_.empty() )
   {
-    std::cerr << "Camera Handle is empty - cannot retrieve image" << std::endl;
+    std::cerr << name_ << " Camera Handle is empty - cannot retrieve image" << std::endl;
     return;
   }
 
