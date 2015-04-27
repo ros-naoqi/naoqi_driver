@@ -141,18 +141,6 @@ void Bridge::rosLoop()
         converter::Converter& conv = converters_[conv_index];
         ros::Time schedule = conv_queue_.top().schedule_;
 
-        ros::Duration d(schedule - ros::Time::now());
-        if ( d > ros::Duration(0))
-        {
-          d.sleep();
-        }
-        // check the publishing condition
-        // publishing enabled
-        // has to be registered
-        // has to be subscribed
-#ifdef DEBUG
-        ros::Time before = ros::Time::now();
-#endif
         PubConstIter pub_it = pub_map_.find( conv.name() );
         if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
         {
@@ -182,7 +170,19 @@ void Bridge::rosLoop()
         {
           conv.callAll( actions );
         }
+
+        ros::Duration d(schedule - ros::Time::now());
+        if ( d > ros::Duration(0))
+        {
+          d.sleep();
+        }
+
 #if DEBUG
+        // check the publishing condition
+        // publishing enabled
+        // has to be registered
+        // has to be subscribed
+        ros::Time before = ros::Time::now();
         ros::Time after = ros::Time::now();
         std::cerr << "round trip last " << after-before << std::endl;
 #endif
@@ -416,7 +416,7 @@ void Bridge::registerDefaultConverter()
   /** Front Camera */
   boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
   boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", 2 );
-  boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 10, sessionPtr_, AL::kTopCamera, AL::kQVGA );
+  boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 15, sessionPtr_, AL::kTopCamera, AL::kQVGA );
   fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
   fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
   fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
@@ -426,7 +426,7 @@ void Bridge::registerDefaultConverter()
     /** Depth Camera */
     boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
     boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", 2 );
-    boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 10, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+    boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 15, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
     dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
     dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
     dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
