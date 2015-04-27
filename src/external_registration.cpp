@@ -30,6 +30,17 @@ int main(int argc, char** argv)
   boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
   app.session()->registerService("ALRosBridge", bs);
 
+
+  if ( argc > 1 )
+  {
+    std::cout << "using ip address: " << argv[1] << std::endl;
+    bs->setMasterURI( "http://"+std::string(argv[1])+":11311");
+  }
+  else
+  {
+    std::cout << "no ip address given. Run qicli call to set the master uri" << std::endl;
+  }
+
   //! @note Must call ow._stopService when the application stops to do the clean-up
   app.atStop(boost::function<void()>(
                  boost::bind(&alros::Bridge::stopService, boost::ref(bs))));

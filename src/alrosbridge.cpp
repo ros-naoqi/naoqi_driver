@@ -486,8 +486,8 @@ void Bridge::registerSubscriber( subscriber::Subscriber sub )
   if (it == subscribers_.end() )
   {
     sub_index = subscribers_.size();
+    sub.reset( *nhPtr_ );
     subscribers_.push_back( sub );
-    sub.reset(*nhPtr_);
     std::cout << "registered subscriber:\t" << sub.name() << std::endl;
   }
   // if found, re-init them
@@ -571,6 +571,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
 
     for_each( subscriber::Subscriber& sub, subscribers_ )
     {
+      std::cout << "resetting subscriber " << sub.name() << std::endl;
       sub.reset( *nhPtr_ );
     }
   }
