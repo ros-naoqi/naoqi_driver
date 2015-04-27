@@ -36,7 +36,7 @@ namespace alros{
 namespace tools {
 
 /**
- * @brief The struct describing an image retrieve by ALVideoDevice
+ * @brief The struct describing an image retrieved by ALVideoDevice.
  *        This specification can be found here:
  *        http://doc.aldebaran.com/2-1/naoqi/vision/alvideodevice-tuto.html
  */
