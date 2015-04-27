@@ -18,7 +18,7 @@
 #ifndef JOINT_STATES_PUBLISHER_HPP
 #define JOINT_STATES_PUBLISHER_HPP
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

@@ -18,13 +18,13 @@
 #ifndef INFO_CONVERTER_HPP
 #define INFO_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/StringStamped.h>

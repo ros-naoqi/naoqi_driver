@@ -18,22 +18,22 @@
 #ifndef GLOBALRECORDER_HPP
 #define GLOBALRECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/tools.hpp>
 
-/**
+/*
 * STANDARD includes
 */
 #include <string>
 
-/**
+/*
 * BOOST includes
 */
 # include <boost/thread/mutex.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

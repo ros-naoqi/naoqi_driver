@@ -18,23 +18,23 @@
 #ifndef AUDIO_CONVERTER_HPP
 #define AUDIO_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/enable_shared_from_this.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_msgs/AudioBuffer.h>
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/anymodule.hpp>

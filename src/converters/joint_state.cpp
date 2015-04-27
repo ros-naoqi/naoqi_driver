@@ -15,18 +15,18 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "joint_state.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
-/**
+/*
 * ROS includes
 */
 #include <kdl_parser/kdl_parser.hpp>

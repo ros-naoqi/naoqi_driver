@@ -30,12 +30,12 @@
 #ifndef FROM_ANY_VALUE_HPP
 #define FROM_ANY_VALUE_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "naoqi_image.hpp"
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/anyvalue.hpp>

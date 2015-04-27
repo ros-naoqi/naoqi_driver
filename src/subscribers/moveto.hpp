@@ -19,12 +19,12 @@
 #ifndef MOVETO_SUBSCRIBER_HPP
 #define MOVETO_SUBSCRIBER_HPP
 
-/**
+/*
  * LOCAL includes
  */
 #include "subscriber_base.hpp"
 
-/**
+/*
  * ROS includes
  */
 #include <ros/ros.h>

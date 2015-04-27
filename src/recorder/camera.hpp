@@ -18,12 +18,12 @@
 #ifndef CAMERA_RECORDER_HPP
 #define CAMERA_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <sensor_msgs/CameraInfo.h>

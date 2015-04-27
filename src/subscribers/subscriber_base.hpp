@@ -18,12 +18,12 @@
 #ifndef BASE_SUBSCRIBER_HPP
 #define BASE_SUBSCRIBER_HPP
 
-/**
+/*
  * ALDEBARAN includes
  */
 #include <qi/session.hpp>
 
-/**
+/*
  * LOCAL includes
  */
 #include <alrosbridge/tools.hpp>

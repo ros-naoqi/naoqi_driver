@@ -15,18 +15,18 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * STANDARD includes
 */
 #include <ctime>
 #include <sstream>
 
-/**
+/*
 * ROS includes
 */
 #include <std_msgs/Int32.h>
@@ -36,14 +36,14 @@
 #include <rosbag/view.h>
 #include <geometry_msgs/TransformStamped.h>
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/filesystem.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/log.hpp>

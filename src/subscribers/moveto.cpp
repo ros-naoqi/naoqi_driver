@@ -15,12 +15,12 @@
  *
 */
 
-/**
+/*
  * LOCAL includes
  */
 #include "moveto.hpp"
 
-/**
+/*
  * ROS includes
  */
 #include <tf/transform_datatypes.h>

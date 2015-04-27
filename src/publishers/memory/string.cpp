@@ -15,7 +15,7 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "string.hpp"

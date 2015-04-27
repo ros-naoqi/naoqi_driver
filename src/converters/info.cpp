@@ -15,13 +15,13 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "info.hpp"
 #include "../tools/from_any_value.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/assign/list_of.hpp>

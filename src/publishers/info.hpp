@@ -18,13 +18,13 @@
 #ifndef PUBLISHER_INFO_HPP
 #define PUBLISHER_INFO_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "basic.hpp"
 #include <alrosbridge/tools.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

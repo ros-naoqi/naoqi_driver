@@ -18,12 +18,12 @@
 #ifndef MEMORY_STRING_PUBLISHER_HPP
 #define MEMORY_STRING_PUBLISHER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "../publisher_base.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/StringStamped.h>

@@ -18,12 +18,12 @@
 #ifndef JOINT_STATE_RECORDER_HPP
 #define JOINT_STATE_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <sensor_msgs/JointState.h>

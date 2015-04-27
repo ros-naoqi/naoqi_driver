@@ -15,12 +15,12 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "camera.hpp"
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include "../tools/alvisiondefinitions.h" // for kTop...

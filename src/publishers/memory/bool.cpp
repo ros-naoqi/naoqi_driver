@@ -15,7 +15,7 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "bool.hpp"

@@ -18,13 +18,13 @@
 #ifndef DIAGNOSTICS_CONVERTER_HPP
 #define DIAGNOSTICS_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <diagnostic_msgs/DiagnosticArray.h>
@@ -34,6 +34,11 @@ namespace alros
 namespace converter
 {
 
+/**
+ * @brief This class defines a Diagnostic converter
+ * It does not use the DiagnostricsUpdater for optimization.
+ * A full diagnostic_msgs/DiagnosticArray is built and sent to requesting nodes
+ */
 class DiagnosticsConverter : public BaseConverter<DiagnosticsConverter>
 {
 

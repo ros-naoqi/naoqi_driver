@@ -15,12 +15,12 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "int.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

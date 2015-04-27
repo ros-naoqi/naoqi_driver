@@ -15,7 +15,7 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "camera.hpp"
@@ -23,17 +23,17 @@
 #include "../tools/alvisiondefinitions.h" // for kTop...
 #include "../tools/from_any_value.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <cv_bridge/cv_bridge.h>
 
-/**
+/*
 * CV includes
 */
 #include <opencv2/imgproc/imgproc.hpp>
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

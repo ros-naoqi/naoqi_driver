@@ -15,13 +15,13 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "laser.hpp"
 #include "../tools/from_any_value.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

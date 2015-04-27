@@ -18,13 +18,13 @@
 #ifndef MEMORY_BOOL_CONVERTER_HPP
 #define MEMORY_BOOL_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "../converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/BoolStamped.h>

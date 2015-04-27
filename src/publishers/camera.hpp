@@ -18,7 +18,7 @@
 #ifndef PUBLISHER_CAMERA_HPP
 #define PUBLISHER_CAMERA_HPP
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

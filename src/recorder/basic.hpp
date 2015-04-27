@@ -18,12 +18,12 @@
 #ifndef BASIC_RECORDER_HPP
 #define BASIC_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * STANDARD includes
 */
 #include <string>

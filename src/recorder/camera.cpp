@@ -15,7 +15,7 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "camera.hpp"

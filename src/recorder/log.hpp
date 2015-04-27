@@ -18,12 +18,12 @@
 #ifndef INT_RECORDER_HPP
 #define INT_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

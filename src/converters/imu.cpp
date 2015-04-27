@@ -15,18 +15,18 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "imu.hpp"
 #include "../tools/from_any_value.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <tf/transform_datatypes.h>
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

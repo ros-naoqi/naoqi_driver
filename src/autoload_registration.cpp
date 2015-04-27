@@ -15,17 +15,17 @@
  *
 */
 
-/**
+/*
  * LOCAL includes
  */
 #include <alrosbridge/alrosbridge.hpp>
 
-/**
+/*
  * ALDEBARAN includes
  */
 #include <qi/anymodule.hpp>
 
-/*
+/**
 * @brief starter code for registrating the ALRosBridge module via the autoload.ini.
 */
 void registerRosBridge(qi::ModuleBuilder* mb) {

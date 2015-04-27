@@ -18,21 +18,24 @@
 #ifndef ODOMETRY_PUBLISHER_HPP
 #define ODOMETRY_PUBLISHER_HPP
 
-/**
+/*
+* LOCAL includes
+*/
+#include "converter_base.hpp"
+
+/*
 * ROS includes
 */
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <geometry_msgs/Transform.h>
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/anyobject.hpp>
 
 #include <vector>
-
-#include "publisher_base.hpp"
 
 namespace tf2_ros
 {

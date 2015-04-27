@@ -15,12 +15,12 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "float.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

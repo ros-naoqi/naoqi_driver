@@ -15,12 +15,12 @@
  *
 */
 
-/**
+/*
 * LOCAL includes
 */
 #include "audio.hpp"
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>

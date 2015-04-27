@@ -20,7 +20,7 @@
 
 #include <string>
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

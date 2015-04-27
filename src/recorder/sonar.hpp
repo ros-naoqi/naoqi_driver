@@ -18,12 +18,12 @@
 #ifndef SONAR_RECORDER_HPP
 #define SONAR_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <sensor_msgs/Range.h>

@@ -18,13 +18,13 @@
 #ifndef LASER_CONVERTER_HPP
 #define LASER_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <sensor_msgs/LaserScan.h>

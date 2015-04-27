@@ -19,13 +19,13 @@
 #ifndef ROS_ENV_HPP
 #define ROS_ENV_HPP
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>
 
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/os.hpp>

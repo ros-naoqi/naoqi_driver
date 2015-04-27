@@ -18,7 +18,7 @@
 #ifndef PUBLISHER_SONAR_HPP
 #define PUBLISHER_SONAR_HPP
 
-/**
+/*
 * ROS includes
 */
 #include <ros/ros.h>

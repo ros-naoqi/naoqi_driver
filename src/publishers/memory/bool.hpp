@@ -18,12 +18,12 @@
 #ifndef MEMORY_BOOL_PUBLISHER_HPP
 #define MEMORY_BOOL_PUBLISHER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "../publisher_base.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/BoolStamped.h>

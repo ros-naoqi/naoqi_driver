@@ -18,14 +18,14 @@
 #ifndef JOINT_STATES_CONVERTER_HPP
 #define JOINT_STATES_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include "../tools/robot_description.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <sensor_msgs/JointState.h>

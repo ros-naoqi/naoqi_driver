@@ -18,12 +18,12 @@
 #ifndef MEMORY_FLOAT_PUBLISHER_HPP
 #define MEMORY_FLOAT_PUBLISHER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "../publisher_base.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/FloatStamped.h>

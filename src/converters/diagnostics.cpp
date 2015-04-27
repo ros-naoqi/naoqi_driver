@@ -15,27 +15,22 @@
  *
  */
 
-/**
+/*
 * LOCAL includes
 */
 #include "diagnostics.hpp"
 #include "../tools/from_any_value.hpp"
 
-/**
+/*
 * ROS includes
 */
 #include <diagnostic_updater/DiagnosticStatusWrapper.h>
 
-/**
+/*
 * BOOST includes
 */
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
-
-/** This file defines a Diagnostic converter
- * It does not use the DiagnostricsUpdater for optimization.
- * A full diagnostic_msgs/DiagnosticArray is built and sent to requesting nodes
- */
 
 namespace alros
 {

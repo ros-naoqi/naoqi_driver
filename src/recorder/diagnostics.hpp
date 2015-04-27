@@ -18,12 +18,12 @@
 #ifndef DIAGNOSTICS_RECORDER_HPP
 #define DIAGNOSTICS_RECORDER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
 
-/**
+/*
 * ROS includes
 */
 #include <diagnostic_msgs/DiagnosticArray.h>

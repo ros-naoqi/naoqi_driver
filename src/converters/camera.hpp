@@ -18,13 +18,13 @@
 #ifndef CONVERTER_CAMERA_HPP
 #define CONVERTER_CAMERA_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
 
-/**
+/*
 * ROS includes
 */
 #include <image_transport/image_transport.h>

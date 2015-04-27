@@ -18,12 +18,12 @@
 #ifndef ROBOT_DESCRIPTION_HPP
 #define ROBOT_DESCRIPTION_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/tools.hpp>
 
-/**
+/*
 * STANDARD includes
 */
 #include <string>

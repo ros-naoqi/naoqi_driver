@@ -18,12 +18,12 @@
 #ifndef BASE_CONVERTER_HPP
 #define BASE_CONVERTER_HPP
 
-/**
+/*
 * LOCAL includes
 */
 #include <alrosbridge/tools.hpp>
 
-/**
+/*
 * ALDEBARAN includes
 */
 #include <qi/session.hpp>
