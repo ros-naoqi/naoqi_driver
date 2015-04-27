@@ -1,5 +1,5 @@
-#include <alrosbridge/test/old_concept.hpp>
-#include <alrosbridge/test/new_concept.hpp>
+#include "old_concept.hpp"
+#include "new_concept.hpp"
 
 #include <vector>
 
