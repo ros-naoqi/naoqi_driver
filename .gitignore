@@ -1,2 +1,5 @@
 .*
 build*
+doc/*
+!doc/source/*
+!doc/Doxyfile
