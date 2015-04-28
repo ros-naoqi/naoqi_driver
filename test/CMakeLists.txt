@@ -12,7 +12,7 @@ target_link_libraries(
   alrosbridge
 )
 qi_create_gtest( dynamic_callback_test "dynamic_callback.cpp" )
-qi_use_lib( dynamic_callback_test GTEST ROS QI CONSOLE_BRIDGE )
+qi_use_lib( dynamic_callback_test GTEST ROS QI )
 qi_create_gtest( recorder_callback_test "recorder_callback_test.cpp" )
 qi_use_lib( recorder_callback_test GTEST QI)
 target_link_libraries(
