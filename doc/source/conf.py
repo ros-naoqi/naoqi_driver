@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# ecto documentation build configuration file, created by
+# alrosbridge documentation build configuration file, created by
 # sphinx-quickstart on Mon May 11 08:53:19 2009.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -53,7 +53,7 @@ show_sphinx = False
 master_doc = 'index'
 
 # General information about the project.
-project = u'ecto'
+project = u'alrosbridge'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -116,14 +116,14 @@ html_theme_path = ['.']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = 'ecto ' + gittag_short
+#html_title = 'alrosbridge ' + gittag_short
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = 'art/ecto.dot.png'
+#html_logo = ''
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -174,7 +174,7 @@ html_theme_path = ['.']
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-#htmlhelp_basename = 'ecto-cmakedoc'
+#htmlhelp_basename = 'alrosbridge-cmakedoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -187,10 +187,7 @@ html_theme_path = ['.']
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
-#latex_documents = [
-#  ('index', 'ecto.tex', ur'ecto',
-#   ur'Troy D. Straszheim, Ethan A. Rublee', 'manual'),
-#]
+#latex_documents = []
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
