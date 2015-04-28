@@ -79,7 +79,7 @@ public:
   /**
    * @brief Write a ROSbag with the last bufferized data (10s by default)
    */
-  void minidump();
+  std::string minidump();
 
   void setBufferDuration(float duration);
 
