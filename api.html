@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API description &mdash; ecto  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ecto  documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">ecto  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="api-description">
+<h1>API description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h1>
+<p>All the following calls must be performed from the robot.</p>
+<p><strong>Environment setup API</strong></p>
+<p>In order to get the module to connect to your roscore, you should send it your IP.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>setMasterURI</strong> ( <tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::string&amp;</span></tt> <strong>uri</strong> )</p>
+<p>Set current master URI. The IP adress given is from defauth <em>eth0</em> network interface.</p>
+<p><em>param:</em> <strong>uri</strong> - string in form of <tt class="docutils literal"><span class="pre">http://&lt;ip&gt;:11311</span></tt></p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>setMasterURINet</strong> ( <tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::string&amp;</span></tt> <strong>uri</strong>, <tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::string&amp;</span></tt> <strong>network_interface</strong> )</p>
+<p>Set current master URI using a given network interface.</p>
+<p><em>param:</em> <strong>uri</strong> - string in form of <tt class="docutils literal"><span class="pre">http://&lt;ip&gt;:11311</span></tt></p>
+<p><em>param:</em> <strong>network_interface</strong> - string. For example <tt class="docutils literal"><span class="pre">tether</span></tt>.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::string&amp;</span></tt> ALRosBridge::<strong>getMasterURI</strong> ()</p>
+<p>Get current master URI using a given network interface.</p>
+<p><em>return:</em> string in form of <tt class="docutils literal"><span class="pre">http://&lt;ip&gt;:11311</span></tt></p>
+</li>
+</ul>
+<hr class="docutils" />
+<p><strong>Converters API</strong></p>
+<p>The converters are responsible for operating conversion between NAOqi messages and ROS messages, in accordance with given frequency.</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::vector&lt;</span> <span class="pre">std::string</span> <span class="pre">&gt;&amp;</span></tt> ALRosBridge::<strong>getAvailableConverters</strong> ()</p>
+<p>Get all registered converters in the module.</p>
+<p><em>return:</em> vector of string of all converter&#8217;s topic name</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>registerMemoryConverter</strong> ( <tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::string&amp;</span></tt> <strong>key</strong>, <tt class="docutils literal"><span class="pre">float</span></tt> <strong>frequency</strong>, <tt class="docutils literal"><span class="pre">int</span></tt> <strong>type</strong> )</p>
+<p>Register a new converter for the memory key given.</p>
+<p><em>param:</em> <strong>key</strong> - naoqi memory key. For example <tt class="docutils literal"><span class="pre">ALMemory/KeyAdded</span></tt>.</p>
+<p><em>param:</em> <strong>frequency</strong> - frequency of the converter (in Hz)</p>
+<p><em>param:</em> <strong>type</strong> - type identifier of the given memory data.</p>
+<div class="highlight-python"><div class="highlight"><pre>Available types are:
+* 0 - None/Undefined
+* 1 - Int
+* 2 - Float
+* 3 - String
+* 4 - Bool
+</pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>addMemoryConverters</strong> ( <tt class="docutils literal"><span class="pre">std::string</span></tt> <strong>filePath</strong> )</p>
+<p>Add some new converters for memory keys. This call requires as argument the path to a JSON file (stored on the robot) structured as the following one.
+memKeys and topic must be present and filled. Frequency is optional, and if not there, the default value is 10 Hz.</p>
+<p><em>param:</em> <strong>filePath</strong> - path of the JSON file</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+    <span class="s">&quot;memKeys&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s">&quot;KeyName1&quot;</span><span class="p">,</span>
+                <span class="s">&quot;KeyName2&quot;</span>
+               <span class="p">],</span>
+    <span class="s">&quot;topic&quot;</span><span class="p">:</span> <span class="s">&quot;topicName&quot;</span><span class="p">,</span>
+    <span class="s">&quot;frequency&quot;</span><span class="p">:</span> <span class="mi">10</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p><strong>Publishers API</strong></p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>startPublishing</strong> ()</p>
+<p>Start/enable publishing all registered publisher</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>stopPublishing</strong> ()</p>
+<p>Stop/disable publishing all registered publisher</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">const</span> <span class="pre">std::vector&lt;</span> <span class="pre">std::string</span> <span class="pre">&gt;&amp;</span></tt> ALRosBridge::<strong>getSubscribedPublishers</strong> ()</p>
+<p>Get all subscribed publishers.</p>
+<p><em>return:</em> vector of string of publisher&#8217;s topic name</p>
+</li>
+</ul>
+<hr class="docutils" />
+<p><strong>Recorders API</strong></p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>startRecording</strong> ()</p>
+<p>Start/enable recording all registered recorder.</p>
+<p>This will record all topics in one ROSbag, named after current date &amp; time. The ROSbag is stored in the exact path where the <strong>ALRosBridge</strong> module is launched (meaning that it will be stored on the robot if it&#8217;s launched from here).</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">void</span></tt> ALRosBridge::<strong>stopRecording</strong> ()</p>
+<p>Stop/disable recording all registered recorder.</p>
+</li>
+</ul>
+<p>You can now have a look to the <a class="reference external" href="topics.rst">list of available topics</a>, or you can go back to the <a class="reference external" href="index.rst">main menu</a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">ecto  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Aldebaran, Inc.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
