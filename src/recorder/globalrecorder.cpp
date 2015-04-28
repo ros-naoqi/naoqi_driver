@@ -108,7 +108,7 @@ namespace recorder
       _isStarted = false;
 
       std::stringstream message;
-      message << "The bag " << _nameBag << " is closed. ";
+      message << _nameBag;
       std::cout << YELLOW << "The bag " << BOLDCYAN << _nameBag << RESETCOLOR << YELLOW << " is closed" << RESETCOLOR << std::endl;
 
       // Check if we are on a robot
@@ -119,8 +119,6 @@ namespace recorder
         std::cout << BOLDRED << "To download this bag on your computer:" << RESETCOLOR << std::endl
                      << GREEN << "\t$ scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>" << RESETCOLOR
                         << std::endl;
-        message << "To download this bag on your computer: "
-                << "scp nao@" << robot_ip << ":" << _nameBag << " <LOCAL_PATH>";
       }
 
       _nameBag.clear();

@@ -198,7 +198,7 @@ void Bridge::rosLoop()
   }
 }
 
-void Bridge::minidump()
+std::string Bridge::minidump()
 {
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
@@ -208,13 +208,56 @@ void Bridge::minidump()
 
   // WRITE ALL BUFFER INTO THE ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
-  recorder_->startRecord(); // MAYBE ADD NAME ARGUMENT
+  recorder_->startRecord();
   // for each recorder, call write_dump function
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
     iterator->second.writeDump();
   }
-  recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+}
+
+std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
+{
+  bool success = false;
+  int index = 0;
+  while (!success && (index<names.size()))
+  {
+    if (rec_map_.find(names[index]) != rec_map_.end())
+    {
+      success = true;
+    }
+    ++index;
+  }
+
+  if (success)
+  {
+    // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+    if (record_enabled_)
+    {
+      stopRecording();
+    }
+    // WRITE CHOOSEN BUFFER INTO THE ROSBAG
+    boost::mutex::scoped_lock lock_record( mutex_record_ );
+    recorder_->startRecord();
+
+    for_each( const std::string& name, names)
+    {
+      RecIter it = rec_map_.find(name);
+      if ( it != rec_map_.end() )
+      {
+        it->second.writeDump();
+      }
+    }
+    return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  }
+  else
+  {
+    std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
+              << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+              << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+    return "Could not find any topic in converters. To get the list of all available converter's name, please run: $ qicli call BridgeService.getAvailableConverters";
+  }
 }
 
 void Bridge::setBufferDuration(float duration)
@@ -909,6 +952,7 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
+                    minidumpConverters,
                     setBufferDuration,
                     startPublishing,
                     stopPublishing,

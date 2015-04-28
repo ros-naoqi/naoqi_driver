@@ -33,12 +33,13 @@ int main(int argc, char** argv)
 
   if ( argc > 1 )
   {
-    std::cout << "using ip address: " << argv[1] << std::endl;
+    std::cout << BOLDYELLOW << "using ip address: "
+              << BOLDCYAN << argv[1] << RESETCOLOR << std::endl;
     bs->setMasterURI( "http://"+std::string(argv[1])+":11311");
   }
   else
   {
-    std::cout << "no ip address given. Run qicli call to set the master uri" << std::endl;
+    std::cout << BOLDRED << "No ip address given. Run qicli call to set the master uri" << RESETCOLOR << std::endl;
   }
 
   //! @note Must call ow._stopService when the application stops to do the clean-up
