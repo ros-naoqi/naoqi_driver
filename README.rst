@@ -30,4 +30,6 @@ For further information, you can go `here <./doc/source/index.rst>`_ or build th
 
 .. code-block:: sh
 
-  sphinx-build -b html ./doc/source/ ./doc/build/
+  cd doc
+  doxygen Doxyfile
+  sphinx-build -b html ./source/ ./build/
