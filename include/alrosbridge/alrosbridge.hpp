@@ -80,6 +80,7 @@ public:
    * @brief Write a ROSbag with the last bufferized data (10s by default)
    */
   std::string minidump();
+  std::string minidumpConverters(const std::vector<std::string>& names);
 
   void setBufferDuration(float duration);
 
