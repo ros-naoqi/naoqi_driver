@@ -1,3 +1,5 @@
+.. _main menu:
+
 Description
 ===========
 
@@ -12,10 +14,10 @@ custom ones.
 Table of content
 ================
 
-1. `How to install it <install.rst>`_
-2. `Getting started <start.rst>`_
-3. `API <api.rst>`_
-4. `Topic list <topics.rst>`_
-5. `Troubleshooting <trouble.rst>`_
-6. `Next step <next.rst>`_
-7. `Extra use-cases <other_usage.rst>`_
+1. :ref:`How to install it`
+2. :ref:`Getting started`
+3. :ref:`API`
+4. :ref:`Topic list`
+5. :ref:`Troubleshooting`
+6. :ref:`Next step`
+7. :ref:`Extra use-cases`

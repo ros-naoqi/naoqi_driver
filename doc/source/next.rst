@@ -1,3 +1,5 @@
+.. _Next step:
+
 Next steps
 ==========
 

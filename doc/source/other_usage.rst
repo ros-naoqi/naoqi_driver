@@ -1,3 +1,5 @@
+.. _Extra use-cases:
+
 Additional Resources
 ====================
 

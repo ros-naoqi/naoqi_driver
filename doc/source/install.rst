@@ -1,3 +1,5 @@
+.. _How to install it:
+
 How to install it
 =================
 
