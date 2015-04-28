@@ -213,9 +213,10 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
 
-  ros::Time now = ros::Time::now();
-  msg_->header.stamp = now;
-  camera_info_.header.stamp = now;
+  //ros::Time now = ros::Time::now();
+  msg_->header.stamp.sec = image.timestamp_s;
+  msg_->header.stamp.nsec = image.timestamp_us*1000;
+  camera_info_.header.stamp = msg_->header.stamp;
 
   for_each( const message_actions::MessageAction& action, actions )
   {
