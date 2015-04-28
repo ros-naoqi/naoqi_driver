@@ -1,2 +1,7 @@
+touch .catkin
 source setup.bash
-exec bin/alrosbridge_bin
+if [ 0 -eq $# ]; then
+  exec bin/alrosbridge_bin
+else
+  exec bin/alrosbridge_bin --qi-url=tcp://$1:9559
+fi
