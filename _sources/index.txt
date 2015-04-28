@@ -1,3 +1,5 @@
+.. _main menu:
+
 Description
 ===========
 
@@ -13,13 +15,12 @@ Table of content
 ================
 
 .. toctree::
-  :maxdepth: 1
+  :numbered:
 
-
-  How to install it <install>
-  Getting started <start>
-  API <api>
-  Topic list <topics>
-  Troubleshooting <trouble>
-  Next step <next>
-  Extra use-cases <other_usage>
+  install
+  start
+  api
+  topics
+  trouble
+  next
+  other
