@@ -1,4 +1,4 @@
-.. _Troubleshooting:
+.. _trouble:
 
 Troubleshooting
 ===============
@@ -24,4 +24,4 @@ In order to synchronize the two, you need to update the NTP server on both:
   TODO
 
 
-Go back to the `main menu <index.rst>`_.
+Go back to the :ref:`index <main menu>`.

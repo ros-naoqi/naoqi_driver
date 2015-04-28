@@ -1,4 +1,4 @@
-.. _Extra use-cases:
+.. _other:
 
 Additional Resources
 ====================
@@ -26,4 +26,4 @@ Then start motion on your robot:
 You can now control your robot with the app.
 
 
-Go back to the `main menu <index.rst>`_.
+Go back to the :ref:`index <main menu>`.

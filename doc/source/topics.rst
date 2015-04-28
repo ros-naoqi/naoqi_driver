@@ -1,4 +1,4 @@
-.. _Topic list:
+.. _topic:
 
 Topics
 ======
@@ -137,4 +137,4 @@ Main topics
 
 /tf (tf2_msgs/TFMessage): the usual tf message, using /joint_states
 
-Go back to the `main menu <index.rst>`_.
+Go back to the :ref:`index <main menu>`.

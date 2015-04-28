@@ -1,4 +1,4 @@
-.. _API:
+.. _api:
 
 API description
 ===============
@@ -111,4 +111,4 @@ The converters are responsible for operating conversion between NAOqi messages a
   Stop/disable recording all registered recorder.
 
 
-You can now have a look to the `list of available topics <topics.rst>`_, or you can go back to the :ref:`index <main menu>`.
+You can now have a look to the :ref:`list of available topics <topic>`, or you can go back to the :ref:`index <main menu>`.

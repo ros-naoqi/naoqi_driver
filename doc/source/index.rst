@@ -14,10 +14,13 @@ custom ones.
 Table of content
 ================
 
-1. :ref:`How to install it`
-2. :ref:`Getting started`
-3. :ref:`API`
-4. :ref:`Topic list`
-5. :ref:`Troubleshooting`
-6. :ref:`Next step`
-7. :ref:`Extra use-cases`
+.. toctree::
+  :numbered:
+
+  install
+  start
+  api
+  topics
+  trouble
+  next
+  other
