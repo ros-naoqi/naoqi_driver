@@ -112,3 +112,5 @@ The converters are responsible for operating conversion between NAOqi messages a
 
 
 You can now have a look to the :ref:`list of available topics <topic>`, or you can go back to the :ref:`index <main menu>`.
+
+If you want to know more about the API, you can look at the doxygen documentation `here <./api/index.html>`_
