@@ -26,4 +26,8 @@ Once connected, normal ROS communication is happening between
 your robot, running NAOqi OS, and your desktop, running ROS.
 
 
-For further information, you can go `here <./doc/source/index.rst>`_
+For further information, you can go `here <./doc/source/index.rst>`_ or build the doc:
+
+.. code-block:: sh
+
+  sphinx-build -b html ./doc/source/ ./doc/build/
