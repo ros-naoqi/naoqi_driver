@@ -40,6 +40,7 @@ int main(int argc, char** argv)
   else
   {
     std::cout << BOLDRED << "No ip address given. Run qicli call to set the master uri" << RESETCOLOR << std::endl;
+    bs->init();
   }
 
   //! @note Must call ow._stopService when the application stops to do the clean-up

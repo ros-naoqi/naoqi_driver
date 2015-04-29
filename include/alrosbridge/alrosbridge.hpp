@@ -76,6 +76,10 @@ public:
   */
   ~Bridge();
 
+  void init();
+
+  void startRosLoop();
+  void stopRosLoop();
   /**
    * @brief Write a ROSbag with the last bufferized data (10s by default)
    */
@@ -236,8 +240,6 @@ private:
   }
 
   void rosLoop();
-  void startRosLoop();
-  void stopRosLoop();
 
   boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
