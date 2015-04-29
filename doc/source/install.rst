@@ -33,6 +33,7 @@ Download the dependencies of the alrosbridge ::
   $ cd ~/qibuild_ws
   $ git clone https://github.com/aldebaran/gtest.git
   $ git clone https://github.com/aldebaran/libqiprobes.git
+  $ git clone https://github.com/aldebaran/libqicore.git
   $ git clone https://github.com/aldebaran/libqi.git
 
 Download this project and compile it ::
