@@ -31,15 +31,15 @@ When qiBuild compiles, it will only look for dependencies within a toolchain, so
 Download the dependencies of the alrosbridge ::
 
   $ cd ~/qibuild_ws
-  $ git clone https://github.com/aldebaran/gtest.git
-  $ git clone https://github.com/aldebaran/libqiprobes.git
-  $ git clone https://github.com/aldebaran/libqicore.git
-  $ git clone https://github.com/aldebaran/libqi.git
+  $ qisrc add https://github.com/aldebaran/gtest.git
+  $ qisrc add https://github.com/aldebaran/libqiprobes.git
+  $ qisrc add https://github.com/aldebaran/libqicore.git
+  $ qisrc add https://github.com/aldebaran/libqi.git
 
 Download this project and compile it ::
 
   $ cd ~/qibuild_ws
-  $ git clone https://github.com/ros-naoqi/alrosbridge.git
+  $ qisrc add https://github.com/ros-naoqi/alrosbridge.git
   $ cd alrosbridge
   $ qibuild configure -c <tc_name>
   $ qibuild make -c <tc_name>
