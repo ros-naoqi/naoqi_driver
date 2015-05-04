@@ -38,7 +38,7 @@ void JointStatePublisher::publish( const sensor_msgs::JointState& js_msg,
   /**
    * ROBOT STATE PUBLISHER
    */
-  tf_broadcaster_.sendTransform(tf_transforms);
+  tf_broadcasterPtr_->sendTransform(tf_transforms);
 }
 
 
@@ -46,7 +46,7 @@ void JointStatePublisher::reset( ros::NodeHandle& nh )
 {
   pub_joint_states_ = nh.advertise<sensor_msgs::JointState>( topic_, 10 );
 
-  tf_broadcaster_ = tf2_ros::TransformBroadcaster();
+  tf_broadcasterPtr_ = boost::make_shared<tf2_ros::TransformBroadcaster>();
 
   is_initialized_ = true;
 }

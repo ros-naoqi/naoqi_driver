@@ -55,7 +55,7 @@ public:
   virtual bool isSubscribed() const;
 
 private:
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
+  boost::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcasterPtr_;
 
   /** initialize separate publishers for js and odom */
   ros::Publisher pub_joint_states_;
