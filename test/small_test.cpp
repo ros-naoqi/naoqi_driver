@@ -38,7 +38,7 @@
 #include "../src/converters/memory/float.hpp"
 #include "../src/converters/memory/bool.hpp"
 
-#include "../src/event.hpp"
+#include "../src/event/basic.hpp"
 
 int main( int argc, char** argv )
 {
