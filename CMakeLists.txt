@@ -77,6 +77,7 @@ qi_create_lib(
   src/recorder/globalrecorder.cpp
   src/event/basic.hxx
   src/event/basic.hpp
+  src/event/audio.cpp
   ${PUBLISHER}
   ${SUBSCRIBER}
   ${RECORDER}
