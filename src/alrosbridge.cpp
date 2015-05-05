@@ -296,6 +296,11 @@ void Bridge::setBufferDuration(float duration)
   buffer_duration_ = duration;
 }
 
+float Bridge::getBufferDuration()
+{
+  return buffer_duration_;
+}
+
 void Bridge::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -1010,6 +1015,7 @@ QI_REGISTER_OBJECT( Bridge,
                     minidump,
                     minidumpConverters,
                     setBufferDuration,
+                    getBufferDuration,
                     startPublishing,
                     stopPublishing,
                     getMasterURI,

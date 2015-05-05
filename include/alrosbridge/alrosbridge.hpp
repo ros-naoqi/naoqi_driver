@@ -87,6 +87,7 @@ public:
   std::string minidumpConverters(const std::vector<std::string>& names);
 
   void setBufferDuration(float duration);
+  float getBufferDuration();
 
   /**
    * @brief registers generall converter units
