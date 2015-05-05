@@ -65,7 +65,7 @@ void DiagnosticsRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-    buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   }
   else
   {
