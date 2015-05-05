@@ -75,8 +75,8 @@ qi_create_lib(
   SHARED
   src/alrosbridge.cpp
   src/recorder/globalrecorder.cpp
-  src/event.hxx
-  src/event.hpp
+  src/event/basic.hxx
+  src/event/basic.hpp
   ${PUBLISHER}
   ${SUBSCRIBER}
   ${RECORDER}

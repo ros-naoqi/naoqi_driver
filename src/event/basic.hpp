@@ -86,6 +86,6 @@ private:
 
 }; // class globalrecorder
 } //alros
-#include "event.hxx"
+#include "basic.hxx"
 
 #endif

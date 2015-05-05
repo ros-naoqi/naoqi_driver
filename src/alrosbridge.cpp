@@ -70,7 +70,10 @@
 #include "recorder/joint_state.hpp"
 #include "recorder/sonar.hpp"
 
-#include "event.hpp"
+/*
+ * EVENTS
+ */
+#include "event/basic.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
