@@ -70,7 +70,11 @@
 #include "recorder/joint_state.hpp"
 #include "recorder/sonar.hpp"
 
-#include "event.hpp"
+/*
+ * EVENTS
+ */
+#include "event/basic.hpp"
+#include "event/audio.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
@@ -319,6 +323,7 @@ void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder&
 void Bridge::insertEventConverter(const std::string& key, event::Event event)
 {
   //event.reset(*nhPtr_, recorder_);
+  event.resetRecorder(recorder_);
   event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
 }
 
@@ -437,11 +442,11 @@ void Bridge::registerDefaultConverter()
   std::cout << "info converter registered" << std::endl;
 
   /** AUDIO **/
-  boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
+  /*boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
   boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
   ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
   registerPublisher( ac, ap );
-  std::cout << "audio converter registered" << std::endl;
+  std::cout << "audio converter registered" << std::endl;*/
 
   /** LOGS */
   boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
@@ -555,6 +560,16 @@ void Bridge::registerDefaultConverter()
   usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
   registerConverter( usc, usp, usr );
   std::cout << "sonar converter is registered" << std::endl;
+
+  boost::shared_ptr<AudioEventRegister> event_register =
+      boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
+  insertEventConverter("audio", event_register);
+  if (keep_looping) {
+    event_map_.find("audio")->second.startProcess();
+  }
+  if (publish_enabled_) {
+    event_map_.find("audio")->second.isPublishing(true);
+  }
 }
 
 // public interface here
@@ -665,7 +680,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
     typedef std::map< std::string, event::Event > event_map;
     for_each( event_map::value_type &event, event_map_ )
     {
-      event.second.reset(*nhPtr_, recorder_);
+      event.second.resetPublisher(*nhPtr_);
     }
   }
   // Start publishing again

@@ -15,19 +15,14 @@
  *
 */
 
-#ifndef AUDIO_CONVERTER_HPP
-#define AUDIO_CONVERTER_HPP
+#ifndef AUDIO_EVENT_CONVERTER_HPP
+#define AUDIO_EVENT_CONVERTER_HPP
 
 /*
 * LOCAL includes
 */
 #include "converter_base.hpp"
 #include <alrosbridge/message_actions.h>
-
-/*
-* BOOST includes
-*/
-#include <boost/enable_shared_from_this.hpp>
 
 /*
 * ROS includes
@@ -43,39 +38,27 @@ namespace alros{
 
 namespace converter{
 
-class AudioConverter : public BaseConverter<AudioConverter>, public boost::enable_shared_from_this<AudioConverter>
+class AudioEventConverter : public BaseConverter<AudioEventConverter>
 {
 
   typedef boost::function<void(naoqi_msgs::AudioBuffer&) > Callback_t;
 
 public:
-  AudioConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
+  AudioEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
 
-  ~AudioConverter();
-
-  void processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer);
+  ~AudioEventConverter();
 
   virtual void reset();
 
   void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  virtual void callAll(const std::vector<message_actions::MessageAction>& actions);
+  void callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_msgs::AudioBuffer& msg);
 
 private:
-  void start();
-  void stop();
-
-  qi::AnyObject p_audio_;
-  qi::AnyObject p_robot_model_;
-  qi::FutureSync<qi::AnyObject> p_audio_extractor_request;
-  std::vector<uint8_t> channelMap;
-  unsigned int serviceId;
   /** Registered Callbacks **/
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
-  std::vector<message_actions::MessageAction> actions_;
+  naoqi_msgs::AudioBuffer msg_;
 };
-
-QI_REGISTER_OBJECT(AudioConverter, processRemote)
 
 }
 
