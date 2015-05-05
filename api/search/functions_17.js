@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['_7eaudioconverter',['~AudioConverter',['../classalros_1_1converter_1_1AudioConverter.html#a98e0cae7c25651a919cab58edb6b5314',1,'alros::converter::AudioConverter']]],
+  ['_7eaudioeventconverter',['~AudioEventConverter',['../classalros_1_1converter_1_1AudioEventConverter.html#a496f7eb61f40ad3189da47496a44020b',1,'alros::converter::AudioEventConverter']]],
+  ['_7eaudioeventregister',['~AudioEventRegister',['../classalros_1_1AudioEventRegister.html#a78a9293736fe2a89022413d2d416cb65',1,'alros::AudioEventRegister']]],
   ['_7ebaseconverter',['~BaseConverter',['../classalros_1_1converter_1_1BaseConverter.html#ac0f8dc9f2a5830054eb60a6c554d8337',1,'alros::converter::BaseConverter']]],
   ['_7ebasesubscriber',['~BaseSubscriber',['../classalros_1_1subscriber_1_1BaseSubscriber.html#a83b1ea965a2bb7f6d3198b663c85cfbf',1,'alros::subscriber::BaseSubscriber']]],
   ['_7ebasicpublisher',['~BasicPublisher',['../classalros_1_1publisher_1_1BasicPublisher.html#a01be785737a97fab23c1443c8850789b',1,'alros::publisher::BasicPublisher']]],

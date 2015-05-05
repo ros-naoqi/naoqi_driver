@@ -106,8 +106,10 @@ Inheritance diagram for alros::event::Event::EventConcept:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a972b4fb8a2a8a44be74dd3d272d945c9"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#a972b4fb8a2a8a44be74dd3d272d945c9">~EventConcept</a> ()</td></tr>
 <tr class="separator:a972b4fb8a2a8a44be74dd3d272d945c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab247e2b73223b3a8fe3cd7658f0fa3c8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#ab247e2b73223b3a8fe3cd7658f0fa3c8">reset</a> (ros::NodeHandle &amp;nh, boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)=0</td></tr>
-<tr class="separator:ab247e2b73223b3a8fe3cd7658f0fa3c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e24a7383aeefebc8c2bdf35c07d8766"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#a0e24a7383aeefebc8c2bdf35c07d8766">resetPublisher</a> (ros::NodeHandle &amp;nh)=0</td></tr>
+<tr class="separator:a0e24a7383aeefebc8c2bdf35c07d8766"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb21f57ab5d9f46505e4a829c14595de"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#adb21f57ab5d9f46505e4a829c14595de">resetRecorder</a> (boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)=0</td></tr>
+<tr class="separator:adb21f57ab5d9f46505e4a829c14595de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2efde1d539b97437c794325f7a687267"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#a2efde1d539b97437c794325f7a687267">startProcess</a> ()=0</td></tr>
 <tr class="separator:a2efde1d539b97437c794325f7a687267"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac98178d2903b1724cfe5d68f3c74c5b9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#ac98178d2903b1724cfe5d68f3c74c5b9">stopProcess</a> ()=0</td></tr>
@@ -196,7 +198,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab247e2b73223b3a8fe3cd7658f0fa3c8"></a>
+<a class="anchor" id="a0e24a7383aeefebc8c2bdf35c07d8766"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -204,21 +206,11 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void alros::event::Event::EventConcept::reset </td>
+          <td class="memname">virtual void alros::event::Event::EventConcept::resetPublisher </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
-          <td class="paramname"><em>nh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>nh</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt;&#160;</td>
-          <td class="paramname"><em>gr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -228,7 +220,33 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#aad311b0f3a447e7af62ff275d503adab">alros::event::Event::EventModel&lt; T &gt;</a>.</p>
+<p>Implemented in <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#a7eb43dba13222f02bcd364f422f87d0c">alros::event::Event::EventModel&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adb21f57ab5d9f46505e4a829c14595de"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void alros::event::Event::EventConcept::resetRecorder </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt;&#160;</td>
+          <td class="paramname"><em>gr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#a3beef7f0c817713540ffc53ded187330">alros::event::Event::EventModel&lt; T &gt;</a>.</p>
 
 </div>
 </div>
@@ -283,12 +301,12 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/sambrose/work/audio/alrosbridge/include/alrosbridge/event/<a class="el" href="include_2alrosbridge_2event_2event_8hpp_source.html">event.hpp</a></li>
+<li>/home/sambrose/work/audio/alrosbridge/include/alrosbridge/event/<a class="el" href="event_8hpp_source.html">event.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 28 2015 14:52:43 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 5 2015 17:27:25 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

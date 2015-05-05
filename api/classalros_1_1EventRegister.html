@@ -98,7 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>GlobalRecorder concept interface.  
  <a href="classalros_1_1EventRegister.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="src_2event_8hpp_source.html">event.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="event_2basic_8hpp_source.html">basic.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -109,8 +109,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0cd88f997841e144f529551c50ad74e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7158ea9b45a6e795ea922ceeea88f3f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#ac7158ea9b45a6e795ea922ceeea88f3f">~EventRegister</a> ()</td></tr>
 <tr class="separator:ac7158ea9b45a6e795ea922ceeea88f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83b2735e8916cc3472c32b7ab5f03fd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#a83b2735e8916cc3472c32b7ab5f03fd5">reset</a> (ros::NodeHandle &amp;nh, boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)</td></tr>
-<tr class="separator:a83b2735e8916cc3472c32b7ab5f03fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6478dfdd92728e7df2442c029cc06cc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#a6478dfdd92728e7df2442c029cc06cc6">resetPublisher</a> (ros::NodeHandle &amp;nh)</td></tr>
+<tr class="separator:a6478dfdd92728e7df2442c029cc06cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb55433e771b6ac1f4272e7e08aea9b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#abb55433e771b6ac1f4272e7e08aea9b0">resetRecorder</a> (boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)</td></tr>
+<tr class="separator:abb55433e771b6ac1f4272e7e08aea9b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a612be493b559b2be962129858f6dddb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#a612be493b559b2be962129858f6dddb0">startProcess</a> ()</td></tr>
 <tr class="separator:a612be493b559b2be962129858f6dddb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a403f406b8ad332c32c8c428cdf4436b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1EventRegister.html#a403f406b8ad332c32c8c428cdf4436b9">stopProcess</a> ()</td></tr>
@@ -314,28 +316,36 @@ template&lt;typename Converter , typename Publisher , typename Recorder &gt; </d
 
 </div>
 </div>
-<a class="anchor" id="a83b2735e8916cc3472c32b7ab5f03fd5"></a>
+<a class="anchor" id="a6478dfdd92728e7df2442c029cc06cc6"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Converter , typename Publisher , typename Recorder &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classalros_1_1EventRegister.html">alros::EventRegister</a>&lt; Converter, Publisher, Recorder &gt;::reset </td>
+          <td class="memname">void <a class="el" href="classalros_1_1EventRegister.html">alros::EventRegister</a>&lt; Converter, Publisher, Recorder &gt;::resetPublisher </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
-          <td class="paramname"><em>nh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>nh</em></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abb55433e771b6ac1f4272e7e08aea9b0"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Converter , typename Publisher , typename Recorder &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classalros_1_1EventRegister.html">alros::EventRegister</a>&lt; Converter, Publisher, Recorder &gt;::resetRecorder </td>
+          <td>(</td>
           <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt;&#160;</td>
-          <td class="paramname"><em>gr</em>&#160;</td>
-        </tr>
-        <tr>
+          <td class="paramname"><em>gr</em></td><td>)</td>
           <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -645,13 +655,13 @@ template&lt;typename Converter , typename Publisher , typename Recorder &gt; </d
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/sambrose/work/audio/alrosbridge/src/<a class="el" href="src_2event_8hpp_source.html">event.hpp</a></li>
-<li>/home/sambrose/work/audio/alrosbridge/src/<a class="el" href="event_8hxx_source.html">event.hxx</a></li>
+<li>/home/sambrose/work/audio/alrosbridge/src/event/<a class="el" href="event_2basic_8hpp_source.html">basic.hpp</a></li>
+<li>/home/sambrose/work/audio/alrosbridge/src/event/<a class="el" href="basic_8hxx_source.html">basic.hxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 28 2015 14:52:43 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 5 2015 17:27:25 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

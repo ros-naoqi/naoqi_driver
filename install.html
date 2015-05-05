@@ -76,14 +76,15 @@ $ ./ros-toolchain/update_toolchain.sh local_ros &lt;tc_name&gt;
 </div>
 <p>Download the dependencies of the alrosbridge</p>
 <div class="highlight-python"><div class="highlight"><pre>$ cd ~/qibuild_ws
-$ git clone https://github.com/aldebaran/gtest.git
-$ git clone https://github.com/aldebaran/libqiprobes.git
-$ git clone https://github.com/aldebaran/libqi.git
+$ qisrc add https://github.com/aldebaran/gtest.git
+$ qisrc add https://github.com/aldebaran/libqiprobes.git
+$ qisrc add https://github.com/aldebaran/libqicore.git
+$ qisrc add https://github.com/aldebaran/libqi.git
 </pre></div>
 </div>
 <p>Download this project and compile it</p>
 <div class="highlight-python"><div class="highlight"><pre>$ cd ~/qibuild_ws
-$ git clone https://github.com/ros-naoqi/alrosbridge.git
+$ qisrc add https://github.com/ros-naoqi/alrosbridge.git
 $ cd alrosbridge
 $ qibuild configure -c &lt;tc_name&gt;
 $ qibuild make -c &lt;tc_name&gt;

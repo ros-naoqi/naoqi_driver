@@ -107,8 +107,10 @@ Inheritance diagram for alros::event::Event::EventModel&lt; T &gt;:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad57718ea0286723a57806b53654ee20a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#ad57718ea0286723a57806b53654ee20a">EventModel</a> (const T &amp;other)</td></tr>
 <tr class="separator:ad57718ea0286723a57806b53654ee20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad311b0f3a447e7af62ff275d503adab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#aad311b0f3a447e7af62ff275d503adab">reset</a> (ros::NodeHandle &amp;nh, boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)</td></tr>
-<tr class="separator:aad311b0f3a447e7af62ff275d503adab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb43dba13222f02bcd364f422f87d0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#a7eb43dba13222f02bcd364f422f87d0c">resetPublisher</a> (ros::NodeHandle &amp;nh)</td></tr>
+<tr class="separator:a7eb43dba13222f02bcd364f422f87d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3beef7f0c817713540ffc53ded187330"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#a3beef7f0c817713540ffc53ded187330">resetRecorder</a> (boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt; gr)</td></tr>
+<tr class="separator:a3beef7f0c817713540ffc53ded187330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a208337f6803f48fac58128a1c9b0a427"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#a208337f6803f48fac58128a1c9b0a427">startProcess</a> ()</td></tr>
 <tr class="separator:a208337f6803f48fac58128a1c9b0a427"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb8f5787996d91eb91f100fee4f24d65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html#acb8f5787996d91eb91f100fee4f24d65">stopProcess</a> ()</td></tr>
@@ -215,7 +217,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aad311b0f3a447e7af62ff275d503adab"></a>
+<a class="anchor" id="a7eb43dba13222f02bcd364f422f87d0c"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -225,21 +227,11 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html">alros::event::Event::EventModel</a>&lt; T &gt;::reset </td>
+          <td class="memname">void <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html">alros::event::Event::EventModel</a>&lt; T &gt;::resetPublisher </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
-          <td class="paramname"><em>nh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>nh</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt;&#160;</td>
-          <td class="paramname"><em>gr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -249,7 +241,35 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#ab247e2b73223b3a8fe3cd7658f0fa3c8">alros::event::Event::EventConcept</a>.</p>
+<p>Implements <a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#a0e24a7383aeefebc8c2bdf35c07d8766">alros::event::Event::EventConcept</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3beef7f0c817713540ffc53ded187330"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="structalros_1_1event_1_1Event_1_1EventModel.html">alros::event::Event::EventModel</a>&lt; T &gt;::resetRecorder </td>
+          <td>(</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classalros_1_1recorder_1_1GlobalRecorder.html">alros::recorder::GlobalRecorder</a> &gt;&#160;</td>
+          <td class="paramname"><em>gr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="structalros_1_1event_1_1Event_1_1EventConcept.html#adb21f57ab5d9f46505e4a829c14595de">alros::event::Event::EventConcept</a>.</p>
 
 </div>
 </div>
@@ -323,12 +343,12 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/sambrose/work/audio/alrosbridge/include/alrosbridge/event/<a class="el" href="include_2alrosbridge_2event_2event_8hpp_source.html">event.hpp</a></li>
+<li>/home/sambrose/work/audio/alrosbridge/include/alrosbridge/event/<a class="el" href="event_8hpp_source.html">event.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 28 2015 14:52:43 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 5 2015 17:27:25 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

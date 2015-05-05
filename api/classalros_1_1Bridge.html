@@ -115,6 +115,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7908b3a4f56f670f52684d2d499ec014"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#a7908b3a4f56f670f52684d2d499ec014">~Bridge</a> ()</td></tr>
 <tr class="memdesc:a7908b3a4f56f670f52684d2d499ec014"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for ALRosBridge, destroys all ros nodehandle and shutsdown all publisher.  <a href="#a7908b3a4f56f670f52684d2d499ec014">More...</a><br/></td></tr>
 <tr class="separator:a7908b3a4f56f670f52684d2d499ec014"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5da3c1551ef851719937a64ff7db2ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#ac5da3c1551ef851719937a64ff7db2ff">init</a> ()</td></tr>
+<tr class="separator:ac5da3c1551ef851719937a64ff7db2ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8cdac6ee4c51fcf83fe16dac008b591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#af8cdac6ee4c51fcf83fe16dac008b591">startRosLoop</a> ()</td></tr>
+<tr class="separator:af8cdac6ee4c51fcf83fe16dac008b591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe4fedafa8b7d23290ed42859e683ab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#abe4fedafa8b7d23290ed42859e683ab9">stopRosLoop</a> ()</td></tr>
+<tr class="separator:abe4fedafa8b7d23290ed42859e683ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01f3b3956d3492eaf5765e21daa2df20"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#a01f3b3956d3492eaf5765e21daa2df20">minidump</a> ()</td></tr>
 <tr class="memdesc:a01f3b3956d3492eaf5765e21daa2df20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a ROSbag with the last bufferized data (10s by default)  <a href="#a01f3b3956d3492eaf5765e21daa2df20">More...</a><br/></td></tr>
 <tr class="separator:a01f3b3956d3492eaf5765e21daa2df20"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,10 +232,6 @@ Private Member Functions</h2></td></tr>
 <tr class="separator:a2bf4f4aa5d8a9dc589568b051aa63351"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa74d0f8d6640ba71d21ca05b348282a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#aa74d0f8d6640ba71d21ca05b348282a9">rosLoop</a> ()</td></tr>
 <tr class="separator:aa74d0f8d6640ba71d21ca05b348282a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8cdac6ee4c51fcf83fe16dac008b591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#af8cdac6ee4c51fcf83fe16dac008b591">startRosLoop</a> ()</td></tr>
-<tr class="separator:af8cdac6ee4c51fcf83fe16dac008b591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe4fedafa8b7d23290ed42859e683ab9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classalros_1_1Bridge.html#abe4fedafa8b7d23290ed42859e683ab9">stopRosLoop</a> ()</td></tr>
-<tr class="separator:abe4fedafa8b7d23290ed42859e683ab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -570,6 +572,21 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
 </div><div class="memdoc">
 
 <p>get all subscribed publishers </p>
+
+</div>
+</div>
+<a class="anchor" id="ac5da3c1551ef851719937a64ff7db2ff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void alros::Bridge::init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1149,9 +1166,6 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
 <a class="anchor" id="af8cdac6ee4c51fcf83fe16dac008b591"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void alros::Bridge::startRosLoop </td>
@@ -1160,11 +1174,6 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -1206,9 +1215,6 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
 <a class="anchor" id="abe4fedafa8b7d23290ed42859e683ab9"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void alros::Bridge::stopRosLoop </td>
@@ -1217,11 +1223,6 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -1611,7 +1612,7 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Apr 28 2015 14:52:43 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 5 2015 17:27:25 for ALRosBridge by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
