@@ -61,7 +61,8 @@ int main( int argc, char** argv )
   alros::EventRegister<alros::converter::MemoryBoolConverter,
       alros::publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,
       alros::recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > event_register("MiddleTactilTouched", sessionPtr);
-  event_register.reset(n, gr);
+  event_register.resetPublisher(n);
+  event_register.resetRecorder(gr);
 
   gr->startRecord();
 

@@ -54,7 +54,8 @@ public:
   EventRegister( const std::string& key, const qi::SessionPtr& session );
   ~EventRegister();
 
-  void reset( ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void resetPublisher( ros::NodeHandle& nh );
+  void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
   void startProcess();
   void stopProcess();

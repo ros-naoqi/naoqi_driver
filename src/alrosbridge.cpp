@@ -319,6 +319,7 @@ void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder&
 void Bridge::insertEventConverter(const std::string& key, event::Event event)
 {
   //event.reset(*nhPtr_, recorder_);
+  event.resetRecorder(recorder_);
   event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
 }
 
@@ -665,7 +666,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
     typedef std::map< std::string, event::Event > event_map;
     for_each( event_map::value_type &event, event_map_ )
     {
-      event.second.reset(*nhPtr_, recorder_);
+      event.second.resetPublisher(*nhPtr_);
     }
   }
   // Start publishing again

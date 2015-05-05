@@ -54,9 +54,14 @@ public:
     eventPtr_( boost::make_shared<EventModel<T> >(event) )
   {}
 
-  void reset( ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+  void resetPublisher( ros::NodeHandle& nh )
   {
-    eventPtr_->reset(nh, gr);
+    eventPtr_->resetPublisher(nh);
+  }
+
+  void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+  {
+    eventPtr_->resetRecorder(gr);
   }
 
   void startProcess( )
@@ -87,7 +92,8 @@ private:
   struct EventConcept
   {
     virtual ~EventConcept(){}
-    virtual void reset( ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr ) = 0;
+    virtual void resetPublisher(ros::NodeHandle& nh) = 0;
+    virtual void resetRecorder(boost::shared_ptr<alros::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
     virtual void isRecording(bool state) = 0;
@@ -105,9 +111,14 @@ private:
       converter_( other )
     {}
 
-    void reset( ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+    void resetPublisher( ros::NodeHandle& nh )
     {
-      converter_->reset(nh, gr);
+      converter_->resetPublisher(nh);
+    }
+
+    void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+    {
+      converter_->resetRecorder(gr);
     }
 
     void startProcess( )

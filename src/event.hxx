@@ -59,9 +59,14 @@ EventRegister<Converter, Publisher, Recorder>::~EventRegister()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::reset(  ros::NodeHandle& nh, boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+void EventRegister<Converter, Publisher, Recorder>::resetPublisher(  ros::NodeHandle& nh )
 {
   publisher_->reset(nh);
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+{
   recorder_->reset(gr, converter_->frequency());
 }
 
