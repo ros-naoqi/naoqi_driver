@@ -27,6 +27,8 @@
 #define BOLDYELLOW "\033[1m\033[33m"
 #define BOLDCYAN "\033[1m\033[36m"
 
+#define BUFFER_DEFAULT_DURATION 10.f
+
 # include <qi/anyobject.hpp>
 
 namespace alros

@@ -259,6 +259,8 @@ private:
 
   std::vector< subscriber::Subscriber > subscribers_;
 
+  float buffer_duration_;
+
   /** Pub Publisher to execute at a specific time */
   struct ScheduledConverter {
     ScheduledConverter(const ros::Time& schedule, size_t conv_index) :

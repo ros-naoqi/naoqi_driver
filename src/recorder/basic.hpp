@@ -40,7 +40,7 @@ class BasicRecorder
 public:
   BasicRecorder( const std::string& topic, float buffer_frequency = 0 ):
     topic_( topic ),
-    buffer_duration_( 10.f ),
+    buffer_duration_( BUFFER_DEFAULT_DURATION ),
     is_initialized_( false ),
     is_subscribed_( false ),
     buffer_frequency_(buffer_frequency)
