@@ -152,6 +152,7 @@ CameraConverter::CameraConverter( const std::string& name, const float& frequenc
     colorspace_ = AL::kInfraredColorSpace;
     msg_colorspace_ = "16UC1";
     cv_mat_type_ = CV_16U;
+    camera_info_ = camera_info_definitions::getCameraInfo(camera_source_, resolution_);
   }
 }
 
