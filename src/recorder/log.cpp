@@ -24,7 +24,7 @@ namespace recorder
 
 LogRecorder::LogRecorder(const std::string& topic , float buffer_frequency):
   topic_( topic ),
-  buffer_duration_(10.f),
+  buffer_duration_(helpers::bufferDefaultDuration),
   buffer_frequency_(buffer_frequency),
   counter_(1)
 {}
@@ -61,7 +61,7 @@ void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequen
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-    buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   }
   else
   {

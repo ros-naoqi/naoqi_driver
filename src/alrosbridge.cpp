@@ -105,7 +105,8 @@ Bridge::Bridge( qi::SessionPtr& session )
   publish_enabled_(false),
   record_enabled_(false),
   keep_looping(true),
-  recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix()))
+  recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix())),
+  buffer_duration_(helpers::bufferDefaultDuration)
 {
 }
 
@@ -288,11 +289,16 @@ std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
 
 void Bridge::setBufferDuration(float duration)
 {
-  // LOOP AGAINST ALL RECORDERS
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
     iterator->second.setBufferDuration(duration);
   }
+  buffer_duration_ = duration;
+}
+
+float Bridge::getBufferDuration()
+{
+  return buffer_duration_;
 }
 
 void Bridge::registerConverter( converter::Converter& conv )
@@ -1009,6 +1015,7 @@ QI_REGISTER_OBJECT( Bridge,
                     minidump,
                     minidumpConverters,
                     setBufferDuration,
+                    getBufferDuration,
                     startPublishing,
                     stopPublishing,
                     getMasterURI,

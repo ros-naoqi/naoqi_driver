@@ -27,7 +27,7 @@ namespace recorder
 
 SonarRecorder::SonarRecorder(const std::vector<std::string>& topics, float buffer_frequency ):
   topics_(topics),
-  buffer_duration_(10.f),
+  buffer_duration_(helpers::bufferDefaultDuration),
   buffer_frequency_(buffer_frequency),
   counter_(1)
 {}
@@ -67,7 +67,7 @@ void SonarRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequ
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-    buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
+    buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   }
   else
   {

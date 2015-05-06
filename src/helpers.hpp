@@ -54,6 +54,8 @@ inline dataType::DataType getDataType(qi::AnyValue value)
   return type;
 }
 
+static const float bufferDefaultDuration = 10.f;
+
 } //helpers
 } // alros
 

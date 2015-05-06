@@ -87,6 +87,7 @@ public:
   std::string minidumpConverters(const std::vector<std::string>& names);
 
   void setBufferDuration(float duration);
+  float getBufferDuration();
 
   /**
    * @brief registers generall converter units
@@ -258,6 +259,8 @@ private:
   typedef std::map< std::string, event::Event>::iterator EventIter;
 
   std::vector< subscriber::Subscriber > subscribers_;
+
+  float buffer_duration_;
 
   /** Pub Publisher to execute at a specific time */
   struct ScheduledConverter {

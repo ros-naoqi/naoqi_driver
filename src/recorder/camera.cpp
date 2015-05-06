@@ -27,7 +27,7 @@ namespace recorder
 
 CameraRecorder::CameraRecorder( const std::string& topic_, float buffer_frequency ):
   buffer_frequency_(buffer_frequency),
-  buffer_duration_( 10.f ),
+  buffer_duration_( helpers::bufferDefaultDuration ),
   counter_(1)
 {
   topic_info_ = topic_ + "/camera_info";
@@ -67,7 +67,7 @@ void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_freq
 {
   gr_ = gr;
   max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-  buffer_size_ = static_cast<size_t>(buffer_duration_*buffer_frequency_);
+  buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   buffer_.resize(buffer_size_);
   is_initialized_ = true;
 }

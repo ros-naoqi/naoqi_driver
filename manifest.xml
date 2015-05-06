@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <package version="0.0.2" uuid="alrosbridge">
  <services>
-  <service autorun="false" execStart="./run.sh" name="alrosbridge"/>
-  <!-- <service autorun="true" execStart="./bin/alros_bin" name="alrosbridge"/> -->
+  <!-- <service autorun="false" execStart="./run.sh" name="alrosbridge"/> -->
+  <service autorun="true" execStart="run.sh" name="alrosbridge"/>
  </services>
  <executableFiles>
-  <file path="run.sh"/>
+  <file path="./run.sh"/>
   <!--  <file path="bin/alros_bin"/> -->
  </executableFiles>
 </package>
