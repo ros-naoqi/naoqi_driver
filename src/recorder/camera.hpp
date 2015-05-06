@@ -22,6 +22,7 @@
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
+#include "../helpers.hpp"
 
 /*
 * ROS includes

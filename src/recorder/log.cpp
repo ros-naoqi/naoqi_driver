@@ -24,7 +24,7 @@ namespace recorder
 
 LogRecorder::LogRecorder(const std::string& topic , float buffer_frequency):
   topic_( topic ),
-  buffer_duration_(BUFFER_DEFAULT_DURATION),
+  buffer_duration_(helpers::bufferDefaultDuration),
   buffer_frequency_(buffer_frequency),
   counter_(1)
 {}

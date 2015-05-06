@@ -27,7 +27,7 @@ namespace recorder
 
 SonarRecorder::SonarRecorder(const std::vector<std::string>& topics, float buffer_frequency ):
   topics_(topics),
-  buffer_duration_(BUFFER_DEFAULT_DURATION),
+  buffer_duration_(helpers::bufferDefaultDuration),
   buffer_frequency_(buffer_frequency),
   counter_(1)
 {}

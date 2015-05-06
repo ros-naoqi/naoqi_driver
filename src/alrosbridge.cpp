@@ -106,7 +106,7 @@ Bridge::Bridge( qi::SessionPtr& session )
   record_enabled_(false),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix())),
-  buffer_duration_(BUFFER_DEFAULT_DURATION)
+  buffer_duration_(helpers::bufferDefaultDuration)
 {
 }
 

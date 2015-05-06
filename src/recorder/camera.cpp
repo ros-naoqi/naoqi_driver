@@ -27,7 +27,7 @@ namespace recorder
 
 CameraRecorder::CameraRecorder( const std::string& topic_, float buffer_frequency ):
   buffer_frequency_(buffer_frequency),
-  buffer_duration_( BUFFER_DEFAULT_DURATION ),
+  buffer_duration_( helpers::bufferDefaultDuration ),
   counter_(1)
 {
   topic_info_ = topic_ + "/camera_info";
