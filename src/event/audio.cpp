@@ -120,6 +120,14 @@ void AudioEventRegister::stopProcess()
   }
 }
 
+void AudioEventRegister::writeDump()
+{
+  if (isStarted_)
+  {
+    recorder_->writeDump();
+  }
+}
+
 void AudioEventRegister::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);

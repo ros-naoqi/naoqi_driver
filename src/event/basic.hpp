@@ -60,6 +60,8 @@ public:
   void startProcess();
   void stopProcess();
 
+  void writeDump();
+
   void isRecording(bool state);
   void isPublishing(bool state);
 

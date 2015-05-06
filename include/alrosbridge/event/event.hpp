@@ -74,6 +74,11 @@ public:
     eventPtr_->stopProcess();
   }
 
+  void writeDump( )
+  {
+    eventPtr_->writeDump();
+  }
+
   void isRecording(bool state)
   {
     eventPtr_->isRecording(state);
@@ -96,6 +101,7 @@ private:
     virtual void resetRecorder(boost::shared_ptr<alros::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
+    virtual void writeDump() = 0;
     virtual void isRecording(bool state) = 0;
     virtual void isPublishing(bool state) = 0;
   };
@@ -129,6 +135,11 @@ private:
     void stopProcess( )
     {
       converter_->stopProcess();
+    }
+
+    void writeDump( )
+    {
+      converter_->writeDump();
     }
 
     void isRecording(bool state)

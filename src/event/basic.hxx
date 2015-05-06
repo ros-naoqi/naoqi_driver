@@ -94,6 +94,15 @@ void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::writeDump()
+{
+  if (isStarted_)
+  {
+    recorder_->writeDump();
+  }
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);

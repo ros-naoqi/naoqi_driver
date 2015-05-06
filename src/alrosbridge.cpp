@@ -246,6 +246,10 @@ std::string Bridge::minidump()
   {
     iterator->second.writeDump();
   }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.writeDump();
+  }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
