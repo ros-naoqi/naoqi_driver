@@ -38,7 +38,7 @@
 // Publisher
 #include "../src/publishers/basic.hpp"
 // Recorder
-#include "../recorder/basic.hpp"
+#include "../recorder/basic_event.hpp"
 
 namespace alros
 {
@@ -81,7 +81,7 @@ private:
 private:
   boost::shared_ptr<converter::AudioEventConverter> converter_;
   boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > publisher_;
-  boost::shared_ptr<recorder::BasicRecorder<naoqi_msgs::AudioBuffer> > recorder_;
+  boost::shared_ptr<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> > recorder_;
 
   qi::SessionPtr session_;
   qi::AnyObject p_audio_;

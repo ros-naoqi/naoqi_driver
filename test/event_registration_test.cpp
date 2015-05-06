@@ -35,17 +35,44 @@
 
 #include "../src/publishers/basic.hpp"
 #include "../src/recorder/basic.hpp"
+#include "../src/recorder/basic_event.hpp"
 #include "../src/converters/memory/float.hpp"
 #include "../src/converters/memory/bool.hpp"
 
 #include "../src/event/basic.hpp"
+
+void basic_event_recorder(qi::SessionPtr sessionPtr)
+{
+  ros::Time::init();
+
+  boost::shared_ptr<alros::recorder::GlobalRecorder> gr = boost::make_shared<alros::recorder::GlobalRecorder>("");
+
+  alros::EventRegister<alros::converter::MemoryBoolConverter,
+      alros::publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,
+      alros::recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > event_register("MiddleTactilTouched", sessionPtr);
+  event_register.resetRecorder(gr);
+
+  //gr->startRecord();
+
+  event_register.startProcess();
+  //event_register.isRecording(true);
+
+  qi::os::sleep(60);
+
+  //event_register.isRecording(false);
+  event_register.stopProcess();
+  //gr->stopRecord("");
+}
 
 int main( int argc, char** argv )
 {
   qi::ApplicationSession app(argc, argv);
   app.start();
 
-  setenv( "ROS_MASTER_URI", "http://10.0.128.9:11311", 1 );
+  qi::SessionPtr sessionPtr = app.session();
+  basic_event_recorder(sessionPtr);
+
+  /*setenv( "ROS_MASTER_URI", "http://10.0.128.9:11311", 1 );
   ros::init( argc, argv, "converter_memory_test" );
   ros::NodeHandle n;
 
@@ -73,7 +100,7 @@ int main( int argc, char** argv )
 
   event_register.isRecording(false);
   event_register.stopProcess();
-  gr->stopRecord("");
+  gr->stopRecord("");*/
 
   app.run();
   app.session()->close();

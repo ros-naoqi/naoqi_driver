@@ -49,6 +49,7 @@ EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string&
 
   converter_->registerCallback( message_actions::PUBLISH, boost::bind(&Publisher::publish, publisher_, _1) );
   converter_->registerCallback( message_actions::RECORD, boost::bind(&Recorder::write, recorder_, _1) );
+  converter_->registerCallback( message_actions::LOG, boost::bind(&Recorder::bufferize, recorder_, _1) );
 
   signal_ = p_memory_.call<qi::AnyObject>("subscriber", key_);
 }
@@ -135,6 +136,7 @@ void EventRegister<Converter, Publisher, Recorder>::onEvent()
     {
       actions.push_back(message_actions::RECORD);
     }
+    actions.push_back(message_actions::LOG);
     if (actions.size() >0)
     {
       converter_->callAll( actions );
