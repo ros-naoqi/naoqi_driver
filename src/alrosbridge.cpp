@@ -141,7 +141,7 @@ void Bridge::rosLoop()
 {
   static std::vector<message_actions::MessageAction> actions;
 
-  ros::Time::init();
+//  ros::Time::init();
   while( keep_looping )
   {
     // clear the callback triggers
@@ -155,6 +155,10 @@ void Bridge::rosLoop()
         converter::Converter& conv = converters_[conv_index];
         ros::Time schedule = conv_queue_.top().schedule_;
 
+        // check the publishing condition
+        // 1. publishing enabled
+        // 2. has to be registered
+        // 3. has to be subscribed
         PubConstIter pub_it = pub_map_.find( conv.name() );
         if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
         {
@@ -162,13 +166,13 @@ void Bridge::rosLoop()
         }
 
         // check the recording condition
-        // recording enabled
-        // has to be registered
-        // has to be subscribed (configured to be recorded)
+        // 1. recording enabled
+        // 2. has to be registered
+        // 3. has to be subscribed (configured to be recorded)
         RecConstIter rec_it = rec_map_.find( conv.name() );
         {
-          boost::mutex::scoped_lock lock_record( mutex_record_ );
-          if ( record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
+          boost::mutex::scoped_lock lock_record( mutex_record_, boost::try_to_lock );
+          if ( lock_record && record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
           {
             actions.push_back(message_actions::RECORD);
           }
@@ -420,15 +424,21 @@ void Bridge::registerDefaultConverter()
   tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
   tf2_buffer_->setUsingDedicatedThread(true);
 
-//  // Info should be at 0 (latched) but somehow that does not work ...
-//  publisher::Publisher info = alros::publisher::InfoPublisher("info", "info", 0.1, sessionPtr_);
-//  registerPublisher( info );
-
   alros::Robot robot_type;
 
-  /** Info publisher **/
-  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
-  robot_type = inc->robot();
+  // replace this with proper configuration struct
+  bool with_info = true;
+  bool with_audio = true;
+  bool with_logs = true;
+  bool with_diag = true;
+  bool with_imu_torso = true;
+  bool with_imu_base = true;
+  bool with_camera_front = true;
+  bool with_camera_depth = true;
+  bool with_camera_ir = true;
+  bool with_joint_states = true;
+  bool with_laser = true;
+  bool with_sonar = true;
 
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
@@ -438,143 +448,175 @@ void Bridge::registerDefaultConverter()
    * Then, InfoConverter will never be called again, because of its 0Hz frequency. But if a new user subscribes to the "info"
    * topic, he/she will receive the information published before, as the publisher is latched.
    */
+  /** Info publisher **/
+  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
+  robot_type = inc->robot();
 
-  boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
-  boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
-  inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
-  inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
-  inc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::bufferize, inr, _1) );
-  registerConverter( inc, inp, inr );
-  std::cout << "info converter registered" << std::endl;
+  if ( with_info )
+  {
+    boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
+    boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
+    inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
+    inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
+    inc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::bufferize, inr, _1) );
+    registerConverter( inc, inp, inr );
+  }
 
   /** AUDIO **/
-  /*boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
-  ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
-  registerPublisher( ac, ap );
-  std::cout << "audio converter registered" << std::endl;*/
+  if ( with_audio )
+  {
+    boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
+    boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
+    ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
+    registerPublisher( ac, ap );
+  }
 
   /** LOGS */
-  boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
-  boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( "/rosout" );
-  lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
-  registerPublisher( lc, lp );
-  std::cout << "logging converter registered" << std::endl;
+  if ( with_logs )
+  {
+    boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
+    boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( "/rosout" );
+    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
+    registerPublisher( lc, lp );
+  }
 
   /** DIAGNOSTICS */
-  boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
-  boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
-  boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
-  dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
-  dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
-  dc->registerCallback( message_actions::LOG, boost::bind(&recorder::DiagnosticsRecorder::bufferize, dr, _1) );
-  registerConverter( dc, dp, dr );
-  std::cout << "diagnostics converter registered" << std::endl;
+  if ( with_diag )
+  {
+    boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
+    boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
+    boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
+    dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
+    dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
+    dc->registerCallback( message_actions::LOG, boost::bind(&recorder::DiagnosticsRecorder::bufferize, dr, _1) );
+    registerConverter( dc, dp, dr );
+  }
 
   /** IMU TORSO **/
-  boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
-  boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_torso" );
-  boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
-  imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
-  imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
-  imutc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imutr, _1) );
-  registerConverter( imutc, imutp, imutr );
-
-  if(robot_type == alros::PEPPER){
-    /** IMU BASE **/
-    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
-    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_base" );
-    boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
-    imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
-    imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
-    imubc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imubr, _1) );
-    registerConverter( imubc, imubp, imubr );
+  if ( with_imu_torso )
+  {
+    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
+    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_torso" );
+    boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
+    imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
+    imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
+    imutc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imutr, _1) );
+    registerConverter( imutc, imutp, imutr );
   }
-  std::cout << "imu converter registered" << std::endl;
+
+  if(robot_type == alros::PEPPER)
+  {
+    /** IMU BASE **/
+    if ( with_imu_base )
+    {
+      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
+      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_base" );
+      boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
+      imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
+      imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
+      imubc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imubr, _1) );
+      registerConverter( imubc, imubp, imubr );
+    }
+  } // endif PEPPER
 
   /** Front Camera */
-  boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
-  boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", 2 );
-  boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 15, sessionPtr_, AL::kTopCamera, AL::kQVGA );
-  fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
-  fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
-  fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
-  registerConverter( fcc, fcp, fcr );
+  if ( with_camera_front )
+  {
+    boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
+    boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", 15 );
+    boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 15, sessionPtr_, AL::kTopCamera, AL::kQVGA );
+    fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
+    fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
+    fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
+    registerConverter( fcc, fcp, fcr );
+  }
 
-  if(robot_type == alros::PEPPER){
+  if(robot_type == alros::PEPPER)
+  {
     /** Depth Camera */
-    boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
-    boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", 2 );
-    boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 15, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
-    dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
-    dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
-    dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
-    registerConverter( dcc, dcp, dcr );
+    if ( with_camera_depth )
+    {
+      boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
+      boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", 10 );
+      boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 15, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+      dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
+      dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
+      dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
+      registerConverter( dcc, dcp, dcr );
+    }
 
     /** Infrared Camera */
-    boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
-    boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", 2 );
-    boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", 15, sessionPtr_, AL::kInfraredCamera, AL::kQVGA);
-    icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
-    icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
-    icc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, icr, _1, _2) );
-    registerConverter( icc, icp, icr );
-  }
-  std::cout << "cameras are registered" << std::endl;
+    if ( with_camera_ir )
+    {
+      boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
+      boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", 5 );
+      boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", 15, sessionPtr_, AL::kInfraredCamera, AL::kQVGA);
+      icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
+      icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
+      icc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, icr, _1, _2) );
+      registerConverter( icc, icp, icr );
+    }
+  } // endif PEPPER
 
   /** Joint States */
-  boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
-  std::cout << "joint state publisher " << std::endl;
-  boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
-  boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_ );
-  jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
-  jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
-  jsc->registerCallback( message_actions::LOG, boost::bind(&recorder::JointStateRecorder::bufferize, jsr, _1, _2) );
-  registerConverter( jsc, jsp, jsr );
-//  registerRecorder(jsc, jsr);
-  std::cout << "joint states converter is initialized" << std::endl;
+  if ( with_joint_states )
+  {
+    boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
+    std::cout << "joint state publisher " << std::endl;
+    boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
+    boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_ );
+    jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
+    jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
+    jsc->registerCallback( message_actions::LOG, boost::bind(&recorder::JointStateRecorder::bufferize, jsr, _1, _2) );
+    registerConverter( jsc, jsp, jsr );
+    //  registerRecorder(jsc, jsr);
+  }
 
   if(robot_type == alros::PEPPER){
     /** Laser */
-    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
-    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
-    boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
-    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
-    lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
-    lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::bufferize, lr, _1) );
-    registerConverter( lc, lp, lr );
+    if ( with_laser )
+    {
+      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
+      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
+      boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
+      lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
+      lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
+      lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::bufferize, lr, _1) );
+      registerConverter( lc, lp, lr );
+    }
   }
-  std::cout << "laser converter is initialized" << std::endl;
 
   /** Sonar */
-  std::vector<std::string> sonar_topics;
-  if (robot_type == alros::PEPPER)
+  if ( with_sonar )
   {
-    sonar_topics.push_back("sonar/front");
-    sonar_topics.push_back("sonar/back");
-  }
-  else
-  {
-    sonar_topics.push_back("sonar/left");
-    sonar_topics.push_back("sonar/right");
-  }
-  boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
-  boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
-  boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
-  usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
-  usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
-  usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
-  registerConverter( usc, usp, usr );
-  std::cout << "sonar converter is registered" << std::endl;
+    std::vector<std::string> sonar_topics;
+    if (robot_type == alros::PEPPER)
+    {
+      sonar_topics.push_back("sonar/front");
+      sonar_topics.push_back("sonar/back");
+    }
+    else
+    {
+      sonar_topics.push_back("sonar/left");
+      sonar_topics.push_back("sonar/right");
+    }
+    boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
+    boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
+    boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
+    usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
+    usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
+    usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
+    registerConverter( usc, usp, usr );
 
-  boost::shared_ptr<AudioEventRegister> event_register =
-      boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
-  insertEventConverter("audio", event_register);
-  if (keep_looping) {
-    event_map_.find("audio")->second.startProcess();
-  }
-  if (publish_enabled_) {
-    event_map_.find("audio")->second.isPublishing(true);
+    boost::shared_ptr<AudioEventRegister> event_register =
+        boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
+    insertEventConverter("audio", event_register);
+    if (keep_looping) {
+      event_map_.find("audio")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("audio")->second.isPublishing(true);
+    }
   }
 }
 
