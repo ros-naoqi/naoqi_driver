@@ -136,7 +136,7 @@ void Bridge::rosLoop()
 {
   static std::vector<message_actions::MessageAction> actions;
 
-  ros::Time::init();
+//  ros::Time::init();
   while( keep_looping )
   {
     // clear the callback triggers
@@ -157,13 +157,13 @@ void Bridge::rosLoop()
         }
 
         // check the recording condition
-        // recording enabled
-        // has to be registered
-        // has to be subscribed (configured to be recorded)
+        // 1. recording enabled
+        // 2. has to be registered
+        // 3. has to be subscribed (configured to be recorded)
         RecConstIter rec_it = rec_map_.find( conv.name() );
         {
-          boost::mutex::scoped_lock lock_record( mutex_record_ );
-          if ( record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
+          boost::mutex::scoped_lock lock_record( mutex_record_, boost::try_to_lock );
+          if ( lock_record && record_enabled_ && rec_it != rec_map_.end() && rec_it->second.isSubscribed() )
           {
             actions.push_back(message_actions::RECORD);
           }
