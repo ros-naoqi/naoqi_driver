@@ -94,6 +94,11 @@ public:
     eventPtr_->isPublishing(state);
   }
 
+  void isDumping(bool state)
+  {
+    eventPtr_->isDumping(state);
+  }
+
 private:
 
   /**
@@ -110,6 +115,7 @@ private:
     virtual void setBufferDuration(float duration) = 0;
     virtual void isRecording(bool state) = 0;
     virtual void isPublishing(bool state) = 0;
+    virtual void isDumping(bool state) = 0;
   };
 
 
@@ -161,6 +167,11 @@ private:
     void isPublishing(bool state)
     {
       converter_->isPublishing(state);
+    }
+
+    void isDumping(bool state)
+    {
+      converter_->isDumping(state);
     }
 
     T converter_;

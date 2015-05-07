@@ -43,7 +43,8 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     session_(session),
     isStarted_(false),
     isPublishing_(false),
-    isRecording_(false)
+    isRecording_(false),
+    isDumping_(false)
 {
   int micConfig = p_robot_model_.call<int>("_getMicrophoneConfig");
   if(micConfig){
@@ -145,6 +146,12 @@ void AudioEventRegister::isPublishing(bool state)
   isPublishing_ = state;
 }
 
+void AudioEventRegister::isDumping(bool state)
+{
+  boost::mutex::scoped_lock dump_lock(mutex_);
+  isDumping_ = state;
+}
+
 void AudioEventRegister::registerCallback()
 {
 }
@@ -179,7 +186,10 @@ void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, q
     {
       actions.push_back(message_actions::RECORD);
     }
-    actions.push_back(message_actions::LOG);
+    if ( !isDumping_ )
+    {
+      actions.push_back(message_actions::LOG);
+    }
     if (actions.size() >0)
     {
       converter_->callAll( actions, msg );

@@ -65,6 +65,7 @@ public:
 
   void isRecording(bool state);
   void isPublishing(bool state);
+  void isDumping(bool state);
 
 private:
   void registerCallback();
@@ -86,6 +87,7 @@ private:
   bool isStarted_;
   bool isPublishing_;
   bool isRecording_;
+  bool isDumping_;
 
 }; // class globalrecorder
 } //alros

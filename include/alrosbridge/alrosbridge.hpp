@@ -217,6 +217,7 @@ private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
   bool record_enabled_;
+  bool dump_enabled_;
   bool keep_looping;
 
   const size_t freq_;

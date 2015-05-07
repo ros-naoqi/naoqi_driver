@@ -41,7 +41,8 @@ EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string&
     p_memory_( session->service("ALMemory") ),
     isStarted_(false),
     isPublishing_(false),
-    isRecording_(false)
+    isRecording_(false),
+    isDumping_(false)
 {
   publisher_ = boost::make_shared<Publisher>( key_ );
   recorder_ = boost::make_shared<Recorder>( key_ );
@@ -123,6 +124,13 @@ void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::isDumping(bool state)
+{
+  boost::mutex::scoped_lock dump_lock(mutex_);
+  isDumping_ = state;
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::registerCallback()
 {
   signalID_ = signal_.connect("signal", (boost::function<void(qi::AnyValue)>(boost::bind(&EventRegister<Converter, Publisher, Recorder>::onEvent,
@@ -151,7 +159,10 @@ void EventRegister<Converter, Publisher, Recorder>::onEvent()
     {
       actions.push_back(message_actions::RECORD);
     }
-    actions.push_back(message_actions::LOG);
+    if ( !isDumping_ )
+    {
+      actions.push_back(message_actions::LOG);
+    }
     if (actions.size() >0)
     {
       converter_->callAll( actions );

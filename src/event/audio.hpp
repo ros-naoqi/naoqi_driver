@@ -73,6 +73,7 @@ public:
 
   void isRecording(bool state);
   void isPublishing(bool state);
+  void isDumping(bool state);
 
   void processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer);
 
@@ -98,6 +99,7 @@ private:
   bool isStarted_;
   bool isPublishing_;
   bool isRecording_;
+  bool isDumping_;
 
 }; // class
 

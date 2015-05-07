@@ -105,6 +105,7 @@ Bridge::Bridge( qi::SessionPtr& session )
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
+  dump_enabled_(false),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix())),
   buffer_duration_(helpers::bufferDefaultDuration)
@@ -180,7 +181,7 @@ void Bridge::rosLoop()
         }
 
         // bufferize data in recorder
-        if ( rec_it != rec_map_.end() && conv.frequency() != 0)
+        if ( !dump_enabled_ && rec_it != rec_map_.end() && conv.frequency() != 0)
         {
           actions.push_back(message_actions::LOG);
         }
@@ -232,6 +233,13 @@ void Bridge::rosLoop()
 
 std::string Bridge::minidump(const std::string& prefix)
 {
+  // STOP BUFFERIZING
+  dump_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(true);
+  }
+
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
@@ -242,24 +250,38 @@ std::string Bridge::minidump(const std::string& prefix)
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord(prefix);
   // for each recorder, call write_dump function
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.writeDump();
+  }
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
     iterator->second.writeDump();
   }
+
+  // RESTART BUFFERIZING
+  dump_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
-    iterator->second.writeDump();
+    iterator->second.isDumping(false);
   }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
 std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
+  // STOP BUFFERIZING
+  dump_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(true);
+  }
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
     stopRecording();
   }
+
   // WRITE CHOOSEN BUFFER INTO THE ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -275,6 +297,24 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
       }
       it->second.writeDump();
     }
+    else
+    {
+      EventIter it_event = event_map_.find(name);
+      if ( it_event != event_map_.end() )
+      {
+        if ( !is_started )
+        {
+          recorder_->startRecord(prefix);
+        }
+        it_event->second.writeDump();
+      }
+    }
+  }
+  // RESTART BUFFERIZING
+  dump_enabled_ = false;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(false);
   }
   if ( is_started )
   {
@@ -814,8 +854,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
     {
       if ( !is_started )
       {
-        recorder_->startRecord()
-          record_enabled_ = true;
+        recorder_->startRecord();
       }
       it->second.subscribe(true);
       std::cout << HIGHGREEN << "Topic "
@@ -831,7 +870,11 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
         << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
     }
   }
-  if ( !is_started )
+  if ( is_started )
+  {
+    record_enabled_ = true;
+  }
+  else
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
       << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
