@@ -103,6 +103,12 @@ void EventRegister<Converter, Publisher, Recorder>::writeDump()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::setBufferDuration(float duration)
+{
+  recorder_->setBufferDuration(duration);
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);

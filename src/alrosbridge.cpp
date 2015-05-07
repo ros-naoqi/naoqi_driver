@@ -295,6 +295,10 @@ void Bridge::setBufferDuration(float duration)
   {
     iterator->second.setBufferDuration(duration);
   }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.setBufferDuration(duration);
+  }
   buffer_duration_ = duration;
 }
 

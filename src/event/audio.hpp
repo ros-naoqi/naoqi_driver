@@ -69,6 +69,7 @@ public:
   void stopProcess();
 
   void writeDump();
+  void setBufferDuration(float duration);
 
   void isRecording(bool state);
   void isPublishing(bool state);

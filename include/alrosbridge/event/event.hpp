@@ -79,6 +79,11 @@ public:
     eventPtr_->writeDump();
   }
 
+  void setBufferDuration(float duration)
+  {
+    eventPtr_->setBufferDuration(duration);
+  }
+
   void isRecording(bool state)
   {
     eventPtr_->isRecording(state);
@@ -102,6 +107,7 @@ private:
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
     virtual void writeDump() = 0;
+    virtual void setBufferDuration(float duration) = 0;
     virtual void isRecording(bool state) = 0;
     virtual void isPublishing(bool state) = 0;
   };
@@ -140,6 +146,11 @@ private:
     void writeDump( )
     {
       converter_->writeDump();
+    }
+
+    void setBufferDuration(float duration)
+    {
+      converter_->setBufferDuration(duration);
     }
 
     void isRecording(bool state)

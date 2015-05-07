@@ -128,6 +128,11 @@ void AudioEventRegister::writeDump()
   }
 }
 
+void AudioEventRegister::setBufferDuration(float duration)
+{
+  recorder_->setBufferDuration(duration);
+}
+
 void AudioEventRegister::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);
