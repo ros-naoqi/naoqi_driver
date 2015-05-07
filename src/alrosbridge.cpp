@@ -250,43 +250,36 @@ std::string Bridge::minidump()
 
 std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
 {
-  bool success = false;
-  int index = 0;
-  while (!success && (index<names.size()))
+  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  if (record_enabled_)
   {
-    if (rec_map_.find(names[index]) != rec_map_.end())
-    {
-      success = true;
-    }
-    ++index;
+    stopRecording();
   }
+  // WRITE CHOOSEN BUFFER INTO THE ROSBAG
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
 
-  if (success)
+  bool is_started = false;
+  for_each( const std::string& name, names)
   {
-    // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
-    if (record_enabled_)
+    RecIter it = rec_map_.find(name);
+    if ( it != rec_map_.end() )
     {
-      stopRecording();
-    }
-    // WRITE CHOOSEN BUFFER INTO THE ROSBAG
-    boost::mutex::scoped_lock lock_record( mutex_record_ );
-    recorder_->startRecord();
-
-    for_each( const std::string& name, names)
-    {
-      RecIter it = rec_map_.find(name);
-      if ( it != rec_map_.end() )
+      if ( !is_started )
       {
-        it->second.writeDump();
+        recorder_->startRecord();
       }
+      it->second.writeDump();
     }
+  }
+  if ( is_started )
+  {
     return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
   }
   else
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
-              << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-              << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+      << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+      << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
     return "Could not find any topic in converters. To get the list of all available converter's name, please run: $ qicli call BridgeService.getAvailableConverters";
   }
 }
@@ -465,10 +458,10 @@ void Bridge::registerDefaultConverter()
   /** AUDIO **/
   if ( with_audio )
   {
-    boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
-    boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
-    ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
-    registerPublisher( ac, ap );
+    //boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
+    //boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
+    //ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
+    //registerPublisher( ac, ap );
   }
 
   /** LOGS */
@@ -802,48 +795,38 @@ void Bridge::startRecording()
 
 void Bridge::startRecordingConverters(const std::vector<std::string>& names)
 {
-  bool success = false;
-  int index = 0;
-  while (!success && (index<names.size()))
-  {
-    if (rec_map_.find(names[index]) != rec_map_.end())
-    {
-      success = true;
-    }
-    ++index;
-  }
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
 
-  if (success)
+  bool is_started = false;
+  for_each( const std::string& name, names)
   {
-    boost::mutex::scoped_lock lock_record( mutex_record_ );
-    recorder_->startRecord();
-
-    for_each( const std::string& name, names)
+    RecIter it = rec_map_.find(name);
+    if ( it != rec_map_.end() )
     {
-      RecIter it = rec_map_.find(name);
-      if ( it != rec_map_.end() )
+      if ( !is_started )
       {
-        it->second.subscribe(true);
-        std::cout << HIGHGREEN << "Topic "
-                  << BOLDCYAN << name << RESETCOLOR
-                  << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+        recorder_->startRecord()
+          record_enabled_ = true;
       }
-      else
-      {
-        std::cout << BOLDRED << "Could not find topic "
-                  << BOLDCYAN << name
-                  << BOLDRED << " in recorders" << RESETCOLOR << std::endl
-                  << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-                  << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
-      }
+      it->second.subscribe(true);
+      std::cout << HIGHGREEN << "Topic "
+        << BOLDCYAN << name << RESETCOLOR
+        << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
     }
-    record_enabled_ = true;
+    else
+    {
+      std::cout << BOLDRED << "Could not find topic "
+        << BOLDCYAN << name
+        << BOLDRED << " in recorders" << RESETCOLOR << std::endl
+        << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+        << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+    }
   }
-  else
+  if ( !is_started )
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
-              << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-              << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+      << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
+      << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
   }
 }
 
