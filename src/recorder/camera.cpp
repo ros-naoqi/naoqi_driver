@@ -66,6 +66,7 @@ void CameraRecorder::writeDump()
 void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  conv_frequency_ = conv_frequency;
   max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
   buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   buffer_.resize(buffer_size_);
@@ -90,7 +91,7 @@ void CameraRecorder::bufferize( const sensor_msgs::ImagePtr& img, const sensor_m
 void CameraRecorder::setBufferDuration(float duration)
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
   buffer_.resize(buffer_size_);
 }

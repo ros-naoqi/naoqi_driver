@@ -58,6 +58,7 @@ void LogRecorder::writeDump()
 void LogRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  conv_frequency_ = conv_frequency;
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
@@ -90,7 +91,7 @@ void LogRecorder::bufferize( std::list<rosgraph_msgs::Log>& log_msgs )
 void LogRecorder::setBufferDuration(float duration)
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
   buffer_.resize(buffer_size_);
 }

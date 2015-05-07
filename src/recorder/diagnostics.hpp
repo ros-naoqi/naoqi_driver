@@ -85,6 +85,7 @@ protected:
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 

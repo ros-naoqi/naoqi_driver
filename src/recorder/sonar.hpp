@@ -86,6 +86,7 @@ protected:
   std::vector<std::string> topics_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 
