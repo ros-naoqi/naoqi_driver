@@ -55,23 +55,23 @@ namespace alros
 namespace recorder
 {
 
-  GlobalRecorder::GlobalRecorder(const std::string& prefix):
+  GlobalRecorder::GlobalRecorder(const std::string& prefix_topic):
     _bag()
   , _processMutex()
   , _nameBag("")
   , _isStarted(false)
   {
-    if (!prefix.empty())
+    if (!prefix_topic.empty())
     {
-      _prefix = "/"+prefix+"/";
+      _prefix_topic = "/"+prefix_topic+"/";
     }
     else
     {
-      _prefix = "/";
+      _prefix_topic = "/";
     }
   }
 
-  void GlobalRecorder::startRecord() {
+  void GlobalRecorder::startRecord(const std::string& prefix_bag) {
     boost::mutex::scoped_lock startLock( _processMutex );
     if (!_isStarted) {
       try {
@@ -84,9 +84,14 @@ namespace recorder
         char buffer[80];
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
-        std::strftime(buffer,80,"/%d-%m-%Y_%I:%M:%S",timeinfo);
+        std::strftime(buffer,80,"%d-%m-%Y_%I:%M:%S",timeinfo);
 
-        _nameBag = cur_path.string()+buffer;
+        if (!prefix_bag.empty()) {
+          _nameBag = cur_path.string()+"/"+prefix_bag+"_"+buffer;
+        }
+        else {
+          _nameBag = cur_path.string()+"/"+buffer;
+        }
         _nameBag.append(".bag");
 
         _bag.open(_nameBag, rosbag::bagmode::Write);
@@ -140,7 +145,7 @@ namespace recorder
       std::string ros_topic;
       if (topic[0]!='/')
       {
-        ros_topic = _prefix+topic;
+        ros_topic = _prefix_topic+topic;
       }
       else
       {

@@ -230,7 +230,7 @@ void Bridge::rosLoop()
   } // while loop
 }
 
-std::string Bridge::minidump()
+std::string Bridge::minidump(const std::string& prefix)
 {
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
@@ -240,7 +240,7 @@ std::string Bridge::minidump()
 
   // WRITE ALL BUFFER INTO THE ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
-  recorder_->startRecord();
+  recorder_->startRecord(prefix);
   // for each recorder, call write_dump function
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
@@ -253,7 +253,7 @@ std::string Bridge::minidump()
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
-std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
+std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
@@ -271,7 +271,7 @@ std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
     {
       if ( !is_started )
       {
-        recorder_->startRecord();
+        recorder_->startRecord(prefix);
       }
       it->second.writeDump();
     }

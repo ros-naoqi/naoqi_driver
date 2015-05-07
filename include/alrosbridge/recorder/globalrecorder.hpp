@@ -62,12 +62,12 @@ public:
   /**
   * @brief Constructor for recorder interface
   */
-  GlobalRecorder(const std::string& prefix);
+  GlobalRecorder(const std::string& prefix_topic);
 
   /**
   * @brief Initialize the recording of the ROSbag
   */
-  void startRecord();
+  void startRecord(const std::string& prefix_bag = "");
 
   /**
   * @brief Terminate the recording of the ROSbag
@@ -82,7 +82,7 @@ public:
     std::string ros_topic;
     if (topic[0]!='/')
     {
-      ros_topic = _prefix+topic;
+      ros_topic = _prefix_topic+topic;
     }
     else
     {
@@ -103,7 +103,7 @@ public:
   bool isStarted();
 
 private:
-  std::string _prefix;
+  std::string _prefix_topic;
   boost::mutex _processMutex;
   rosbag::Bag _bag;
   std::string _nameBag;
