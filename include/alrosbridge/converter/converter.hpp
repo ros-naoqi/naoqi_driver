@@ -83,7 +83,19 @@ public:
 
   void callAll( const std::vector<message_actions::MessageAction>& actions )
   {
-    convPtr_->callAll(actions);
+    if ( actions.size() > 0 )
+    {
+      convPtr_->callAll(actions);
+    }
+
+    ros::Time after = ros::Time::now();
+    lapse_time = after - before;
+    before = after;
+  }
+
+  ros::Duration lapseTime() const
+  {
+    return lapse_time;
   }
 
   friend bool operator==( const Converter& lhs, const Converter& rhs )
@@ -95,6 +107,9 @@ public:
   }
 
 private:
+
+  ros::Time before;
+  ros::Duration lapse_time;
 
   /**
   * BASE concept struct
