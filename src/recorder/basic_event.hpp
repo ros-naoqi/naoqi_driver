@@ -44,9 +44,7 @@ public:
     buffer_duration_( helpers::bufferDefaultDuration ),
     is_initialized_( false ),
     is_subscribed_( false )
-  {
-    std::cout << "Size of buffer: " << buffer_.size() << std::endl;
-  }
+  {}
 
   virtual ~BasicEventRecorder() {}
 
@@ -98,7 +96,6 @@ public:
 
   virtual void bufferize(const T& msg)
   {
-    std::cout << "In bufferize function" << std::endl;
     boost::mutex::scoped_lock lock_bufferize( mutex_ );
     typename std::list<T>::iterator it;
     removeOld();
@@ -124,8 +121,6 @@ protected:
     ros::Duration d( ros::Time::now() - msg.header.stamp );
     if (static_cast<float>(d.toSec()) > buffer_duration_)
     {
-      std::cout << "Removing old data in buffer: "
-                << d.toSec() << "s" << std::endl;
       return true;
     }
     return false;
@@ -133,7 +128,6 @@ protected:
 
   void removeOld()
   {
-    std::cout << "Size of buffer: " << buffer_.size() << std::endl;
     while (buffer_.size() > 0 && isTooOld(buffer_.front()))
     {
       buffer_.pop_front();
