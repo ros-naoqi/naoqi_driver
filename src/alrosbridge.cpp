@@ -233,6 +233,12 @@ void Bridge::rosLoop()
 
 std::string Bridge::minidump(const std::string& prefix)
 {
+  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  if (record_enabled_)
+  {
+    stopRecording();
+  }
+
   // STOP BUFFERIZING
   dump_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -241,16 +247,11 @@ std::string Bridge::minidump(const std::string& prefix)
   }
   ros::Time time = ros::Time::now();
 
-  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
-  if (record_enabled_)
-  {
-    stopRecording();
-  }
-
-  // WRITE ALL BUFFER INTO THE ROSBAG
+  // START A NEW ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord(prefix);
-  // for each recorder, call write_dump function
+
+  // WRITE ALL BUFFER INTO THE ROSBAG
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.writeDump(time);
@@ -271,6 +272,12 @@ std::string Bridge::minidump(const std::string& prefix)
 
 std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
+  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  if (record_enabled_)
+  {
+    stopRecording();
+  }
+
   // STOP BUFFERIZING
   dump_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -278,11 +285,6 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
     iterator->second.isDumping(true);
   }
   ros::Time time = ros::Time::now();
-  // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
-  if (record_enabled_)
-  {
-    stopRecording();
-  }
 
   // WRITE CHOOSEN BUFFER INTO THE ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
