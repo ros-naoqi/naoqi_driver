@@ -298,6 +298,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
       if ( !is_started )
       {
         recorder_->startRecord(prefix);
+        is_started = true;
       }
       it->second.writeDump(time);
     }
@@ -309,6 +310,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
         if ( !is_started )
         {
           recorder_->startRecord(prefix);
+          is_started = true;
         }
         it_event->second.writeDump(time);
       }
@@ -859,6 +861,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
       if ( !is_started )
       {
         recorder_->startRecord();
+        is_started = true;
       }
       it->second.subscribe(true);
       std::cout << HIGHGREEN << "Topic "
