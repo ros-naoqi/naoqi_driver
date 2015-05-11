@@ -40,26 +40,10 @@
 #include "converters/log.hpp"
 
 /*
- * PUBLISHERS
- */
-#include "publishers/basic.hpp"
-#include "publishers/camera.hpp"
-#include "publishers/info.hpp"
-#include "publishers/joint_state.hpp"
-#include "publishers/log.hpp"
-#include "publishers/sonar.hpp"
-
-/*
  * TOOLS
  */
 #include "tools/robot_description.hpp"
 #include "tools/alvisiondefinitions.h" // for kTop...
-
-/*
- * SUBSCRIBERS
- */
-#include "subscribers/teleop.hpp"
-#include "subscribers/moveto.hpp"
 
 /*
  * RECORDERS
@@ -103,7 +87,6 @@ namespace alros
 Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
   freq_(15),
-  publish_enabled_(false),
   record_enabled_(false),
   dump_enabled_(false),
   keep_looping(true),
@@ -115,12 +98,6 @@ Bridge::Bridge( qi::SessionPtr& session )
 Bridge::~Bridge()
 {
   std::cout << "ALRosBridge is shutting down.." << std::endl;
-  // destroy nodehandle?
-  if(nhPtr_)
-  {
-    nhPtr_->shutdown();
-    ros::shutdown();
-  }
 }
 
 void Bridge::init()
@@ -128,7 +105,6 @@ void Bridge::init()
   ros::Time::init(); // can call this many times
   loadBootConfig();
   registerDefaultConverter();
-  registerDefaultSubscriber();
   startRosLoop();
 }
 
@@ -142,7 +118,6 @@ void Bridge::loadBootConfig()
 void Bridge::stopService() {
   stopRosLoop();
   converters_.clear();
-  subscribers_.clear();
   event_map_.clear();
 }
 
@@ -164,16 +139,6 @@ void Bridge::rosLoop()
         size_t conv_index = conv_queue_.top().conv_index_;
         converter::Converter& conv = converters_[conv_index];
         ros::Time schedule = conv_queue_.top().schedule_;
-
-        // check the publishing condition
-        // 1. publishing enabled
-        // 2. has to be registered
-        // 3. has to be subscribed
-        PubConstIter pub_it = pub_map_.find( conv.name() );
-        if ( publish_enabled_ &&  pub_it != pub_map_.end() && pub_it->second.isSubscribed() )
-        {
-          actions.push_back(message_actions::PUBLISH);
-        }
 
         // check the recording condition
         // 1. recording enabled
@@ -232,10 +197,10 @@ void Bridge::rosLoop()
       }
     } // mutex scope
 
-    if ( publish_enabled_ )
+    /*if ( publish_enabled_ )
     {
       ros::spinOnce();
-    }
+    }*/
   } // while loop
 }
 
@@ -370,14 +335,6 @@ void Bridge::registerConverter( converter::Converter& conv )
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
-void Bridge::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
-{
-//  pub.reset(*nhPtr_);
-  // Concept classes don't have any default constructors needed by operator[]
-  // Cannot use this operator here. So we use insert
-  pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
-}
-
 void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder& rec, float frequency)
 {
   // Concept classes don't have any default constructors needed by operator[]
@@ -393,20 +350,7 @@ void Bridge::insertEventConverter(const std::string& key, event::Event event)
   event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
 }
 
-void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
-{
-  registerConverter( conv );
-  registerPublisher( conv.name(), pub);
-  registerRecorder(  conv.name(), rec, conv.frequency());
-}
-
-void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher pub )
-{
-  registerConverter( conv );
-  registerPublisher(conv.name(), pub);
-}
-
-void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec )
+void Bridge::registerConverter( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
   registerRecorder(  conv.name(), rec, conv.frequency());
@@ -448,16 +392,16 @@ bool Bridge::registerMemoryConverter( const std::string& key, float frequency, c
     return false;
     break;
   case 1:
-    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped>,converter::MemoryFloatConverter>(key,frequency);
+    _registerMemoryConverter<converter::MemoryFloatConverter, recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> >(key,frequency);
     break;
   case 2:
-    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped>,converter::MemoryIntConverter>(key,frequency);
+    _registerMemoryConverter<converter::MemoryIntConverter, recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> >(key,frequency);
     break;
   case 3:
-    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>,converter::MemoryStringConverter>(key,frequency);
+    _registerMemoryConverter<converter::MemoryStringConverter, recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >(key,frequency);
     break;
   case 4:
-    _registerMemoryConverter<publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped>,converter::MemoryBoolConverter>(key,frequency);
+    _registerMemoryConverter<converter::MemoryBoolConverter, recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> >(key,frequency);
     break;
   default:
     {
@@ -539,46 +483,40 @@ void Bridge::registerDefaultConverter()
 
   if ( info_enabled )
   {
-    boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
     boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
-    inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
     inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
     inc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::bufferize, inr, _1) );
-    registerConverter( inc, inp, inr );
+    registerConverter( inc, inr );
   }
-
 
   /** LOGS */
   if ( logs_enabled )
   {
     boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", logs_frequency, sessionPtr_);
-    boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( "/rosout" );
-    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
-    registerPublisher( lc, lp );
+    boost::shared_ptr<recorder::BasicRecorder<rosgraph_msgs::Log> > lr = boost::make_shared<recorder::BasicRecorder<rosgraph_msgs::Log> >( "log" );
+    lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<rosgraph_msgs::Log>::write, lr, _1) );
+    lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<rosgraph_msgs::Log>::bufferize, lr, _1) );
+    registerConverter( lc, lr );
   }
 
   /** DIAGNOSTICS */
   if ( diag_enabled )
   {
     boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", diag_frequency, sessionPtr_);
-    boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
     boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
-    dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
     dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
     dc->registerCallback( message_actions::LOG, boost::bind(&recorder::DiagnosticsRecorder::bufferize, dr, _1) );
-    registerConverter( dc, dp, dr );
+    registerConverter( dc, dr );
   }
 
   /** IMU TORSO **/
   if ( imu_torso_enabled )
   {
-    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
     boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_torso" );
     boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, imu_torso_frequency, sessionPtr_);
-    imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
     imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
     imutc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imutr, _1) );
-    registerConverter( imutc, imutp, imutr );
+    registerConverter( imutc, imutr );
   }
 
   if(robot_type == alros::PEPPER)
@@ -586,26 +524,22 @@ void Bridge::registerDefaultConverter()
     /** IMU BASE **/
     if ( imu_base_enabled )
     {
-      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
       boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_base" );
       boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, imu_base_frequency, sessionPtr_);
-      imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
       imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
       imubc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imubr, _1) );
-      registerConverter( imubc, imubp, imubr );
+      registerConverter( imubc, imubr );
     }
   } // endif PEPPER
 
   /** Front Camera */
   if ( camera_front_enabled )
   {
-    boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
     boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", camera_front_recorder_fps );
     boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", camera_front_fps, sessionPtr_, AL::kTopCamera, camera_front_resolution );
-    fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
     fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
     fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
-    registerConverter( fcc, fcp, fcr );
+    registerConverter( fcc, fcr );
   }
 
   if(robot_type == alros::PEPPER)
@@ -613,52 +547,43 @@ void Bridge::registerDefaultConverter()
     /** Depth Camera */
     if ( camera_depth_enabled )
     {
-      boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
       boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", camera_depth_recorder_fps );
       boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", camera_depth_fps, sessionPtr_, AL::kDepthCamera, camera_depth_resolution );
-      dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
       dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
       dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
-      registerConverter( dcc, dcp, dcr );
+      registerConverter( dcc, dcr );
     }
 
     /** Infrared Camera */
     if ( camera_ir_enabled )
     {
-      boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
       boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", camera_ir_recorder_fps );
       boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", camera_ir_fps, sessionPtr_, AL::kInfraredCamera, camera_ir_resolution);
-      icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
       icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
       icc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, icr, _1, _2) );
-      registerConverter( icc, icp, icr );
+      registerConverter( icc, icr );
     }
   } // endif PEPPER
 
   /** Joint States */
   if ( joint_states_enabled )
   {
-    boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
     boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
     boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", joint_states_frequency, tf2_buffer_, sessionPtr_ );
-    jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
     jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
     jsc->registerCallback( message_actions::LOG, boost::bind(&recorder::JointStateRecorder::bufferize, jsr, _1, _2) );
-    registerConverter( jsc, jsp, jsr );
-    //  registerRecorder(jsc, jsr);
+    registerConverter( jsc, jsr );
   }
 
   if(robot_type == alros::PEPPER){
     /** Laser */
     if ( laser_enabled )
     {
-      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", laser_frequency, sessionPtr_ );
-      lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
       lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
       lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::bufferize, lr, _1) );
-      registerConverter( lc, lp, lr );
+      registerConverter( lc, lr );
     }
   }
 
@@ -676,14 +601,14 @@ void Bridge::registerDefaultConverter()
       sonar_topics.push_back("sonar/left");
       sonar_topics.push_back("sonar/right");
     }
-    boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
     boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
     boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", sonar_frequency, sessionPtr_ );
-    usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
     usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
-    registerConverter( usc, usp, usr );
+    registerConverter( usc, usr );
+  }
 
+  {
     /** Audio */
     boost::shared_ptr<AudioEventRegister> event_register =
         boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
@@ -691,40 +616,7 @@ void Bridge::registerDefaultConverter()
     if (keep_looping) {
       event_map_.find("audio")->second.startProcess();
     }
-    if (publish_enabled_) {
-      event_map_.find("audio")->second.isPublishing(true);
-    }
   }
-}
-
-// public interface here
-void Bridge::registerSubscriber( subscriber::Subscriber sub )
-{
-  std::vector<subscriber::Subscriber>::iterator it;
-  it = std::find( subscribers_.begin(), subscribers_.end(), sub );
-  size_t sub_index = 0;
-
-  // if subscriber is not found, register it!
-  if (it == subscribers_.end() )
-  {
-    sub_index = subscribers_.size();
-    //sub.reset( *nhPtr_ );
-    subscribers_.push_back( sub );
-    std::cout << "registered subscriber:\t" << sub.name() << std::endl;
-  }
-  // if found, re-init them
-  else
-  {
-    std::cout << "re-initialized existing subscriber:\t" << it->name() << std::endl;
-  }
-}
-
-void Bridge::registerDefaultSubscriber()
-{
-  if (!subscribers_.empty())
-    return;
-  registerSubscriber( boost::make_shared<alros::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", sessionPtr_) );
-  registerSubscriber( boost::make_shared<alros::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
 std::vector<std::string> Bridge::getAvailableConverters()
@@ -745,112 +637,6 @@ std::vector<std::string> Bridge::getAvailableConverters()
 /*
 * EXPOSED FUNCTIONS
 */
-
-std::string Bridge::getMasterURI() const
-{
-  return ros_env::getMasterURI();
-}
-
-void Bridge::setMasterURI( const std::string& uri)
-{
-  setMasterURINet(uri, "eth0");
-}
-
-void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
-{
-  // To avoid two calls to this function happening at the same time
-  boost::mutex::scoped_lock lock( mutex_conv_queue_ );
-
-  // Stopping the loop if there is any
-  //stopRosLoop();
-
-  // Reinitializing ROS Node
-  {
-    nhPtr_.reset();
-    std::cout << "nodehandle reset " << std::endl;
-    ros_env::setMasterURI( uri, network_interface );
-    nhPtr_.reset( new ros::NodeHandle("~") );
-  }
-
-  if(converters_.empty())
-  {
-    // If there is no converters, create them
-    // (converters only depends on Naoqi, resetting the
-    // Ros node has no impact on them)
-    std::cout << BOLDRED << "going to register converters" << RESETCOLOR << std::endl;
-    registerDefaultConverter();
-    registerDefaultSubscriber();
-//    startRosLoop();
-  }
-  else
-  {
-    std::cout << "NOT going to re-register the converters" << std::endl;
-    // If some converters are already there, then
-    // we just need to reset the registered publisher
-    // using the new ROS node handler.
-    typedef std::map< std::string, publisher::Publisher > publisher_map;
-    for_each( publisher_map::value_type &pub, pub_map_ )
-    {
-      pub.second.reset(*nhPtr_);
-    }
-
-    for_each( subscriber::Subscriber& sub, subscribers_ )
-    {
-      std::cout << "resetting subscriber " << sub.name() << std::endl;
-      sub.reset( *nhPtr_ );
-    }
-  }
-
-  if (!event_map_.empty()) {
-    typedef std::map< std::string, event::Event > event_map;
-    for_each( event_map::value_type &event, event_map_ )
-    {
-      event.second.resetPublisher(*nhPtr_);
-    }
-  }
-  // Start publishing again
-  publish_enabled_ = true;
-
-  if ( !keep_looping )
-  {
-    std::cout << "going to start ROS loop" << std::endl;
-    startRosLoop();
-  }
-}
-
-void Bridge::startPublishing()
-{
-  publish_enabled_ = true;
-  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
-  {
-    iterator->second.isPublishing(true);
-  }
-}
-
-void Bridge::stopPublishing()
-{
-  publish_enabled_ = false;
-  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
-  {
-    iterator->second.isPublishing(false);
-  }
-}
-
-std::vector<std::string> Bridge::getSubscribedPublishers() const
-{
-  std::vector<std::string> publisher;
-  for(PubConstIter iterator = pub_map_.begin(); iterator != pub_map_.end(); iterator++)
-  {
-    // iterator->first = key
-    // iterator->second = value
-    // Repeat if you also want to iterate through the second map.
-    if ( iterator->second.isSubscribed() )
-    {
-      publisher.push_back( iterator->second.topic() );
-    }
-  }
-  return publisher;
-}
 
 void Bridge::startRecording()
 {
@@ -983,15 +769,6 @@ void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt
 }
 
 void Bridge::addMemoryConverters(std::string filepath){
-  // Check if the nodeHandle pointer is already initialized
-  if(!nhPtr_){
-    std::cout << BOLDRED << "The connection with the ROS master does not seem to be initialized." << std::endl
-              << BOLDYELLOW << "Please run:" << RESETCOLOR << std::endl
-              << GREEN << "\t$ qicli call BridgeService.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
-              << BOLDYELLOW << "before trying to add converters" << RESETCOLOR << std::endl;
-    return;
-  }
-
   // Open the file filepath and parse it
   boost::property_tree::ptree pt;
   parseJsonFile(filepath, pt);
@@ -1042,12 +819,12 @@ void Bridge::addMemoryConverters(std::string filepath){
   }
 
   // Create converter, publisher and recorder
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> > mlp = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> >( topic );
   boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> > mlr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> >( topic );
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
-  mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList>::publish, mlp, _1) );
   mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList>::write, mlr, _1) );
-  registerConverter( mlc, mlp, mlr );
+  mlc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList>::bufferize, mlr, _1) );
+
+  registerConverter( mlc, mlr );
 }
 
 bool Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
@@ -1088,29 +865,29 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
     break;
   case 1:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryFloatConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 2:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryIntConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 3:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 4:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryBoolConverter,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
@@ -1129,9 +906,6 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
   if (keep_looping) {
     event_map_.find(key)->second.startProcess();
   }
-  if (publish_enabled_) {
-    event_map_.find(key)->second.isPublishing(true);
-  }
 
   return true;
 }
@@ -1142,13 +916,7 @@ QI_REGISTER_OBJECT( Bridge,
                     minidumpConverters,
                     setBufferDuration,
                     getBufferDuration,
-                    startPublishing,
-                    stopPublishing,
-                    getMasterURI,
-                    setMasterURI,
-                    setMasterURINet,
                     getAvailableConverters,
-                    getSubscribedPublishers,
                     addMemoryConverters,
                     registerMemoryConverter,
                     registerEventConverter,

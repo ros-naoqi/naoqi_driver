@@ -54,11 +54,6 @@ public:
     eventPtr_( boost::make_shared<EventModel<T> >(event) )
   {}
 
-  void resetPublisher( ros::NodeHandle& nh )
-  {
-    eventPtr_->resetPublisher(nh);
-  }
-
   void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
   {
     eventPtr_->resetRecorder(gr);
@@ -89,11 +84,6 @@ public:
     eventPtr_->isRecording(state);
   }
 
-  void isPublishing(bool state)
-  {
-    eventPtr_->isPublishing(state);
-  }
-
   void isDumping(bool state)
   {
     eventPtr_->isDumping(state);
@@ -107,14 +97,12 @@ private:
   struct EventConcept
   {
     virtual ~EventConcept(){}
-    virtual void resetPublisher(ros::NodeHandle& nh) = 0;
     virtual void resetRecorder(boost::shared_ptr<alros::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
     virtual void writeDump(const ros::Time& time) = 0;
     virtual void setBufferDuration(float duration) = 0;
     virtual void isRecording(bool state) = 0;
-    virtual void isPublishing(bool state) = 0;
     virtual void isDumping(bool state) = 0;
   };
 
@@ -128,11 +116,6 @@ private:
     EventModel( const T& other ):
       converter_( other )
     {}
-
-    void resetPublisher( ros::NodeHandle& nh )
-    {
-      converter_->resetPublisher(nh);
-    }
 
     void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
     {
@@ -162,11 +145,6 @@ private:
     void isRecording(bool state)
     {
       converter_->isRecording(state);
-    }
-
-    void isPublishing(bool state)
-    {
-      converter_->isPublishing(state);
     }
 
     void isDumping(bool state)

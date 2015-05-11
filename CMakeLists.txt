@@ -47,21 +47,6 @@ qi_use_lib( alrosconverters QI QICORE ROS )
 qi_stage_lib( alrosconverters )
 
 set(
-  PUBLISHER
-  src/publishers/camera.cpp
-  src/publishers/info.cpp
-  src/publishers/joint_state.cpp
-  src/publishers/log.cpp
-  src/publishers/sonar.cpp
-  )
-
-set(
-  SUBSCRIBER
-  src/subscribers/teleop.cpp
-  src/subscribers/moveto.cpp
-  )
-
-set(
   RECORDER
   src/recorder/camera.cpp
   src/recorder/diagnostics.cpp
@@ -78,8 +63,6 @@ qi_create_lib(
   src/event/basic.hxx
   src/event/basic.hpp
   src/event/audio.cpp
-  ${PUBLISHER}
-  ${SUBSCRIBER}
   ${RECORDER}
   ${TOOLS}
 )

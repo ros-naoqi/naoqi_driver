@@ -8,7 +8,6 @@ namespace message_actions
 
 enum MessageAction
 {
-  PUBLISH,
   RECORD,
   LOG
 };

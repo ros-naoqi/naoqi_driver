@@ -41,7 +41,7 @@ namespace alros
 * @note a type erasure pattern in implemented here to avoid strict inheritance,
 * thus each possible publisher instance has to implement the virtual functions mentioned in the concept
 */
-template <typename Converter, typename Publisher, typename Recorder>
+template <typename Converter, typename Recorder>
 class EventRegister
 {
 
@@ -54,7 +54,6 @@ public:
   EventRegister( const std::string& key, const qi::SessionPtr& session );
   ~EventRegister();
 
-  void resetPublisher( ros::NodeHandle& nh );
   void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
   void startProcess();
@@ -64,7 +63,6 @@ public:
   void setBufferDuration(float duration);
 
   void isRecording(bool state);
-  void isPublishing(bool state);
   void isDumping(bool state);
 
 private:
@@ -74,7 +72,6 @@ private:
 
 private:
   boost::shared_ptr<Converter> converter_;
-  boost::shared_ptr<Publisher> publisher_;
   boost::shared_ptr<Recorder> recorder_;
 
   qi::AnyObject p_memory_;
@@ -85,7 +82,6 @@ private:
   boost::mutex mutex_;
 
   bool isStarted_;
-  bool isPublishing_;
   bool isRecording_;
   bool isDumping_;
 

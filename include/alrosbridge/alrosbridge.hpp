@@ -39,8 +39,6 @@
 * PUBLIC INTERFACE
 */
 #include <alrosbridge/converter/converter.hpp>
-#include <alrosbridge/publisher/publisher.hpp>
-#include <alrosbridge/subscriber/subscriber.hpp>
 #include <alrosbridge/recorder/recorder.hpp>
 #include <alrosbridge/event/event.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -80,6 +78,7 @@ public:
 
   void startRosLoop();
   void stopRosLoop();
+
   /**
    * @brief Write a ROSbag with the last bufferized data (10s by default)
    */
@@ -96,13 +95,6 @@ public:
   void registerConverter( converter::Converter& conv );
 
   /**
-   * @brief prepare and register a publisher
-   * @param conv_name the name of the converter related to the publisher
-   * @param pub       the publisher to add
-   */
-  void registerPublisher( const std::string& conv_name, publisher::Publisher& pub);
-
-  /**
    * @brief prepare and register a recorder
    * @param conv_name the name of the converter related to the recorder
    * @param rec       the recorder to add
@@ -112,17 +104,7 @@ public:
   /**
    * @brief register a converter with an associated publisher and recorder
    */
-  void registerConverter(converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec );
-
-  /**
-   * @brief register a converter with an associated publisher instance
-   */
-  void registerPublisher(converter::Converter conv, publisher::Publisher pub );
-
-  /**
-   * @brief register a converter with an associated recorder instance
-   */
-  void registerRecorder(converter::Converter conv, recorder::Recorder rec );
+  void registerConverter(converter::Converter conv, recorder::Recorder rec );
 
   /**
    * @brief qicli call function to register a converter for a given memory key
@@ -139,54 +121,6 @@ public:
    * @brief get all available converters
    */
   std::vector<std::string> getAvailableConverters();
-
-  /**
-   * @brief get all subscribed publishers
-   */
-  std::vector<std::string> getSubscribedPublishers() const;
-
-  std::string _whoIsYourDaddy()
-  {
-    return "ask surya";
-  }
-
-  /**
-  * @brief registers a subscriber
-  * @param subscriber to register
-  * @see Subscriber
-  * @note it will be called by value to expose that internally there will be a copy,
-  * eventually this should be replaced by move semantics C++11
-  */
-  void registerSubscriber( subscriber::Subscriber sub );
-
-  /**
-  * @brief qicli call function to get current master uri
-  * @return string indicating http master uri
-  */
-  std::string getMasterURI() const;
-
-  /**
-  * @brief qicli call function to set current master uri
-  * @param string in form of http://<ip>:11311
-  * @param network_interface the network interface ("eth0", "tether" ...)
-  */
-  void setMasterURINet( const std::string& uri, const std::string& network_interface );
-
-  /**
-  * @brief qicli call function to set current master uri
-  * @param string in form of http://<ip>:11311
-  */
-  void setMasterURI( const std::string& uri );
-
-  /**
-  * @brief qicli call function to start/enable publishing all registered publisher
-  */
-  void startPublishing();
-
-  /**
-  * @brief qicli call function to stop/disable publishing all registered publisher
-  */
-  void stopPublishing();
 
   /**
   * @brief qicli call function to start recording all registered converter in a ROSbag
@@ -210,19 +144,21 @@ public:
 
   void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
-
   void stopService();
+
+  std::string _whoIsYourDaddy()
+  {
+    return "ask surya";
+  }
 
 private:
   qi::SessionPtr sessionPtr_;
-  bool publish_enabled_;
   bool record_enabled_;
   bool dump_enabled_;
   bool keep_looping;
 
   const size_t freq_;
   boost::thread publisherThread_;
-  //ros::Rate r_;
 
   boost::shared_ptr<recorder::GlobalRecorder> recorder_;
 
@@ -231,39 +167,30 @@ private:
   void loadBootConfig();
 
   void registerDefaultConverter();
-  void registerDefaultSubscriber();
   void insertEventConverter(const std::string& key, event::Event event);
 
-  template <typename T1, typename T2, typename T3>
+  template <typename T1, typename T2>
   void _registerMemoryConverter( const std::string& key, float frequency ) {
-    boost::shared_ptr<T1> mfp = boost::make_shared<T1>( key );
     boost::shared_ptr<T2> mfr = boost::make_shared<T2>( key );
-    boost::shared_ptr<T3> mfc = boost::make_shared<T3>( key , frequency, sessionPtr_, key );
-    mfc->registerCallback( message_actions::PUBLISH, boost::bind(&T1::publish, mfp, _1) );
+    boost::shared_ptr<T1> mfc = boost::make_shared<T1>( key , frequency, sessionPtr_, key );
     mfc->registerCallback( message_actions::RECORD, boost::bind(&T2::write, mfr, _1) );
     mfc->registerCallback( message_actions::LOG, boost::bind(&T2::bufferize, mfr, _1) );
-    registerConverter( mfc, mfp, mfr );
+    registerConverter( mfc, mfr );
   }
 
   void rosLoop();
 
-  boost::scoped_ptr<ros::NodeHandle> nhPtr_;
   boost::mutex mutex_reinit_;
   boost::mutex mutex_conv_queue_;
   boost::mutex mutex_record_;
 
   std::vector< converter::Converter > converters_;
-  std::map< std::string, publisher::Publisher > pub_map_;
   std::map< std::string, recorder::Recorder > rec_map_;
   std::map< std::string, event::Event > event_map_;
-  typedef std::map< std::string, publisher::Publisher>::const_iterator PubConstIter;
-  typedef std::map< std::string, publisher::Publisher>::iterator PubIter;
   typedef std::map< std::string, recorder::Recorder>::const_iterator RecConstIter;
   typedef std::map< std::string, recorder::Recorder>::iterator RecIter;
   typedef std::map< std::string, event::Event>::const_iterator EventConstIter;
   typedef std::map< std::string, event::Event>::iterator EventIter;
-
-  std::vector< subscriber::Subscriber > subscribers_;
 
   float buffer_duration_;
 

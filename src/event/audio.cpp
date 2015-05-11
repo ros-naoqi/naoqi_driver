@@ -42,7 +42,6 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     p_robot_model_(session->service("ALRobotModel")),
     session_(session),
     isStarted_(false),
-    isPublishing_(false),
     isRecording_(false),
     isDumping_(false)
 {
@@ -59,11 +58,9 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     channelMap.push_back(1);
     channelMap.push_back(4);
   }
-  publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( name );
   recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> >( name );
   converter_ = boost::make_shared<converter::AudioEventConverter>( name, frequency, session );
 
-  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, publisher_, _1) );
   converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::write, recorder_, _1) );
   converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::bufferize, recorder_, _1) );
 
@@ -72,11 +69,6 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
 AudioEventRegister::~AudioEventRegister()
 {
   stopProcess();
-}
-
-void AudioEventRegister::resetPublisher(ros::NodeHandle& nh)
-{
-  publisher_->reset(nh);
 }
 
 void AudioEventRegister::resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
@@ -140,12 +132,6 @@ void AudioEventRegister::isRecording(bool state)
   isRecording_ = state;
 }
 
-void AudioEventRegister::isPublishing(bool state)
-{
-  boost::mutex::scoped_lock pub_lock(mutex_);
-  isPublishing_ = state;
-}
-
 void AudioEventRegister::isDumping(bool state)
 {
   boost::mutex::scoped_lock dump_lock(mutex_);
@@ -176,16 +162,12 @@ void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, q
   std::vector<message_actions::MessageAction> actions;
   boost::mutex::scoped_lock callback_lock(mutex_);
   if (isStarted_) {
-    // CHECK FOR PUBLISH
-    if ( isPublishing_ && publisher_->isSubscribed() )
-    {
-      actions.push_back(message_actions::PUBLISH);
-    }
     // CHECK FOR RECORD
     if ( isRecording_ )
     {
       actions.push_back(message_actions::RECORD);
     }
+    // CHECK FOR BUFFERIZE
     if ( !isDumping_ )
     {
       actions.push_back(message_actions::LOG);

@@ -35,8 +35,6 @@
 
 // Converter
 #include "../src/converters/audio.hpp"
-// Publisher
-#include "../src/publishers/basic.hpp"
 // Recorder
 #include "../recorder/basic_event.hpp"
 
@@ -62,7 +60,6 @@ public:
   AudioEventRegister( const std::string& name, const float& frequency, const qi::SessionPtr& session );
   ~AudioEventRegister();
 
-  void resetPublisher( ros::NodeHandle& nh );
   void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
 
   void startProcess();
@@ -72,7 +69,6 @@ public:
   void setBufferDuration(float duration);
 
   void isRecording(bool state);
-  void isPublishing(bool state);
   void isDumping(bool state);
 
   void processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer);
@@ -84,7 +80,6 @@ private:
 
 private:
   boost::shared_ptr<converter::AudioEventConverter> converter_;
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > publisher_;
   boost::shared_ptr<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> > recorder_;
 
   qi::SessionPtr session_;
@@ -97,7 +92,6 @@ private:
   boost::mutex mutex_;
 
   bool isStarted_;
-  bool isPublishing_;
   bool isRecording_;
   bool isDumping_;
 
