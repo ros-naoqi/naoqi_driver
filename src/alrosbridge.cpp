@@ -855,15 +855,28 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   bool is_started = false;
   for_each( const std::string& name, names)
   {
-    RecIter it = rec_map_.find(name);
-    if ( it != rec_map_.end() )
+    RecIter it_rec = rec_map_.find(name);
+    EventIter it_ev = event_map_.find(name);
+    if ( it_rec != rec_map_.end() )
     {
       if ( !is_started )
       {
         recorder_->startRecord();
         is_started = true;
       }
-      it->second.subscribe(true);
+      it_rec->second.subscribe(true);
+      std::cout << HIGHGREEN << "Topic "
+        << BOLDCYAN << name << RESETCOLOR
+        << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+    }
+    else if ( it_ev != event_map_.end() )
+    {
+      if ( !is_started )
+      {
+        recorder_->startRecord();
+        is_started = true;
+      }
+      it_ev->second.isRecording(true);
       std::cout << HIGHGREEN << "Topic "
         << BOLDCYAN << name << RESETCOLOR
         << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
