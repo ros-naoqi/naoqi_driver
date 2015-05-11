@@ -126,9 +126,17 @@ Bridge::~Bridge()
 void Bridge::init()
 {
   ros::Time::init(); // can call this many times
+  loadBootConfig();
   registerDefaultConverter();
   registerDefaultSubscriber();
   startRosLoop();
+}
+
+void Bridge::loadBootConfig()
+{
+  std::string file_path = alros::helpers::getBootConfigFile();
+  std::cout << "load boot config from " << file_path << std::endl;
+  boost::property_tree::read_json( file_path, boot_config_ );
 }
 
 void Bridge::stopService() {
@@ -475,18 +483,18 @@ void Bridge::registerDefaultConverter()
   alros::Robot robot_type;
 
   // replace this with proper configuration struct
-  bool with_info = true;
-  bool with_audio = true;
-  bool with_logs = true;
-  bool with_diag = true;
-  bool with_imu_torso = true;
-  bool with_imu_base = true;
-  bool with_camera_front = true;
-  bool with_camera_depth = true;
-  bool with_camera_ir = true;
-  bool with_joint_states = true;
-  bool with_laser = true;
-  bool with_sonar = true;
+  bool with_info          = boot_config_.get( "converters.info.enabled", true);
+  bool with_audio         = boot_config_.get( "converters.audio.enabled", true);
+  bool with_logs          = boot_config_.get( "converters.logs.enabled", true);
+  bool with_diag          = boot_config_.get( "converters.diag.enabled", true);
+  bool with_imu_torso     = boot_config_.get( "converters.imu_torso.enabled", true);
+  bool with_imu_base      = boot_config_.get( "converters.imu_base.enabled", true);
+  bool with_camera_front  = boot_config_.get( "converters.front_camera.enabled", true);
+  bool with_camera_depth  = boot_config_.get( "converters.depth_camera.enabled", true);
+  bool with_camera_ir     = boot_config_.get( "converters.ir_camera.enabled", true);
+  bool with_joint_states  = boot_config_.get( "converters.joint_states.enabled", true);
+  bool with_laser         = boot_config_.get( "converters.laser.enabled", true);
+  bool with_sonar         = boot_config_.get( "converters.sonar.enabled", true);
 
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
@@ -510,14 +518,6 @@ void Bridge::registerDefaultConverter()
     registerConverter( inc, inp, inr );
   }
 
-  /** AUDIO **/
-  if ( with_audio )
-  {
-    //boost::shared_ptr<converter::AudioConverter> ac = boost::make_shared<converter::AudioConverter>( "audio", 1, sessionPtr_);
-    //boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > ap = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( "audio" );
-    //ac->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, ap, _1));
-    //registerPublisher( ac, ap );
-  }
 
   /** LOGS */
   if ( with_logs )
@@ -656,6 +656,7 @@ void Bridge::registerDefaultConverter()
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
     registerConverter( usc, usp, usr );
 
+    /** Audio */
     boost::shared_ptr<AudioEventRegister> event_register =
         boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
     insertEventConverter("audio", event_register);

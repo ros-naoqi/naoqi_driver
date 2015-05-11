@@ -226,6 +226,10 @@ private:
 
   boost::shared_ptr<recorder::GlobalRecorder> recorder_;
 
+  /* boot config */
+  boost::property_tree::ptree boot_config_;
+  void loadBootConfig();
+
   void registerDefaultConverter();
   void registerDefaultSubscriber();
   void insertEventConverter(const std::string& key, event::Event event);

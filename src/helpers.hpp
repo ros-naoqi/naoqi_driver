@@ -56,6 +56,14 @@ inline dataType::DataType getDataType(qi::AnyValue value)
 
 static const float bufferDefaultDuration = 10.f;
 
+static const std::string boot_config_file_name = "boot_config.json";
+
+inline std::string& getBootConfigFile()
+{
+  static std::string path = qi::path::findData("/", boot_config_file_name );
+  return path;
+}
+
 } //helpers
 } // alros
 
