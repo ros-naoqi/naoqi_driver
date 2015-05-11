@@ -47,7 +47,7 @@ void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
 void DiagnosticsRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-  std::list<diagnostic_msgs::DiagnosticArray>::iterator it;
+  boost::circular_buffer<diagnostic_msgs::DiagnosticArray>::iterator it;
   for (it = buffer_.begin(); it != buffer_.end(); it++)
   {
     if (!it->header.stamp.isZero()) {
@@ -87,7 +87,6 @@ void DiagnosticsRecorder::bufferize(diagnostic_msgs::DiagnosticArray& msg )
   else
   {
     counter_ = 1;
-    buffer_.pop_front();
     buffer_.push_back(msg);
   }
 }

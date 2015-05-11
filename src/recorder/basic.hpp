@@ -28,6 +28,7 @@
 * STANDARD includes
 */
 #include <string>
+#include <boost/circular_buffer.hpp>
 
 namespace alros
 {
@@ -82,7 +83,7 @@ public:
   virtual void writeDump(const ros::Time& time)
   {
     boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-    typename std::list<T>::iterator it;
+    typename boost::circular_buffer<T>::iterator it;
     for (it = buffer_.begin(); it != buffer_.end(); it++)
     {
       if (!it->header.stamp.isZero()) {
@@ -104,7 +105,6 @@ public:
     else
     {
       counter_ = 1;
-      buffer_.pop_front();
       buffer_.push_back(msg);
     }
   }
@@ -138,7 +138,7 @@ public:
 protected:
   std::string topic_;
 
-  std::list<T> buffer_;
+  boost::circular_buffer<T> buffer_;
   size_t buffer_size_;
   float buffer_duration_;
   boost::mutex mutex_;

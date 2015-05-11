@@ -19,6 +19,11 @@
 #define INT_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -74,7 +79,7 @@ public:
 protected:
   std::string topic_;
 
-  std::list< std::list<rosgraph_msgs::Log> > buffer_;
+  boost::circular_buffer< std::list<rosgraph_msgs::Log> > buffer_;
   size_t buffer_size_;
   float buffer_duration_;
 

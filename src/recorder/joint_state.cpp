@@ -49,12 +49,12 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
 void JointStateRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-  std::list< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;
+  boost::circular_buffer< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;
   for (it_tf = bufferTF_.begin(); it_tf != bufferTF_.end(); it_tf++)
   {
     gr_->write("/tf", *it_tf);
   }
-  for (std::list<sensor_msgs::JointState>::iterator it_js = bufferJoinState_.begin();
+  for (boost::circular_buffer<sensor_msgs::JointState>::iterator it_js = bufferJoinState_.begin();
        it_js != bufferJoinState_.end(); it_js++)
   {
     if (!it_js->header.stamp.isZero()) {
@@ -96,8 +96,6 @@ void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
   else
   {
     counter_ = 1;
-    bufferJoinState_.pop_front();
-    bufferTF_.pop_front();
     bufferJoinState_.push_back(js_msg);
     bufferTF_.push_back(tf_transforms);
   }

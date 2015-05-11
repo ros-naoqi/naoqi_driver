@@ -53,7 +53,7 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
 void CameraRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
+  boost::circular_buffer< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
   for (it = buffer_.begin(); it != buffer_.end(); it++)
   {
     if (it->first != NULL)
@@ -83,7 +83,6 @@ void CameraRecorder::bufferize( const sensor_msgs::ImagePtr& img, const sensor_m
   else
   {
     counter_ = 1;
-    buffer_.pop_front();
     buffer_.push_back(std::make_pair(img, camera_info));
   }
 }

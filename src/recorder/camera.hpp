@@ -19,6 +19,11 @@
 #define CAMERA_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -75,7 +80,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> > buffer_;
+  boost::circular_buffer< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> > buffer_;
   size_t buffer_size_;
   float buffer_duration_;
 
