@@ -47,7 +47,7 @@ public:
 
   void bufferize( std::list<rosgraph_msgs::Log>& log_msgs );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 

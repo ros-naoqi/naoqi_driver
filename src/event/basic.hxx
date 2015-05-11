@@ -95,11 +95,11 @@ void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::writeDump()
+void EventRegister<Converter, Publisher, Recorder>::writeDump(const ros::Time& time)
 {
   if (isStarted_)
   {
-    recorder_->writeDump();
+    recorder_->writeDump(time);
   }
 }
 

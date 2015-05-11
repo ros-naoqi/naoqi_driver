@@ -239,6 +239,7 @@ std::string Bridge::minidump(const std::string& prefix)
   {
     iterator->second.isDumping(true);
   }
+  ros::Time time = ros::Time::now();
 
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
@@ -252,11 +253,11 @@ std::string Bridge::minidump(const std::string& prefix)
   // for each recorder, call write_dump function
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
-    iterator->second.writeDump();
+    iterator->second.writeDump(time);
   }
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
-    iterator->second.writeDump();
+    iterator->second.writeDump(time);
   }
 
   // RESTART BUFFERIZING
@@ -276,6 +277,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   {
     iterator->second.isDumping(true);
   }
+  ros::Time time = ros::Time::now();
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
@@ -295,7 +297,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
       {
         recorder_->startRecord(prefix);
       }
-      it->second.writeDump();
+      it->second.writeDump(time);
     }
     else
     {
@@ -306,7 +308,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
         {
           recorder_->startRecord(prefix);
         }
-        it_event->second.writeDump();
+        it_event->second.writeDump(time);
       }
     }
   }

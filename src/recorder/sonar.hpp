@@ -46,7 +46,7 @@ public:
 
   void bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 

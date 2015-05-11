@@ -121,11 +121,11 @@ void AudioEventRegister::stopProcess()
   }
 }
 
-void AudioEventRegister::writeDump()
+void AudioEventRegister::writeDump(const ros::Time& time)
 {
   if (isStarted_)
   {
-    recorder_->writeDump();
+    recorder_->writeDump(time);
   }
 }
 

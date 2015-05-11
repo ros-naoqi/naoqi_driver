@@ -46,7 +46,7 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
   gr_->write("/tf", tf_transforms);
 }
 
-void JointStateRecorder::writeDump()
+void JointStateRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
   std::list< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;

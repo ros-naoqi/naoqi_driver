@@ -74,9 +74,9 @@ public:
     eventPtr_->stopProcess();
   }
 
-  void writeDump( )
+  void writeDump( const ros::Time& time )
   {
-    eventPtr_->writeDump();
+    eventPtr_->writeDump(time);
   }
 
   void setBufferDuration(float duration)
@@ -111,7 +111,7 @@ private:
     virtual void resetRecorder(boost::shared_ptr<alros::recorder::GlobalRecorder> gr) = 0;
     virtual void startProcess() = 0;
     virtual void stopProcess() = 0;
-    virtual void writeDump() = 0;
+    virtual void writeDump(const ros::Time& time) = 0;
     virtual void setBufferDuration(float duration) = 0;
     virtual void isRecording(bool state) = 0;
     virtual void isPublishing(bool state) = 0;
@@ -149,9 +149,9 @@ private:
       converter_->stopProcess();
     }
 
-    void writeDump( )
+    void writeDump( const ros::Time& time )
     {
-      converter_->writeDump();
+      converter_->writeDump(time);
     }
 
     void setBufferDuration(float duration)

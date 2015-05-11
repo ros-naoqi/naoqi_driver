@@ -68,7 +68,7 @@ public:
   void startProcess();
   void stopProcess();
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
   void setBufferDuration(float duration);
 
   void isRecording(bool state);

@@ -51,7 +51,7 @@ void SonarRecorder::write(const std::vector<sensor_msgs::Range>& sonar_msgs)
   }
 }
 
-void SonarRecorder::writeDump()
+void SonarRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
   std::list< std::vector<sensor_msgs::Range> >::iterator it;

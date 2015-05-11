@@ -44,7 +44,7 @@ void DiagnosticsRecorder::write(diagnostic_msgs::DiagnosticArray& msg)
   }
 }
 
-void DiagnosticsRecorder::writeDump()
+void DiagnosticsRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
   std::list<diagnostic_msgs::DiagnosticArray>::iterator it;

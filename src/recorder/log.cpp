@@ -45,7 +45,7 @@ void LogRecorder::write(std::list<rosgraph_msgs::Log>& log_msgs)
   }
 }
 
-void LogRecorder::writeDump()
+void LogRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
   std::list< std::list<rosgraph_msgs::Log> >::iterator it;

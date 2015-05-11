@@ -79,7 +79,7 @@ public:
     }
   }
 
-  virtual void writeDump()
+  virtual void writeDump(const ros::Time& time)
   {
     boost::mutex::scoped_lock lock_write_buffer( mutex_ );
     typename std::list<T>::iterator it;

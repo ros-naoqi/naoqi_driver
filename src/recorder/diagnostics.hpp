@@ -46,7 +46,7 @@ public:
 
   void bufferize(diagnostic_msgs::DiagnosticArray& msg );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 

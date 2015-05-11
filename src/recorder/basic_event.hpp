@@ -78,10 +78,10 @@ public:
     }
   }
 
-  virtual void writeDump()
+  virtual void writeDump(const ros::Time& time)
   {
     boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-    removeOld();
+    removeOlderThan(time);
     typename std::list<T>::iterator it;
     for (it = buffer_.begin(); it != buffer_.end(); it++)
     {
@@ -126,9 +126,27 @@ protected:
     return false;
   }
 
+  bool isOlderThan(const T& msg, const ros::Time& time)
+  {
+    ros::Duration d( time - msg.header.stamp );
+    if (static_cast<float>(d.toSec()) > buffer_duration_)
+    {
+      return true;
+    }
+    return false;
+  }
+
   void removeOld()
   {
     while (buffer_.size() > 0 && isTooOld(buffer_.front()))
+    {
+      buffer_.pop_front();
+    }
+  }
+
+  void removeOlderThan(const ros::Time& time)
+  {
+    while (buffer_.size() > 0 && isOlderThan(buffer_.front(), time))
     {
       buffer_.pop_front();
     }

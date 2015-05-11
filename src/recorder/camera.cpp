@@ -50,7 +50,7 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
   }
 }
 
-void CameraRecorder::writeDump()
+void CameraRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
   std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
