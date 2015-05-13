@@ -50,10 +50,10 @@ void CameraRecorder::write(const sensor_msgs::ImagePtr& img, const sensor_msgs::
   }
 }
 
-void CameraRecorder::writeDump()
+void CameraRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
+  boost::circular_buffer< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> >::iterator it;
   for (it = buffer_.begin(); it != buffer_.end(); it++)
   {
     if (it->first != NULL)
@@ -66,6 +66,7 @@ void CameraRecorder::writeDump()
 void CameraRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  conv_frequency_ = conv_frequency;
   max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
   buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
   buffer_.resize(buffer_size_);
@@ -82,7 +83,6 @@ void CameraRecorder::bufferize( const sensor_msgs::ImagePtr& img, const sensor_m
   else
   {
     counter_ = 1;
-    buffer_.pop_front();
     buffer_.push_back(std::make_pair(img, camera_info));
   }
 }
@@ -90,9 +90,9 @@ void CameraRecorder::bufferize( const sensor_msgs::ImagePtr& img, const sensor_m
 void CameraRecorder::setBufferDuration(float duration)
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
-  buffer_.resize(buffer_size_);
+  buffer_.set_capacity(buffer_size_);
 }
 
 } //publisher

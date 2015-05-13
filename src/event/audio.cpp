@@ -43,7 +43,8 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     session_(session),
     isStarted_(false),
     isPublishing_(false),
-    isRecording_(false)
+    isRecording_(false),
+    isDumping_(false)
 {
   int micConfig = p_robot_model_.call<int>("_getMicrophoneConfig");
   if(micConfig){
@@ -59,12 +60,12 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     channelMap.push_back(4);
   }
   publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( name );
-  recorder_ = boost::make_shared<recorder::BasicRecorder<naoqi_msgs::AudioBuffer> >( name );
+  recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> >( name );
   converter_ = boost::make_shared<converter::AudioEventConverter>( name, frequency, session );
 
   converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, publisher_, _1) );
-  converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_msgs::AudioBuffer>::write, recorder_, _1) );
-  converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_msgs::AudioBuffer>::bufferize, recorder_, _1) );
+  converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::write, recorder_, _1) );
+  converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::bufferize, recorder_, _1) );
 
 }
 
@@ -120,6 +121,19 @@ void AudioEventRegister::stopProcess()
   }
 }
 
+void AudioEventRegister::writeDump(const ros::Time& time)
+{
+  if (isStarted_)
+  {
+    recorder_->writeDump(time);
+  }
+}
+
+void AudioEventRegister::setBufferDuration(float duration)
+{
+  recorder_->setBufferDuration(duration);
+}
+
 void AudioEventRegister::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);
@@ -130,6 +144,12 @@ void AudioEventRegister::isPublishing(bool state)
 {
   boost::mutex::scoped_lock pub_lock(mutex_);
   isPublishing_ = state;
+}
+
+void AudioEventRegister::isDumping(bool state)
+{
+  boost::mutex::scoped_lock dump_lock(mutex_);
+  isDumping_ = state;
 }
 
 void AudioEventRegister::registerCallback()
@@ -165,6 +185,10 @@ void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, q
     if ( isRecording_ )
     {
       actions.push_back(message_actions::RECORD);
+    }
+    if ( !isDumping_ )
+    {
+      actions.push_back(message_actions::LOG);
     }
     if (actions.size() >0)
     {

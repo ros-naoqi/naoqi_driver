@@ -83,8 +83,8 @@ public:
   /**
    * @brief Write a ROSbag with the last bufferized data (10s by default)
    */
-  std::string minidump();
-  std::string minidumpConverters(const std::vector<std::string>& names);
+  std::string minidump(const std::string& prefix);
+  std::string minidumpConverters(const std::string& prefix, const std::vector<std::string>& names);
 
   void setBufferDuration(float duration);
   float getBufferDuration();
@@ -217,6 +217,7 @@ private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
   bool record_enabled_;
+  bool dump_enabled_;
   bool keep_looping;
 
   const size_t freq_;

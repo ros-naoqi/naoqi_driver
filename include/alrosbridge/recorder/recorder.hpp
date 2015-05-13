@@ -95,9 +95,9 @@ public:
     recPtr_->reset( gr, frequency );
   }
 
-  void writeDump()
+  void writeDump(const ros::Time& time)
   {
-    recPtr_->writeDump();
+    recPtr_->writeDump(time);
   }
 
   void setBufferDuration(float duration)
@@ -125,7 +125,7 @@ private:
     virtual void subscribe(bool state) = 0;
     virtual bool isSubscribed() const = 0;
     virtual std::string topic() const = 0;
-    virtual void writeDump() = 0;
+    virtual void writeDump(const ros::Time& time) = 0;
     virtual void setBufferDuration(float duration) = 0;
     virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency ) = 0;
   };
@@ -166,9 +166,9 @@ private:
       return recorder_->topic();
     }
 
-    void writeDump()
+    void writeDump(const ros::Time& time)
     {
-      recorder_->writeDump();
+      recorder_->writeDump(time);
     }
 
     void setBufferDuration(float duration)

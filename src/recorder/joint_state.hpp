@@ -19,6 +19,11 @@
 #define JOINT_STATE_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -48,7 +53,7 @@ public:
   void bufferize( const sensor_msgs::JointState& js_msg,
                   const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 
@@ -75,8 +80,8 @@ public:
 protected:
   std::string topic_;
 
-  std::list<sensor_msgs::JointState> bufferJoinState_;
-  std::list< std::vector<geometry_msgs::TransformStamped> > bufferTF_;
+  boost::circular_buffer<sensor_msgs::JointState> bufferJoinState_;
+  boost::circular_buffer< std::vector<geometry_msgs::TransformStamped> > bufferTF_;
   size_t buffer_size_;
   float buffer_duration_;
 
@@ -88,6 +93,7 @@ protected:
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 

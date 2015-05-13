@@ -46,15 +46,15 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
   gr_->write("/tf", tf_transforms);
 }
 
-void JointStateRecorder::writeDump()
+void JointStateRecorder::writeDump(const ros::Time& time)
 {
   boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-  std::list< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;
+  boost::circular_buffer< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;
   for (it_tf = bufferTF_.begin(); it_tf != bufferTF_.end(); it_tf++)
   {
     gr_->write("/tf", *it_tf);
   }
-  for (std::list<sensor_msgs::JointState>::iterator it_js = bufferJoinState_.begin();
+  for (boost::circular_buffer<sensor_msgs::JointState>::iterator it_js = bufferJoinState_.begin();
        it_js != bufferJoinState_.end(); it_js++)
   {
     if (!it_js->header.stamp.isZero()) {
@@ -69,6 +69,7 @@ void JointStateRecorder::writeDump()
 void JointStateRecorder::reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
 {
   gr_ = gr;
+  conv_frequency_ = conv_frequency;
   if (buffer_frequency_ != 0)
   {
     max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
@@ -95,8 +96,6 @@ void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
   else
   {
     counter_ = 1;
-    bufferJoinState_.pop_front();
-    bufferTF_.pop_front();
     bufferJoinState_.push_back(js_msg);
     bufferTF_.push_back(tf_transforms);
   }
@@ -105,10 +104,10 @@ void JointStateRecorder::bufferize( const sensor_msgs::JointState& js_msg,
 void JointStateRecorder::setBufferDuration(float duration)
 {
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
-  buffer_size_ = ( buffer_size_ / buffer_duration_ ) * duration;
+  buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
-  bufferJoinState_.resize(buffer_size_);
-  bufferTF_.resize(buffer_size_);
+  bufferJoinState_.set_capacity(buffer_size_);
+  bufferTF_.set_capacity(buffer_size_);
 }
 
 } //publisher

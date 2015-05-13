@@ -19,6 +19,11 @@
 #define CAMERA_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -47,7 +52,7 @@ public:
 
   void bufferize( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 
@@ -75,7 +80,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  std::list< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> > buffer_;
+  boost::circular_buffer< std::pair<sensor_msgs::ImagePtr, sensor_msgs::CameraInfo> > buffer_;
   size_t buffer_size_;
   float buffer_duration_;
 
@@ -86,6 +91,7 @@ protected:
   std::string topic_img_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 

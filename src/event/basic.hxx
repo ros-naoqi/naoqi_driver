@@ -41,7 +41,8 @@ EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string&
     p_memory_( session->service("ALMemory") ),
     isStarted_(false),
     isPublishing_(false),
-    isRecording_(false)
+    isRecording_(false),
+    isDumping_(false)
 {
   publisher_ = boost::make_shared<Publisher>( key_ );
   recorder_ = boost::make_shared<Recorder>( key_ );
@@ -49,6 +50,7 @@ EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string&
 
   converter_->registerCallback( message_actions::PUBLISH, boost::bind(&Publisher::publish, publisher_, _1) );
   converter_->registerCallback( message_actions::RECORD, boost::bind(&Recorder::write, recorder_, _1) );
+  converter_->registerCallback( message_actions::LOG, boost::bind(&Recorder::bufferize, recorder_, _1) );
 
   signal_ = p_memory_.call<qi::AnyObject>("subscriber", key_);
 }
@@ -93,6 +95,21 @@ void EventRegister<Converter, Publisher, Recorder>::stopProcess()
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::writeDump(const ros::Time& time)
+{
+  if (isStarted_)
+  {
+    recorder_->writeDump(time);
+  }
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::setBufferDuration(float duration)
+{
+  recorder_->setBufferDuration(duration);
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);
@@ -104,6 +121,13 @@ void EventRegister<Converter, Publisher, Recorder>::isPublishing(bool state)
 {
   boost::mutex::scoped_lock pub_lock(mutex_);
   isPublishing_ = state;
+}
+
+template <typename Converter, typename Publisher, typename Recorder>
+void EventRegister<Converter, Publisher, Recorder>::isDumping(bool state)
+{
+  boost::mutex::scoped_lock dump_lock(mutex_);
+  isDumping_ = state;
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
@@ -134,6 +158,10 @@ void EventRegister<Converter, Publisher, Recorder>::onEvent()
     if ( isRecording_ )
     {
       actions.push_back(message_actions::RECORD);
+    }
+    if ( !isDumping_ )
+    {
+      actions.push_back(message_actions::LOG);
     }
     if (actions.size() >0)
     {

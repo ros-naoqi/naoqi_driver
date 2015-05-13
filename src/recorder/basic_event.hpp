@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef BASIC_RECORDER_HPP
-#define BASIC_RECORDER_HPP
+#ifndef BASIC_EVENT_RECORDER_HPP
+#define BASIC_EVENT_RECORDER_HPP
 
 /*
 * LOCAL includes
@@ -28,7 +28,6 @@
 * STANDARD includes
 */
 #include <string>
-#include <boost/circular_buffer.hpp>
 
 namespace alros
 {
@@ -36,20 +35,18 @@ namespace recorder
 {
 
 template<class T>
-class BasicRecorder
+class BasicEventRecorder
 {
 
 public:
-  BasicRecorder( const std::string& topic, float buffer_frequency = 0 ):
+  BasicEventRecorder( const std::string& topic ):
     topic_( topic ),
     buffer_duration_( helpers::bufferDefaultDuration ),
     is_initialized_( false ),
-    is_subscribed_( false ),
-    buffer_frequency_(buffer_frequency),
-    counter_(1)
+    is_subscribed_( false )
   {}
 
-  virtual ~BasicRecorder() {}
+  virtual ~BasicEventRecorder() {}
 
   inline std::string topic() const
   {
@@ -84,7 +81,8 @@ public:
   virtual void writeDump(const ros::Time& time)
   {
     boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-    typename boost::circular_buffer<T>::iterator it;
+    removeOlderThan(time);
+    typename std::list<T>::iterator it;
     for (it = buffer_.begin(); it != buffer_.end(); it++)
     {
       if (!it->header.stamp.isZero()) {
@@ -99,48 +97,65 @@ public:
   virtual void bufferize(const T& msg)
   {
     boost::mutex::scoped_lock lock_bufferize( mutex_ );
-    if (counter_ < max_counter_)
-    {
-      counter_++;
-    }
-    else
-    {
-      counter_ = 1;
-      buffer_.push_back(msg);
-    }
+    typename std::list<T>::iterator it;
+    removeOld();
+    buffer_.push_back(msg);
+
   }
 
   virtual void reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
   {
     gr_ = gr;
-    conv_frequency_ = conv_frequency;
-    if (buffer_frequency_ != 0)
-    {
-      max_counter_ = static_cast<int>(conv_frequency/buffer_frequency_);
-      buffer_size_ = static_cast<size_t>(buffer_duration_*(conv_frequency/max_counter_));
-    }
-    else
-    {
-      max_counter_ = 1;
-      buffer_size_ = static_cast<size_t>(buffer_duration_*conv_frequency);
-    }
-    buffer_.resize(buffer_size_);
     is_initialized_ = true;
   }
 
   virtual void setBufferDuration(float duration)
   {
     boost::mutex::scoped_lock lock_bufferize( mutex_ );
-    buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
     buffer_duration_ = duration;
-    buffer_.set_capacity(buffer_size_);
+  }
+
+protected:
+  bool isTooOld(const T& msg)
+  {
+    ros::Duration d( ros::Time::now() - msg.header.stamp );
+    if (static_cast<float>(d.toSec()) > buffer_duration_)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  bool isOlderThan(const T& msg, const ros::Time& time)
+  {
+    ros::Duration d( time - msg.header.stamp );
+    if (static_cast<float>(d.toSec()) > buffer_duration_)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  void removeOld()
+  {
+    while (buffer_.size() > 0 && isTooOld(buffer_.front()))
+    {
+      buffer_.pop_front();
+    }
+  }
+
+  void removeOlderThan(const ros::Time& time)
+  {
+    while (buffer_.size() > 0 && isOlderThan(buffer_.front(), time))
+    {
+      buffer_.pop_front();
+    }
   }
 
 protected:
   std::string topic_;
 
-  boost::circular_buffer<T> buffer_;
-  size_t buffer_size_;
+  std::list<T> buffer_;
   float buffer_duration_;
   boost::mutex mutex_;
 
@@ -148,11 +163,6 @@ protected:
   bool is_subscribed_;
 
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
-
-  float buffer_frequency_;
-  float conv_frequency_;
-  int counter_;
-  int max_counter_;
 
 }; // class
 

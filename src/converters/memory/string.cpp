@@ -45,9 +45,9 @@ void MemoryStringConverter::registerCallback( message_actions::MessageAction act
 bool MemoryStringConverter::convert()
 {
   bool success = false;
-  std::string value = p_memory_.call<std::string>("getData", memory_key_);
   try
   {
+    std::string value = p_memory_.call<std::string>("getData", memory_key_);
     msg_.header.stamp = ros::Time::now();
     msg_.data = value;
     success = true;

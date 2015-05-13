@@ -19,6 +19,11 @@
 #define SONAR_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -46,7 +51,7 @@ public:
 
   void bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 
@@ -73,7 +78,7 @@ public:
 protected:
   std::string topic_;
 
-  std::list< std::vector<sensor_msgs::Range> > buffer_;
+  boost::circular_buffer< std::vector<sensor_msgs::Range> > buffer_;
   size_t buffer_size_;
   float buffer_duration_;
 
@@ -86,6 +91,7 @@ protected:
   std::vector<std::string> topics_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 

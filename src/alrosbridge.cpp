@@ -65,6 +65,7 @@
  * RECORDERS
  */
 #include "recorder/basic.hpp"
+#include "recorder/basic_event.hpp"
 #include "recorder/camera.hpp"
 #include "recorder/diagnostics.hpp"
 #include "recorder/joint_state.hpp"
@@ -104,6 +105,7 @@ Bridge::Bridge( qi::SessionPtr& session )
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
+  dump_enabled_(false),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix())),
   buffer_duration_(helpers::bufferDefaultDuration)
@@ -179,7 +181,7 @@ void Bridge::rosLoop()
         }
 
         // bufferize data in recorder
-        if ( rec_it != rec_map_.end() && conv.frequency() != 0)
+        if ( !dump_enabled_ && rec_it != rec_map_.end() && conv.frequency() != 0)
         {
           actions.push_back(message_actions::LOG);
         }
@@ -229,7 +231,7 @@ void Bridge::rosLoop()
   } // while loop
 }
 
-std::string Bridge::minidump()
+std::string Bridge::minidump(const std::string& prefix)
 {
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
@@ -237,24 +239,53 @@ std::string Bridge::minidump()
     stopRecording();
   }
 
-  // WRITE ALL BUFFER INTO THE ROSBAG
+  // STOP BUFFERIZING
+  dump_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(true);
+  }
+  ros::Time time = ros::Time::now();
+
+  // START A NEW ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
-  recorder_->startRecord();
-  // for each recorder, call write_dump function
+  recorder_->startRecord(prefix);
+
+  // WRITE ALL BUFFER INTO THE ROSBAG
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.writeDump(time);
+  }
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
-    iterator->second.writeDump();
+    iterator->second.writeDump(time);
+  }
+
+  // RESTART BUFFERIZING
+  dump_enabled_ = false;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(false);
   }
   return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
 }
 
-std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
+std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
     stopRecording();
   }
+
+  // STOP BUFFERIZING
+  dump_enabled_ = true;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(true);
+  }
+  ros::Time time = ros::Time::now();
+
   // WRITE CHOOSEN BUFFER INTO THE ROSBAG
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -266,10 +297,30 @@ std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
     {
       if ( !is_started )
       {
-        recorder_->startRecord();
+        recorder_->startRecord(prefix);
+        is_started = true;
       }
-      it->second.writeDump();
+      it->second.writeDump(time);
     }
+    else
+    {
+      EventIter it_event = event_map_.find(name);
+      if ( it_event != event_map_.end() )
+      {
+        if ( !is_started )
+        {
+          recorder_->startRecord(prefix);
+          is_started = true;
+        }
+        it_event->second.writeDump(time);
+      }
+    }
+  }
+  // RESTART BUFFERIZING
+  dump_enabled_ = false;
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+  {
+    iterator->second.isDumping(false);
   }
   if ( is_started )
   {
@@ -287,6 +338,10 @@ std::string Bridge::minidumpConverters(const std::vector<std::string>& names)
 void Bridge::setBufferDuration(float duration)
 {
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
+  {
+    iterator->second.setBufferDuration(duration);
+  }
+  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.setBufferDuration(duration);
   }
@@ -800,15 +855,28 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   bool is_started = false;
   for_each( const std::string& name, names)
   {
-    RecIter it = rec_map_.find(name);
-    if ( it != rec_map_.end() )
+    RecIter it_rec = rec_map_.find(name);
+    EventIter it_ev = event_map_.find(name);
+    if ( it_rec != rec_map_.end() )
     {
       if ( !is_started )
       {
-        recorder_->startRecord()
-          record_enabled_ = true;
+        recorder_->startRecord();
+        is_started = true;
       }
-      it->second.subscribe(true);
+      it_rec->second.subscribe(true);
+      std::cout << HIGHGREEN << "Topic "
+        << BOLDCYAN << name << RESETCOLOR
+        << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
+    }
+    else if ( it_ev != event_map_.end() )
+    {
+      if ( !is_started )
+      {
+        recorder_->startRecord();
+        is_started = true;
+      }
+      it_ev->second.isRecording(true);
       std::cout << HIGHGREEN << "Topic "
         << BOLDCYAN << name << RESETCOLOR
         << HIGHGREEN << " is subscribed for recording" << RESETCOLOR << std::endl;
@@ -822,7 +890,11 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
         << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
     }
   }
-  if ( !is_started )
+  if ( is_started )
+  {
+    record_enabled_ = true;
+  }
+  else
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
       << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
@@ -987,29 +1059,29 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
     break;
   case 1:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryFloatConverter,publisher::BasicPublisher<naoqi_bridge_msgs::FloatStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::FloatStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 2:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryIntConverter,publisher::BasicPublisher<naoqi_bridge_msgs::IntStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::IntStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 3:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }
   case 4:
     {
-      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
-          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
+      boost::shared_ptr<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryBoolConverter,publisher::BasicPublisher<naoqi_bridge_msgs::BoolStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::BoolStamped> > >( key, sessionPtr_ );
       insertEventConverter(key, event_register);
       break;
     }

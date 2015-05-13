@@ -19,6 +19,11 @@
 #define DIAGNOSTICS_RECORDER_HPP
 
 /*
+* BOOST includes
+*/
+#include <boost/circular_buffer.hpp>
+
+/*
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -46,7 +51,7 @@ public:
 
   void bufferize(diagnostic_msgs::DiagnosticArray& msg );
 
-  void writeDump();
+  void writeDump(const ros::Time& time);
 
   void setBufferDuration(float duration);
 
@@ -73,7 +78,7 @@ public:
 protected:
   std::string topic_;
 
-  std::list<diagnostic_msgs::DiagnosticArray> buffer_;
+  boost::circular_buffer<diagnostic_msgs::DiagnosticArray> buffer_;
   size_t buffer_size_;
   float buffer_duration_;
 
@@ -85,6 +90,7 @@ protected:
   boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
+  float conv_frequency_;
   int counter_;
   int max_counter_;
 

@@ -60,8 +60,12 @@ public:
   void startProcess();
   void stopProcess();
 
+  void writeDump(const ros::Time& time);
+  void setBufferDuration(float duration);
+
   void isRecording(bool state);
   void isPublishing(bool state);
+  void isDumping(bool state);
 
 private:
   void registerCallback();
@@ -83,6 +87,7 @@ private:
   bool isStarted_;
   bool isPublishing_;
   bool isRecording_;
+  bool isDumping_;
 
 }; // class globalrecorder
 } //alros
