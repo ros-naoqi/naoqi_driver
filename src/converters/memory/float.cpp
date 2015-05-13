@@ -45,9 +45,9 @@ void MemoryFloatConverter::registerCallback( message_actions::MessageAction acti
 bool MemoryFloatConverter::convert()
 {
   bool success = false;
-  float value = p_memory_.call<float>("getData", memory_key_);
   try
   {
+    float value = p_memory_.call<float>("getData", memory_key_);
     msg_.header.stamp = ros::Time::now();
     msg_.data = value;
     success = true;
