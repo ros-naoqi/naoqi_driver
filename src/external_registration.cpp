@@ -24,8 +24,8 @@ int main(int argc, char** argv)
 {
   qi::ApplicationSession app(argc, argv);
   app.start();
-  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
-  app.session()->registerService("ALRosBridge", bs);
+  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("FlightRecorder", app.session()).asSharedPtr();
+  app.session()->registerService("FlightRecorder", bs);
 
   bs->init();
 
