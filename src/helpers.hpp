@@ -34,6 +34,8 @@ namespace alros
 namespace helpers
 {
 
+static const long folderMaximumSize = 2000000000;
+
 inline dataType::DataType getDataType(qi::AnyValue value)
 {
   dataType::DataType type;
@@ -50,6 +52,29 @@ inline dataType::DataType getDataType(qi::AnyValue value)
     throw std::runtime_error("Cannot get a valid type.");
   }
   return type;
+}
+
+inline void getFoldersize(std::string rootFolder, long& file_size){
+  boost::algorithm::replace_all(rootFolder, "\\\\", "\\");
+  boost::filesystem::path folderPath(rootFolder);
+  if (boost::filesystem::exists(folderPath)){
+    boost::filesystem::directory_iterator end_itr;
+
+    for (boost::filesystem::directory_iterator dirIte(rootFolder); dirIte != end_itr; ++dirIte )
+    {
+      boost::filesystem::path filePath(dirIte->path());
+      try{
+        if (!boost::filesystem::is_directory(dirIte->status()) )
+        {
+          file_size = file_size + boost::filesystem::file_size(filePath);
+        }else{
+          getFoldersize(filePath.string(),file_size);
+        }
+      }catch(std::exception& e){
+        std::cout << e.what() << std::endl;
+      }
+    }
+  }
 }
 
 static const float bufferDefaultDuration = 10.f;
@@ -76,6 +101,21 @@ inline std::string& getBootConfigFile()
 {
   static std::string path = qi::path::findData("/", boot_config_file_name );
   return path;
+}
+
+inline void getFilesSize(const boost::filesystem::path& root, long& file_size)
+{
+  std::vector<boost::filesystem::path> files_path;
+  getFiles(root, ".bag", files_path);
+  for (std::vector<boost::filesystem::path>::const_iterator it=files_path.begin();
+       it!=files_path.end(); it++)
+  {
+    try{
+      file_size = file_size + boost::filesystem::file_size(*it);
+    }catch(std::exception& e){
+      std::cout << e.what() << std::endl;
+    }
+  }
 }
 
 } //helpers
