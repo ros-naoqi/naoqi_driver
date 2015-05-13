@@ -209,7 +209,7 @@ std::string Bridge::minidump(const std::string& prefix)
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -248,7 +248,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -638,7 +638,7 @@ std::vector<std::string> Bridge::getAvailableConverters()
 * EXPOSED FUNCTIONS
 */
 
-void Bridge::startRecording()
+void Bridge::_startRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -663,7 +663,7 @@ void Bridge::startRecording()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordingConverters(const std::vector<std::string>& names)
+void Bridge::_startRecordingConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -717,7 +717,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   }
 }
 
-std::string Bridge::stopRecording()
+std::string Bridge::_stopRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -920,7 +920,7 @@ QI_REGISTER_OBJECT( Bridge,
                     addMemoryConverters,
                     registerMemoryConverter,
                     registerEventConverter,
-                    startRecording,
-                    startRecordingConverters,
-                    stopRecording );
+                    _startRecording,
+                    _startRecordingConverters,
+                    _stopRecording );
 } //alros
