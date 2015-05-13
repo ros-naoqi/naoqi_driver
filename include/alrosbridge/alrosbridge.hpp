@@ -147,6 +147,11 @@ public:
   void stopService();
 
   std::vector<std::string> getFilesList();
+
+  void removeAllFiles();
+
+  void removeFiles(std::vector<std::string> files);
+
   std::string _whoIsYourDaddy()
   {
     return "ask surya";

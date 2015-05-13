@@ -948,6 +948,29 @@ std::vector<std::string> Bridge::getFilesList()
   }
   return fileNames;
 }
+
+void Bridge::removeAllFiles()
+{
+  boost::filesystem::path folderPath( boost::filesystem::current_path() );
+  std::vector<boost::filesystem::path> files;
+  helpers::getFiles(folderPath, ".bag", files);
+
+  for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    std::remove(it->c_str());
+  }
+}
+
+void Bridge::removeFiles(std::vector<std::string> files)
+{
+  for (std::vector<std::string>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    std::remove(it->c_str());
+  }
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
@@ -959,6 +982,8 @@ QI_REGISTER_OBJECT( Bridge,
                     registerMemoryConverter,
                     registerEventConverter,
                     getFilesList,
+                    removeAllFiles,
+                    removeFiles,
                     _startRecording,
                     _startRecordingConverters,
                     _stopRecording );
