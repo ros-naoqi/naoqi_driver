@@ -146,6 +146,7 @@ public:
 
   void stopService();
 
+  std::vector<std::string> getFilesList();
   std::string _whoIsYourDaddy()
   {
     return "ask surya";

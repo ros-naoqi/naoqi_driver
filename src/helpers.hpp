@@ -19,7 +19,10 @@
 #ifndef HELPERS_HPP
 #define HELPERS_HPP
 
-#include <alrosbridge/publisher/publisher.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/replace.hpp>
+
 #include <alrosbridge/tools.hpp>
 #include <qi/session.hpp>
 
@@ -30,22 +33,6 @@ namespace alros
 {
 namespace helpers
 {
-
-inline double getYaw(const geometry_msgs::Pose& pose)
-{
-  double yaw, _pitch, _roll;
-  tf2::Matrix3x3(tf2::Quaternion(pose.orientation.x, pose.orientation.y,
-                                pose.orientation.z, pose.orientation.w)).getEulerYPR(yaw, _pitch, _roll);
-  return yaw;
-}
-
-inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Publisher& second )
-{
-  if ( first.topic() == second.topic() )
-    return true;
-  else
-    return false;
-}
 
 inline dataType::DataType getDataType(qi::AnyValue value)
 {
@@ -66,6 +53,22 @@ inline dataType::DataType getDataType(qi::AnyValue value)
 }
 
 static const float bufferDefaultDuration = 10.f;
+inline void getFiles(const boost::filesystem::path& root, const std::string& ext, std::vector<boost::filesystem::path>& ret)
+{
+  if(!boost::filesystem::exists(root) || !boost::filesystem::is_directory(root)) return;
+
+  boost::filesystem::recursive_directory_iterator it(root);
+  boost::filesystem::recursive_directory_iterator endit;
+
+  while(it != endit)
+  {
+    if(boost::filesystem::is_regular_file(*it) && it->path().extension() == ext)
+    {
+      ret.push_back(it->path().filename());
+    }
+    ++it;
+  }
+}
 
 static const std::string boot_config_file_name = "boot_config.json";
 
