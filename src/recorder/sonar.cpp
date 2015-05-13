@@ -98,7 +98,7 @@ void SonarRecorder::setBufferDuration(float duration)
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
   buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
-  buffer_.resize(buffer_size_);
+  buffer_.set_capacity(buffer_size_);
 }
 
 } //publisher

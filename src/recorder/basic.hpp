@@ -45,7 +45,8 @@ public:
     buffer_duration_( helpers::bufferDefaultDuration ),
     is_initialized_( false ),
     is_subscribed_( false ),
-    buffer_frequency_(buffer_frequency)
+    buffer_frequency_(buffer_frequency),
+    counter_(1)
   {}
 
   virtual ~BasicRecorder() {}
@@ -132,7 +133,7 @@ public:
     boost::mutex::scoped_lock lock_bufferize( mutex_ );
     buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
     buffer_duration_ = duration;
-    buffer_.resize(buffer_size_);
+    buffer_.set_capacity(buffer_size_);
   }
 
 protected:

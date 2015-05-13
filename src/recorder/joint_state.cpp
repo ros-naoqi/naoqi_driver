@@ -106,8 +106,8 @@ void JointStateRecorder::setBufferDuration(float duration)
   boost::mutex::scoped_lock lock_bufferize( mutex_ );
   buffer_size_ = static_cast<size_t>(duration*(conv_frequency_/max_counter_));
   buffer_duration_ = duration;
-  bufferJoinState_.resize(buffer_size_);
-  bufferTF_.resize(buffer_size_);
+  bufferJoinState_.set_capacity(buffer_size_);
+  bufferTF_.set_capacity(buffer_size_);
 }
 
 } //publisher
