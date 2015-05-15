@@ -18,6 +18,7 @@
 #include "log.hpp"
 
 #include <qicore/logmessage.hpp>
+#include <queue>
 
 #include <std_msgs/String.h>
 
@@ -34,11 +35,9 @@ namespace converter
 /** mutex to change the logs list */
 boost::mutex MUTEX_LOGS;
 /** list of ogs in which the NAOqi callback will write its logs */
-std::list<rosgraph_msgs::Log> LOGS;
+std::queue<rosgraph_msgs::Log> LOGS;
 /** Vector where at index NAOQI_LOG_LEVEL, there is the matching ROS level */
 std::vector<rosgraph_msgs::Log::_level_type> LOG_LEVELS;
-/** Latest time at which the updates happened */
-ros::Time last_log_update_ = ros::TIME_MIN;
 
 void logCallback(const qi::LogMessage& msg)
 {
@@ -57,11 +56,12 @@ void logCallback(const qi::LogMessage& msg)
 
   // If we are not publishing, the queue will increase, so we have to prevent an explosion
   // We only keep a log if it's within 5 second of the last publish (totally arbitrary)
-  if ((log.header.stamp - last_log_update_) < ros::Duration(5))
+  boost::mutex::scoped_lock lock( MUTEX_LOGS );
+  while (LOGS.size() > 1000)
   {
-    boost::mutex::scoped_lock lock( MUTEX_LOGS );
-    LOGS.push_back(log);
+    LOGS.pop();
   }
+  LOGS.push(log);
 }
 
 LogConverter::LogConverter( const std::string& name, float frequency, const qi::SessionPtr& session )
@@ -92,10 +92,9 @@ void LogConverter::callAll( const std::vector<message_actions::MessageAction>& a
     }
     {
       boost::mutex::scoped_lock lock( MUTEX_LOGS );
-      LOGS.pop_front();
+      LOGS.pop();
     }
   }
-  last_log_update_ = ros::Time::now();
 }
 
 void LogConverter::reset( )
