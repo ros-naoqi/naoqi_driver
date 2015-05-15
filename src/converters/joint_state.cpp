@@ -30,6 +30,7 @@
 * ROS includes
 */
 #include <kdl_parser/kdl_parser.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace alros
 {
@@ -111,14 +112,16 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
    */
   std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", 1, true );
   const ros::Time& odom_stamp = ros::Time::now();
-  const float& odomX =  al_odometry_data[0];
-  const float& odomY =  al_odometry_data[1];
-  const float& odomZ =  al_odometry_data[2];
+  const float& odomX  =  al_odometry_data[0];
+  const float& odomY  =  al_odometry_data[1];
+  const float& odomZ  =  al_odometry_data[2];
   const float& odomWX =  al_odometry_data[3];
   const float& odomWY =  al_odometry_data[4];
   const float& odomWZ =  al_odometry_data[5];
   //since all odometry is 6DOF we'll need a quaternion created from yaw
-  geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromRollPitchYaw( odomWX, odomWY, odomWZ );
+  tf2::Quaternion tf_quat;
+  tf_quat.setRPY( odomWX, odomWY, odomWZ );
+  geometry_msgs::Quaternion odom_quat = tf2::toMsg( tf_quat );
 
   static geometry_msgs::TransformStamped msg_tf_odom;
   msg_tf_odom.header.frame_id = "odom";
@@ -165,13 +168,15 @@ void JointStateConverter::setTransforms(const std::map<std::string, double>& joi
       tf_transform.transform.translation.y = seg->second.segment.pose(jnt->second).p.y();
       tf_transform.transform.translation.z = seg->second.segment.pose(jnt->second).p.z();
 
-      tf_transform.header.frame_id = tf::resolve(tf_prefix, seg->second.root);
-      tf_transform.child_frame_id = tf::resolve(tf_prefix, seg->second.tip);
+      //tf_transform.header.frame_id = tf::resolve(tf_prefix, seg->second.root);
+      //tf_transform.child_frame_id = tf::resolve(tf_prefix, seg->second.tip);
+      tf_transform.header.frame_id = seg->second.root; // tf2 does not suppport tf_prefixing
+      tf_transform.child_frame_id = seg->second.tip;
 
       tf_transforms_.push_back(tf_transform);
 
       if (tf2_buffer_)
-        tf2_buffer_->setTransform(tf_transform, "alrosconverter", false);
+          tf2_buffer_->setTransform(tf_transform, "alrosconverter", false);
     }
   }
   //tf_broadcaster_.sendTransform(tf_transforms);
@@ -193,8 +198,10 @@ void JointStateConverter::setFixedTransforms(const std::string& tf_prefix, const
     tf_transform.transform.translation.y = seg->second.segment.pose(0).p.y();
     tf_transform.transform.translation.z = seg->second.segment.pose(0).p.z();
 
-    tf_transform.header.frame_id = tf::resolve(tf_prefix, seg->second.root);
-    tf_transform.child_frame_id = tf::resolve(tf_prefix, seg->second.tip);
+    //tf_transform.header.frame_id = tf::resolve(tf_prefix, seg->second.root);
+    //tf_transform.child_frame_id = tf::resolve(tf_prefix, seg->second.tip);
+    tf_transform.header.frame_id = seg->second.root;
+    tf_transform.child_frame_id = seg->second.tip;
 
     tf_transforms_.push_back(tf_transform);
 

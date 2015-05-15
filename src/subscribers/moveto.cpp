@@ -23,8 +23,10 @@
 /*
  * ROS includes
  */
-#include <tf/transform_datatypes.h>
+//#include <tf/transform_datatypes.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
+#include "../helpers.hpp"
 
 namespace alros
 {
@@ -48,7 +50,7 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
 {
   if ( pose_msg->header.frame_id == "base_footprint" )
   {
-    double yaw = tf::getYaw(pose_msg->pose.orientation);
+    double yaw = alros::helpers::getYaw(pose_msg->pose);
 
     std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << " yaw: " << yaw << std::endl;
     p_motion_.async<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, yaw);
@@ -67,7 +69,7 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
       //tf_listenerPtr_->lookupTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), tf_trans);
       //std::cout << "got a transform " << tf_trans.getOrigin().x() << std::endl;
       tf2_buffer_->transform( *pose_msg, pose_msg_bf, "base_footprint", ros::Time(0), pose_msg->header.frame_id );
-      double yaw = tf::getYaw(pose_msg_bf.pose.orientation);
+      double yaw = alros::helpers::getYaw(pose_msg_bf.pose);
       std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
       p_motion_.async<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, yaw );
     } catch( const tf2::LookupException& e)

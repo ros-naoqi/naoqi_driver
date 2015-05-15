@@ -24,7 +24,8 @@
 /*
 * ROS includes
 */
-#include <tf/transform_datatypes.h>
+//#include <tf/transform_datatypes.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 /*
 * BOOST includes
@@ -102,10 +103,14 @@ namespace converter {
     const ros::Time& stamp = ros::Time::now();
     msg_imu_.header.stamp = stamp;
 
-    msg_imu_.orientation = tf::createQuaternionMsgFromRollPitchYaw(
-                                memData[1],
-                                memData[2],
-                                memData[3]);
+    tf2::Quaternion tf_quat;
+    tf_quat.setRPY( memData[1], memData[2], memData[3] );
+    msg_imu_.orientation = tf2::toMsg( tf_quat );
+
+    //msg_imu_.orientation = tf::createQuaternionMsgFromRollPitchYaw(
+    //                            memData[1],
+    //                            memData[2],
+    //                            memData[3]);
 
     msg_imu_.angular_velocity.x = memData[4];
     msg_imu_.angular_velocity.y = memData[5];

@@ -23,10 +23,21 @@
 #include <alrosbridge/tools.hpp>
 #include <qi/session.hpp>
 
+#include <geometry_msgs/Pose.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+
 namespace alros
 {
 namespace helpers
 {
+
+inline double getYaw(const geometry_msgs::Pose& pose)
+{
+  double yaw, _pitch, _roll;
+  tf2::Matrix3x3(tf2::Quaternion(pose.orientation.x, pose.orientation.y,
+                                pose.orientation.z, pose.orientation.w)).getEulerYPR(yaw, _pitch, _roll);
+  return yaw;
+}
 
 inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Publisher& second )
 {
