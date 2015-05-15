@@ -12,14 +12,14 @@
     "depth_camera":
     {
       "enabled"       : true,
-      "resolution"    : 1,
+      "resolution"    : 0,
       "fps"           : 10,
       "recorder_fps"  : 5
     },
     "ir_camera":
     {
       "enabled"       : true,
-      "resolution"    : 1,
+      "resolution"    : 0,
       "fps"           : 10,
       "recorder_fps"  : 5
     },
@@ -31,12 +31,12 @@
     "logs":
     {
       "enabled"       : true,
-      "frequency"     : 10
+      "frequency"     : 1
     },
     "diag":
     {
       "enabled"       : true,
-      "frequency"     : 10
+      "frequency"     : 1
     },
     "imu_torso":
     {

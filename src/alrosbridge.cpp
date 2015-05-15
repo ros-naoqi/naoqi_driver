@@ -483,18 +483,47 @@ void Bridge::registerDefaultConverter()
   alros::Robot robot_type;
 
   // replace this with proper configuration struct
-  bool with_info          = boot_config_.get( "converters.info.enabled", true);
-  bool with_audio         = boot_config_.get( "converters.audio.enabled", true);
-  bool with_logs          = boot_config_.get( "converters.logs.enabled", true);
-  bool with_diag          = boot_config_.get( "converters.diag.enabled", true);
-  bool with_imu_torso     = boot_config_.get( "converters.imu_torso.enabled", true);
-  bool with_imu_base      = boot_config_.get( "converters.imu_base.enabled", true);
-  bool with_camera_front  = boot_config_.get( "converters.front_camera.enabled", true);
-  bool with_camera_depth  = boot_config_.get( "converters.depth_camera.enabled", true);
-  bool with_camera_ir     = boot_config_.get( "converters.ir_camera.enabled", true);
-  bool with_joint_states  = boot_config_.get( "converters.joint_states.enabled", true);
-  bool with_laser         = boot_config_.get( "converters.laser.enabled", true);
-  bool with_sonar         = boot_config_.get( "converters.sonar.enabled", true);
+  bool info_enabled                   = boot_config_.get( "converters.info.enabled", true);
+  size_t info_frequency               = boot_config_.get( "converters.info.frequency", 1);
+
+  bool audio_enabled                  = boot_config_.get( "converters.audio.enabled", true);
+  size_t audio_frequency              = boot_config_.get( "converters.audio.frequency", 1);
+
+  bool logs_enabled                   = boot_config_.get( "converters.logs.enabled", true);
+  size_t logs_frequency               = boot_config_.get( "converters.logs.frequency", 10);
+
+  bool diag_enabled                   = boot_config_.get( "converters.diag.enabled", true);
+  size_t diag_frequency               = boot_config_.get( "converters.diag.frequency", 10);
+
+  bool imu_torso_enabled              = boot_config_.get( "converters.imu_torso.enabled", true);
+  size_t imu_torso_frequency          = boot_config_.get( "converters.imu_torso.frequency", 10);
+
+  bool imu_base_enabled               = boot_config_.get( "converters.imu_base.enabled", true);
+  size_t imu_base_frequency           = boot_config_.get( "converters.imu_base.frequency", 10);
+
+  bool camera_front_enabled           = boot_config_.get( "converters.front_camera.enabled", true);
+  size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 2); // VGA
+  size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 15);
+  size_t camera_front_recorder_fps    = boot_config_.get( "converters.front_camera.recorder_fps", 5);
+
+  bool camera_depth_enabled           = boot_config_.get( "converters.depth_camera.enabled", true);
+  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 0); // QQVGA
+  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 15);
+  size_t camera_depth_recorder_fps    = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
+
+  bool camera_ir_enabled              = boot_config_.get( "converters.ir_camera.enabled", true);
+  size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 0); // QQVGA
+  size_t camera_ir_fps                = boot_config_.get( "converters.ir_camera.fps", 15);
+  size_t camera_ir_recorder_fps       = boot_config_.get( "converters.ir_camera.recorder_fps", 5);
+
+  bool joint_states_enabled           = boot_config_.get( "converters.joint_states.enabled", true);
+  size_t joint_states_frequency       = boot_config_.get( "converters.joint_states.frequency", 15);
+
+  bool laser_enabled                  = boot_config_.get( "converters.laser.enabled", true);
+  size_t laser_frequency              = boot_config_.get( "converters.laser.frequency", 10);
+
+  bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
+  size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
 
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
@@ -508,7 +537,7 @@ void Bridge::registerDefaultConverter()
   boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
   robot_type = inc->robot();
 
-  if ( with_info )
+  if ( info_enabled )
   {
     boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
     boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
@@ -520,18 +549,18 @@ void Bridge::registerDefaultConverter()
 
 
   /** LOGS */
-  if ( with_logs )
+  if ( logs_enabled )
   {
-    boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", 1, sessionPtr_);
+    boost::shared_ptr<converter::LogConverter> lc = boost::make_shared<converter::LogConverter>( "log", logs_frequency, sessionPtr_);
     boost::shared_ptr<publisher::LogPublisher> lp = boost::make_shared<publisher::LogPublisher>( "/rosout" );
     lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::LogPublisher::publish, lp, _1) );
     registerPublisher( lc, lp );
   }
 
   /** DIAGNOSTICS */
-  if ( with_diag )
+  if ( diag_enabled )
   {
-    boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", 1, sessionPtr_);
+    boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", diag_frequency, sessionPtr_);
     boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics_agg" );
     boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics_agg" );
     dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
@@ -541,11 +570,11 @@ void Bridge::registerDefaultConverter()
   }
 
   /** IMU TORSO **/
-  if ( with_imu_torso )
+  if ( imu_torso_enabled )
   {
     boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
     boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_torso" );
-    boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, 15, sessionPtr_);
+    boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, imu_torso_frequency, sessionPtr_);
     imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
     imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
     imutc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imutr, _1) );
@@ -555,11 +584,11 @@ void Bridge::registerDefaultConverter()
   if(robot_type == alros::PEPPER)
   {
     /** IMU BASE **/
-    if ( with_imu_base )
+    if ( imu_base_enabled )
     {
       boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
       boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_base" );
-      boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, 15, sessionPtr_);
+      boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, imu_base_frequency, sessionPtr_);
       imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
       imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
       imubc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::bufferize, imubr, _1) );
@@ -568,11 +597,11 @@ void Bridge::registerDefaultConverter()
   } // endif PEPPER
 
   /** Front Camera */
-  if ( with_camera_front )
+  if ( camera_front_enabled )
   {
     boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
-    boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", 15 );
-    boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", 15, sessionPtr_, AL::kTopCamera, AL::kQVGA );
+    boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", camera_front_recorder_fps );
+    boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", camera_front_fps, sessionPtr_, AL::kTopCamera, camera_front_resolution );
     fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
     fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
     fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
@@ -582,11 +611,11 @@ void Bridge::registerDefaultConverter()
   if(robot_type == alros::PEPPER)
   {
     /** Depth Camera */
-    if ( with_camera_depth )
+    if ( camera_depth_enabled )
     {
       boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
-      boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", 10 );
-      boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", 15, sessionPtr_, AL::kDepthCamera, AL::kQVGA );
+      boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", camera_depth_recorder_fps );
+      boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", camera_depth_fps, sessionPtr_, AL::kDepthCamera, camera_depth_resolution );
       dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
       dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
       dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
@@ -594,11 +623,11 @@ void Bridge::registerDefaultConverter()
     }
 
     /** Infrared Camera */
-    if ( with_camera_ir )
+    if ( camera_ir_enabled )
     {
       boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
-      boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", 5 );
-      boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", 15, sessionPtr_, AL::kInfraredCamera, AL::kQVGA);
+      boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", camera_ir_recorder_fps );
+      boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", camera_ir_fps, sessionPtr_, AL::kInfraredCamera, camera_ir_resolution);
       icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
       icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
       icc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, icr, _1, _2) );
@@ -607,12 +636,11 @@ void Bridge::registerDefaultConverter()
   } // endif PEPPER
 
   /** Joint States */
-  if ( with_joint_states )
+  if ( joint_states_enabled )
   {
     boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
-    std::cout << "joint state publisher " << std::endl;
     boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
-    boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", 15, tf2_buffer_, sessionPtr_ );
+    boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", joint_states_frequency, tf2_buffer_, sessionPtr_ );
     jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
     jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
     jsc->registerCallback( message_actions::LOG, boost::bind(&recorder::JointStateRecorder::bufferize, jsr, _1, _2) );
@@ -622,11 +650,11 @@ void Bridge::registerDefaultConverter()
 
   if(robot_type == alros::PEPPER){
     /** Laser */
-    if ( with_laser )
+    if ( laser_enabled )
     {
       boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
-      boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", 10, sessionPtr_ );
+      boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", laser_frequency, sessionPtr_ );
       lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
       lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
       lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::bufferize, lr, _1) );
@@ -635,7 +663,7 @@ void Bridge::registerDefaultConverter()
   }
 
   /** Sonar */
-  if ( with_sonar )
+  if ( sonar_enabled )
   {
     std::vector<std::string> sonar_topics;
     if (robot_type == alros::PEPPER)
@@ -650,7 +678,7 @@ void Bridge::registerDefaultConverter()
     }
     boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
     boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
-    boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", 10, sessionPtr_ );
+    boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", sonar_frequency, sessionPtr_ );
     usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
     usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
