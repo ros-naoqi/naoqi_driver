@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>naoqi_rosbridge</name>
+  <version>0.0.0</version>
+  <description>Bridge between Aldebaran's NAOqiOS and ROS</description>
+
+  <author>Karsten Knese</author>
+  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
+  <license>BSD</license>
+
+  <build_depend>boost</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>kdl_parser</build_depend>
+  <build_depend>libopencv-dev</build_depend>
+  <build_depend>naoqi_libqi</build_depend>
+  <build_depend>naoqi_libqicore</build_depend>
+  <build_depend>orocos_kdl</build_depend>
+  <build_depend>rosbag_storage</build_depend>
+  <build_depend>tf2_ros</build_depend>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>boost</run_depend>
+  <run_depend>image_transport</run_depend>
+  <run_depend>kdl_parser</run_depend>
+  <run_depend>libopencv-dev</run_depend>
+  <run_depend>naoqi_libqi</run_depend>
+  <run_depend>naoqi_libqicore</run_depend>
+  <run_depend>orocos_kdl</run_depend>
+  <run_depend>rosbag_storage</run_depend>
+  <run_depend>tf2_ros</run_depend>
+</package>
