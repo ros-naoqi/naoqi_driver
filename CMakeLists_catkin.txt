@@ -1,0 +1,55 @@
+# CMake file that uses catkin
+find_package(catkin COMPONENTS cv_bridge diagnostic_msgs geometry_msgs image_transport
+  kdl_parser naoqi_bridge_msgs naoqi_libqi naoqi_libqicore rosbag_storage rosgraph_msgs
+  sensor_msgs tf2_geometry_msgs tf2_msgs tf2_ros
+)
+find_package(OpenCV)
+find_package(orocos_kdl)
+
+catkin_package(LIBRARIES alrosconverters)
+
+include_directories( include ${catkin_INCLUDE_DIRS})
+
+# create the different libraries
+add_library(
+  alrosconverters
+  SHARED
+  ${CONVERTERS_SRC}
+  ${TOOLS_SRC}
+  )
+target_link_libraries(alrosconverters ${naoqi_libiq_LIBRARIES})
+install(TARGETS alrosconverters DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+add_library(
+  alrosbridge
+  SHARED
+  ${BRIDGE_SRC}
+  ${PUBLISHER_SRC}
+  ${SUBSCRIBER_SRC}
+  ${RECORDER_SRC}
+  ${TOOLS_SRC}
+)
+target_link_libraries(
+  alrosbridge
+  alrosconverters
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${orocos_kdl_LIBRARIES}
+  )
+install(TARGETS alrosbridge DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+# create the binary of the bridge
+add_executable(alrosbridge_bin src/external_registration.cpp)
+target_link_libraries(
+  alrosbridge_bin
+  alrosbridge
+  ${catkin_LIBRARIES}
+)
+install(TARGETS alrosbridge_bin DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+# install the urdf for runtime loading
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}/")
+install(DIRECTORY share DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
+
+#add_subdirectory( benchmark )
+#add_subdirectory( test )
