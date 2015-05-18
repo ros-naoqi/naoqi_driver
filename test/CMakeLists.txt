@@ -19,12 +19,12 @@ target_link_libraries(
   recorder_callback_test
   alrosbridge
 )
-qi_create_gtest( converter_memory_test "converter_memory_test.cpp" )
-qi_use_lib( converter_memory_test GTEST QI)
-target_link_libraries(
-  converter_memory_test
-  alrosbridge
-)
+#qi_create_gtest( converter_memory_test "converter_memory_test.cpp" )
+#qi_use_lib( converter_memory_test GTEST QI)
+#target_link_libraries(
+#  converter_memory_test
+#  alrosbridge
+#)
 qi_create_gtest( event_registration_test "event_registration_test.cpp" )
 qi_use_lib( event_registration_test GTEST QI)
 target_link_libraries(
