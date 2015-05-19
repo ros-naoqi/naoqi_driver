@@ -632,8 +632,9 @@ void Bridge::registerDefaultConverter()
     registerConverter( usc, usr );
   }
 
+  /** Audio */
+  if ( audio_enabled )
   {
-    /** Audio */
     boost::shared_ptr<AudioEventRegister> event_register =
         boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
     insertEventConverter("audio", event_register);
