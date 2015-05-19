@@ -52,5 +52,8 @@ install(TARGETS alrosbridge_bin DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}/")
 install(DIRECTORY share DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
 
+# make sure there is a file describing a naoqi module
+file(WRITE ${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/alros.mod "cpp")
+
 #add_subdirectory( benchmark )
 #add_subdirectory( test )
