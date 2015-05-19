@@ -22,6 +22,16 @@
 
 int main(int argc, char** argv)
 {
+  qi::path::detail::addOptionalSdkPrefix( "/opt/ros/indigo" );
+
+  /*
+  const std::vector<std::string>& prefixes = qi::path::detail::getSdkPrefixes();
+  for (size_t i=0; i<prefixes.size(); i++)
+  {
+    std::cout << "sdk prefix: " << prefixes[i] << std::endl;
+  }
+  */
+
   qi::ApplicationSession app(argc, argv);
   app.start();
   //app.session()->loadService( "alros.BridgeService" );
