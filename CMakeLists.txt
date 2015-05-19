@@ -1,22 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
-project(alrosbridge)
+project(naoqi_rosbridge)
 
-find_package(qibuild)
-find_package(qimodule)
-
-#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x -std=c++0x")
-
-include_directories( include )
-
-qi_create_module(
-  alros
-  src/autoload_registration.cpp
-  SHARED
-)
-qi_stage_lib( alros )
-
+# define source files that can be used by qibuild or catkin
 set(
-  CONVERTERS
+  CONVERTERS_SRC
   src/converters/audio.cpp
   src/converters/camera.cpp
   src/converters/diagnostics.cpp
@@ -33,21 +20,13 @@ set(
   src/converters/log.cpp
   )
 set(
-  TOOLS
+  TOOLS_SRC
   src/tools/robot_description.cpp
   src/tools/from_any_value.cpp
   )
-qi_create_lib(
-  alrosconverters
-  SHARED
-  ${CONVERTERS}
-  ${TOOLS}
-  )
-qi_use_lib( alrosconverters QI QICORE ROS )
-qi_stage_lib( alrosconverters )
 
 set(
-  PUBLISHER
+  PUBLISHER_SRC
   src/publishers/camera.cpp
   src/publishers/info.cpp
   src/publishers/joint_state.cpp
@@ -56,13 +35,13 @@ set(
   )
 
 set(
-  SUBSCRIBER
+  SUBSCRIBER_SRC
   src/subscribers/teleop.cpp
   src/subscribers/moveto.cpp
   )
 
 set(
-  RECORDER
+  RECORDER_SRC
   src/recorder/camera.cpp
   src/recorder/diagnostics.cpp
   src/recorder/joint_state.cpp
@@ -70,33 +49,80 @@ set(
   src/recorder/sonar.cpp
   )
 
-qi_create_lib(
-  alrosbridge
-  SHARED
+set(
+  BRIDGE_SRC
   src/alrosbridge.cpp
   src/recorder/globalrecorder.cpp
   src/event/basic.hxx
   src/event/basic.hpp
   src/event/audio.cpp
-  ${PUBLISHER}
-  ${SUBSCRIBER}
-  ${RECORDER}
-  ${TOOLS}
-)
+  )
 
-qi_stage_lib( alrosbridge )
-qi_use_lib(alros QI ROS)
+# use catkin if qibuild is not found
+find_package(catkin QUIET)
+find_package(qibuild QUIET)
+
+set(USE_QIBUILD FALSE)
+if(catkin_FOUND AND qibuild_FOUND)
+  # if you have qibuild and catkin, you have to choose one
+  option(USE_QIBUILD "Whether you use qibuild or catkin" TRUE)
+  message("WARNING: You have both catkin and qibuild installed")
+  message("WARNING: You need to choose one with the option USE_QIBUILD")
+  message("WARNING: E.g. catkin_make --cmake-args -DUSE_QIBUILD=FALSE")
+  message("WARNING: BTW, CMake might crash after you read this")
+endif()
+
+if(NOT qibuild_FOUND OR NOT USE_QIBUILD)
+  include(CMakeLists_catkin.txt)
+  return()
+endif()
+
+find_package(qimodule)
+
+#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x -std=c++0x")
+
+include_directories( include )
+
+qi_create_module(
+  alros
+  src/autoload_registration.cpp
+  SHARED
+)
+qi_stage_lib( alros )
+
+# create the different libraries
+qi_create_lib(
+  alrosconverters
+  SHARED
+  ${CONVERTERS_SRC}
+  ${TOOLS_SRC}
+  )
+qi_use_lib( alrosconverters QI QICORE ROS )
+qi_stage_lib( alrosconverters )
+
+qi_create_lib(
+  alrosbridge
+  SHARED
+  ${BRIDGE_SRC}
+  ${PUBLISHER_SRC}
+  ${SUBSCRIBER_SRC}
+  ${RECORDER_SRC}
+  ${TOOLS_SRC}
+)
 qi_use_lib(alrosbridge QICORE QI ROS)
 target_link_libraries(
   alrosbridge
   alrosconverters
   )
+qi_stage_lib( alrosbridge )
 
+qi_use_lib(alros QI ROS)
 target_link_libraries(
   alros
   alrosbridge
 )
 
+# create the binary of the bridge
 qi_create_bin(alrosbridge_bin src/external_registration.cpp)
 target_link_libraries(
   alrosbridge_bin
