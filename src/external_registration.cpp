@@ -20,17 +20,12 @@
 #include <qi/anymodule.hpp>
 #include <alrosbridge/alrosbridge.hpp>
 
+#include "ros_env.hpp"
+
 int main(int argc, char** argv)
 {
-  qi::path::detail::addOptionalSdkPrefix( "/opt/ros/indigo" );
-
-  /*
-  const std::vector<std::string>& prefixes = qi::path::detail::getSdkPrefixes();
-  for (size_t i=0; i<prefixes.size(); i++)
-  {
-    std::cout << "sdk prefix: " << prefixes[i] << std::endl;
-  }
-  */
+  /* adjust the SDK prefix in case you compiled via catkin*/
+  alros::ros_env::adjustSDKPrefix();
 
   qi::ApplicationSession app(argc, argv);
   app.start();
