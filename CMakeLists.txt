@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.3)
 project(naoqi_rosbridge)
 
 # define source files that can be used by qibuild or catkin
@@ -59,20 +59,10 @@ set(
   )
 
 # use catkin if qibuild is not found
-find_package(catkin QUIET)
-find_package(qibuild QUIET)
-
-set(USE_QIBUILD FALSE)
-if(catkin_FOUND AND qibuild_FOUND)
-  # if you have qibuild and catkin, you have to choose one
-  option(USE_QIBUILD "Whether you use qibuild or catkin" TRUE)
-  message("WARNING: You have both catkin and qibuild installed")
-  message("WARNING: You need to choose one with the option USE_QIBUILD")
-  message("WARNING: E.g. catkin_make --cmake-args -DUSE_QIBUILD=FALSE")
-  message("WARNING: BTW, CMake might crash after you read this")
-endif()
-
-if(NOT qibuild_FOUND OR NOT USE_QIBUILD)
+if(DEFINED qibuild_DIR)
+  find_package(qibuild QUIET)
+else()
+  find_package(catkin QUIET)
   include(CMakeLists_catkin.txt)
   return()
 endif()
