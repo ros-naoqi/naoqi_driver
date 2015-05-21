@@ -124,4 +124,4 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${QI_SDK_DIR}/${QI_S
 qi_install_data( share/)
 
 add_subdirectory( benchmark )
-add_subdirectory( test )
+#add_subdirectory( test )
