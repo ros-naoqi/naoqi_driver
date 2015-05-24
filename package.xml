@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>naoqi_rosbridge</name>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <description>Bridge between Aldebaran's NAOqiOS and ROS</description>
 
   <author>Karsten Knese</author>

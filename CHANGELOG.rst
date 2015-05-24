@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2015-05-24)
+------------------
 * clean seperation between catkin and qibuild
 * adjust sdk prefixes with cmake_prefix
 * fix devel problems and rename lib
