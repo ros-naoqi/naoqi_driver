@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.6 (2015-05-28)
+------------------
 * add install rule for the module file
 * Contributors: Vincent Rabaud
 
