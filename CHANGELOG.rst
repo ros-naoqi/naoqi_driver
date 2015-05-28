@@ -2,6 +2,11 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add install rule for the module file
+* Contributors: Vincent Rabaud
+
 0.0.5 (2015-05-24)
 ------------------
 * clean seperation between catkin and qibuild
