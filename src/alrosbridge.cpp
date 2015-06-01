@@ -372,7 +372,9 @@ void Bridge::registerConverter( converter::Converter& conv )
 
 void Bridge::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
 {
-//  pub.reset(*nhPtr_);
+  if (publish_enabled_) {
+    pub.reset(*nhPtr_);
+  }
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
@@ -1047,6 +1049,7 @@ void Bridge::addMemoryConverters(std::string filepath){
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
   mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList>::publish, mlp, _1) );
   mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList>::write, mlr, _1) );
+  mlc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList>::bufferize, mlr, _1) );
   registerConverter( mlc, mlp, mlr );
 }
 
