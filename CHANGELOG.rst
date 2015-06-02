@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.7 (2015-06-02)
+------------------
 * correct filepath lookup for catkin and qibuild
 * hotfix: do not cast 'getenv' return to string when it's null
 * hotfix: allow to register correctly a converter on the fly
