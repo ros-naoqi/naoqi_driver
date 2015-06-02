@@ -134,9 +134,12 @@ void Bridge::init()
 
 void Bridge::loadBootConfig()
 {
-  std::string file_path = alros::helpers::getBootConfigFile();
+  const std::string& file_path = alros::helpers::getBootConfigFile();
   std::cout << "load boot config from " << file_path << std::endl;
-  boost::property_tree::read_json( file_path, boot_config_ );
+  if (!file_path.empty())
+  {
+    boost::property_tree::read_json( file_path, boot_config_ );
+  }
 }
 
 void Bridge::stopService() {

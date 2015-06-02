@@ -19,6 +19,7 @@
 * LOCAL includes
 */
 #include "robot_description.hpp"
+#include "../helpers.hpp"
 
 namespace alros{
 
@@ -32,13 +33,11 @@ std::string getRobotDescription(Robot robot){
 
     if ( robot == PEPPER)
     {
-      urdf_path = qi::path::findData("/urdf/", "pepper_robot.urdf");
-      std::cout << "share folder found in " << urdf_path << std::endl;
+      urdf_path = alros::helpers::getURDF("pepper_robot.urdf");
     }
     else if ( robot == NAO )
     {
-      urdf_path = qi::path::findData("/urdf/", "nao_robot.urdf");
-      std::cout << "share folder found in " << urdf_path << std::endl;
+      urdf_path = alros::helpers::getURDF("nao_robot.urdf");
     }
     else
     {

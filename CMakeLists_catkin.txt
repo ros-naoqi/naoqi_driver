@@ -1,3 +1,6 @@
+# Add pre-processor compile flag indicating catkin
+add_definitions( -DCATKIN_BUILD )
+
 # CMake file that uses catkin
 find_package(catkin COMPONENTS cv_bridge diagnostic_msgs diagnostic_updater
   geometry_msgs image_transport kdl_parser naoqi_bridge_msgs naoqi_libqi
