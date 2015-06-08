@@ -244,6 +244,18 @@ void Bridge::rosLoop()
 
 std::string Bridge::minidump(const std::string& prefix)
 {
+  // CHECK SIZE IN FOLDER
+  long files_size = 0;
+  boost::filesystem::path folderPath(boost::filesystem::current_path());
+  helpers::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::folderMaximumSize)
+  {
+    std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
+                 << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
+                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+    return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
+  }
+
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
@@ -283,6 +295,18 @@ std::string Bridge::minidump(const std::string& prefix)
 
 std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
+  // CHECK SIZE IN FOLDER
+  long files_size = 0;
+  boost::filesystem::path folderPath(boost::filesystem::current_path());
+  helpers::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::folderMaximumSize)
+  {
+    std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
+                 << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
+                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+    return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
+  }
+
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
