@@ -55,6 +55,8 @@ inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Pu
     return false;
 }
 
+static const float bufferDefaultDuration = 60.f;
+
 static const long folderMaximumSize = 2000000000;
 
 inline dataType::DataType getDataType(qi::AnyValue value)
@@ -98,7 +100,6 @@ inline void getFoldersize(std::string rootFolder, long& file_size){
   }
 }
 
-static const float bufferDefaultDuration = 10.f;
 inline void getFiles(const boost::filesystem::path& root, const std::string& ext, std::vector<boost::filesystem::path>& ret)
 {
   if(!boost::filesystem::exists(root) || !boost::filesystem::is_directory(root)) return;

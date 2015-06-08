@@ -712,8 +712,11 @@ void Bridge::registerDefaultConverter()
     usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
     registerConverter( usc, usp, usr );
+  }
 
-    /** Audio */
+  /** Audio */
+  if ( audio_enabled )
+  {
     boost::shared_ptr<AudioEventRegister> event_register =
         boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
     insertEventConverter("audio", event_register);
