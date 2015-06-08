@@ -1142,6 +1142,20 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
   return true;
 }
 
+std::vector<std::string> Bridge::getFilesList()
+{
+  std::vector<std::string> fileNames;
+  boost::filesystem::path folderPath( boost::filesystem::current_path() );
+  std::vector<boost::filesystem::path> files;
+  helpers::getFiles(folderPath, ".bag", files);
+
+  for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    fileNames.push_back(it->string());
+  }
+  return fileNames;
+}
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
@@ -1158,6 +1172,7 @@ QI_REGISTER_OBJECT( Bridge,
                     addMemoryConverters,
                     registerMemoryConverter,
                     registerEventConverter,
+                    getFilesList,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );
