@@ -214,6 +214,10 @@ public:
 
   std::vector<std::string> getFilesList();
 
+  void removeAllFiles();
+
+  void removeFiles(std::vector<std::string> files);
+
 private:
   qi::SessionPtr sessionPtr_;
   bool publish_enabled_;
