@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     std::cout << BOLDYELLOW << "using ip address: "
               << BOLDCYAN << argv[1] << RESETCOLOR << std::endl;
     bs->init();
-    bs->setMasterURI( "http://"+std::string(argv[1])+":11311");
+    bs->_setMasterURI( "http://"+std::string(argv[1])+":11311");
   }
   else
   {

@@ -259,7 +259,7 @@ std::string Bridge::minidump(const std::string& prefix)
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -310,7 +310,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -778,17 +778,17 @@ std::vector<std::string> Bridge::getAvailableConverters()
 * EXPOSED FUNCTIONS
 */
 
-std::string Bridge::getMasterURI() const
+std::string Bridge::_getMasterURI() const
 {
   return ros_env::getMasterURI();
 }
 
-void Bridge::setMasterURI( const std::string& uri)
+void Bridge::_setMasterURI( const std::string& uri)
 {
-  setMasterURINet(uri, "eth0");
+  _setMasterURINet(uri, "eth0");
 }
 
-void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
+void Bridge::_setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // To avoid two calls to this function happening at the same time
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -850,7 +850,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   }
 }
 
-void Bridge::startPublishing()
+void Bridge::_startPublishing()
 {
   publish_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -859,7 +859,7 @@ void Bridge::startPublishing()
   }
 }
 
-void Bridge::stopPublishing()
+void Bridge::_stopPublishing()
 {
   publish_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -868,7 +868,7 @@ void Bridge::stopPublishing()
   }
 }
 
-std::vector<std::string> Bridge::getSubscribedPublishers() const
+std::vector<std::string> Bridge::_getSubscribedPublishers() const
 {
   std::vector<std::string> publisher;
   for(PubConstIter iterator = pub_map_.begin(); iterator != pub_map_.end(); iterator++)
@@ -884,7 +884,7 @@ std::vector<std::string> Bridge::getSubscribedPublishers() const
   return publisher;
 }
 
-void Bridge::startRecording()
+void Bridge::_startRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -909,7 +909,7 @@ void Bridge::startRecording()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordingConverters(const std::vector<std::string>& names)
+void Bridge::_startRecordingConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -963,7 +963,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   }
 }
 
-std::string Bridge::stopRecording()
+std::string Bridge::_stopRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -1212,20 +1212,20 @@ QI_REGISTER_OBJECT( Bridge,
                     minidumpConverters,
                     setBufferDuration,
                     getBufferDuration,
-                    startPublishing,
-                    stopPublishing,
-                    getMasterURI,
-                    setMasterURI,
-                    setMasterURINet,
+                    _startPublishing,
+                    _stopPublishing,
+                    _getMasterURI,
+                    _setMasterURI,
+                    _setMasterURINet,
                     getAvailableConverters,
-                    getSubscribedPublishers,
+                    _getSubscribedPublishers,
                     addMemoryConverters,
                     registerMemoryConverter,
                     registerEventConverter,
                     getFilesList,
                     removeAllFiles,
                     removeFiles,
-                    startRecording,
-                    startRecordingConverters,
-                    stopRecording );
+                    _startRecording,
+                    _startRecordingConverters,
+                    _stopRecording );
 } //alros
