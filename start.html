@@ -54,7 +54,11 @@
 <div class="section" id="start-the-alrosbridge-module">
 <h2>2.1. Start the <strong>ALRosBridge</strong> module<a class="headerlink" href="#start-the-alrosbridge-module" title="Permalink to this headline">¶</a></h2>
 <p><strong>Run from your computer:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre>$ path/to/alrosbridge-bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ path/to/alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt;
+</pre></div>
+</div>
+<p>In case you built via catkin, you can alternatively start the bridge via rosrun</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_rosbridge alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt;
 </pre></div>
 </div>
 <p>The roscore IP is the IP of the computer where roscore is running. This command is optional. If you don&#8217;t specify, any ROS communication is disabled until you call setMasterURI.</p>
