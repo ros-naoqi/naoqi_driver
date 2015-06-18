@@ -22,13 +22,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HeadYaw.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HeadYaw.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HeadYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HeadYaw_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -48,13 +48,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HeadPitch.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HeadPitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HeadPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HeadPitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -74,13 +74,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HipRoll.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HipRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -100,13 +100,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HipPitch.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HipPitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/HipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/HipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -126,13 +126,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/KneePitch.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/KneePitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/KneePitch_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/KneePitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -158,13 +158,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/Torso.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/Torso.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/Torso_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/Torso_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -184,13 +184,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LShoulderPitch.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LShoulderPitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -210,13 +210,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LShoulderRoll.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LShoulderRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -236,13 +236,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LElbowYaw.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LElbowYaw.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LElbowYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LElbowYaw_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -262,13 +262,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LElbowRoll.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LElbowRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -288,13 +288,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LWristYaw.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LWristYaw.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -322,13 +322,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RShoulderPitch.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RShoulderPitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RShoulderPitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -348,13 +348,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RShoulderRoll.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RShoulderRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RShoulderRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -374,13 +374,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RElbowYaw.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RElbowYaw.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RElbowYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RElbowYaw_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -400,13 +400,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RElbowRoll.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RElbowRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RElbowRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -426,13 +426,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RWristYaw.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RWristYaw.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RWristYaw_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -452,18 +452,6 @@
     <origin rpy="-1.81761e-08 -0.209438 -3.14159" xyz="-0.0718 0 -0.0534"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="CameraBottom_optical_frame"/>
-  <joint name="CameraBottom_optical_frame_joint" type="fixed">
-    <parent link="CameraBottom_frame"/>
-    <child link="CameraBottom_optical_frame"/>
-    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
-  </joint>
-  <link name="CameraDepth_optical_frame"/>
-  <joint name="CameraDepth_optical_frame_joint" type="fixed">
-    <parent link="CameraDepth_frame"/>
-    <child link="CameraDepth_optical_frame"/>
-    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
-  </joint>
   <link name="LHandTouchBack_frame"/>
   <joint name="LHand/Touch/Back_sensor_fixedjoint" type="fixed">
     <parent link="l_wrist"/>
@@ -475,7 +463,7 @@
   <joint name="LaserSensor/Front_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingFrontLaser_frame"/>
-    <origin rpy="0 0 0" xyz="0.0562 0 -0.334"/>
+    <origin rpy="0 0.349044 0" xyz="0.0562 0 -0.0692"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="VerticalLeftLaser_frame"/>
@@ -496,7 +484,7 @@
   <joint name="LaserSensor/Left_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingLeftLaser_frame"/>
-    <origin rpy="0 0 1.75728367321" xyz="-0.018 0.0899 -0.334"/>
+    <origin rpy="8.34035e-09 0.191982 1.5708" xyz="-0.018 0.0899 -0.0759"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="ShovelLaser_frame"/>
@@ -552,14 +540,14 @@
   <joint name="LaserSensor/Right_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingRightLaser_frame"/>
-    <origin rpy="0 0 -1.75728367321" xyz="-0.018 -0.0899 -0.334"/>
+    <origin rpy="4.08851e-07 0.191857 -1.60746" xyz="0.018 -0.0899 -0.0759"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="HeadTouchFront_frame"/>
   <joint name="Head/Touch/Front_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchFront_frame"/>
-    <origin rpy="0 0.20944 0" xyz="0.028175 0 0.21267"/>
+    <origin rpy="0 -1.1861 0" xyz="0.0275 0 0.1245"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="VerticalRightLaser_frame"/>
@@ -590,12 +578,6 @@
     <origin rpy="0 0 0" xyz="0.0868 0 0.1631"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="CameraTop_optical_frame"/>
-  <joint name="CameraTop_optical_frame_joint" type="fixed">
-    <parent link="CameraTop_frame"/>
-    <child link="CameraTop_optical_frame"/>
-    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
-  </joint>
   <link name="ImuBaseAccelerometer_frame"/>
   <joint name="AccelerometerBase_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
@@ -621,7 +603,7 @@
   <joint name="Head/Touch/Rear_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchRear_frame"/>
-    <origin rpy="0 -0.314159 0" xyz="-0.03376 0 0.21052"/>
+    <origin rpy="3.14159 -1.33319 -3.14159" xyz="-0.033 0 0.1245"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="BumperFR_frame"/>
@@ -649,19 +631,19 @@
   <joint name="Head/Touch/Middle_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchMiddle_frame"/>
-    <origin rpy="0 -0.0349066 0" xyz="0.0041 0 0.2159"/>
+    <origin rpy="3.14159 -1.57079 -3.14159" xyz="-0.004 0 0.125"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="RFinger41_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger41.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger41.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger41_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger41_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -676,13 +658,13 @@
   <link name="LFinger42_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger42.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger42.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger42_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger42_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -697,13 +679,13 @@
   <link name="RFinger11_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger11.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger11.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -718,13 +700,13 @@
   <link name="RFinger12_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger12.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger12.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -739,13 +721,13 @@
   <link name="LFinger33_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger33.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger33.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger33_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger33_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -760,13 +742,13 @@
   <link name="RFinger32_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger32.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger32.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger32_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger32_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -781,13 +763,13 @@
   <link name="LFinger21_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger21.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger21.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -802,13 +784,13 @@
   <link name="RFinger43_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger43.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger43.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger43_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger43_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -823,13 +805,13 @@
   <link name="LFinger13_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger13.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger13.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -844,13 +826,13 @@
   <link name="LFinger32_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger32.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger32.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger32_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger32_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -865,13 +847,13 @@
   <link name="LFinger11_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger11.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger11.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger11_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -886,13 +868,13 @@
   <link name="RFinger22_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger22.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger22.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -907,13 +889,13 @@
   <link name="LFinger41_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger41.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger41.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger41_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger41_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -928,13 +910,13 @@
   <link name="RFinger13_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger13.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger13.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger13_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -949,13 +931,13 @@
   <link name="LFinger22_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger22.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger22.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger22_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -970,13 +952,13 @@
   <link name="RFinger21_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger21.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger21.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger21_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -991,13 +973,13 @@
   <link name="LFinger12_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger12.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger12.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger12_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1012,13 +994,13 @@
   <link name="RFinger23_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger23.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger23.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger23_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger23_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1033,13 +1015,13 @@
   <link name="LFinger23_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger23.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger23.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger23_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger23_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1054,13 +1036,13 @@
   <link name="LFinger43_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger43.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger43.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger43_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger43_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1075,13 +1057,13 @@
   <link name="RFinger42_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger42.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger42.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger42_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger42_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1096,13 +1078,13 @@
   <link name="LFinger31_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger31.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger31.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LFinger31_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LFinger31_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1117,13 +1099,13 @@
   <link name="RFinger33_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger33.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger33.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger33_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger33_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1138,13 +1120,13 @@
   <link name="RFinger31_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger31.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger31.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RFinger31_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RFinger31_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1159,13 +1141,13 @@
   <link name="LThumb1_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LThumb1.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LThumb1.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1180,13 +1162,13 @@
   <link name="RThumb1_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RThumb1.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RThumb1.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RThumb1_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1201,13 +1183,13 @@
   <link name="RThumb2_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RThumb2.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RThumb2.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/RThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/RThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1222,13 +1204,13 @@
   <link name="LThumb2_link">
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LThumb2.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LThumb2.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/LThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/LThumb2_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1248,13 +1230,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelFL.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelFL.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelFL_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelFL_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1274,13 +1256,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelB.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelB.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelB_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelB_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1300,13 +1282,13 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelFR.dae" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelFR.dae" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pepper_description/meshes/WheelFR_0.10.stl" scale="0.1 0.1 0.1"/>
+        <mesh filename="package://pepper_meshes/meshes/1.0/WheelFR_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
@@ -1319,3 +1301,4 @@
     <limit effort="3.25" lower="0" upper="0" velocity="6.28319"/>
   </joint>
 </robot>
+

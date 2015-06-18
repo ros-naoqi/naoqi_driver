@@ -26,6 +26,10 @@
 #include <geometry_msgs/Pose.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
+#ifdef CATKIN_BUILD
+#include <ros/package.h>
+#endif
+
 namespace alros
 {
 namespace helpers
@@ -71,8 +75,28 @@ static const std::string boot_config_file_name = "boot_config.json";
 
 inline std::string& getBootConfigFile()
 {
-  static std::string path = qi::path::findData("/", boot_config_file_name );
+#ifdef CATKIN_BUILD
+  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/"+boot_config_file_name;
+  std::cout << "found a catkin prefix " << path << std::endl;
   return path;
+#else
+  static std::string path = qi::path::findData( "/", boot_config_file_name );
+  std::cout << "found a qibuild path " << path << std::endl;
+  return path;
+#endif
+}
+
+inline std::string& getURDF( std::string filename )
+{
+#ifdef CATKIN_BUILD
+  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/urdf/"+filename;
+  std::cout << "found a catkin URDF " << path << std::endl;
+  return path;
+#else
+  static std::string path = qi::path::findData( "/urdf/", filename );
+  std::cout << "found a qibuild URDF " << path << std::endl;
+  return path;
+#endif
 }
 
 } //helpers

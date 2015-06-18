@@ -9,8 +9,14 @@ Start the **ALRosBridge** module
 
 **Run from your computer:** ::
 
-  $ path/to/alrosbridge-bin --qi-url=<yourRobotIP>
+  $ path/to/alrosbridge_bin --qi-url=<yourRobotIP> <roscore_ip>
 
+In case you built via catkin, you can alternatively start the bridge via rosrun ::
+
+  $ rosrun naoqi_rosbridge alrosbridge_bin --qi-url=<yourRobotIP> <roscore_ip>
+
+
+The roscore IP is the IP of the computer where roscore is running. This command is optional. If you don't specify, any ROS communication is disabled until you call setMasterURI.
 
 Use the **ALRosBridge** module
 ----------------------------------
