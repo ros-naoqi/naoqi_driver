@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2015-06-18)
+------------------
 * devel-space compatibility
 * move application files to app folder
 * Add methods to remove bags presents on folder
