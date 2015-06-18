@@ -2,6 +2,21 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* devel-space compatibility
+* move application files to app folder
+* Add methods to remove bags presents on folder
+* Add an helper function to check size taken by bags
+* Add an helper function to check presents bags on folder
+* rename urdf
+* add romeo.urdf
+* update and rename files to be consistent with *description
+* update doc for rosrun
+* updated roscore option in doc
+* remove test folder
+* Contributors: Karsten Knese, Marine CHAMOUX, Vincent Rabaud
+
 0.0.7 (2015-06-02)
 ------------------
 * correct filepath lookup for catkin and qibuild
