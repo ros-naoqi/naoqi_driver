@@ -53,7 +53,7 @@ target_link_libraries(
 install(TARGETS alrosbridge_bin DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 # install the urdf for runtime loading
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share" DESTINATION "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/")
 install(DIRECTORY share DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
 
 # make sure there is a file describing a naoqi module
