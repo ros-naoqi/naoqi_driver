@@ -210,8 +210,13 @@ public:
 
   void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
-
   void stopService();
+
+  std::vector<std::string> getFilesList();
+
+  void removeAllFiles();
+
+  void removeFiles(std::vector<std::string> files);
 
 private:
   qi::SessionPtr sessionPtr_;
