@@ -33,11 +33,11 @@ std::string getRobotDescription(Robot robot){
 
     if ( robot == PEPPER)
     {
-      urdf_path = alros::helpers::getURDF("pepper_robot.urdf");
+      urdf_path = alros::helpers::getURDF("pepper.urdf");
     }
     else if ( robot == NAO )
     {
-      urdf_path = alros::helpers::getURDF("nao_robot.urdf");
+      urdf_path = alros::helpers::getURDF("nao.urdf");
     }
     else
     {
