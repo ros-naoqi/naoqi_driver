@@ -143,7 +143,7 @@ public:
   /**
    * @brief get all subscribed publishers
    */
-  std::vector<std::string> getSubscribedPublishers() const;
+  std::vector<std::string> _getSubscribedPublishers() const;
 
   std::string _whoIsYourDaddy()
   {
@@ -163,45 +163,45 @@ public:
   * @brief qicli call function to get current master uri
   * @return string indicating http master uri
   */
-  std::string getMasterURI() const;
+  std::string _getMasterURI() const;
 
   /**
   * @brief qicli call function to set current master uri
   * @param string in form of http://<ip>:11311
   * @param network_interface the network interface ("eth0", "tether" ...)
   */
-  void setMasterURINet( const std::string& uri, const std::string& network_interface );
+  void _setMasterURINet( const std::string& uri, const std::string& network_interface );
 
   /**
   * @brief qicli call function to set current master uri
   * @param string in form of http://<ip>:11311
   */
-  void setMasterURI( const std::string& uri );
+  void _setMasterURI( const std::string& uri );
 
   /**
   * @brief qicli call function to start/enable publishing all registered publisher
   */
-  void startPublishing();
+  void _startPublishing();
 
   /**
   * @brief qicli call function to stop/disable publishing all registered publisher
   */
-  void stopPublishing();
+  void _stopPublishing();
 
   /**
   * @brief qicli call function to start recording all registered converter in a ROSbag
   */
-  void startRecording();
+  void _startRecording();
 
   /**
   * @brief qicli call function to start recording given topics in a ROSbag
   */
-  void startRecordingConverters(const std::vector<std::string>& names);
+  void _startRecordingConverters(const std::vector<std::string>& names);
 
   /**
   * @brief qicli call function to stop recording all registered publisher in a ROSbag
   */
-  std::string stopRecording();
+  std::string _stopRecording();
 
   /**
    * @brief qicli call function to add on-the-fly some memory keys extractors
@@ -210,8 +210,13 @@ public:
 
   void parseJsonFile(std::string filepath, boost::property_tree::ptree& pt);
 
-
   void stopService();
+
+  std::vector<std::string> getFilesList();
+
+  void removeAllFiles();
+
+  void removeFiles(std::vector<std::string> files);
 
 private:
   qi::SessionPtr sessionPtr_;

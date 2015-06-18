@@ -244,10 +244,22 @@ void Bridge::rosLoop()
 
 std::string Bridge::minidump(const std::string& prefix)
 {
+  // CHECK SIZE IN FOLDER
+  long files_size = 0;
+  boost::filesystem::path folderPath(boost::filesystem::current_path());
+  helpers::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::folderMaximumSize)
+  {
+    std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
+                 << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
+                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+    return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
+  }
+
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -283,10 +295,22 @@ std::string Bridge::minidump(const std::string& prefix)
 
 std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
+  // CHECK SIZE IN FOLDER
+  long files_size = 0;
+  boost::filesystem::path folderPath(boost::filesystem::current_path());
+  helpers::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::folderMaximumSize)
+  {
+    std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
+                 << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
+                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+    return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
+  }
+
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
   if (record_enabled_)
   {
-    stopRecording();
+    _stopRecording();
   }
 
   // STOP BUFFERIZING
@@ -688,8 +712,11 @@ void Bridge::registerDefaultConverter()
     usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
     registerConverter( usc, usp, usr );
+  }
 
-    /** Audio */
+  /** Audio */
+  if ( audio_enabled )
+  {
     boost::shared_ptr<AudioEventRegister> event_register =
         boost::make_shared<AudioEventRegister>( "audio", 0, sessionPtr_ );
     insertEventConverter("audio", event_register);
@@ -751,17 +778,17 @@ std::vector<std::string> Bridge::getAvailableConverters()
 * EXPOSED FUNCTIONS
 */
 
-std::string Bridge::getMasterURI() const
+std::string Bridge::_getMasterURI() const
 {
   return ros_env::getMasterURI();
 }
 
-void Bridge::setMasterURI( const std::string& uri)
+void Bridge::_setMasterURI( const std::string& uri)
 {
-  setMasterURINet(uri, "eth0");
+  _setMasterURINet(uri, "eth0");
 }
 
-void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
+void Bridge::_setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // To avoid two calls to this function happening at the same time
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -823,7 +850,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   }
 }
 
-void Bridge::startPublishing()
+void Bridge::_startPublishing()
 {
   publish_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -832,7 +859,7 @@ void Bridge::startPublishing()
   }
 }
 
-void Bridge::stopPublishing()
+void Bridge::_stopPublishing()
 {
   publish_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -841,7 +868,7 @@ void Bridge::stopPublishing()
   }
 }
 
-std::vector<std::string> Bridge::getSubscribedPublishers() const
+std::vector<std::string> Bridge::_getSubscribedPublishers() const
 {
   std::vector<std::string> publisher;
   for(PubConstIter iterator = pub_map_.begin(); iterator != pub_map_.end(); iterator++)
@@ -857,7 +884,7 @@ std::vector<std::string> Bridge::getSubscribedPublishers() const
   return publisher;
 }
 
-void Bridge::startRecording()
+void Bridge::_startRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -882,7 +909,7 @@ void Bridge::startRecording()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordingConverters(const std::vector<std::string>& names)
+void Bridge::_startRecordingConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -936,7 +963,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   }
 }
 
-std::string Bridge::stopRecording()
+std::string Bridge::_stopRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -1142,23 +1169,63 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
   return true;
 }
 
+std::vector<std::string> Bridge::getFilesList()
+{
+  std::vector<std::string> fileNames;
+  boost::filesystem::path folderPath( boost::filesystem::current_path() );
+  std::vector<boost::filesystem::path> files;
+  helpers::getFiles(folderPath, ".bag", files);
+
+  for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    fileNames.push_back(it->string());
+  }
+  return fileNames;
+}
+
+void Bridge::removeAllFiles()
+{
+  boost::filesystem::path folderPath( boost::filesystem::current_path() );
+  std::vector<boost::filesystem::path> files;
+  helpers::getFiles(folderPath, ".bag", files);
+
+  for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    std::remove(it->c_str());
+  }
+}
+
+void Bridge::removeFiles(std::vector<std::string> files)
+{
+  for (std::vector<std::string>::const_iterator it=files.begin();
+       it!=files.end(); it++)
+  {
+    std::remove(it->c_str());
+  }
+}
+
 QI_REGISTER_OBJECT( Bridge,
                     _whoIsYourDaddy,
                     minidump,
                     minidumpConverters,
                     setBufferDuration,
                     getBufferDuration,
-                    startPublishing,
-                    stopPublishing,
-                    getMasterURI,
-                    setMasterURI,
-                    setMasterURINet,
+                    _startPublishing,
+                    _stopPublishing,
+                    _getMasterURI,
+                    _setMasterURI,
+                    _setMasterURINet,
                     getAvailableConverters,
-                    getSubscribedPublishers,
+                    _getSubscribedPublishers,
                     addMemoryConverters,
                     registerMemoryConverter,
                     registerEventConverter,
-                    startRecording,
-                    startRecordingConverters,
-                    stopRecording );
+                    getFilesList,
+                    removeAllFiles,
+                    removeFiles,
+                    _startRecording,
+                    _startRecordingConverters,
+                    _stopRecording );
 } //alros

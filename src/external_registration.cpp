@@ -29,11 +29,9 @@ int main(int argc, char** argv)
 
   qi::ApplicationSession app(argc, argv);
   app.start();
-  //app.session()->loadService( "alros.BridgeService" );
-  //app.session()->registerService("BridgeService",
-  // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
-  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
-  app.session()->registerService("ALRosBridge", bs);
+
+  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("FlightRecorder", app.session()).asSharedPtr();
+  app.session()->registerService("FlightRecorder", bs);
 
 
   if ( argc > 1 )
@@ -41,7 +39,7 @@ int main(int argc, char** argv)
     std::cout << BOLDYELLOW << "using ip address: "
               << BOLDCYAN << argv[1] << RESETCOLOR << std::endl;
     bs->init();
-    bs->setMasterURI( "http://"+std::string(argv[1])+":11311");
+    bs->_setMasterURI( "http://"+std::string(argv[1])+":11311");
   }
   else
   {
