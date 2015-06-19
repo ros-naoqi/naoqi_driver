@@ -452,6 +452,18 @@
     <origin rpy="-1.81761e-08 -0.209438 -3.14159" xyz="-0.0718 0 -0.0534"/>
     <axis xyz="0 0 0"/>
   </joint>
+  <link name="CameraBottom_optical_frame"/>
+  <joint name="CameraBottom_optical_frame_joint" type="fixed">
+    <parent link="CameraBottom_frame"/>
+    <child link="CameraBottom_optical_frame"/>
+    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
+  </joint>
+  <link name="CameraDepth_optical_frame"/>
+  <joint name="CameraDepth_optical_frame_joint" type="fixed">
+    <parent link="CameraDepth_frame"/>
+    <child link="CameraDepth_optical_frame"/>
+    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
+  </joint>
   <link name="LHandTouchBack_frame"/>
   <joint name="LHand/Touch/Back_sensor_fixedjoint" type="fixed">
     <parent link="l_wrist"/>
@@ -463,7 +475,7 @@
   <joint name="LaserSensor/Front_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingFrontLaser_frame"/>
-    <origin rpy="0 0.349044 0" xyz="0.0562 0 -0.0692"/>
+    <origin rpy="0 0 0" xyz="0.0562 0 -0.334"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="VerticalLeftLaser_frame"/>
@@ -484,7 +496,7 @@
   <joint name="LaserSensor/Left_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingLeftLaser_frame"/>
-    <origin rpy="8.34035e-09 0.191982 1.5708" xyz="-0.018 0.0899 -0.0759"/>
+    <origin rpy="0 0 1.75728367321" xyz="-0.018 0.0899 -0.334"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="ShovelLaser_frame"/>
@@ -540,14 +552,14 @@
   <joint name="LaserSensor/Right_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
     <child link="SurroundingRightLaser_frame"/>
-    <origin rpy="4.08851e-07 0.191857 -1.60746" xyz="0.018 -0.0899 -0.0759"/>
+    <origin rpy="0 0 -1.75728367321" xyz="-0.018 -0.0899 -0.334"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="HeadTouchFront_frame"/>
   <joint name="Head/Touch/Front_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchFront_frame"/>
-    <origin rpy="0 -1.1861 0" xyz="0.0275 0 0.1245"/>
+    <origin rpy="0 0.20944 0" xyz="0.028175 0 0.21267"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="VerticalRightLaser_frame"/>
@@ -578,6 +590,12 @@
     <origin rpy="0 0 0" xyz="0.0868 0 0.1631"/>
     <axis xyz="0 0 0"/>
   </joint>
+  <link name="CameraTop_optical_frame"/>
+  <joint name="CameraTop_optical_frame_joint" type="fixed">
+    <parent link="CameraTop_frame"/>
+    <child link="CameraTop_optical_frame"/>
+    <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
+  </joint>
   <link name="ImuBaseAccelerometer_frame"/>
   <joint name="AccelerometerBase_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
@@ -603,7 +621,7 @@
   <joint name="Head/Touch/Rear_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchRear_frame"/>
-    <origin rpy="3.14159 -1.33319 -3.14159" xyz="-0.033 0 0.1245"/>
+    <origin rpy="0 -0.314159 0" xyz="-0.03376 0 0.21052"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="BumperFR_frame"/>
@@ -631,7 +649,7 @@
   <joint name="Head/Touch/Middle_sensor_fixedjoint" type="fixed">
     <parent link="Head"/>
     <child link="HeadTouchMiddle_frame"/>
-    <origin rpy="3.14159 -1.57079 -3.14159" xyz="-0.004 0 0.125"/>
+    <origin rpy="0 -0.0349066 0" xyz="0.0041 0 0.2159"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="RFinger41_link">
@@ -1301,4 +1319,3 @@
     <limit effort="3.25" lower="0" upper="0" velocity="6.28319"/>
   </joint>
 </robot>
-
