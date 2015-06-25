@@ -2,6 +2,12 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update the Pepper URDF
+* add optical frame
+* Contributors: Karsten Knese, Vincent Rabaud
+
 0.1.0 (2015-06-18)
 ------------------
 * devel-space compatibility
