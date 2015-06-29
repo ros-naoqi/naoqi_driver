@@ -19,6 +19,7 @@
 * LOCAL includes
 */
 #include "joint_state.hpp"
+#include "nao_footprint.hpp"
 
 /*
 * BOOST includes
@@ -100,7 +101,6 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   setTransforms(joint_state_map, stamp, jt_tf_prefix);
   setFixedTransforms(jt_tf_prefix, stamp);
 
-
   /**
    * ODOMETRY
    */
@@ -136,6 +136,11 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   tf_transforms_.push_back( msg_tf_odom );
   tf2_buffer_->setTransform( msg_tf_odom, "alrosconverter", false);
 
+  static const alros::Robot& robot_type = robot();
+  if (robot_type == NAO )
+  {
+    nao::addBaseFootprint( tf2_buffer_, tf_transforms_, odom_stamp-ros::Duration(0.1) );
+  }
 
   // If nobody uses that buffer, do not fill it next time
   if (( tf2_buffer_ ) && ( tf2_buffer_.use_count() == 1 ))
@@ -186,7 +191,7 @@ void JointStateConverter::setTransforms(const std::map<std::string, double>& joi
 void JointStateConverter::setFixedTransforms(const std::string& tf_prefix, const ros::Time& time)
 {
   geometry_msgs::TransformStamped tf_transform;
-  tf_transform.header.stamp = time+ros::Duration(0.5);  // future publish by 0.5 seconds
+  tf_transform.header.stamp = time/*+ros::Duration(0.5)*/;  // future publish by 0.5 seconds
 
   // loop over all fixed segments
   for (std::map<std::string, robot_state_publisher::SegmentPair>::const_iterator seg=segments_fixed_.begin(); seg != segments_fixed_.end(); seg++){

@@ -27,6 +27,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
+#include <geometry_msgs/Transform.h>
 #include <geometry_msgs/Pose.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
@@ -44,6 +45,13 @@ inline double getYaw(const geometry_msgs::Pose& pose)
   double yaw, _pitch, _roll;
   tf2::Matrix3x3(tf2::Quaternion(pose.orientation.x, pose.orientation.y,
                                 pose.orientation.z, pose.orientation.w)).getEulerYPR(yaw, _pitch, _roll);
+  return yaw;
+}
+
+inline double getYaw( const geometry_msgs::Transform& pose)
+{
+  double yaw, _pitch, _roll;
+  tf2::Matrix3x3(tf2::Quaternion(pose.rotation.x, pose.rotation.y, pose.rotation.z, pose.rotation.w)).getEulerYPR(yaw, _pitch, _roll);
   return yaw;
 }
 
