@@ -36,7 +36,11 @@ int main(int argc, char** argv)
   app.session()->registerService("ALRosBridge", bs);
 
 
-  if ( argc > 1 )
+  // In case you launch via roslaunch/rosrun we remove the ros args
+  std::vector<std::string> args_out;
+  ros::removeROSArgs( argc, argv, args_out );
+
+  if ( args_out.size() > 1 && !std::string(args_out[1]).empty() )
   {
     std::string network_interface = "eth0";
     if ( argc > 2 ) network_interface = argv[2];
