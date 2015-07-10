@@ -38,10 +38,12 @@ int main(int argc, char** argv)
 
   if ( argc > 1 )
   {
+    std::string network_interface = "eth0";
+    if ( argc > 2 ) network_interface = argv[2];
     std::cout << BOLDYELLOW << "using ip address: "
-              << BOLDCYAN << argv[1] << RESETCOLOR << std::endl;
+              << BOLDCYAN << argv[1] << " @ " << network_interface << RESETCOLOR << std::endl;
     bs->init();
-    bs->setMasterURI( "http://"+std::string(argv[1])+":11311");
+    bs->setMasterURINet( "http://"+std::string(argv[1])+":11311", network_interface);
   }
   else
   {

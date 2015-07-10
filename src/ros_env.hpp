@@ -47,8 +47,17 @@ static std::string getROSIP(std::string network_interface)
 {
   if (network_interface.empty())
     network_interface = "eth0";
+
   typedef std::map< std::string, std::vector<std::string> > Map_IP;
-  static const std::string ip = static_cast<Map_IP>(qi::os::hostIPAddrs())[network_interface][0];
+  Map_IP map_ip = static_cast<Map_IP>(qi::os::hostIPAddrs());
+  if ( map_ip.find(network_interface) == map_ip.end() ) {
+    std::cerr << "Could not find network interface named " << network_interface << ", pssible interfaces are ... ";
+    for (Map_IP::iterator it=map_ip.begin(); it!=map_ip.end(); ++it) std::cerr << it->first <<  " ";
+    std::cerr << std::endl;
+    exit(1);
+  }
+
+  static const std::string ip = map_ip[network_interface][0];
   return ip;
 }
 
