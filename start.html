@@ -51,36 +51,98 @@
             
   <div class="section" id="getting-started">
 <span id="start"></span><h1>2. Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="start-the-alrosbridge-module">
-<h2>2.1. Start the <strong>ALRosBridge</strong> module<a class="headerlink" href="#start-the-alrosbridge-module" title="Permalink to this headline">¶</a></h2>
-<p><strong>Run from your computer:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre>$ path/to/alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt;
-</pre></div>
-</div>
-<p>In case you built via catkin, you can alternatively start the bridge via rosrun</p>
-<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_rosbridge alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt;
-</pre></div>
-</div>
-<p>The roscore IP is the IP of the computer where roscore is running. This command is optional. If you don&#8217;t specify, any ROS communication is disabled until you call setMasterURI.</p>
-</div>
-<div class="section" id="use-the-alrosbridge-module">
-<h2>2.2. Use the <strong>ALRosBridge</strong> module<a class="headerlink" href="#use-the-alrosbridge-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="before-starting-the-module">
+<h2>2.1. Before starting the module<a class="headerlink" href="#before-starting-the-module" title="Permalink to this headline">¶</a></h2>
 <p>To start using this bridge, you need to start a roscore locally on our desktop computer and then, to communicate your external roscore IP on your robot.</p>
-<p><strong>Start a ROScore</strong> (on your desktop machine)</p>
+<p>Start a ROScore (on your desktop machine)</p>
 <div class="highlight-python"><div class="highlight"><pre>$ ROS_IP=&lt;yourDesktopIP&gt; roscore
 </pre></div>
 </div>
-<p>The ROS_IP parameter is needed so that we can later tell the robot how to find and connect to this roscore.</p>
+<p>The ROS_IP parameter is optional in case your local network supports a fully functional DNS. You can easily verify this when you can ping your desktop computer from your robot. In case this fails, set the ROS_IP parameter so that we can later tell the robot how to find and connect to this roscore.</p>
+</div>
+<div class="section" id="start-the-alrosbridge-module">
+<h2>2.2. Start the ALRosBridge module<a class="headerlink" href="#start-the-alrosbridge-module" title="Permalink to this headline">¶</a></h2>
+<p>Please execute the following steps on your local computer, <strong>not</strong> from the robot</p>
+<div class="container">
+<button class="toggleable_button label_ROS" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('ROS')">ROS</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+<button class="toggleable_button label_NAOqi" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('NAOqi')">NAOqi</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+</div>
+<div class="container">
+<div class="toggleable_div label_ROS"><p>In case you built via catkin, you can alternatively start the bridge via rosrun</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> rosrun naoqi_rosbridge alrosbridge_bin --qi-url<span class="o">=</span>&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_device&gt;
+</pre></div>
+</div>
+</div></div>
+<div class="container">
+<div class="toggleable_div label_NAOqi"><p>In case you have a qibuild workspace, you can run the roscore by directly executing the binary</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> path/to/alrosbridge_bin --qi-url<span class="o">=</span>&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_device&gt;
+</pre></div>
+</div>
+</div></div>
+<p>The roscore IP is the IP of the computer where roscore is running. This command is optional. If you don&#8217;t specify, any ROS communication is disabled until you call setMasterURI. The second parameter is the network_device on which your robot is connected. You may only set this parameter in case your robot is connected via wifi or VPN. When yourrobot is configured via wifi, you have to set &#8216;wlan0&#8217; as a network_device.</p>
+</div>
+<div class="section" id="set-change-the-roscore-ip-manually">
+<h2>2.3. Set/Change the roscore ip manually<a class="headerlink" href="#set-change-the-roscore-ip-manually" title="Permalink to this headline">¶</a></h2>
 <p><strong>Set the master IP</strong> (on the robot)</p>
 <div class="highlight-python"><div class="highlight"><pre>$ qicli call ALRosBridge.setMasterURI http://&lt;yourDesktopIP&gt;:11311
 </pre></div>
 </div>
 <p>If the robot is not connected through ethernet, you need to specify the network interface</p>
-<div class="highlight-python"><div class="highlight"><pre>$ qicli call BridgeService.setMasterURINet http://&lt;yourDesktopIP&gt;:11311 &lt;network_interface&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ qicli call ALRosBridge.setMasterURINet http://&lt;yourDesktopIP&gt;:11311 &lt;network_interface&gt;
 </pre></div>
 </div>
 <p>For instance, if the robot use tethering (and <tt class="docutils literal"><span class="pre">tether</span></tt> shows when doing <tt class="docutils literal"><span class="pre">ifconfig</span></tt>), use</p>
-<div class="highlight-python"><div class="highlight"><pre>$ qicli call BridgeService.setMasterURINet http://&lt;yourDesktopIP&gt;:11311 tether
+<div class="highlight-python"><div class="highlight"><pre>$ qicli call ALRosBridge.setMasterURINet http://&lt;yourDesktopIP&gt;:11311 tether
 </pre></div>
 </div>
 <p><strong>Functionalities</strong>:</p>
@@ -150,8 +212,9 @@ Connections:
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">2. Getting Started</a><ul>
-<li><a class="reference internal" href="#start-the-alrosbridge-module">2.1. Start the <strong>ALRosBridge</strong> module</a></li>
-<li><a class="reference internal" href="#use-the-alrosbridge-module">2.2. Use the <strong>ALRosBridge</strong> module</a></li>
+<li><a class="reference internal" href="#before-starting-the-module">2.1. Before starting the module</a></li>
+<li><a class="reference internal" href="#start-the-alrosbridge-module">2.2. Start the ALRosBridge module</a></li>
+<li><a class="reference internal" href="#set-change-the-roscore-ip-manually">2.3. Set/Change the roscore ip manually</a></li>
 </ul>
 </li>
 </ul>
