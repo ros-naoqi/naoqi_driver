@@ -535,6 +535,11 @@ void Bridge::registerDefaultConverter()
   size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 15);
   size_t camera_front_recorder_fps    = boot_config_.get( "converters.front_camera.recorder_fps", 5);
 
+  bool camera_bottom_enabled          = boot_config_.get( "converters.bottom_camera.enabled", true);
+  size_t camera_bottom_resolution     = boot_config_.get( "converters.bottom_camera.resolution", 2); // VGA
+  size_t camera_bottom_fps            = boot_config_.get( "converters.bottom_camera.fps", 15);
+  size_t camera_bottom_recorder_fps   = boot_config_.get( "converters.bottom_camera.recorder_fps", 5);
+
   bool camera_depth_enabled           = boot_config_.get( "converters.depth_camera.enabled", true);
   size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 0); // QQVGA
   size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 15);
@@ -636,6 +641,19 @@ void Bridge::registerDefaultConverter()
     fcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, fcr, _1, _2) );
     registerConverter( fcc, fcp, fcr );
   }
+
+  /** Front Camera */
+  if ( camera_bottom_enabled )
+  {
+    boost::shared_ptr<publisher::CameraPublisher> bcp = boost::make_shared<publisher::CameraPublisher>( "camera/bottom/image_raw", AL::kBottomCamera );
+    boost::shared_ptr<recorder::CameraRecorder> bcr = boost::make_shared<recorder::CameraRecorder>( "camera/bottom", camera_bottom_recorder_fps );
+    boost::shared_ptr<converter::CameraConverter> bcc = boost::make_shared<converter::CameraConverter>( "bottom_camera", camera_bottom_fps, sessionPtr_, AL::kBottomCamera, camera_bottom_resolution );
+    bcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, bcp, _1, _2) );
+    bcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, bcr, _1, _2) );
+    bcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, bcr, _1, _2) );
+    registerConverter( bcc, bcp, bcr );
+  }
+
 
   if(robot_type == alros::PEPPER)
   {
