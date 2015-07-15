@@ -66,8 +66,9 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
 
   // adjust yaw according to torso orientation, all other angles 0 (= in z-plane)
   double yaw = alros::helpers::getYaw( tf_odom_to_base.transform ) ;
-
-  tf2::Transform tf_odom_to_footprint( tf2::Quaternion(0.0f, 0.0f, yaw), new_origin);
+  tf2::Quaternion new_q;
+  new_q.setRPY(0.0f, 0.0f, yaw);
+  tf2::Transform tf_odom_to_footprint( new_q, new_origin);
 
   // way too complicated here, there should be proper conversions!
   tf2::Quaternion q( tf_odom_to_base.transform.rotation.x,

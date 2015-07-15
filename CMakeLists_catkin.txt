@@ -12,6 +12,10 @@ find_package(orocos_kdl)
 
 catkin_package(LIBRARIES alrosconverters)
 
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=deprecated-declarations")
+endif()
+
 include_directories( include ${catkin_INCLUDE_DIRS})
 
 # create the different libraries
