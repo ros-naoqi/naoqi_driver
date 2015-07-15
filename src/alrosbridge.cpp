@@ -531,23 +531,23 @@ void Bridge::registerDefaultConverter()
   size_t imu_base_frequency           = boot_config_.get( "converters.imu_base.frequency", 10);
 
   bool camera_front_enabled           = boot_config_.get( "converters.front_camera.enabled", true);
-  size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 2); // VGA
-  size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 15);
+  size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 1); // VGA
+  size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 10);
   size_t camera_front_recorder_fps    = boot_config_.get( "converters.front_camera.recorder_fps", 5);
 
   bool camera_bottom_enabled          = boot_config_.get( "converters.bottom_camera.enabled", true);
-  size_t camera_bottom_resolution     = boot_config_.get( "converters.bottom_camera.resolution", 2); // VGA
-  size_t camera_bottom_fps            = boot_config_.get( "converters.bottom_camera.fps", 15);
+  size_t camera_bottom_resolution     = boot_config_.get( "converters.bottom_camera.resolution", 1); // VGA
+  size_t camera_bottom_fps            = boot_config_.get( "converters.bottom_camera.fps", 10);
   size_t camera_bottom_recorder_fps   = boot_config_.get( "converters.bottom_camera.recorder_fps", 5);
 
   bool camera_depth_enabled           = boot_config_.get( "converters.depth_camera.enabled", true);
-  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 0); // QQVGA
-  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 15);
+  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
+  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
   size_t camera_depth_recorder_fps    = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
 
   bool camera_ir_enabled              = boot_config_.get( "converters.ir_camera.enabled", true);
-  size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 0); // QQVGA
-  size_t camera_ir_fps                = boot_config_.get( "converters.ir_camera.fps", 15);
+  size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 1); // QVGA
+  size_t camera_ir_fps                = boot_config_.get( "converters.ir_camera.fps", 10);
   size_t camera_ir_recorder_fps       = boot_config_.get( "converters.ir_camera.recorder_fps", 5);
 
   bool joint_states_enabled           = boot_config_.get( "converters.joint_states.enabled", true);
