@@ -27,27 +27,25 @@ int main(int argc, char** argv)
   /* adjust the SDK prefix in case you compiled via catkin*/
   alros::ros_env::adjustSDKPrefix();
 
+  /* launch naoqi service */
   qi::ApplicationSession app(argc, argv);
   app.start();
-  //app.session()->loadService( "alros.BridgeService" );
-  //app.session()->registerService("BridgeService",
-  // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
   boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
   app.session()->registerService("ALRosBridge", bs);
 
-
-  // In case you launch via roslaunch/rosrun we remove the ros args
+  /* In case you launch via roslaunch/rosrun we remove the ros args */
   std::vector<std::string> args_out;
   ros::removeROSArgs( argc, argv, args_out );
 
+  /* configure the ros communication according to the commandline arguments */
   if ( args_out.size() > 1 && !std::string(args_out[1]).empty() )
   {
     std::string network_interface = "eth0";
-    if ( argc > 2 ) network_interface = argv[2];
+    if ( args_out.size() > 2 ) network_interface = args_out[2];
     std::cout << BOLDYELLOW << "using ip address: "
-              << BOLDCYAN << argv[1] << " @ " << network_interface << RESETCOLOR << std::endl;
+              << BOLDCYAN << args_out[1] << " @ " << network_interface << RESETCOLOR << std::endl;
     bs->init();
-    bs->setMasterURINet( "http://"+std::string(argv[1])+":11311", network_interface);
+    bs->setMasterURINet( "http://"+std::string(args_out[1])+":11311", network_interface);
   }
   else
   {
