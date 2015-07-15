@@ -2,6 +2,20 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* update start doc for v1.2
+* lower default values for camera
+* add bottom camera
+* create launch file for running rosbridge
+* remove ros args from cmdline
+* nao basefootprint
+* remove ros args
+* main:  support 2nd argument as network interface
+* ros_env.hpp write error message when network interface is not found
+* include install instructions for ROS
+* Contributors: Karsten Knese, Kei Okada, Vincent Rabaud
+
 0.1.1 (2015-06-25)
 ------------------
 * update the Pepper URDF
@@ -17,7 +31,7 @@ Changelog for package naoqi_rosbridge
 * Add an helper function to check presents bags on folder
 * rename urdf
 * add romeo.urdf
-* update and rename files to be consistent with *description
+* update and rename files to be consistent with description
 * update doc for rosrun
 * updated roscore option in doc
 * remove test folder
@@ -653,7 +667,7 @@ Changelog for package naoqi_rosbridge
   src/alrosbridge.cpp
 * implement depth image with camera info
 * quickfix: resolve segfault in schedule publisher
-  hint: prevent a re-alloc of memory in all_publisher_ variable since this leads to invalid pointer
+  hint: prevent a re-alloc of memory in all_publisher variable since this leads to invalid pointer
 * const pointer implementation
 * fix a crash with undefined pointer
 * use the create_module macro as it should be
