@@ -2,10 +2,23 @@
 add_definitions( -DCATKIN_BUILD )
 
 # CMake file that uses catkin
-find_package(catkin COMPONENTS cv_bridge diagnostic_msgs diagnostic_updater
-  geometry_msgs image_transport kdl_parser naoqi_bridge_msgs naoqi_libqi
-  naoqi_libqicore robot_state_publisher rosbag_storage rosgraph_msgs
-  sensor_msgs tf2_geometry_msgs tf2_msgs tf2_ros
+find_package(catkin COMPONENTS 
+  cv_bridge 
+  diagnostic_msgs 
+  diagnostic_updater
+  geometry_msgs 
+  image_transport 
+  kdl_parser 
+  naoqi_bridge_msgs 
+  naoqi_libqi
+  naoqi_libqicore 
+  robot_state_publisher 
+  rosbag_storage 
+  rosgraph_msgs
+  sensor_msgs 
+  tf2_geometry_msgs 
+  tf2_msgs 
+  tf2_ros
 )
 find_package(OpenCV)
 find_package(orocos_kdl)
@@ -26,6 +39,7 @@ add_library(
   ${TOOLS_SRC}
   )
 target_link_libraries(alrosconverters ${naoqi_libiq_LIBRARIES})
+add_dependencies(alrosconverters ${catkin_EXPORTED_TARGETS})
 install(TARGETS alrosconverters DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
 add_library(
