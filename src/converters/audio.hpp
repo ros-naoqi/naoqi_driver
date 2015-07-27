@@ -27,7 +27,7 @@
 /*
 * ROS includes
 */
-#include <naoqi_msgs/AudioBuffer.h>
+#include <naoqi_bridge_msgs/AudioBuffer.h>
 
 /*
 * ALDEBARAN includes
@@ -41,7 +41,7 @@ namespace converter{
 class AudioEventConverter : public BaseConverter<AudioEventConverter>
 {
 
-  typedef boost::function<void(naoqi_msgs::AudioBuffer&) > Callback_t;
+  typedef boost::function<void(naoqi_bridge_msgs::AudioBuffer&) > Callback_t;
 
 public:
   AudioEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
@@ -52,12 +52,12 @@ public:
 
   void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  void callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_msgs::AudioBuffer& msg);
+  void callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_bridge_msgs::AudioBuffer& msg);
 
 private:
   /** Registered Callbacks **/
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
-  naoqi_msgs::AudioBuffer msg_;
+  naoqi_bridge_msgs::AudioBuffer msg_;
 };
 
 }

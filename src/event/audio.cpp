@@ -59,13 +59,13 @@ AudioEventRegister::AudioEventRegister( const std::string& name, const float& fr
     channelMap.push_back(1);
     channelMap.push_back(4);
   }
-  publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> >( name );
-  recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> >( name );
+  publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::AudioBuffer> >( name );
+  recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_bridge_msgs::AudioBuffer> >( name );
   converter_ = boost::make_shared<converter::AudioEventConverter>( name, frequency, session );
 
-  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_msgs::AudioBuffer>::publish, publisher_, _1) );
-  converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::write, recorder_, _1) );
-  converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer>::bufferize, recorder_, _1) );
+  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::AudioBuffer>::publish, publisher_, _1) );
+  converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::AudioBuffer>::write, recorder_, _1) );
+  converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::AudioBuffer>::bufferize, recorder_, _1) );
 
 }
 
@@ -162,7 +162,7 @@ void AudioEventRegister::unregisterCallback()
 
 void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer)
 {
-  naoqi_msgs::AudioBuffer msg = naoqi_msgs::AudioBuffer();
+  naoqi_bridge_msgs::AudioBuffer msg = naoqi_bridge_msgs::AudioBuffer();
   msg.header.stamp = ros::Time::now();
   msg.frequency = 48000;
   msg.channelMap = channelMap;

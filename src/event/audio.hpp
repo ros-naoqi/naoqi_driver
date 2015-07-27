@@ -28,7 +28,7 @@
 #include <qi/session.hpp>
 
 #include <ros/ros.h>
-#include <naoqi_msgs/AudioBuffer.h>
+#include <naoqi_bridge_msgs/AudioBuffer.h>
 
 #include <alrosbridge/tools.hpp>
 #include <alrosbridge/recorder/globalrecorder.hpp>
@@ -84,8 +84,8 @@ private:
 
 private:
   boost::shared_ptr<converter::AudioEventConverter> converter_;
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_msgs::AudioBuffer> > publisher_;
-  boost::shared_ptr<recorder::BasicEventRecorder<naoqi_msgs::AudioBuffer> > recorder_;
+  boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::AudioBuffer> > publisher_;
+  boost::shared_ptr<recorder::BasicEventRecorder<naoqi_bridge_msgs::AudioBuffer> > recorder_;
 
   qi::SessionPtr session_;
   qi::AnyObject p_audio_;
