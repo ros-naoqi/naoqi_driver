@@ -93,7 +93,16 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   // put joint states in tf broadcaster
   std::map< std::string, double > joint_state_map;
   // stupid version --> change this with std::transform c++11 ??!
-  std::transform( msg_joint_states_.name.begin(), msg_joint_states_.name.end(), msg_joint_states_.position.begin(), std::inserter( joint_state_map, joint_state_map.end() ), std::make_pair<std::string, double>);
+//  std::transform( msg_joint_states_.name.begin(), msg_joint_states_.name.end(), msg_joint_states_.position.begin(),
+//                  std::inserter( joint_state_map, joint_state_map.end() ),
+//                  std::make_pair);
+  std::vector<double>::const_iterator itPos = msg_joint_states_.position.begin();
+  for(std::vector<std::string>::const_iterator itName = msg_joint_states_.name.begin();
+      itName != msg_joint_states_.name.end();
+      ++itName, ++itPos)
+  {
+    joint_state_map[*itName] = *itPos;
+  }
 
   // reset the transforms we want to use at this time
   tf_transforms_.clear();
