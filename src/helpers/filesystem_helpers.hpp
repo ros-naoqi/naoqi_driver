@@ -16,20 +16,14 @@
 */
 
 
-#ifndef HELPERS_HPP
-#define HELPERS_HPP
+#ifndef FILESYSTEM_HELPERS_HPP
+#define FILESYSTEM_HELPERS_HPP
 
-#include <alrosbridge/publisher/publisher.hpp>
-#include <alrosbridge/tools.hpp>
 #include <qi/session.hpp>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/replace.hpp>
-
-#include <geometry_msgs/Transform.h>
-#include <geometry_msgs/Pose.h>
-#include <tf2/LinearMath/Matrix3x3.h>
 
 #ifdef CATKIN_BUILD
 #include <ros/package.h>
@@ -39,49 +33,10 @@ namespace alros
 {
 namespace helpers
 {
-
-inline double getYaw(const geometry_msgs::Pose& pose)
+namespace filesystem
 {
-  double yaw, _pitch, _roll;
-  tf2::Matrix3x3(tf2::Quaternion(pose.orientation.x, pose.orientation.y,
-                                pose.orientation.z, pose.orientation.w)).getEulerYPR(yaw, _pitch, _roll);
-  return yaw;
-}
-
-inline double getYaw( const geometry_msgs::Transform& pose)
-{
-  double yaw, _pitch, _roll;
-  tf2::Matrix3x3(tf2::Quaternion(pose.rotation.x, pose.rotation.y, pose.rotation.z, pose.rotation.w)).getEulerYPR(yaw, _pitch, _roll);
-  return yaw;
-}
-
-inline bool hasSameTopic( const publisher::Publisher& first, const publisher::Publisher& second )
-{
-  if ( first.topic() == second.topic() )
-    return true;
-  else
-    return false;
-}
 
 static const long folderMaximumSize = 2000000000;
-
-inline dataType::DataType getDataType(qi::AnyValue value)
-{
-  dataType::DataType type;
-  if (value.kind() == qi::TypeKind_Int) {
-    type = dataType::Int;
-  }
-  else if (value.kind() == qi::TypeKind_Float) {
-    type = dataType::Float;
-  }
-  else if (value.kind() == qi::TypeKind_String) {
-    type = dataType::String;
-  }
-  else {
-    throw std::runtime_error("Cannot get a valid type.");
-  }
-  return type;
-}
 
 inline void getFoldersize(std::string rootFolder, long& file_size){
   boost::algorithm::replace_all(rootFolder, "\\\\", "\\");
@@ -106,7 +61,6 @@ inline void getFoldersize(std::string rootFolder, long& file_size){
   }
 }
 
-static const float bufferDefaultDuration = 10.f;
 inline void getFiles(const boost::filesystem::path& root, const std::string& ext, std::vector<boost::filesystem::path>& ret)
 {
   if(!boost::filesystem::exists(root) || !boost::filesystem::is_directory(root)) return;
@@ -124,34 +78,6 @@ inline void getFiles(const boost::filesystem::path& root, const std::string& ext
   }
 }
 
-static const std::string boot_config_file_name = "boot_config.json";
-
-inline std::string& getBootConfigFile()
-{
-#ifdef CATKIN_BUILD
-  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/"+boot_config_file_name;
-  std::cout << "found a catkin prefix " << path << std::endl;
-  return path;
-#else
-  static std::string path = qi::path::findData( "/", boot_config_file_name );
-  std::cout << "found a qibuild path " << path << std::endl;
-  return path;
-#endif
-}
-
-inline std::string& getURDF( std::string filename )
-{
-#ifdef CATKIN_BUILD
-  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/urdf/"+filename;
-  std::cout << "found a catkin URDF " << path << std::endl;
-  return path;
-#else
-  static std::string path = qi::path::findData( "/urdf/", filename );
-  std::cout << "found a qibuild URDF " << path << std::endl;
-  return path;
-#endif
-}
-
 inline void getFilesSize(const boost::filesystem::path& root, long& file_size)
 {
   std::vector<boost::filesystem::path> files_path;
@@ -167,6 +93,36 @@ inline void getFilesSize(const boost::filesystem::path& root, long& file_size)
   }
 }
 
+/** Boot config loader */
+static const std::string boot_config_file_name = "boot_config.json";
+inline std::string& getBootConfigFile()
+{
+#ifdef CATKIN_BUILD
+  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/"+boot_config_file_name;
+  std::cout << "found a catkin prefix " << path << std::endl;
+  return path;
+#else
+  static std::string path = qi::path::findData( "/", boot_config_file_name );
+  std::cout << "found a qibuild path " << path << std::endl;
+  return path;
+#endif
+}
+
+/* URDF loader */
+inline std::string& getURDF( std::string filename )
+{
+#ifdef CATKIN_BUILD
+  static std::string path = ros::package::getPath("naoqi_rosbridge")+"/share/urdf/"+filename;
+  std::cout << "found a catkin URDF " << path << std::endl;
+  return path;
+#else
+  static std::string path = qi::path::findData( "/urdf/", filename );
+  std::cout << "found a qibuild URDF " << path << std::endl;
+  return path;
+#endif
+}
+
+} // filesystem
 } //helpers
 } // alros
 

@@ -15,8 +15,8 @@
  *
 */
 
-#ifndef INT_RECORDER_HPP
-#define INT_RECORDER_HPP
+#ifndef LOG_RECORDER_HPP
+#define LOG_RECORDER_HPP
 
 /*
 * BOOST includes
@@ -27,7 +27,7 @@
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
-#include "../helpers.hpp"
+#include "../helpers/recorder_helpers.hpp"
 
 /*
 * ROS includes

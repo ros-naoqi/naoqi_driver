@@ -27,7 +27,7 @@ namespace recorder
 
 JointStateRecorder::JointStateRecorder( const std::string& topic, float buffer_frequency ):
   topic_( topic ),
-  buffer_duration_(helpers::bufferDefaultDuration),
+  buffer_duration_(helpers::recorder::bufferDefaultDuration),
   is_initialized_( false ),
   is_subscribed_( false ),
   buffer_frequency_(buffer_frequency),

@@ -51,7 +51,7 @@ static std::string getROSIP(std::string network_interface)
   typedef std::map< std::string, std::vector<std::string> > Map_IP;
   Map_IP map_ip = static_cast<Map_IP>(qi::os::hostIPAddrs());
   if ( map_ip.find(network_interface) == map_ip.end() ) {
-    std::cerr << "Could not find network interface named " << network_interface << ", pssible interfaces are ... ";
+    std::cerr << "Could not find network interface named " << network_interface << ", possible interfaces are ... ";
     for (Map_IP::iterator it=map_ip.begin(); it!=map_ip.end(); ++it) std::cerr << it->first <<  " ";
     std::cerr << std::endl;
     exit(1);
@@ -61,9 +61,17 @@ static std::string getROSIP(std::string network_interface)
   return ip;
 }
 
+static std::string prefix = "";
+
+static void setPrefix( std::string s )
+{
+  prefix = s;
+  std::cout << "set prefix successfully to " << prefix << std::endl;
+}
+
 static std::string getPrefix()
 {
-  return "alrosbridge";
+  return prefix;
 }
 
 static void setMasterURI( const std::string& uri, const std::string& network_interface )
@@ -93,27 +101,6 @@ static std::string getMasterURI( )
   return getenv("ROS_MASTER_URI");
 }
 
-static std::string getCMakePrefixPath()
-{
-  char *cMakePrefixPath = getenv( "CMAKE_PREFIX_PATH" );
-  if (cMakePrefixPath != NULL) {
-    return getenv( "CMAKE_PREFIX_PATH" );
-  }
-  return "";
-}
-
-static void adjustSDKPrefix()
-{
-  std::string cmake_prefix = alros::ros_env::getCMakePrefixPath();
-  std::vector<std::string> prefixes;
-  boost::split( prefixes, cmake_prefix, boost::is_any_of(":") );
-
-  for (size_t i=0; i<prefixes.size(); i++)
-  {
-    std::cout << "going to add: " << prefixes[i] << std::endl;
-    qi::path::detail::addOptionalSdkPrefix( prefixes[i].c_str() );
-  }
-}
 
 } // ros_env
 } // alros

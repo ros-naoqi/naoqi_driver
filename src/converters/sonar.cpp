@@ -39,14 +39,14 @@ SonarConverter::SonarConverter( const std::string& name, const float& frequency,
     is_subscribed_(false)
 {
   std::vector<std::string> keys;
-  if (robot() == PEPPER) {
+  if (robot_ == robot::PEPPER) {
     keys.push_back("Device/SubDeviceList/Platform/Front/Sonar/Sensor/Value");
     keys.push_back("Device/SubDeviceList/Platform/Back/Sonar/Sensor/Value");
     frames_.push_back("SonarFront_frame");
     frames_.push_back("SonarBack_frame");
     //topics_.push_back(topic + "/Front_sensor");
     //topics_.push_back(topic + "/Back_sensor");
-  } else if (robot() == NAO) {
+  } else if (robot_ == robot::NAO) {
     keys.push_back("Device/SubDeviceList/US/Left/Sensor/Value");
     keys.push_back("Device/SubDeviceList/US/Right/Sensor/Value");
     frames_.push_back("LSonar_frame");

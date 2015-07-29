@@ -34,7 +34,7 @@ namespace alros {
 
 namespace tools {
 
-std::string getRobotDescription(Robot robot);
+std::string getRobotDescription( const robot::Robot& robot);
 
 }
 

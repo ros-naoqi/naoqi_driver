@@ -31,12 +31,16 @@
 
 namespace alros
 {
+
+namespace robot
+{
 enum Robot
 {
   UNIDENTIFIED,
   NAO,
   PEPPER
 };
+}
 
 enum Topics {
   Laser = 0,

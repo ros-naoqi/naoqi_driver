@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
-#include "../helpers.hpp"
+#include "../helpers/recorder_helpers.hpp"
 
 /*
 * STANDARD includes
@@ -41,7 +41,7 @@ class BasicEventRecorder
 public:
   BasicEventRecorder( const std::string& topic ):
     topic_( topic ),
-    buffer_duration_( helpers::bufferDefaultDuration ),
+    buffer_duration_( helpers::recorder::bufferDefaultDuration ),
     is_initialized_( false ),
     is_subscribed_( false )
   {}

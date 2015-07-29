@@ -19,25 +19,25 @@
 * LOCAL includes
 */
 #include "robot_description.hpp"
-#include "../helpers.hpp"
+#include "../helpers/filesystem_helpers.hpp"
 
 namespace alros{
 
 namespace tools{
 
-std::string getRobotDescription(Robot robot){
+std::string getRobotDescription( const robot::Robot& robot){
     std::string urdf_path;
     static std::string robot_desc;
     if(!robot_desc.empty())
       return robot_desc;
 
-    if ( robot == PEPPER)
+    if ( robot == robot::PEPPER)
     {
-      urdf_path = alros::helpers::getURDF("pepper.urdf");
+      urdf_path = helpers::filesystem::getURDF("pepper.urdf");
     }
-    else if ( robot == NAO )
+    else if ( robot == robot::NAO )
     {
-      urdf_path = alros::helpers::getURDF("nao.urdf");
+      urdf_path = helpers::filesystem::getURDF("nao.urdf");
     }
     else
     {

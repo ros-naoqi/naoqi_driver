@@ -26,7 +26,7 @@ namespace alros
 namespace publisher
 {
 
-InfoPublisher::InfoPublisher(const std::string& topic , Robot robot_type)
+InfoPublisher::InfoPublisher(const std::string& topic , const robot::Robot& robot_type)
   : BasicPublisher( topic ),
     robot_(robot_type)
 {

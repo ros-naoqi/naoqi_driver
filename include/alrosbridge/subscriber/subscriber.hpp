@@ -25,8 +25,6 @@
 
 #include <ros/ros.h>
 
-#include <alrosbridge/tools.hpp>
-
 namespace alros
 {
 namespace subscriber
@@ -83,11 +81,6 @@ public:
     return subPtr_->name();
   }
 
-  Robot robot() const
-  {
-    return subPtr_->robot();
-  }
-
   /**
   * @brief getting the topic to subscriber on
   * @return string indicating the topic
@@ -117,7 +110,6 @@ private:
     virtual void reset( ros::NodeHandle& nh ) = 0;
     virtual std::string name() const = 0;
     virtual std::string topic() const = 0;
-    virtual Robot robot() const = 0;
   };
 
 
@@ -139,11 +131,6 @@ private:
     std::string topic() const
     {
       return subscriber_->topic();
-    }
-
-    Robot robot() const
-    {
-      return subscriber_->robot();
     }
 
     bool isInitialized() const

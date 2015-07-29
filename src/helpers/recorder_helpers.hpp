@@ -15,43 +15,21 @@
  *
 */
 
-#ifndef PUBLISHER_INFO_HPP
-#define PUBLISHER_INFO_HPP
 
-/*
-* LOCAL includes
-*/
-#include "basic.hpp"
-#include <alrosbridge/tools.hpp>
-
-/*
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <naoqi_bridge_msgs/StringStamped.h>
+#ifndef RECORDER_HELPERS_HPP
+#define RECORDER_HELPERS_HPP
 
 namespace alros
 {
-namespace publisher
+namespace helpers
+{
+namespace recorder
 {
 
-class InfoPublisher : public BasicPublisher<naoqi_bridge_msgs::StringStamped>
-{
-public:
-  InfoPublisher( const std::string& topic, const robot::Robot& robot_type );
+static const float bufferDefaultDuration = 10.f;
 
-  void reset( ros::NodeHandle& nh );
-
-  virtual inline bool isSubscribed() const
-  {
-    return true;
-  }
-
-protected:
-  const robot::Robot& robot_;
-};
-
-} //publisher
-} //alros
+} // recorder
+} // helpers
+} // alros
 
 #endif

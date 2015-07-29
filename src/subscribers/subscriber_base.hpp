@@ -27,6 +27,7 @@
  * LOCAL includes
  */
 #include <alrosbridge/tools.hpp>
+#include "../helpers/bridge_helpers.hpp"
 
 namespace alros
 {
@@ -43,7 +44,7 @@ public:
     name_( name ),
     topic_( topic ),
     is_initialized_( false ),
-    robot_( UNIDENTIFIED ),
+    robot_( helpers::bridge::getRobot(session) ),
     session_(session)
   {}
 
@@ -64,40 +65,13 @@ public:
     return is_initialized_;
   }
 
-  /** Function that returns the type of a robot
-   */
-  inline Robot robot() const
-  {
-    if (robot_ != UNIDENTIFIED)
-      return robot_;
-
-    qi::AnyObject p_memory = session_->service("ALMemory");
-    std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
-    std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
-
-    if (std::string(robot) == "nao")
-    {
-      robot_ = NAO;
-      return robot_;
-    }
-    if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
-    {
-      robot_ = PEPPER;
-      return robot_;
-    }
-    else
-    {
-      return UNIDENTIFIED;
-    }
-  }
-
 protected:
   std::string name_, topic_;
 
   bool is_initialized_;
 
   /** The type of the robot */
-  mutable Robot robot_;
+  const robot::Robot& robot_;
 
   /** Pointer to a session from which we can create proxies */
   qi::SessionPtr session_;

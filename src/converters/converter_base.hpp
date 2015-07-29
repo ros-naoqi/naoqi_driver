@@ -22,6 +22,7 @@
 * LOCAL includes
 */
 #include <alrosbridge/tools.hpp>
+#include "../helpers/bridge_helpers.hpp"
 
 /*
 * ALDEBARAN includes
@@ -43,7 +44,7 @@ public:
   BaseConverter( const std::string& name, float frequency, qi::SessionPtr session ):
     name_( name ),
     frequency_( frequency ),
-    robot_( UNIDENTIFIED ),
+    robot_( helpers::bridge::getRobot(session) ),
     session_(session),
     record_enabled_(false)
   {}
@@ -62,6 +63,7 @@ public:
 
   /** Function that returns the type of a robot
    */
+  /*
   inline Robot robot() const
   {
     if (robot_ != UNIDENTIFIED)
@@ -94,7 +96,7 @@ public:
       robot_ = UNIDENTIFIED;
       return robot_;
     }
-  }
+  }*/
 
 protected:
   std::string name_;
@@ -102,7 +104,7 @@ protected:
   /** Frequency at which the converter should turn. This is informative */
   float frequency_;
   /** The type of the robot */
-  mutable Robot robot_;
+  const robot::Robot& robot_;
 
   /** Pointer to a session from which we can create proxies */
   qi::SessionPtr session_;

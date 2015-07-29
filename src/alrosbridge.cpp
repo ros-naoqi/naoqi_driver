@@ -81,7 +81,10 @@
  * STATIC FUNCTIONS INCLUDE
  */
 #include "ros_env.hpp"
-#include "helpers.hpp"
+#include "helpers/filesystem_helpers.hpp"
+#include "helpers/recorder_helpers.hpp"
+#include "helpers/naoqi_helpers.hpp"
+#include "helpers/bridge_helpers.hpp"
 
 /*
  * ROS
@@ -102,14 +105,28 @@ namespace alros
 
 Bridge::Bridge( qi::SessionPtr& session )
   : sessionPtr_( session ),
+  robot_( helpers::bridge::getRobot(session) ),
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
   dump_enabled_(false),
   keep_looping(true),
-  recorder_(boost::make_shared<recorder::GlobalRecorder>(::alros::ros_env::getPrefix())),
-  buffer_duration_(helpers::bufferDefaultDuration)
+  recorder_(boost::make_shared<recorder::GlobalRecorder>(ros_env::getPrefix())),
+  buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
+  if (robot_ == alros::robot::NAO)
+  {
+    alros::ros_env::setPrefix("nao_robot");
+  }
+  else if (robot_ == alros::robot::PEPPER)
+  {
+    alros::ros_env::setPrefix("pepper_robot");
+  }
+  else
+  {
+    alros::ros_env::setPrefix("undefined");
+  }
+
 }
 
 Bridge::~Bridge()
@@ -134,7 +151,7 @@ void Bridge::init()
 
 void Bridge::loadBootConfig()
 {
-  const std::string& file_path = alros::helpers::getBootConfigFile();
+  const std::string& file_path = helpers::filesystem::getBootConfigFile();
   std::cout << "load boot config from " << file_path << std::endl;
   if (!file_path.empty())
   {
@@ -247,8 +264,8 @@ std::string Bridge::minidump(const std::string& prefix)
   // CHECK SIZE IN FOLDER
   long files_size = 0;
   boost::filesystem::path folderPath(boost::filesystem::current_path());
-  helpers::getFilesSize(folderPath, files_size);
-  if (files_size > helpers::folderMaximumSize)
+  helpers::filesystem::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::filesystem::folderMaximumSize)
   {
     std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
                  << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
@@ -298,8 +315,8 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   // CHECK SIZE IN FOLDER
   long files_size = 0;
   boost::filesystem::path folderPath(boost::filesystem::current_path());
-  helpers::getFilesSize(folderPath, files_size);
-  if (files_size > helpers::folderMaximumSize)
+  helpers::filesystem::getFilesSize(folderPath, files_size);
+  if (files_size > helpers::filesystem::folderMaximumSize)
   {
     std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
                  << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
@@ -455,7 +472,7 @@ bool Bridge::registerMemoryConverter( const std::string& key, float frequency, c
 
   if (type==dataType::None) {
     try {
-      data_type = helpers::getDataType(value);
+      data_type = helpers::naoqi::getDataType(value);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -508,8 +525,6 @@ void Bridge::registerDefaultConverter()
   // init global tf2 buffer
   tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
   tf2_buffer_->setUsingDedicatedThread(true);
-
-  alros::Robot robot_type;
 
   // replace this with proper configuration struct
   bool info_enabled                   = boot_config_.get( "converters.info.enabled", true);
@@ -569,11 +584,10 @@ void Bridge::registerDefaultConverter()
    */
   /** Info publisher **/
   boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
-  robot_type = inc->robot();
 
   if ( info_enabled )
   {
-    boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_type);
+    boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_);
     boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
     inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
     inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
@@ -606,8 +620,8 @@ void Bridge::registerDefaultConverter()
   /** IMU TORSO **/
   if ( imu_torso_enabled )
   {
-    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_torso" );
-    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_torso" );
+    boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu/torso" );
+    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/torso" );
     boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, imu_torso_frequency, sessionPtr_);
     imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
     imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
@@ -615,13 +629,13 @@ void Bridge::registerDefaultConverter()
     registerConverter( imutc, imutp, imutr );
   }
 
-  if(robot_type == alros::PEPPER)
+  if(robot_ == robot::PEPPER)
   {
     /** IMU BASE **/
     if ( imu_base_enabled )
     {
-      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu_base" );
-      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu_base" );
+      boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu/base" );
+      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/base" );
       boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, imu_base_frequency, sessionPtr_);
       imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
       imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
@@ -655,7 +669,7 @@ void Bridge::registerDefaultConverter()
   }
 
 
-  if(robot_type == alros::PEPPER)
+  if(robot_ == robot::PEPPER)
   {
     /** Depth Camera */
     if ( camera_depth_enabled )
@@ -695,7 +709,8 @@ void Bridge::registerDefaultConverter()
     //  registerRecorder(jsc, jsr);
   }
 
-  if(robot_type == alros::PEPPER){
+  if(robot_ == robot::PEPPER)
+  {
     /** Laser */
     if ( laser_enabled )
     {
@@ -713,7 +728,7 @@ void Bridge::registerDefaultConverter()
   if ( sonar_enabled )
   {
     std::vector<std::string> sonar_topics;
-    if (robot_type == alros::PEPPER)
+    if (robot_ == robot::PEPPER)
     {
       sonar_topics.push_back("sonar/front");
       sonar_topics.push_back("sonar/back");
@@ -1113,7 +1128,7 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
 
   if (type==dataType::None) {
     try {
-      data_type = helpers::getDataType(value);
+      data_type = helpers::naoqi::getDataType(value);
     } catch (const std::exception& e) {
       std::cout << BOLDRED << "Could not get a valid data type to register memory converter "
                 << BOLDCYAN << key << RESETCOLOR << std::endl
@@ -1189,7 +1204,7 @@ std::vector<std::string> Bridge::getFilesList()
   std::vector<std::string> fileNames;
   boost::filesystem::path folderPath( boost::filesystem::current_path() );
   std::vector<boost::filesystem::path> files;
-  helpers::getFiles(folderPath, ".bag", files);
+  helpers::filesystem::getFiles(folderPath, ".bag", files);
 
   for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
        it!=files.end(); it++)
@@ -1203,7 +1218,7 @@ void Bridge::removeAllFiles()
 {
   boost::filesystem::path folderPath( boost::filesystem::current_path() );
   std::vector<boost::filesystem::path> files;
-  helpers::getFiles(folderPath, ".bag", files);
+  helpers::filesystem::getFiles(folderPath, ".bag", files);
 
   for (std::vector<boost::filesystem::path>::const_iterator it=files.begin();
        it!=files.end(); it++)

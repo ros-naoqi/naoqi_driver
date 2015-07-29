@@ -44,7 +44,7 @@ JointStateConverter::JointStateConverter( const std::string& name, const float& 
   p_motion_( session->service("ALMotion") ),
   tf2_buffer_(tf2_buffer)
 {
-  robot_desc_ = alros::tools::getRobotDescription(robot());
+  robot_desc_ = tools::getRobotDescription( robot_ );
 }
 
 JointStateConverter::~JointStateConverter()
@@ -76,7 +76,7 @@ void JointStateConverter::registerCallback( const message_actions::MessageAction
 void JointStateConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
   // get joint state values
-  std::vector<float> al_joint_angles = p_motion_.call<std::vector<float> >("getAngles", "Body", true );
+  std::vector<double> al_joint_angles = p_motion_.call<std::vector<double> >("getAngles", "Body", true );
   const ros::Time& stamp = ros::Time::now();
 
   /**
@@ -145,8 +145,7 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   tf_transforms_.push_back( msg_tf_odom );
   tf2_buffer_->setTransform( msg_tf_odom, "alrosconverter", false);
 
-  static const alros::Robot& robot_type = robot();
-  if (robot_type == NAO )
+  if (robot_ == robot::NAO )
   {
     nao::addBaseFootprint( tf2_buffer_, tf_transforms_, odom_stamp-ros::Duration(0.1) );
   }

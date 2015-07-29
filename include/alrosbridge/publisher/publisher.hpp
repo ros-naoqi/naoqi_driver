@@ -25,8 +25,6 @@
 
 #include <ros/ros.h>
 
-#include <alrosbridge/tools.hpp>
-
 namespace alros
 {
 namespace publisher
@@ -52,14 +50,6 @@ public:
   Publisher( const T& pub ):
     pubPtr_( boost::make_shared<PublisherModel<T> >(pub) )
   {}
-
-//  /**
-//  * @brief triggers the publishing process of the concrete publisher instance
-//  */
-//  void publish( )
-//  {
-//    pubPtr_->publish( );
-//  }
 
   /**
   * @brief checks if the publisher is correctly initialized on the ros-master
@@ -91,29 +81,6 @@ public:
     std::cout << topic() << " reset" << std::endl;
   }
 
-//  /**
-//  * @brief getting the descriptive name for this publisher instance
-//  * @return string with the name
-//  */
-//  std::string name() const
-//  {
-//    return pubPtr_->name();
-//  }
-
-//  /**
-//  * @brief getting the assigned frequency of this publisher instance
-//  * @return float value indicating the frequency
-//  */
-//  float frequency() const
-//  {
-//    return pubPtr_->frequency();
-//  }
-
-//  Robot robot() const
-//  {
-//    return pubPtr_->robot();
-//  }
-
   /**
   * @brief getting the topic to publish on
   * @return string indicating the topic
@@ -144,15 +111,10 @@ private:
   struct PublisherConcept
   {
     virtual ~PublisherConcept(){}
-    //virtual void publish() = 0;
     virtual bool isInitialized() const = 0;
     virtual bool isSubscribed() const = 0;
     virtual void reset( ros::NodeHandle& nh ) = 0;
-    //virtual std::string name() const = 0;
     virtual std::string topic() const = 0;
-    //virtual float frequency() const = 0;
-    //virtual Robot robot() const = 0;
-
   };
 
 
@@ -166,30 +128,10 @@ private:
       publisher_( other )
     {}
 
-//    std::string name() const
-//    {
-//      return publisher_->name();
-//    }
-
     std::string topic() const
     {
       return publisher_->topic();
     }
-
-//    float frequency() const
-//    {
-//      return publisher_->frequency();
-//    }
-
-//    Robot robot() const
-//    {
-//      return publisher_->robot();
-//    }
-
-//    void publish( )
-//    {
-//      publisher_->publish( );
-//    }
 
     bool isInitialized() const
     {

@@ -20,17 +20,19 @@
 #include <qi/anymodule.hpp>
 #include <alrosbridge/alrosbridge.hpp>
 
-#include "ros_env.hpp"
+#include "naoqi_env.hpp"
+#include "helpers/bridge_helpers.hpp"
 
 int main(int argc, char** argv)
 {
   /* adjust the SDK prefix in case you compiled via catkin*/
-  alros::ros_env::adjustSDKPrefix();
+  alros::naoqi_env::adjustSDKPrefix();
 
   /* launch naoqi service */
   qi::ApplicationSession app(argc, argv);
   app.start();
   boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
+
   app.session()->registerService("ALRosBridge", bs);
 
   /* In case you launch via roslaunch/rosrun we remove the ros args */

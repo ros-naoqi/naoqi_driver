@@ -47,7 +47,7 @@ InfoConverter::InfoConverter( const std::string& name, float frequency, const qi
   keys_.push_back("RobotConfig/Body/Version");
   keys_.push_back("RobotConfig/Body/SoftwareRequirement");
   keys_.push_back("RobotConfig/Body/Device/Legs/Version");
-  if(robot() == PEPPER)
+  if(robot_ == robot::PEPPER)
   {
     keys_.push_back("Device/DeviceList/BatteryFuelGauge/SerialNumber");
     keys_.push_back("Device/DeviceList/BatteryFuelGauge/FirmwareVersion");

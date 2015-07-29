@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include <alrosbridge/recorder/globalrecorder.hpp>
-#include "../helpers.hpp"
+#include "../helpers/recorder_helpers.hpp"
 
 /*
 * STANDARD includes
@@ -42,7 +42,7 @@ class BasicRecorder
 public:
   BasicRecorder( const std::string& topic, float buffer_frequency = 0 ):
     topic_( topic ),
-    buffer_duration_( helpers::bufferDefaultDuration ),
+    buffer_duration_( helpers::recorder::bufferDefaultDuration ),
     is_initialized_( false ),
     is_subscribed_( false ),
     buffer_frequency_(buffer_frequency),

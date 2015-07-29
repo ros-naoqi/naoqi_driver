@@ -15,43 +15,37 @@
  *
 */
 
-#ifndef PUBLISHER_INFO_HPP
-#define PUBLISHER_INFO_HPP
 
-/*
-* LOCAL includes
-*/
-#include "basic.hpp"
-#include <alrosbridge/tools.hpp>
-
-/*
-* ROS includes
-*/
-#include <ros/ros.h>
-#include <naoqi_bridge_msgs/StringStamped.h>
+#ifndef NAOQI_HELPERS_HPP
+#define NAOQI_HELPERS_HPP
 
 namespace alros
 {
-namespace publisher
+namespace helpers
+{
+namespace naoqi
 {
 
-class InfoPublisher : public BasicPublisher<naoqi_bridge_msgs::StringStamped>
+static dataType::DataType getDataType(qi::AnyValue value)
 {
-public:
-  InfoPublisher( const std::string& topic, const robot::Robot& robot_type );
-
-  void reset( ros::NodeHandle& nh );
-
-  virtual inline bool isSubscribed() const
-  {
-    return true;
+  dataType::DataType type;
+  if (value.kind() == qi::TypeKind_Int) {
+    type = dataType::Int;
   }
+  else if (value.kind() == qi::TypeKind_Float) {
+    type = dataType::Float;
+  }
+  else if (value.kind() == qi::TypeKind_String) {
+    type = dataType::String;
+  }
+  else {
+    throw std::runtime_error("Cannot get a valid type.");
+  }
+  return type;
+}
 
-protected:
-  const robot::Robot& robot_;
-};
-
-} //publisher
-} //alros
+} // naoqi
+} // helpers
+} // alros
 
 #endif
