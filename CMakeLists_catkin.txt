@@ -38,7 +38,7 @@ add_library(
   ${CONVERTERS_SRC}
   ${TOOLS_SRC}
   )
-target_link_libraries(alrosconverters ${naoqi_libiq_LIBRARIES})
+target_link_libraries(alrosconverters ${naoqi_libqi_LIBRARIES})
 add_dependencies(alrosconverters ${catkin_EXPORTED_TARGETS})
 install(TARGETS alrosconverters DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
