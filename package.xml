@@ -5,7 +5,7 @@
   <description>Bridge between Aldebaran's NAOqiOS and ROS</description>
 
   <author>Karsten Knese</author>
-  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
+  <maintainer email="karsten.knese@gmail.com">Karsten Knese</maintainer>
   <license>BSD</license>
 
   <build_depend>boost</build_depend>
@@ -42,5 +42,5 @@
   <run_depend>tf2_ros</run_depend>
 
   <conflict>nao_driver</conflict>
-  <conflict>nao_driver</conflict>
+  <conflict>naoqi_rosbridge</conflict>
 </package>
