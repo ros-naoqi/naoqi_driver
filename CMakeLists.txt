@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(naoqi_rosbridge)
+project(naoqi_driver)
 
 # define source files that can be used by qibuild or catkin
 set(

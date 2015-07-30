@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>naoqi_rosbridge</name>
+  <name>naoqi_driver</name>
   <version>0.1.2</version>
   <description>Bridge between Aldebaran's NAOqiOS and ROS</description>
 
@@ -40,4 +40,7 @@
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>rosbag_storage</run_depend>
   <run_depend>tf2_ros</run_depend>
+
+  <conflict>nao_driver</conflict>
+  <conflict>nao_driver</conflict>
 </package>
