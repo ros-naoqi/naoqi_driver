@@ -80,6 +80,3 @@ install(DIRECTORY launch DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
 # make sure there is a file describing a naoqi module
 file(WRITE ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/alros.mod "cpp")
 install(FILES ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/alros.mod DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/)
-
-#add_subdirectory( benchmark )
-#add_subdirectory( test )

@@ -122,6 +122,3 @@ target_link_libraries(
 # install the urdf for runtime loading
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${QI_SDK_DIR}/${QI_SDK_SHARE}/")
 qi_install_data( share/)
-
-add_subdirectory( benchmark )
-#add_subdirectory( test )
