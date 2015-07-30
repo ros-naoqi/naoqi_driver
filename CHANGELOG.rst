@@ -2,6 +2,19 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* remove legacy code
+* fix typo in package.xml
+* rename package to naoqi_driver
+* remove alrosbridge prefix and cleanup
+* fix typo in cmakelist
+* Fixes for c++11
+* remove naoqi_msgs includes
+* fix for correct header include of msgs
+* remove deprecation warning
+* Contributors: Guillaume JACOB, Karsten Knese, Vincent Rabaud
+
 0.1.2 (2015-07-15)
 ------------------
 * update start doc for v1.2
