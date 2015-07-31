@@ -56,10 +56,6 @@ public:
 private:
   /** The names of the joints in the order given by the motion proxy */
   std::vector<std::string> joint_names_;
-  /** The list of the ALMemory keys for joint temperatures */
-  std::vector<std::string> joint_temperatures_keys_;
-  /** The list of the ALMemory keys for the battery */
-  std::vector<std::string> battery_keys_;
   /** all the keys to check. It is a concatenation of joint_temperatures_keys_, battery_keys_ */
   std::vector<std::string> all_keys_;
   /** Keys for the battery status */

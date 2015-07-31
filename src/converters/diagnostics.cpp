@@ -32,6 +32,20 @@
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
+namespace
+{
+void setMessageFromStatus(diagnostic_updater::DiagnosticStatusWrapper &status)
+{
+  if (status.level == diagnostic_msgs::DiagnosticStatus::OK) {
+    status.message = "OK";
+  } else if (status.level == diagnostic_msgs::DiagnosticStatus::WARN) {
+    status.message = "WARN";
+  } else {
+    status.message = "ERROR";
+  }
+}
+}
+
 namespace alros
 {
 namespace converter
@@ -47,13 +61,15 @@ DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequ
   qi::AnyObject p_motion = session->service("ALMotion");
   joint_names_ = p_motion.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
 
-  for(std::vector<std::string>::const_iterator it = joint_names_.begin(); it != joint_names_.end(); ++it)
-    joint_temperatures_keys_.push_back(std::string("Device/SubDeviceList/") + (*it) + std::string("/Temperature/Sensor/Value"));
+  for(std::vector<std::string>::const_iterator it = joint_names_.begin(); it != joint_names_.end(); ++it) {
+    all_keys_.push_back(std::string("Device/SubDeviceList/") + (*it) + std::string("/Temperature/Sensor/Value"));
+    all_keys_.push_back(std::string("Device/SubDeviceList/") + (*it) + std::string("/Hardness/Actuator/Value"));
+  }
 
   // Get all the battery keys
-  battery_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Value"));
-  battery_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Status"));
-  battery_keys_.push_back(std::string("Device/SubDeviceList/Battery/Current/Sensor/Value"));
+  all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Value"));
+  all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Status"));
+  all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Current/Sensor/Value"));
 
   std::string battery_status_keys[] = {"End off Discharge flag", "Near End Off Discharge flag", "Charge FET on",
     "Discharge FET on", "Accu learn flag", "Discharging flag", "Full Charge Flag", "Charge Flag",
@@ -63,14 +79,6 @@ DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequ
   battery_status_keys_ = std::vector<std::string>(battery_status_keys, battery_status_keys+16);
 
   // TODO get ID from Device/DeviceList/ChestBoard/BodyId
-
-  // Concatenate the keys in all_keys_
-  all_keys_.resize(joint_temperatures_keys_.size() + battery_keys_.size());
-  size_t i = 0;
-  for(std::vector<std::string>::const_iterator it = joint_temperatures_keys_.begin(); it != joint_temperatures_keys_.end(); ++it, ++i)
-    all_keys_[i] = *it;
-  for(std::vector<std::string>::const_iterator it = battery_keys_.begin(); it != battery_keys_.end(); ++it, ++i)
-    all_keys_[i] = *it;
 }
 
 void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
@@ -89,17 +97,28 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     return;
   }
 
-  // Fill the temperature message for the joints
+  // Fill the temperature / stiffness message for the joints
+  double maxTemperature = 0.0;
+  double maxStiffness = 0.0;
+  double minStiffness = 1.0;
+  double minStiffnessWoHands = 1.0;
+  std::stringstream hotJointsSS;
+
   size_t val = 0;
   diagnostic_msgs::DiagnosticStatus::_level_type max_level = diagnostic_msgs::DiagnosticStatus::OK;
-  for(size_t i = 0; i < joint_names_.size(); ++val, ++i)
+  for(size_t i = 0; i < joint_names_.size(); ++i)
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
     status.name = std::string("/Joints/") + joint_names_[i];
 
+    double temperature = static_cast<double>(values[val++]);
+    double stiffness = static_cast<double>(values[val++]);
+
+    // Fill the status data
     status.hardware_id = joint_names_[i];
-    float temperature = values[val];
-    status.add("Temperature", float(values[val]));
+    status.add("Temperature", temperature);
+
+    // Define the level
     if (temperature < temperature_warn_level_)
     {
       status.level = diagnostic_msgs::DiagnosticStatus::OK;
@@ -116,16 +135,33 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
       status.message = "Too hot";
     }
 
-    max_level = std::max(max_level, status.level);
     msg.status.push_back(status);
+
+    // Fill the joint data for later processing
+    max_level = std::max(max_level, status.level);
+    maxTemperature = std::max(maxTemperature, temperature);
+    maxStiffness = std::max(maxStiffness, stiffness);
+    minStiffness = std::min(minStiffness, stiffness);
+    if(joint_names_[i].find("Hand") == std::string::npos)
+      minStiffnessWoHands = std::min(minStiffnessWoHands, stiffness);
+    if(status.level >= (int) diagnostic_msgs::DiagnosticStatus::WARN) {
+      hotJointsSS << std::endl << joint_names_[i] << ": " << temperature << "°C";
+    }
   }
 
-  // Get the aggregated joints
+  // Get the aggregated joints status
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
     status.name = std::string("/Joints");
     status.hardware_id = "joints";
     status.level = max_level;
+    setMessageFromStatus(status);
+
+    status.add("Highest Temperature", maxTemperature);
+    status.add("Highest Stiffness", maxStiffness);
+    status.add("Lowest Stiffness", minStiffness);
+    status.add("Lowest Stiffness without Hands", minStiffnessWoHands);
+    status.add("Hot Joints", hotJointsSS.str());
 
     msg.status.push_back(status);
   }
@@ -139,12 +175,16 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     status.name = std::string("/Battery/Battery");
     status.hardware_id = "battery";
     status.add("Percentage", battery_percentage);
-    for( size_t i = 0; i < battery_status_keys_.size(); ++i)
-      status.add(battery_status_keys_[i], bool((1 << i) && battery_status));
-    //status.add("Status", std::string());
-
-    // TODO, convert battery_status to a string of binary 0101010
-    status.add("Status", battery_status);
+    std::stringstream battery_status_ss;
+    for( size_t i = 0; i < battery_status_keys_.size(); ++i) {
+      bool battery_status_bit = (1 << i) && battery_status;
+      status.add(battery_status_keys_[i], battery_status_bit);
+      battery_status_ss << int(battery_status_bit);
+    }
+    // Display the bit version of the status as a string
+    std::string battery_status_str = battery_status_ss.str();
+    std::reverse(battery_status_str.begin(), battery_status_str.end());
+    status.add("Status", battery_status_str);
 
     std::ostringstream ss;
     if (bool((1 << 6) && battery_status))
@@ -205,6 +245,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     status.name = std::string("/Battery");
     status.hardware_id = "battery";
     status.level = diagnostic_msgs::DiagnosticStatus::OK;
+    setMessageFromStatus(status);
 
     msg.status.push_back(status);
   }
