@@ -52,14 +52,14 @@
   <div class="section" id="how-to-install-it">
 <span id="install"></span><h1>1. How to install it<a class="headerlink" href="#how-to-install-it" title="Permalink to this headline">¶</a></h1>
 <div class="container">
-<button class="toggleable_button label_ROS" onclick="
+<button class="toggleable_button label_catkin" onclick="
 function toggle(label) {
   $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
   $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
   $('.toggleable_div').css('display', 'none');
   $('.toggleable_div.label_' + label).css('display', 'block');
 };
-toggle('ROS')">ROS</button>
+toggle('catkin')">catkin</button>
 <script>
 
 function toggle(label) {
@@ -78,14 +78,14 @@ $(document).ready(function() {
   });
 });
 </script>
-<button class="toggleable_button label_NAOqi" onclick="
+<button class="toggleable_button label_qibuild" onclick="
 function toggle(label) {
   $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
   $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
   $('.toggleable_div').css('display', 'none');
   $('.toggleable_div.label_' + label).css('display', 'block');
 };
-toggle('NAOqi')">NAOqi</button>
+toggle('qibuild')">qibuild</button>
 <script>
 
 function toggle(label) {
@@ -106,19 +106,19 @@ $(document).ready(function() {
 </script>
 </div>
 <div class="container">
-<div class="toggleable_div label_ROS"><p><strong>Binary:</strong></p>
+<div class="toggleable_div label_catkin"><p><strong>Binary:</strong></p>
 <p>If you are in a ROS environment, you followed the official <a class="reference external" href="http://wiki.ros.org/ROS/Installation">instructions</a>.</p>
 <p>The easiest therefore is to install the official binary:</p>
-<div class="highlight-console"><div class="highlight"><pre><span class="go">sudo apt-get install ros-.*-naoqi-rosbridge</span>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">sudo apt-get install ros-.*-naoqi-driver</span>
 </pre></div>
 </div>
 <p><strong>From source:</strong></p>
-<p>If you want to help develop the bridge and are unused to catkin, you will follow the official <a class="reference external" href="http://wiki.ros.org/catkin/Tutorials">catkin tutorials</a>. On Ubuntu, it is:</p>
+<p>If you want to help develop the bridge or simply want to checkout the latest version, follow the steps below to compile from source. It will use catkin to compile, so in case you are not familiar with, don&#8217;t forget to follow the official <a class="reference external" href="http://wiki.ros.org/catkin/Tutorials">catkin tutorials</a>. On Ubuntu, it is:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">mkdir -p ~/catkin_ws/src</span>
 <span class="go">cd ~/catkin_ws/src</span>
-<span class="go">git clone https://github.com/ros-naoqi/alrosbridge.git</span>
+<span class="go">git clone https://github.com/ros-naoqi/naoqi-driver.git</span>
 <span class="gp">#</span> make sure you get all the dependencies installed
-<span class="go">rosdep install -i -y --from-paths ./alrosbridge</span>
+<span class="go">rosdep install -i -y --from-paths ./naoqi_driver</span>
 <span class="gp">#</span> build
 <span class="go">source /opt/ros/indigo/setup.sh</span>
 <span class="go">cd ../ &amp;&amp; catkin_make</span>
@@ -126,29 +126,31 @@ $(document).ready(function() {
 </div>
 </div></div>
 <div class="container">
-<div class="toggleable_div label_NAOqi"><p><strong>Requirement:</strong></p>
-<p>The <strong>ALRosBridge</strong> is made to be compiled with qiBuild so you first need to install it:</p>
+<div class="toggleable_div label_qibuild"><p><strong>Requirement:</strong></p>
+<p>The naoqi driver module is made to be compiled with qibuild so you first need to install it:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">pip install qibuild</span>
 </pre></div>
 </div>
-<p>To set up your environment and start using qiBuild, run the following commands:</p>
+<p>To set up your environment and start using qibuild, run the following commands:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">mkdir ~/qibuild_ws</span>
 <span class="go">cd ~/qibuild_ws</span>
 <span class="go">qibuild init</span>
 </pre></div>
 </div>
-<p>If you encounter any issue, please refer to <a class="reference external" href="http://doc.aldebaran.com/qibuild/">qiBuild documentation</a>.</p>
-<p>When qiBuild compiles, it will only look for dependencies within a toolchain, so one needs to be created.</p>
+<p>If you encounter any issue, please refer to <a class="reference external" href="http://doc.aldebaran.com/qibuild/">qibuild documentation</a>.</p>
+<p>When qibuild compiles, it will only look for dependencies within a toolchain, so one needs to be created.</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="gp">#</span> Create the toolchain
 <span class="go">qitoolchain create &lt;tc_name&gt;</span>
 <span class="go">qibuild add-config &lt;tc_name&gt; -t &lt;tc_name&gt;</span>
-
-<span class="gp">#</span> Add a package that will find your <span class="nb">local </span>ROS installation
-<span class="go">cd ~/qibuild_ws</span>
-<span class="go">git clone https://github.com/ros-naoqi/ros-toolchain.git</span>
-<span class="go">./ros-toolchain/update_toolchain.sh local_ros &lt;tc_name&gt;</span>
 </pre></div>
 </div>
+<p>By default, qitoolchains don&#8217;t come with ROS packages. So we need to add them manually.
+.. code-block:: console</p>
+<blockquote>
+<div># Add a package that will find your local ROS installation
+cd ~/qibuild_ws
+git clone <a class="reference external" href="https://github.com/ros-naoqi/ros-toolchain.git">https://github.com/ros-naoqi/ros-toolchain.git</a>
+./ros-toolchain/update_toolchain.sh local_ros &lt;tc_name&gt;</div></blockquote>
 <p>Download the dependencies of the alrosbridge:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">cd ~/qibuild_ws</span>
 <span class="go">qisrc add https://github.com/aldebaran/gtest.git</span>
@@ -159,13 +161,13 @@ $(document).ready(function() {
 </div>
 <p>Download this project and compile it:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">cd ~/qibuild_ws</span>
-<span class="go">qisrc add https://github.com/ros-naoqi/alrosbridge.git</span>
-<span class="go">cd alrosbridge</span>
+<span class="go">qisrc add https://github.com/ros-naoqi/naoqi-driver.git</span>
+<span class="go">cd naoqi_driver</span>
 <span class="go">qibuild configure -c &lt;tc_name&gt;</span>
 <span class="go">qibuild make -c &lt;tc_name&gt;</span>
 </pre></div>
 </div>
-<p>Once compilation is over, the resulting binary will be in <em>~/qibuild_ws/alrosbridge/build-&lt;tcname&gt;/sdk/bin/alrosbridge_bin</em></p>
+<p>Once compilation is over, the resulting binary will be in <em>~/qibuild_ws/naoqi_driver/build-&lt;tcname&gt;/sdk/bin/alrosbridge_bin</em></p>
 <p>If you encounter any compilation issue, (unable to find some dependencies), you might need to install them (through <em>apt-get install</em> for instance)</p>
 <p>Once you successfully compiled the module, you can learn how to use it on the <a class="reference internal" href="start.html#start"><em>Getting started page</em></a> or you can go back to the <a class="reference internal" href="index.html#main-menu"><em>index</em></a>.</p>
 </div></div>

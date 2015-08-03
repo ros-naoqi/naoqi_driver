@@ -60,8 +60,8 @@ Start a ROScore (on your desktop machine)</p>
 </div>
 <p>The ROS_IP parameter is optional in case your local network supports a fully functional DNS. You can easily verify this when you can ping your desktop computer from your robot. In case this fails, set the ROS_IP parameter so that we can later tell the robot how to find and connect to this roscore.</p>
 </div>
-<div class="section" id="start-the-alrosbridge-module">
-<h2>2.2. Start the ALRosBridge module<a class="headerlink" href="#start-the-alrosbridge-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="start-the-naoqi-driver-module">
+<h2>2.2. Start the naoqi driver module<a class="headerlink" href="#start-the-naoqi-driver-module" title="Permalink to this headline">¶</a></h2>
 <p>Please execute the following steps on your local computer, not from the robot</p>
 <div class="container">
 <button class="toggleable_button label_ROS" onclick="
@@ -119,11 +119,11 @@ $(document).ready(function() {
 </div>
 <div class="container">
 <div class="toggleable_div label_ROS"><p>In case you built via catkin, you can alternatively start the bridge via rosrun</p>
-<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_rosbridge alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_interface&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_driver alrosbridge_bin --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_interface&gt;
 </pre></div>
 </div>
 <p>The second parameter is available from version 1.2 (or compilation from source). Starting from version 1.2 (or compilation from source) you can alternatively start the bridge via a launch file</p>
-<div class="highlight-python"><div class="highlight"><pre>$ roslaunch naoqi_rosbridge naoqi_driver.launch nao_ip:=&lt;yourRobotIP&gt; roscore_ip:=&lt;roscore_ip&gt; network_interface:=&lt;eth0|wlan0|tethering|vpn...&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ roslaunch naoqi_driver naoqi_driver.launch nao_ip:=&lt;yourRobotIP&gt; roscore_ip:=&lt;roscore_ip&gt; network_interface:=&lt;eth0|wlan0|tethering|vpn...&gt;
 </pre></div>
 </div>
 </div></div>
@@ -133,7 +133,7 @@ $(document).ready(function() {
 </pre></div>
 </div>
 </div></div>
-<p>The roscore IP is the IP of the computer where the roscore is running. This command is optional. If you don&#8217;t specify, any ROS communication is disabled until you call setMasterURI. The second parameter <tt class="docutils literal"><span class="pre">network_interface</span></tt> specifies the network interface the robot is connected to. This is important to establish a correct network connection between robot and computer. In case you are not certain which device to use, verify with <tt class="docutils literal"><span class="pre">ifconfig</span></tt> on the robot and verify which network device has the correct IP.</p>
+<p>The roscore IP is the IP of the computer where the roscore is running. This command is optional. If you don&#8217;t specify, any ROS communication is disabled until you call setMasterURI. The second parameter <tt class="docutils literal"><span class="pre">network_interface</span></tt> specifies the network interface the bridge is connected. By default, this is set to <tt class="docutils literal"><span class="pre">eth0</span></tt>. Changing this becomes important to establish a correct network connection between robot and computer, when you are connected via a different network device, such as wlan0 or vpn0 etc. In case you are not certain which device to use, verify with <tt class="docutils literal"><span class="pre">ifconfig</span></tt> and verify which network device has the correct IP.</p>
 </div>
 <div class="section" id="set-the-roscore-ip-manually">
 <h2>2.3. Set the roscore IP manually<a class="headerlink" href="#set-the-roscore-ip-manually" title="Permalink to this headline">¶</a></h2>
@@ -150,51 +150,185 @@ For this, open a SSH connection onto your robot and execute the following comman
 <div class="highlight-python"><div class="highlight"><pre>$ qicli call ALRosBridge.setMasterURINet http://&lt;yourDesktopIP&gt;:11311 tether
 </pre></div>
 </div>
-<p><strong>Functionalities</strong>:</p>
-<p>On your desktop, you can use ROS as you would normally do. For instance</p>
-<div class="highlight-python"><div class="highlight"><pre>$ rosnode info /alrosbridge
---------------------------------------------------------------------------------
-Node [/alrosbridge]
+</div>
+<div class="section" id="check-that-it-is-running-correctly">
+<h2>2.4. Check that it is running correctly<a class="headerlink" href="#check-that-it-is-running-correctly" title="Permalink to this headline">¶</a></h2>
+<p>For an easy check that all components are started and correctly running, you should see the following topics being available on your roscore.</p>
+<div class="container">
+<button class="toggleable_button label_NAO" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('NAO')">NAO</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+<button class="toggleable_button label_Pepper" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('Pepper')">Pepper</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+</div>
+<div class="container">
+<div class="toggleable_div label_NAO"><p>For NAO, the following topics should be available</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rosnode info /nao_robot
+Node [/nao_robot]
 Publications:
- * /alrosbridge/sonar/right [sensor_msgs/Range]
- * /alrosbridge/camera/front/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
- * /alrosbridge/camera/front/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
- * /alrosbridge/camera/front/image_raw [sensor_msgs/Image]
- * /alrosbridge/camera/front/image_raw/theora [theora_image_transport/Packet]
- * /alrosbridge/audio [naoqi_msgs/AudioBuffer]
- * /alrosbridge/info [std_msgs/String]
- * /joint_states [sensor_msgs/JointState]
- * /rosout [rosgraph_msgs/Log]
- * /tf [tf2_msgs/TFMessage]
- * /alrosbridge/camera/front/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
- * /alrosbridge/camera/front/camera_info [sensor_msgs/CameraInfo]
- * /alrosbridge/camera/front/image_raw/compressed [sensor_msgs/CompressedImage]
- * /alrosbridge/imu_torso [sensor_msgs/Imu]
- * /alrosbridge/sonar/left [sensor_msgs/Range]
- * /alrosbridge/camera/front/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
- * /diagnostics_agg [diagnostic_msgs/DiagnosticArray]
+* /tf [tf2_msgs/TFMessage]
+* /nao_robot/sonar/left [sensor_msgs/Range]
+* /nao_robot/camera/front/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/bottom/camera_info [sensor_msgs/CameraInfo]
+* /nao_robot/camera/bottom/image_raw [sensor_msgs/Image]
+* /joint_states [sensor_msgs/JointState]
+* /rosout [rosgraph_msgs/Log]
+* /nao_robot/camera/bottom/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/info [naoqi_bridge_msgs/StringStamped]
+* /nao_robot/camera/bottom/image_raw/compressed [sensor_msgs/CompressedImage]
+* /nao_robot/camera/front/image_raw [sensor_msgs/Image]
+* /nao_robot/camera/front/camera_info [sensor_msgs/CameraInfo]
+* /nao_robot/camera/bottom/image_raw/theora [theora_image_transport/Packet]
+* /nao_robot/camera/front/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/camera/bottom/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/audio [naoqi_bridge_msgs/AudioBuffer]
+* /nao_robot/camera/bottom/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/imu/torso [sensor_msgs/Imu]
+* /nao_robot/camera/bottom/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/front/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/camera/front/image_raw/theora [theora_image_transport/Packet]
+* /nao_robot/camera/front/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/front/image_raw/compressed [sensor_msgs/CompressedImage]
+* /nao_robot/sonar/right [sensor_msgs/Range]
+* /diagnostics_agg [diagnostic_msgs/DiagnosticArray]
 
 Subscriptions:
- * /move_base_simple/goal [geometry_msgs/PoseStamped]
- * /cmd_vel [unknown type]
+* /move_base_simple/goal [geometry_msgs/PoseStamped]
+* /cmd_vel [unknown type]
 
 Services:
- * /alrosbridge/camera/front/image_raw/compressed/set_parameters
- * /alrosbridge/camera/front/image_raw/compressedDepth/set_parameters
- * /alrosbridge/set_logger_level
- * /alrosbridge/get_loggers
- * /alrosbridge/camera/front/image_raw/theora/set_parameters
-
-
-contacting node http://10.0.128.70:43458/ ...
-Pid: 21490
-Connections:
- * topic: /rosout
-    * to: /rosout
-    * direction: outbound
-    * transport: TCPROS
+* /nao_robot/camera/front/image_raw/theora/set_parameters
+* /nao_robot/camera/bottom/image_raw/theora/set_parameters
+* /nao_robot/set_logger_level
+* /nao_robot/camera/front/image_raw/compressed/set_parameters
+* /nao_robot/camera/bottom/image_raw/compressed/set_parameters
+* /nao_robot/get_loggers
+* /nao_robot/camera/bottom/image_raw/compressedDepth/set_parameters
+* /nao_robot/camera/front/image_raw/compressedDepth/set_parameters
 </pre></div>
 </div>
+</div></div>
+<div class="container">
+<div class="toggleable_div label_Pepper"><p>For Pepper, you should see the following topics:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rosnode info /pepper_robot
+Node [/pepper_robot]
+Publications:
+* /pepper_robot/imu/base [sensor_msgs/Imu]
+* /pepper_robot/camera/ir/image_raw/theora [theora_image_transport/Packet]
+* /tf [tf2_msgs/TFMessage]
+* /pepper_robot/camera/bottom/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/camera/ir/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/depth/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/ir/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/depth/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/bottom/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/front/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/audio [naoqi_bridge_msgs/AudioBuffer]
+* /pepper_robot/camera/bottom/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/depth/image_raw/compressedDepth/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/camera_info [sensor_msgs/CameraInfo]
+* /joint_states [sensor_msgs/JointState]
+* /rosout [rosgraph_msgs/Log]
+* /pepper_robot/camera/depth/image_raw/compressedDepth/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/bottom/image_raw [sensor_msgs/Image]
+* /pepper_robot/sonar/front [sensor_msgs/Range]
+* /pepper_robot/camera/depth/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/front/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/bottom/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/depth/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/laser [sensor_msgs/LaserScan]
+* /pepper_robot/camera/front/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/imu/torso [sensor_msgs/Imu]
+* /pepper_robot/camera/ir/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/depth/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/camera/ir/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/bottom/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/info [naoqi_bridge_msgs/StringStamped]
+* /pepper_robot/camera/front/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/depth/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/bottom/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/bottom/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/ir/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/ir/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/sonar/back [sensor_msgs/Range]
+* /pepper_robot/camera/depth/image_raw/compressedDepth [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/front/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/ir/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/depth/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/depth/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /diagnostics_agg [diagnostic_msgs/DiagnosticArray]
+
+Subscriptions:
+* /move_base_simple/goal [geometry_msgs/PoseStamped]
+* /cmd_vel [unknown type]
+
+Services:
+* /pepper_robot/get_loggers
+* /pepper_robot/camera/front/image_raw/theora/set_parameters
+* /pepper_robot/camera/bottom/image_raw/compressed/set_parameters
+* /pepper_robot/camera/depth/image_raw/compressed/set_parameters
+* /pepper_robot/camera/bottom/image_raw/theora/set_parameters
+* /pepper_robot/camera/depth/image_raw/theora/set_parameters
+* /pepper_robot/camera/front/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/bottom/image_raw/compressedDepth/set_parameters
+* /pepper_robot/set_logger_level
+* /pepper_robot/camera/front/image_raw/compressed/set_parameters
+* /pepper_robot/camera/depth/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/ir/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/ir/image_raw/theora/set_parameters
+* /pepper_robot/camera/ir/image_raw/compressed/set_parameters
+</pre></div>
+</div>
+</div></div>
 <dl class="docutils">
 <dt>This module also provides an API on the robot side to:</dt>
 <dd><ul class="first last simple">
@@ -218,8 +352,9 @@ Connections:
   <ul>
 <li><a class="reference internal" href="#">2. Getting Started</a><ul>
 <li><a class="reference internal" href="#before-starting-the-module">2.1. Before starting the module</a></li>
-<li><a class="reference internal" href="#start-the-alrosbridge-module">2.2. Start the ALRosBridge module</a></li>
+<li><a class="reference internal" href="#start-the-naoqi-driver-module">2.2. Start the naoqi driver module</a></li>
 <li><a class="reference internal" href="#set-the-roscore-ip-manually">2.3. Set the roscore IP manually</a></li>
+<li><a class="reference internal" href="#check-that-it-is-running-correctly">2.4. Check that it is running correctly</a></li>
 </ul>
 </li>
 </ul>

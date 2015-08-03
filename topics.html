@@ -51,117 +51,199 @@
             
   <div class="section" id="topics">
 <span id="topic"></span><h1>4. Topics<a class="headerlink" href="#topics" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="exhaustive-list">
-<h2>4.1. Exhaustive list<a class="headerlink" href="#exhaustive-list" title="Permalink to this headline">¶</a></h2>
-<p>Here you can find the exhaustive list of the topics published by default.</p>
-<ul class="simple">
-<li>Nao</li>
-</ul>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>rosnode info /alrosbridge                                                                            <span class="o">[</span>15-04-24 12:37<span class="o">]</span>
---------------------------------------------------------------------------------
-Node <span class="o">[</span>/alrosbridge<span class="o">]</span>
+<p>The following listed topics are available, depending for which robot you launched the bridge. Note that the topics differ between NAO and Pepper, since they don&#8217;t have the same sensor and actuators (e.g. 3D camera). Further, this list may vary over time, since the bridge is still actively under development.</p>
+<div class="container">
+<button class="toggleable_button label_NAO" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('NAO')">NAO</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+<button class="toggleable_button label_Pepper" onclick="
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+toggle('Pepper')">Pepper</button>
+<script>
+
+function toggle(label) {
+  $('.toggleable_button').css({border: '2px outset', 'border-radius': '4px'});
+  $('.toggleable_button.label_' + label).css({border: '2px inset', 'border-radius': '4px'});
+  $('.toggleable_div').css('display', 'none');
+  $('.toggleable_div.label_' + label).css('display', 'block');
+};
+
+$(document).ready(function() {
+  var classList =$('.toggleable_button').attr('class').split(/\s+/);
+  $.each( classList, function(index, item){
+    if (item.substring(0, 5) === 'label') {
+      toggle(item.substring(6));
+    };
+  });
+});
+</script>
+</div>
+<div class="container">
+<div class="toggleable_div label_NAO"><p>For NAO, the following topics should be available</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rosnode info /nao_robot
+Node [/nao_robot]
 Publications:
- * /alrosbridge/sonar/right <span class="o">[</span>sensor_msgs/Range<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/compressed/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw <span class="o">[</span>sensor_msgs/Image<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora <span class="o">[</span>theora_image_transport/Packet<span class="o">]</span>
- * /alrosbridge/audio <span class="o">[</span>naoqi_msgs/AudioBuffer<span class="o">]</span>
- * /alrosbridge/info <span class="o">[</span>naoqi_bridge_msgs/StringStamped<span class="o">]</span>
- * /joint_states <span class="o">[</span>sensor_msgs/JointState<span class="o">]</span>
- * /rosout <span class="o">[</span>rosgraph_msgs/Log<span class="o">]</span>
- * /tf <span class="o">[</span>tf2_msgs/TFMessage<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /alrosbridge/camera/front/camera_info <span class="o">[</span>sensor_msgs/CameraInfo<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/compressed <span class="o">[</span>sensor_msgs/CompressedImage<span class="o">]</span>
- * /alrosbridge/imu_torso <span class="o">[</span>sensor_msgs/Imu<span class="o">]</span>
- * /alrosbridge/sonar/left <span class="o">[</span>sensor_msgs/Range<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/compressed/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /diagnostics_agg <span class="o">[</span>diagnostic_msgs/DiagnosticArray<span class="o">]</span>
+* /tf [tf2_msgs/TFMessage]
+* /nao_robot/sonar/left [sensor_msgs/Range]
+* /nao_robot/camera/front/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/bottom/camera_info [sensor_msgs/CameraInfo]
+* /nao_robot/camera/bottom/image_raw [sensor_msgs/Image]
+* /joint_states [sensor_msgs/JointState]
+* /rosout [rosgraph_msgs/Log]
+* /nao_robot/camera/bottom/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/info [naoqi_bridge_msgs/StringStamped]
+* /nao_robot/camera/bottom/image_raw/compressed [sensor_msgs/CompressedImage]
+* /nao_robot/camera/front/image_raw [sensor_msgs/Image]
+* /nao_robot/camera/front/camera_info [sensor_msgs/CameraInfo]
+* /nao_robot/camera/bottom/image_raw/theora [theora_image_transport/Packet]
+* /nao_robot/camera/front/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/camera/bottom/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/audio [naoqi_bridge_msgs/AudioBuffer]
+* /nao_robot/camera/bottom/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/imu/torso [sensor_msgs/Imu]
+* /nao_robot/camera/bottom/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/front/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /nao_robot/camera/front/image_raw/theora [theora_image_transport/Packet]
+* /nao_robot/camera/front/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /nao_robot/camera/front/image_raw/compressed [sensor_msgs/CompressedImage]
+* /nao_robot/sonar/right [sensor_msgs/Range]
+* /diagnostics_agg [diagnostic_msgs/DiagnosticArray]
 
 Subscriptions:
- * /move_base_simple/goal <span class="o">[</span>unknown <span class="nb">type</span><span class="o">]</span>
- * /cmd_vel <span class="o">[</span>unknown <span class="nb">type</span><span class="o">]</span>
+* /move_base_simple/goal [geometry_msgs/PoseStamped]
+* /cmd_vel [unknown type]
 
 Services:
- * /alrosbridge/camera/front/image_raw/compressed/set_parameters
- * /alrosbridge/get_loggers
- * /alrosbridge/camera/front/image_raw/compressedDepth/set_parameters
- * /alrosbridge/set_logger_level
- * /alrosbridge/camera/front/image_raw/theora/set_parameters
+* /nao_robot/camera/front/image_raw/theora/set_parameters
+* /nao_robot/camera/bottom/image_raw/theora/set_parameters
+* /nao_robot/set_logger_level
+* /nao_robot/camera/front/image_raw/compressed/set_parameters
+* /nao_robot/camera/bottom/image_raw/compressed/set_parameters
+* /nao_robot/get_loggers
+* /nao_robot/camera/bottom/image_raw/compressedDepth/set_parameters
+* /nao_robot/camera/front/image_raw/compressedDepth/set_parameters
 </pre></div>
 </div>
-<ul class="simple">
-<li>Pepper</li>
-</ul>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>rosnode info /alrosbridge                                                                            <span class="o">[</span>15-04-24 12:37<span class="o">]</span>
---------------------------------------------------------------------------------
-Node <span class="o">[</span>/alrosbridge<span class="o">]</span>
+</div></div>
+<div class="container">
+<div class="toggleable_div label_Pepper"><p>For Pepper, you should see the following topics:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ rosnode info /pepper_robot
+Node [/pepper_robot]
 Publications:
- * /alrosbridge/camera/front/image_raw/compressed/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/imu_base <span class="o">[</span>sensor_msgs/Imu<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressed/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw <span class="o">[</span>sensor_msgs/Image<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw <span class="o">[</span>sensor_msgs/Image<span class="o">]</span>
- * /alrosbridge/sonar/front <span class="o">[</span>sensor_msgs/Range<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora <span class="o">[</span>theora_image_transport/Packet<span class="o">]</span>
- * /alrosbridge/audio <span class="o">[</span>naoqi_msgs/AudioBuffer<span class="o">]</span>
- * /alrosbridge/info <span class="o">[</span>naoqi_bridge_msgs/StringStamped<span class="o">]</span>
- * /alrosbridge/sonar/back <span class="o">[</span>sensor_msgs/Range<span class="o">]</span>
- * /alrosbridge/camera/depth/camera_info <span class="o">[</span>sensor_msgs/CameraInfo<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressedDepth/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/theora/parameter_descriptions <span class="o">[</span>dynamic_reconfigure/ConfigDescription<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressed <span class="o">[</span>sensor_msgs/CompressedImage<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressed/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressedDepth/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /joint_states <span class="o">[</span>sensor_msgs/JointState<span class="o">]</span>
- * /rosout <span class="o">[</span>rosgraph_msgs/Log<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/theora/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /tf <span class="o">[</span>tf2_msgs/TFMessage<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/theora/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /alrosbridge/camera/front/camera_info <span class="o">[</span>sensor_msgs/CameraInfo<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/compressed <span class="o">[</span>sensor_msgs/CompressedImage<span class="o">]</span>
- * /alrosbridge/laser <span class="o">[</span>sensor_msgs/LaserScan<span class="o">]</span>
- * /alrosbridge/imu_torso <span class="o">[</span>sensor_msgs/Imu<span class="o">]</span>
- * /alrosbridge/camera/front/image_raw/compressed/parameter_updates <span class="o">[</span>dynamic_reconfigure/Config<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/compressedDepth <span class="o">[</span>sensor_msgs/CompressedImage<span class="o">]</span>
- * /alrosbridge/camera/depth/image_raw/theora <span class="o">[</span>theora_image_transport/Packet<span class="o">]</span>
- * /diagnostics_agg <span class="o">[</span>diagnostic_msgs/DiagnosticArray<span class="o">]</span>
+* /pepper_robot/imu/base [sensor_msgs/Imu]
+* /pepper_robot/camera/ir/image_raw/theora [theora_image_transport/Packet]
+* /tf [tf2_msgs/TFMessage]
+* /pepper_robot/camera/bottom/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/camera/ir/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/depth/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/ir/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/depth/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/bottom/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/front/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/audio [naoqi_bridge_msgs/AudioBuffer]
+* /pepper_robot/camera/bottom/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/depth/image_raw/compressedDepth/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/camera_info [sensor_msgs/CameraInfo]
+* /joint_states [sensor_msgs/JointState]
+* /rosout [rosgraph_msgs/Log]
+* /pepper_robot/camera/depth/image_raw/compressedDepth/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/bottom/image_raw [sensor_msgs/Image]
+* /pepper_robot/sonar/front [sensor_msgs/Range]
+* /pepper_robot/camera/depth/camera_info [sensor_msgs/CameraInfo]
+* /pepper_robot/camera/front/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/bottom/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/depth/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/laser [sensor_msgs/LaserScan]
+* /pepper_robot/camera/front/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/imu/torso [sensor_msgs/Imu]
+* /pepper_robot/camera/ir/image_raw/compressed/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/depth/image_raw/theora [theora_image_transport/Packet]
+* /pepper_robot/camera/ir/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/front/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/bottom/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/info [naoqi_bridge_msgs/StringStamped]
+* /pepper_robot/camera/front/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/depth/image_raw/compressed [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/bottom/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/bottom/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/ir/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/ir/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/sonar/back [sensor_msgs/Range]
+* /pepper_robot/camera/depth/image_raw/compressedDepth [sensor_msgs/CompressedImage]
+* /pepper_robot/camera/front/image_raw/compressed/parameter_updates [dynamic_reconfigure/Config]
+* /pepper_robot/camera/ir/image_raw [sensor_msgs/Image]
+* /pepper_robot/camera/depth/image_raw/theora/parameter_descriptions [dynamic_reconfigure/ConfigDescription]
+* /pepper_robot/camera/depth/image_raw/theora/parameter_updates [dynamic_reconfigure/Config]
+* /diagnostics_agg [diagnostic_msgs/DiagnosticArray]
 
 Subscriptions:
- * /move_base_simple/goal <span class="o">[</span>unknown <span class="nb">type</span><span class="o">]</span>
- * /cmd_vel <span class="o">[</span>unknown <span class="nb">type</span><span class="o">]</span>
+* /move_base_simple/goal [geometry_msgs/PoseStamped]
+* /cmd_vel [unknown type]
 
 Services:
- * /alrosbridge/camera/depth/image_raw/theora/set_parameters
- * /alrosbridge/camera/front/image_raw/compressed/set_parameters
- * /alrosbridge/get_loggers
- * /alrosbridge/camera/depth/image_raw/compressed/set_parameters
- * /alrosbridge/camera/front/image_raw/compressedDepth/set_parameters
- * /alrosbridge/set_logger_level
- * /alrosbridge/camera/depth/image_raw/compressedDepth/set_parameters
- * /alrosbridge/camera/front/image_raw/theora/set_parameters
+* /pepper_robot/get_loggers
+* /pepper_robot/camera/front/image_raw/theora/set_parameters
+* /pepper_robot/camera/bottom/image_raw/compressed/set_parameters
+* /pepper_robot/camera/depth/image_raw/compressed/set_parameters
+* /pepper_robot/camera/bottom/image_raw/theora/set_parameters
+* /pepper_robot/camera/depth/image_raw/theora/set_parameters
+* /pepper_robot/camera/front/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/bottom/image_raw/compressedDepth/set_parameters
+* /pepper_robot/set_logger_level
+* /pepper_robot/camera/front/image_raw/compressed/set_parameters
+* /pepper_robot/camera/depth/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/ir/image_raw/compressedDepth/set_parameters
+* /pepper_robot/camera/ir/image_raw/theora/set_parameters
+* /pepper_robot/camera/ir/image_raw/compressed/set_parameters
 </pre></div>
 </div>
-</div>
+</div></div>
 <div class="section" id="main-topics">
-<h2>4.2. Main topics<a class="headerlink" href="#main-topics" title="Permalink to this headline">¶</a></h2>
+<h2>4.1. Main topics<a class="headerlink" href="#main-topics" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Camera Front</li>
 </ul>
-<p>/alrosconverter/camera/front/camera_info (sensor_msgs/CameraInfo): publishes information on the front camera
-/alrosconverter/camera/front/image_raw (sensor_msgs/Image): publish the images of the Top Camera obtained from ALVideoDevice</p>
+<p>/&lt;robot-prefix&gt;/camera/front/camera_info (sensor_msgs/CameraInfo): publishes information on the front camera
+/&lt;robot-prefix&gt;/camera/front/image_raw (sensor_msgs/Image): publish the images of the Top Camera obtained from ALVideoDevice</p>
 <ul class="simple">
 <li>Camera Depth (Pepper only)</li>
 </ul>
-<p>/alrosconverter/camera/depth/camera_info (sensor_msgs/CameraInfo): publishes information on the depth camera
-/alrosconverter/camera/depth/image_raw (sensor_msgs/Image): publish the depth images obtained from ALVideoDevice</p>
+<p>/&lt;robot-prefix&gt;/camera/depth/camera_info (sensor_msgs/CameraInfo): publishes information on the depth camera
+/&lt;robot-prefix&gt;/camera/depth/image_raw (sensor_msgs/Image): publish the depth images obtained from ALVideoDevice</p>
 <ul class="simple">
 <li>IMU</li>
 </ul>
-<p>/alrosconverter/imu_base (sensor_msgs/Imu): publishes the IMU of Pepper base(Pepper only)
-/alrosconverter/imu_torso (sensor_msgs/Imu): publishes the IMU of the robot&#8217;s torso</p>
+<p>/&lt;robot-prefix&gt;/imu_base (sensor_msgs/Imu): publishes the IMU of Pepper base(Pepper only)
+/&lt;robot-prefix&gt;/imu_torso (sensor_msgs/Imu): publishes the IMU of the robot&#8217;s torso</p>
 <ul class="simple">
 <li>Joint States</li>
 </ul>
@@ -169,14 +251,14 @@ Services:
 <ul class="simple">
 <li>Laser</li>
 </ul>
-<p>/alrosconverter/laser (sensor_msgs/LaserScan): publishes the obstacles&#8217; positions retrieved through lasers.</p>
+<p>/&lt;robot-prefix&gt;/laser (sensor_msgs/LaserScan): publishes the obstacles&#8217; positions retrieved through lasers.</p>
 <ul class="simple">
 <li>Sonar</li>
 </ul>
-<p>/alrosconverter/sonar/left (sensor_msgs/Range): publishes the left sonar values of Nao (Nao only)
-/alrosconverter/sonar/right (sensor_msgs/Range): publishes the right sonar values of Nao (Nao only)
-/alrosconverter/sonar/front (sensor_msgs/Range): publishes the front sonar values of Pepper (Pepper only)
-/alrosconverter/sonar/back (sensor_msgs/Range): publishes the back sonar values of Pepepr (Pepper only)</p>
+<p>/&lt;robot-prefix&gt;/sonar/left (sensor_msgs/Range): publishes the left sonar values of Nao (Nao only)
+/&lt;robot-prefix&gt;/sonar/right (sensor_msgs/Range): publishes the right sonar values of Nao (Nao only)
+/&lt;robot-prefix&gt;/sonar/front (sensor_msgs/Range): publishes the front sonar values of Pepper (Pepper only)
+/&lt;robot-prefix&gt;/sonar/back (sensor_msgs/Range): publishes the back sonar values of Pepepr (Pepper only)</p>
 <ul class="simple">
 <li>TF</li>
 </ul>
@@ -194,8 +276,7 @@ Services:
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">4. Topics</a><ul>
-<li><a class="reference internal" href="#exhaustive-list">4.1. Exhaustive list</a></li>
-<li><a class="reference internal" href="#main-topics">4.2. Main topics</a></li>
+<li><a class="reference internal" href="#main-topics">4.1. Main topics</a></li>
 </ul>
 </li>
 </ul>
