@@ -33,7 +33,7 @@
 #include <kdl_parser/kdl_parser.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-namespace alros
+namespace naoqi
 {
 
 namespace converter
@@ -143,7 +143,7 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
   msg_tf_odom.transform.rotation = odom_quat;
 
   tf_transforms_.push_back( msg_tf_odom );
-  tf2_buffer_->setTransform( msg_tf_odom, "alrosconverter", false);
+  tf2_buffer_->setTransform( msg_tf_odom, "naoqiconverter", false);
 
   if (robot_ == robot::NAO )
   {
@@ -189,7 +189,7 @@ void JointStateConverter::setTransforms(const std::map<std::string, double>& joi
       tf_transforms_.push_back(tf_transform);
 
       if (tf2_buffer_)
-          tf2_buffer_->setTransform(tf_transform, "alrosconverter", false);
+          tf2_buffer_->setTransform(tf_transform, "naoqiconverter", false);
     }
   }
   //tf_broadcaster_.sendTransform(tf_transforms);
@@ -219,7 +219,7 @@ void JointStateConverter::setFixedTransforms(const std::string& tf_prefix, const
     tf_transforms_.push_back(tf_transform);
 
     if (tf2_buffer_)
-      tf2_buffer_->setTransform(tf_transform, "alrosconverter", true);
+      tf2_buffer_->setTransform(tf_transform, "naoqiconverter", true);
   }
   //tf_broadcaster_.sendTransform(tf_transforms);
 }
@@ -245,4 +245,4 @@ void JointStateConverter::addChildren(const KDL::SegmentMap::const_iterator segm
 }
 
 } //publisher
-} // alros
+} // naoqi

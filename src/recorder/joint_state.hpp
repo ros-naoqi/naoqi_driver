@@ -26,7 +26,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 #include "../helpers/recorder_helpers.hpp"
 
 /*
@@ -34,7 +34,7 @@
 */
 #include <sensor_msgs/JointState.h>
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -48,7 +48,7 @@ public:
   void write( const sensor_msgs::JointState& js_msg,
               const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
+  void reset( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( const sensor_msgs::JointState& js_msg,
                   const std::vector<geometry_msgs::TransformStamped>& tf_transforms );
@@ -90,7 +90,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
   float conv_frequency_;
@@ -100,6 +100,6 @@ protected:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

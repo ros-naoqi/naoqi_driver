@@ -18,8 +18,8 @@
 /*
  * PUBLIC INTERFACE
  */
-#include <alrosbridge/alrosbridge.hpp>
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/naoqi_driver.hpp>
+#include <naoqi_driver/message_actions.h>
 
 /*
  * CONVERTERS
@@ -84,7 +84,7 @@
 #include "helpers/filesystem_helpers.hpp"
 #include "helpers/recorder_helpers.hpp"
 #include "helpers/naoqi_helpers.hpp"
-#include "helpers/bridge_helpers.hpp"
+#include "helpers/driver_helpers.hpp"
 
 /*
  * ROS
@@ -100,12 +100,12 @@
 
 #define DEBUG 0
 
-namespace alros
+namespace naoqi
 {
 
-Bridge::Bridge( qi::SessionPtr& session )
+Driver::Driver( qi::SessionPtr& session )
   : sessionPtr_( session ),
-  robot_( helpers::bridge::getRobot(session) ),
+  robot_( helpers::driver::getRobot(session) ),
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
@@ -114,24 +114,24 @@ Bridge::Bridge( qi::SessionPtr& session )
   recorder_(boost::make_shared<recorder::GlobalRecorder>(ros_env::getPrefix())),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
-  if (robot_ == alros::robot::NAO)
+  if (robot_ == naoqi::robot::NAO)
   {
-    alros::ros_env::setPrefix("nao_robot");
+    naoqi::ros_env::setPrefix("nao_robot");
   }
-  else if (robot_ == alros::robot::PEPPER)
+  else if (robot_ == naoqi::robot::PEPPER)
   {
-    alros::ros_env::setPrefix("pepper_robot");
+    naoqi::ros_env::setPrefix("pepper_robot");
   }
   else
   {
-    alros::ros_env::setPrefix("undefined");
+    naoqi::ros_env::setPrefix("undefined");
   }
 
 }
 
-Bridge::~Bridge()
+Driver::~Driver()
 {
-  std::cout << "ALRosBridge is shutting down.." << std::endl;
+  std::cout << "naoqi driver is shutting down.." << std::endl;
   // destroy nodehandle?
   if(nhPtr_)
   {
@@ -140,7 +140,7 @@ Bridge::~Bridge()
   }
 }
 
-void Bridge::init()
+void Driver::init()
 {
   ros::Time::init(); // can call this many times
   loadBootConfig();
@@ -149,7 +149,7 @@ void Bridge::init()
   startRosLoop();
 }
 
-void Bridge::loadBootConfig()
+void Driver::loadBootConfig()
 {
   const std::string& file_path = helpers::filesystem::getBootConfigFile();
   std::cout << "load boot config from " << file_path << std::endl;
@@ -159,7 +159,7 @@ void Bridge::loadBootConfig()
   }
 }
 
-void Bridge::stopService() {
+void Driver::stopService() {
   stopRosLoop();
   converters_.clear();
   subscribers_.clear();
@@ -167,7 +167,7 @@ void Bridge::stopService() {
 }
 
 
-void Bridge::rosLoop()
+void Driver::rosLoop()
 {
   static std::vector<message_actions::MessageAction> actions;
 
@@ -259,7 +259,7 @@ void Bridge::rosLoop()
   } // while loop
 }
 
-std::string Bridge::minidump(const std::string& prefix)
+std::string Driver::minidump(const std::string& prefix)
 {
   // CHECK SIZE IN FOLDER
   long files_size = 0;
@@ -269,7 +269,7 @@ std::string Bridge::minidump(const std::string& prefix)
   {
     std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
                  << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
-                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+                    << "\t$ qicli call ROS-Driver.removeFiles" << RESETCOLOR << std::endl;
     return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
   }
 
@@ -307,10 +307,10 @@ std::string Bridge::minidump(const std::string& prefix)
   {
     iterator->second.isDumping(false);
   }
-  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord(::naoqi::ros_env::getROSIP("eth0"));
 }
 
-std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
+std::string Driver::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
   // CHECK SIZE IN FOLDER
   long files_size = 0;
@@ -320,7 +320,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   {
     std::cout << BOLDRED << "No more space on robot. You need to upload the presents bags and remove them to make new ones."
                  << std::endl << "To remove all the presents bags, you can run this command:" << std::endl
-                    << "\t$ qicli call ALRosBridge.removeFiles" << RESETCOLOR << std::endl;
+                    << "\t$ qicli call ROS-Driver.removeFiles" << RESETCOLOR << std::endl;
     return "No more space on robot. You need to upload the presents bags and remove them to make new ones.";
   }
 
@@ -376,18 +376,18 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   }
   if ( is_started )
   {
-    return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+    return recorder_->stopRecord(::naoqi::ros_env::getROSIP("eth0"));
   }
   else
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
       << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-      << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
-    return "Could not find any topic in converters. To get the list of all available converter's name, please run: $ qicli call BridgeService.getAvailableConverters";
+      << GREEN << "\t$ qicli call ROS-Driver.getAvailableConverters" << RESETCOLOR << std::endl;
+    return "Could not find any topic in converters. To get the list of all available converter's name, please run: $ qicli call ROS-Driver.getAvailableConverters";
   }
 }
 
-void Bridge::setBufferDuration(float duration)
+void Driver::setBufferDuration(float duration)
 {
   for(RecIter iterator = rec_map_.begin(); iterator != rec_map_.end(); iterator++)
   {
@@ -400,12 +400,12 @@ void Bridge::setBufferDuration(float duration)
   buffer_duration_ = duration;
 }
 
-float Bridge::getBufferDuration()
+float Driver::getBufferDuration()
 {
   return buffer_duration_;
 }
 
-void Bridge::registerConverter( converter::Converter& conv )
+void Driver::registerConverter( converter::Converter& conv )
 {
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
   int conv_index = converters_.size();
@@ -414,7 +414,7 @@ void Bridge::registerConverter( converter::Converter& conv )
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
 
-void Bridge::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
+void Driver::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
 {
   if (publish_enabled_) {
     pub.reset(*nhPtr_);
@@ -424,7 +424,7 @@ void Bridge::registerPublisher( const std::string& conv_name, publisher::Publish
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
 }
 
-void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder& rec, float frequency)
+void Driver::registerRecorder( const std::string& conv_name, recorder::Recorder& rec, float frequency)
 {
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
@@ -432,33 +432,33 @@ void Bridge::registerRecorder( const std::string& conv_name, recorder::Recorder&
   rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
 }
 
-void Bridge::insertEventConverter(const std::string& key, event::Event event)
+void Driver::insertEventConverter(const std::string& key, event::Event event)
 {
   //event.reset(*nhPtr_, recorder_);
   event.resetRecorder(recorder_);
   event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
 }
 
-void Bridge::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
+void Driver::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
 {
   registerConverter( conv );
   registerPublisher( conv.name(), pub);
   registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
-void Bridge::registerPublisher( converter::Converter conv, publisher::Publisher pub )
+void Driver::registerPublisher( converter::Converter conv, publisher::Publisher pub )
 {
   registerConverter( conv );
   registerPublisher(conv.name(), pub);
 }
 
-void Bridge::registerRecorder( converter::Converter conv, recorder::Recorder rec )
+void Driver::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
   registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
-bool Bridge::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
+bool Driver::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
   dataType::DataType data_type;
   qi::AnyValue value;
   try {
@@ -520,7 +520,7 @@ bool Bridge::registerMemoryConverter( const std::string& key, float frequency, c
   return true;
 }
 
-void Bridge::registerDefaultConverter()
+void Driver::registerDefaultConverter()
 {
   // init global tf2 buffer
   tf2_buffer_.reset<tf2_ros::Buffer>( new tf2_ros::Buffer() );
@@ -760,7 +760,7 @@ void Bridge::registerDefaultConverter()
 }
 
 // public interface here
-void Bridge::registerSubscriber( subscriber::Subscriber sub )
+void Driver::registerSubscriber( subscriber::Subscriber sub )
 {
   std::vector<subscriber::Subscriber>::iterator it;
   it = std::find( subscribers_.begin(), subscribers_.end(), sub );
@@ -781,15 +781,15 @@ void Bridge::registerSubscriber( subscriber::Subscriber sub )
   }
 }
 
-void Bridge::registerDefaultSubscriber()
+void Driver::registerDefaultSubscriber()
 {
   if (!subscribers_.empty())
     return;
-  registerSubscriber( boost::make_shared<alros::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", sessionPtr_) );
-  registerSubscriber( boost::make_shared<alros::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", sessionPtr_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
-std::vector<std::string> Bridge::getAvailableConverters()
+std::vector<std::string> Driver::getAvailableConverters()
 {
   std::vector<std::string> conv_list;
   for_each( const converter::Converter& conv, converters_ )
@@ -808,17 +808,17 @@ std::vector<std::string> Bridge::getAvailableConverters()
 * EXPOSED FUNCTIONS
 */
 
-std::string Bridge::getMasterURI() const
+std::string Driver::getMasterURI() const
 {
   return ros_env::getMasterURI();
 }
 
-void Bridge::setMasterURI( const std::string& uri)
+void Driver::setMasterURI( const std::string& uri)
 {
   setMasterURINet(uri, "eth0");
 }
 
-void Bridge::setMasterURINet( const std::string& uri, const std::string& network_interface)
+void Driver::setMasterURINet( const std::string& uri, const std::string& network_interface)
 {
   // To avoid two calls to this function happening at the same time
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
@@ -880,7 +880,7 @@ void Bridge::setMasterURINet( const std::string& uri, const std::string& network
   }
 }
 
-void Bridge::startPublishing()
+void Driver::startPublishing()
 {
   publish_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -889,7 +889,7 @@ void Bridge::startPublishing()
   }
 }
 
-void Bridge::stopPublishing()
+void Driver::stopPublishing()
 {
   publish_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
@@ -898,7 +898,7 @@ void Bridge::stopPublishing()
   }
 }
 
-std::vector<std::string> Bridge::getSubscribedPublishers() const
+std::vector<std::string> Driver::getSubscribedPublishers() const
 {
   std::vector<std::string> publisher;
   for(PubConstIter iterator = pub_map_.begin(); iterator != pub_map_.end(); iterator++)
@@ -914,7 +914,7 @@ std::vector<std::string> Bridge::getSubscribedPublishers() const
   return publisher;
 }
 
-void Bridge::startRecording()
+void Driver::startRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord();
@@ -939,7 +939,7 @@ void Bridge::startRecording()
   record_enabled_ = true;
 }
 
-void Bridge::startRecordingConverters(const std::vector<std::string>& names)
+void Driver::startRecordingConverters(const std::vector<std::string>& names)
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
 
@@ -978,7 +978,7 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
         << BOLDCYAN << name
         << BOLDRED << " in recorders" << RESETCOLOR << std::endl
         << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-        << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+        << GREEN << "\t$ qicli call ROS-Driver.getAvailableConverters" << RESETCOLOR << std::endl;
     }
   }
   if ( is_started )
@@ -989,11 +989,11 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
   {
     std::cout << BOLDRED << "Could not find any topic in recorders" << RESETCOLOR << std::endl
       << BOLDYELLOW << "To get the list of all available converter's name, please run:" << RESETCOLOR << std::endl
-      << GREEN << "\t$ qicli call BridgeService.getAvailableConverters" << RESETCOLOR << std::endl;
+      << GREEN << "\t$ qicli call ROS-Driver.getAvailableConverters" << RESETCOLOR << std::endl;
   }
 }
 
-std::string Bridge::stopRecording()
+std::string Driver::stopRecording()
 {
   boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
@@ -1009,13 +1009,13 @@ std::string Bridge::stopRecording()
   {
     iterator->second.isRecording(false);
   }
-  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord(::naoqi::ros_env::getROSIP("eth0"));
 }
 
-void Bridge::startRosLoop()
+void Driver::startRosLoop()
 {
   if (publisherThread_.get_id() ==  boost::thread::id())
-    publisherThread_ = boost::thread( &Bridge::rosLoop, this );
+    publisherThread_ = boost::thread( &Driver::rosLoop, this );
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.startProcess();
@@ -1024,7 +1024,7 @@ void Bridge::startRosLoop()
   keep_looping = true;
 }
 
-void Bridge::stopRosLoop()
+void Driver::stopRosLoop()
 {
   keep_looping = false;
   if (publisherThread_.get_id() !=  boost::thread::id())
@@ -1035,7 +1035,7 @@ void Bridge::stopRosLoop()
   }
 }
 
-void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){
+void Driver::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt){
   // Open json file and parse it
   std::ifstream json_file;
   json_file.open(filepath.c_str(), std::ios_base::in);
@@ -1044,12 +1044,12 @@ void Bridge::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt
   json_file.close();
 }
 
-void Bridge::addMemoryConverters(std::string filepath){
+void Driver::addMemoryConverters(std::string filepath){
   // Check if the nodeHandle pointer is already initialized
   if(!nhPtr_){
     std::cout << BOLDRED << "The connection with the ROS master does not seem to be initialized." << std::endl
               << BOLDYELLOW << "Please run:" << RESETCOLOR << std::endl
-              << GREEN << "\t$ qicli call BridgeService.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
+              << GREEN << "\t$ qicli call ROS-Driver.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
               << BOLDYELLOW << "before trying to add converters" << RESETCOLOR << std::endl;
     return;
   }
@@ -1113,7 +1113,7 @@ void Bridge::addMemoryConverters(std::string filepath){
   registerConverter( mlc, mlp, mlr );
 }
 
-bool Bridge::registerEventConverter(const std::string& key, const dataType::DataType& type)
+bool Driver::registerEventConverter(const std::string& key, const dataType::DataType& type)
 {
   dataType::DataType data_type;
   qi::AnyValue value;
@@ -1199,7 +1199,7 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
   return true;
 }
 
-std::vector<std::string> Bridge::getFilesList()
+std::vector<std::string> Driver::getFilesList()
 {
   std::vector<std::string> fileNames;
   boost::filesystem::path folderPath( boost::filesystem::current_path() );
@@ -1214,7 +1214,7 @@ std::vector<std::string> Bridge::getFilesList()
   return fileNames;
 }
 
-void Bridge::removeAllFiles()
+void Driver::removeAllFiles()
 {
   boost::filesystem::path folderPath( boost::filesystem::current_path() );
   std::vector<boost::filesystem::path> files;
@@ -1227,7 +1227,7 @@ void Bridge::removeAllFiles()
   }
 }
 
-void Bridge::removeFiles(std::vector<std::string> files)
+void Driver::removeFiles(std::vector<std::string> files)
 {
   for (std::vector<std::string>::const_iterator it=files.begin();
        it!=files.end(); it++)
@@ -1236,7 +1236,7 @@ void Bridge::removeFiles(std::vector<std::string> files)
   }
 }
 
-QI_REGISTER_OBJECT( Bridge,
+QI_REGISTER_OBJECT( Driver,
                     _whoIsYourDaddy,
                     minidump,
                     minidumpConverters,
@@ -1258,4 +1258,4 @@ QI_REGISTER_OBJECT( Bridge,
                     startRecording,
                     startRecordingConverters,
                     stopRecording );
-} //alros
+} //naoqi

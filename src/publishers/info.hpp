@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include "basic.hpp"
-#include <alrosbridge/tools.hpp>
+#include <naoqi_driver/tools.hpp>
 
 /*
 * ROS includes
@@ -30,7 +30,7 @@
 #include <ros/ros.h>
 #include <naoqi_bridge_msgs/StringStamped.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -52,6 +52,6 @@ protected:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 #endif

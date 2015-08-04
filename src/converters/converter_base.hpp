@@ -21,8 +21,8 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/tools.hpp>
-#include "../helpers/bridge_helpers.hpp"
+#include <naoqi_driver/tools.hpp>
+#include "../helpers/driver_helpers.hpp"
 
 /*
 * ALDEBARAN includes
@@ -30,7 +30,7 @@
 #include <qi/session.hpp>
 #include <qi/anyobject.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -44,7 +44,7 @@ public:
   BaseConverter( const std::string& name, float frequency, qi::SessionPtr session ):
     name_( name ),
     frequency_( frequency ),
-    robot_( helpers::bridge::getRobot(session) ),
+    robot_( helpers::driver::getRobot(session) ),
     session_(session),
     record_enabled_(false)
   {}
@@ -114,6 +114,6 @@ protected:
 }; // class
 
 } // converter
-} // alros
+} // naoqi
 
 #endif

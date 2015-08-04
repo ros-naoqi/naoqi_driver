@@ -17,7 +17,7 @@
 
 #include "from_any_value.hpp"
 
-namespace alros {
+namespace naoqi {
 
 namespace tools {
 

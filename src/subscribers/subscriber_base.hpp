@@ -26,10 +26,10 @@
 /*
  * LOCAL includes
  */
-#include <alrosbridge/tools.hpp>
-#include "../helpers/bridge_helpers.hpp"
+#include <naoqi_driver/tools.hpp>
+#include "../helpers/driver_helpers.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -44,7 +44,7 @@ public:
     name_( name ),
     topic_( topic ),
     is_initialized_( false ),
-    robot_( helpers::bridge::getRobot(session) ),
+    robot_( helpers::driver::getRobot(session) ),
     session_(session)
   {}
 
@@ -78,6 +78,6 @@ protected:
 }; // class
 
 } // subscriber
-} // alros
+} // naoqi
 
 #endif

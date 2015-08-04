@@ -46,7 +46,7 @@ void setMessageFromStatus(diagnostic_updater::DiagnosticStatusWrapper &status)
 }
 }
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -271,4 +271,4 @@ void DiagnosticsConverter::registerCallback( const message_actions::MessageActio
 }
 
 } //converter
-} // alros
+} // naoqi

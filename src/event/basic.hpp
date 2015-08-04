@@ -28,10 +28,10 @@
 
 #include <ros/ros.h>
 
-#include <alrosbridge/tools.hpp>
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/tools.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 
-namespace alros
+namespace naoqi
 {
 
 /**
@@ -55,7 +55,7 @@ public:
   ~EventRegister();
 
   void resetPublisher( ros::NodeHandle& nh );
-  void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr );
 
   void startProcess();
   void stopProcess();
@@ -90,7 +90,7 @@ private:
   bool isDumping_;
 
 }; // class globalrecorder
-} //alros
+} //naoqi
 #include "basic.hxx"
 
 #endif

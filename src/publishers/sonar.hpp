@@ -24,7 +24,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Range.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -65,6 +65,6 @@ private:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 #endif

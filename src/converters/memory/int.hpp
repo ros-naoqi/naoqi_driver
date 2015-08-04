@@ -22,14 +22,14 @@
 * LOCAL includes
 */
 #include "../converter_base.hpp"
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
 /*
 * ROS includes
 */
 #include <naoqi_bridge_msgs/IntStamped.h>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -63,6 +63,6 @@ private:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

@@ -26,7 +26,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 #include "../helpers/recorder_helpers.hpp"
 
 /*
@@ -34,7 +34,7 @@
 */
 #include <sensor_msgs/Range.h>
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -47,7 +47,7 @@ public:
 
   void write(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
+  void reset( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize(const std::vector<sensor_msgs::Range>& sonar_msgs );
 
@@ -87,7 +87,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr_;
   std::vector<std::string> topics_;
 
   float buffer_frequency_;
@@ -98,6 +98,6 @@ protected:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

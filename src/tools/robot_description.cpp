@@ -21,7 +21,7 @@
 #include "robot_description.hpp"
 #include "../helpers/filesystem_helpers.hpp"
 
-namespace alros{
+namespace naoqi{
 
 namespace tools{
 
@@ -57,4 +57,4 @@ std::string getRobotDescription( const robot::Robot& robot){
 
 } // tools
 
-} // alros
+} // naoqi

@@ -18,7 +18,7 @@
 /*
  * LOCAL includes
  */
-#include <alrosbridge/alrosbridge.hpp>
+#include <naoqi_driver/naoqi_driver.hpp>
 
 /*
  * ALDEBARAN includes
@@ -26,9 +26,9 @@
 #include <qi/anymodule.hpp>
 
 /**
-* @brief starter code for registrating the ALRosBridge module via the autoload.ini.
+* @brief starter code for registrating the naoqi_driver module via the autoload.ini.
 */
-void registerRosBridge(qi::ModuleBuilder* mb) {
-  mb->advertiseFactory<alros::Bridge, qi::SessionPtr>("ALRosBridge");
+void registerRosDriver(qi::ModuleBuilder* mb) {
+  mb->advertiseFactory<naoqi::Driver, qi::SessionPtr>("ROS-Driver");
 }
-QI_REGISTER_MODULE("alros", &registerRosBridge);
+QI_REGISTER_MODULE("naoqi_driver_module", &registerRosDriver);

@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include "converter_base.hpp"
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
 /*
 * ROS includes
@@ -34,7 +34,7 @@
 */
 #include <qi/anymodule.hpp>
 
-namespace alros{
+namespace naoqi{
 
 namespace converter{
 

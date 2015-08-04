@@ -26,7 +26,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace naoqi_env
 {
@@ -54,5 +54,5 @@ static void adjustSDKPrefix()
 }
 
 } // naoqi_env
-} // alros
+} // naoqi
 #endif

@@ -25,7 +25,7 @@
 */
 #include "../tools/alvisiondefinitions.h" // for kTop...
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -81,4 +81,4 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
 }
 
 } // publisher
-} //alros
+} //naoqi

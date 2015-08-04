@@ -23,7 +23,7 @@
 #include <geometry_msgs/Pose.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
-namespace alros
+namespace naoqi
 {
 namespace helpers
 {
@@ -47,6 +47,6 @@ inline double getYaw( const geometry_msgs::Transform& pose)
 
 } //transform
 } //helpers
-} // alros
+} // naoqi
 
 #endif

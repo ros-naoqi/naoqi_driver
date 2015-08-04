@@ -25,7 +25,7 @@
 */
 #include <ros/ros.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -79,6 +79,6 @@ protected:
 }; // class
 
 } // publisher
-} // alros
+} // naoqi
 
 #endif

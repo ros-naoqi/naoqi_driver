@@ -20,7 +20,7 @@
 */
 #include "diagnostics.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -100,4 +100,4 @@ void DiagnosticsRecorder::setBufferDuration(float duration)
 }
 
 } //publisher
-} // alros
+} // naoqi

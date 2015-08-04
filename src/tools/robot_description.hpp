@@ -21,7 +21,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/tools.hpp>
+#include <naoqi_driver/tools.hpp>
 
 /*
 * STANDARD includes
@@ -30,7 +30,7 @@
 #include <fstream>
 
 
-namespace alros {
+namespace naoqi {
 
 namespace tools {
 

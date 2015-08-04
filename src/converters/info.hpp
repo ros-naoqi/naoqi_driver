@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include "converter_base.hpp"
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
 /*
 * ROS includes
@@ -30,7 +30,7 @@
 #include <naoqi_bridge_msgs/StringStamped.h>
 
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -61,6 +61,6 @@ private:
 };
 
 } //converter
-} //alros
+} //naoqi
 
 #endif

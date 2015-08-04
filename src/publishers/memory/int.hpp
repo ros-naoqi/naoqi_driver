@@ -28,7 +28,7 @@
 */
 #include <naoqi_bridge_msgs/IntStamped.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -46,6 +46,6 @@ public:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

@@ -16,18 +16,18 @@
 */
 
 
-#ifndef BRIDGE_HELPERS_HPP
-#define BRIDGE_HELPERS_HPP
+#ifndef DRIVER_HELPERS_HPP
+#define DRIVER_HELPERS_HPP
 
-#include <alrosbridge/tools.hpp>
+#include <naoqi_driver/tools.hpp>
 
 #include <qi/applicationsession.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace helpers
 {
-namespace bridge
+namespace driver
 {
 
 /** Function that returns the type of a robot
@@ -62,8 +62,8 @@ static const robot::Robot& getRobot( const qi::SessionPtr& session )
   return r;
 }
 
-} // naoqi
+} // driver
 } // helpers
-} // alros
+} // naoqi
 
 #endif

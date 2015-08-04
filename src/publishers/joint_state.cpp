@@ -20,7 +20,7 @@
 */
 #include "joint_state.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -58,4 +58,4 @@ bool JointStatePublisher::isSubscribed() const
 }
 
 } //publisher
-} // alros
+} // naoqi

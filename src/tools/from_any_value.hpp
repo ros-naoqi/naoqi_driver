@@ -28,7 +28,7 @@
 */
 #include <qi/anyvalue.hpp>
 
-namespace alros {
+namespace naoqi {
 
 namespace tools {
 

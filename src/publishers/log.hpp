@@ -45,7 +45,7 @@
 #include <qicore/logmanager.hpp>
 #include <qicore/loglistener.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -70,6 +70,6 @@ private:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 #endif

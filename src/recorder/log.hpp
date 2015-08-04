@@ -26,7 +26,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 #include "../helpers/recorder_helpers.hpp"
 
 /*
@@ -35,7 +35,7 @@
 #include <ros/ros.h>
 #include <rosgraph_msgs/Log.h>
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -48,7 +48,7 @@ public:
 
   void write( std::list<rosgraph_msgs::Log>& log_msgs );
 
-  void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
+  void reset(boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( std::list<rosgraph_msgs::Log>& log_msgs );
 
@@ -88,7 +88,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
   float conv_frequency_;
@@ -98,6 +98,6 @@ protected:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

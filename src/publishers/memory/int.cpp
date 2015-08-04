@@ -20,7 +20,7 @@
 */
 #include "int.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -41,4 +41,4 @@ void MemoryIntPublisher::reset( ros::NodeHandle& nh )
 }
 
 } //publisher
-} // alros
+} // naoqi

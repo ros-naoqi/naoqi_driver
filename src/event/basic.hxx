@@ -24,10 +24,10 @@
 
 #include <qi/anyobject.hpp>
 
-#include <alrosbridge/recorder/globalrecorder.hpp>
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
+#include <naoqi_driver/message_actions.h>
 
-namespace alros
+namespace naoqi
 {
 
 template <typename Converter, typename Publisher, typename Recorder>
@@ -67,7 +67,7 @@ void EventRegister<Converter, Publisher, Recorder>::resetPublisher(  ros::NodeHa
 }
 
 template <typename Converter, typename Publisher, typename Recorder>
-void EventRegister<Converter, Publisher, Recorder>::resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+void EventRegister<Converter, Publisher, Recorder>::resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr )
 {
   recorder_->reset(gr, converter_->frequency());
 }

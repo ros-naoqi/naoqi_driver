@@ -1,6 +1,6 @@
 <!-- in qiproject.xml -->
 <project version="3">
-  <qibuild name="alrosbridge" >
+  <qibuild name="naoqi_driver" >
     <depends buildtime="true" runtime="true" names="libqicore libqi ros" />
   </qibuild>
 </project>

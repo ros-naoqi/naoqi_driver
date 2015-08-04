@@ -20,7 +20,7 @@
 */
 #include "bool.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -41,4 +41,4 @@ void MemoryBoolPublisher::reset( ros::NodeHandle& nh )
 }
 
 } //publisher
-} // alros
+} // naoqi

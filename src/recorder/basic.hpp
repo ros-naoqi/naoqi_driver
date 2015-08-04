@@ -21,7 +21,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 #include "../helpers/recorder_helpers.hpp"
 
 /*
@@ -30,7 +30,7 @@
 #include <string>
 #include <boost/circular_buffer.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -147,7 +147,7 @@ protected:
   bool is_initialized_;
   bool is_subscribed_;
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr_;
 
   float buffer_frequency_;
   float conv_frequency_;
@@ -157,6 +157,6 @@ protected:
 }; // class
 
 } // publisher
-} // alros
+} // naoqi
 
 #endif

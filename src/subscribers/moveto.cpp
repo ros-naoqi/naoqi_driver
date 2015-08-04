@@ -28,7 +28,7 @@
 
 #include "../helpers/transform_helpers.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -85,4 +85,4 @@ void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_
 }
 
 } //publisher
-} // alros
+} // naoqi

@@ -29,7 +29,7 @@
 
 # include <qi/anyobject.hpp>
 
-namespace alros
+namespace naoqi
 {
 
 namespace robot
@@ -59,9 +59,9 @@ enum DataType
 };
 }
 
-} // alros
+} // naoqi
 
-QI_TYPE_ENUM_REGISTER(alros::Topics);
-QI_TYPE_ENUM_REGISTER(alros::dataType::DataType);
+QI_TYPE_ENUM_REGISTER(naoqi::Topics);
+QI_TYPE_ENUM_REGISTER(naoqi::dataType::DataType);
 
 #endif

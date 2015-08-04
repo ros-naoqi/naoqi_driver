@@ -24,9 +24,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <ros/ros.h>
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -156,6 +156,6 @@ private:
 }; // class converter
 
 } //converter
-} //alros
+} //naoqi
 
 #endif

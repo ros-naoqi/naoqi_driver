@@ -24,7 +24,7 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -68,7 +68,7 @@ private:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 
 #endif

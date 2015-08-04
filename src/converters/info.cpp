@@ -28,7 +28,7 @@
 #include <boost/foreach.hpp>
 #define for_each BOOST_FOREACH
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -93,4 +93,4 @@ void InfoConverter::callAll( const std::vector<message_actions::MessageAction>& 
 }
 
 } // converter
-} //alros
+} //naoqi

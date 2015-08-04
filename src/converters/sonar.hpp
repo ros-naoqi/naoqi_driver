@@ -22,14 +22,14 @@
 * LOCAL includes
 */
 #include "converter_base.hpp"
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
 /*
 * ROS includes
 */
 #include <sensor_msgs/Range.h>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -71,6 +71,6 @@ private:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 #endif

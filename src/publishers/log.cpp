@@ -20,7 +20,7 @@
 */
 #include "log.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -31,4 +31,4 @@ LogPublisher::LogPublisher(const std::string &topic )
 }
 
 } // publisher
-} //alros
+} //naoqi

@@ -26,7 +26,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 #include "../helpers/recorder_helpers.hpp"
 
 /*
@@ -35,7 +35,7 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Image.h>
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -48,7 +48,7 @@ public:
 
   void write( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
-  void reset(boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float conv_frequency );
+  void reset(boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float conv_frequency );
 
   void bufferize( const sensor_msgs::ImagePtr& img, const sensor_msgs::CameraInfo& camera_info );
 
@@ -86,7 +86,7 @@ protected:
 
   boost::mutex mutex_;
 
-  boost::shared_ptr<alros::recorder::GlobalRecorder> gr_;
+  boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr_;
   std::string topic_info_;
   std::string topic_img_;
 
@@ -98,6 +98,6 @@ protected:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

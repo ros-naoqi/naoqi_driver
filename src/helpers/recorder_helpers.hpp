@@ -19,7 +19,7 @@
 #ifndef RECORDER_HELPERS_HPP
 #define RECORDER_HELPERS_HPP
 
-namespace alros
+namespace naoqi
 {
 namespace helpers
 {
@@ -30,6 +30,6 @@ static const float bufferDefaultDuration = 10.f;
 
 } // recorder
 } // helpers
-} // alros
+} // naoqi
 
 #endif

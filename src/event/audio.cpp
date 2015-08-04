@@ -24,12 +24,12 @@
 
 #include <qi/anyobject.hpp>
 
-#include <alrosbridge/recorder/globalrecorder.hpp>
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
+#include <naoqi_driver/message_actions.h>
 
 #include "audio.hpp"
 
-namespace alros
+namespace naoqi
 {
 
 AudioEventRegister::AudioEventRegister()
@@ -79,7 +79,7 @@ void AudioEventRegister::resetPublisher(ros::NodeHandle& nh)
   publisher_->reset(nh);
 }
 
-void AudioEventRegister::resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr )
+void AudioEventRegister::resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr )
 {
   recorder_->reset(gr, converter_->frequency());
 }
@@ -91,15 +91,15 @@ void AudioEventRegister::startProcess()
   {
     if(!serviceId)
     {
-      serviceId = session_->registerService("ALRosBridge_Audio", shared_from_this());
+      serviceId = session_->registerService("ROS-Driver-Audio", shared_from_this());
       p_audio_.call<void>(
               "setClientPreferences",
-              "ALRosBridge_Audio",
+              "ROS-Driver-Audio",
               48000,
               0,
               0
               );
-      p_audio_.call<void>("subscribe","ALRosBridge_Audio");
+      p_audio_.call<void>("subscribe","ROS-Driver-Audio");
       std::cout << "Audio Extractor: Start" << std::endl;
     }
     isStarted_ = true;
@@ -112,7 +112,7 @@ void AudioEventRegister::stopProcess()
   if (isStarted_)
   {
     if(serviceId){
-      p_audio_.call<void>("unsubscribe", "ALRosBridge_Audio");
+      p_audio_.call<void>("unsubscribe", "ROS-Driver-Audio");
       session_->unregisterService(serviceId);
       serviceId = 0;
     }

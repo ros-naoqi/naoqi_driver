@@ -50,8 +50,8 @@ set(
   )
 
 set(
-  BRIDGE_SRC
-  src/alrosbridge.cpp
+  DRIVER_SRC
+  src/naoqi_driver.cpp
   src/recorder/globalrecorder.cpp
   src/event/basic.hxx
   src/event/basic.hpp
@@ -69,54 +69,37 @@ endif()
 
 find_package(qimodule)
 
-#SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x -std=c++0x")
-
 include_directories( include )
 
 qi_create_module(
-  alros
+  naoqi_driver_module
   src/autoload_registration.cpp
   SHARED
 )
-qi_stage_lib( alros )
+qi_stage_lib( naoqi_driver_module )
 
-# create the different libraries
 qi_create_lib(
-  alrosconverters
+  naoqi_driver
   SHARED
+  ${DRIVER_SRC}
   ${CONVERTERS_SRC}
-  ${TOOLS_SRC}
-  )
-qi_use_lib( alrosconverters QI QICORE ROS )
-qi_stage_lib( alrosconverters )
-
-qi_create_lib(
-  alrosbridge
-  SHARED
-  ${BRIDGE_SRC}
   ${PUBLISHER_SRC}
   ${SUBSCRIBER_SRC}
   ${RECORDER_SRC}
   ${TOOLS_SRC}
 )
-qi_use_lib(alrosbridge QICORE QI ROS)
-target_link_libraries(
-  alrosbridge
-  alrosconverters
-  )
-qi_stage_lib( alrosbridge )
+qi_use_lib( naoqi_driver QICORE QI ROS )
+qi_stage_lib( naoqi_driver )
 
-qi_use_lib(alros QI ROS)
 target_link_libraries(
-  alros
-  alrosbridge
+  naoqi_driver_module
+  naoqi_driver
 )
 
-# create the binary of the bridge
-qi_create_bin(alrosbridge_bin src/external_registration.cpp)
+qi_create_bin( naoqi_driver_node src/external_registration.cpp)
 target_link_libraries(
-  alrosbridge_bin
-  alros
+  naoqi_driver_node
+  naoqi_driver
 )
 
 # install the urdf for runtime loading

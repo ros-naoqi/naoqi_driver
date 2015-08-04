@@ -20,7 +20,7 @@
 */
 #include "string.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -42,4 +42,4 @@ void MemoryStringPublisher::reset( ros::NodeHandle& nh )
 }
 
 } //publisher
-} // alros
+} // naoqi

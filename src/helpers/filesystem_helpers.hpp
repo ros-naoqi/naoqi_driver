@@ -29,7 +29,7 @@
 #include <ros/package.h>
 #endif
 
-namespace alros
+namespace naoqi
 {
 namespace helpers
 {
@@ -124,6 +124,6 @@ inline std::string& getURDF( std::string filename )
 
 } // filesystem
 } //helpers
-} // alros
+} // naoqi
 
 #endif

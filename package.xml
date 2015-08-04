@@ -2,7 +2,7 @@
 <package>
   <name>naoqi_driver</name>
   <version>0.5.0</version>
-  <description>Bridge between Aldebaran's NAOqiOS and ROS</description>
+  <description>Driver module between Aldebaran's NAOqiOS and ROS. It publishes all sensor and actuator data as well as basic diagnostic for battery, termperature. It subscribes also to RVIZ simple goal and cmd_vel for teleop.</description>
 
   <author>Karsten Knese</author>
   <maintainer email="karsten.knese@gmail.com">Karsten Knese</maintainer>

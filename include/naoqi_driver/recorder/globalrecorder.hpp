@@ -21,7 +21,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/tools.hpp>
+#include <naoqi_driver/tools.hpp>
 
 /*
 * STANDARD includes
@@ -42,7 +42,7 @@
 
 
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -114,6 +114,6 @@ private:
 
 }; // class globalrecorder
 } // recorder
-} //alros
+} //naoqi
 
 #endif

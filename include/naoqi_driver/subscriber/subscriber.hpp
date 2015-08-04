@@ -25,7 +25,7 @@
 
 #include <ros/ros.h>
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -151,6 +151,6 @@ private:
 }; // class subscriber
 
 } //subscriber
-} //alros
+} //naoqi
 
 #endif

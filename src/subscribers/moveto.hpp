@@ -31,7 +31,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <tf2_ros/buffer.h>
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -52,5 +52,5 @@ private:
 }; // class Teleop
 
 } // subscriber
-}// alros
+}// naoqi
 #endif

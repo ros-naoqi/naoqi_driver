@@ -21,7 +21,7 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <boost/assign/list_of.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -225,7 +225,7 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQVGA()
 }
 } // camera_info_definitions
 } //publisher
-} //alros
+} //naoqi
 
 
 #endif

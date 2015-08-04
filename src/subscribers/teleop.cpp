@@ -21,7 +21,7 @@
 #include "teleop.hpp"
 
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -53,4 +53,4 @@ void TeleopSubscriber::callback( const geometry_msgs::TwistConstPtr& twist_msg )
 }
 
 } //publisher
-} // alros
+} // naoqi

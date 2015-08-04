@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.2" uuid="alrosbridge">
+<package version="0.0.2" uuid="naoqi_driver">
  <services>
   <!-- <service autorun="false" execStart="./run.sh" name="alrosbridge"/> -->
-  <service autorun="true" execStart="run.sh" name="alrosbridge"/>
+  <service autorun="true" execStart="run.sh" name="naoqi_driver"/>
  </services>
  <executableFiles>
   <file path="./run.sh"/>

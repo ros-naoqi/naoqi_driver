@@ -20,7 +20,7 @@
 */
 #include "float.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -41,4 +41,4 @@ void MemoryFloatPublisher::reset( ros::NodeHandle& nh )
 }
 
 } //publisher
-} // alros
+} // naoqi

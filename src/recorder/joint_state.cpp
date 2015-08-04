@@ -20,7 +20,7 @@
 */
 #include "joint_state.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -111,4 +111,4 @@ void JointStateRecorder::setBufferDuration(float duration)
 }
 
 } //publisher
-} // alros
+} // naoqi

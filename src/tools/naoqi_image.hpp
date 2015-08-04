@@ -18,7 +18,7 @@
 #ifndef NAOQI_IMAGE_HPP
 #define NAOQI_IMAGE_HPP
 
-namespace alros{
+namespace naoqi{
 
 namespace tools {
 

@@ -18,7 +18,7 @@
 /*
 * LOCAL includes
 */
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 
 /*
 * STANDARD includes
@@ -50,7 +50,7 @@
 
 qiLogCategory("ros.Recorder");
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -168,4 +168,4 @@ namespace recorder
   }
 
 } // recorder
-} // alros
+} // naoqi

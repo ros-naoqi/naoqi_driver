@@ -17,7 +17,7 @@
 
 #include "log.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -96,4 +96,4 @@ void LogRecorder::setBufferDuration(float duration)
 }
 
 } //publisher
-} // alros
+} // naoqi

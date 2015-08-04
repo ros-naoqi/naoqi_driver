@@ -1,29 +1,30 @@
+cmake_minimum_required(VERSION 2.8.3)
 # Add pre-processor compile flag indicating catkin
 add_definitions( -DCATKIN_BUILD )
 
 # CMake file that uses catkin
-find_package(catkin COMPONENTS 
-  cv_bridge 
-  diagnostic_msgs 
+find_package(catkin COMPONENTS
+  cv_bridge
+  diagnostic_msgs
   diagnostic_updater
-  geometry_msgs 
-  image_transport 
-  kdl_parser 
-  naoqi_bridge_msgs 
+  geometry_msgs
+  image_transport
+  kdl_parser
+  naoqi_bridge_msgs
   naoqi_libqi
-  naoqi_libqicore 
-  robot_state_publisher 
-  rosbag_storage 
+  naoqi_libqicore
+  robot_state_publisher
+  rosbag_storage
   rosgraph_msgs
-  sensor_msgs 
-  tf2_geometry_msgs 
-  tf2_msgs 
+  sensor_msgs
+  tf2_geometry_msgs
+  tf2_msgs
   tf2_ros
 )
 find_package(OpenCV)
 find_package(orocos_kdl)
 
-catkin_package(LIBRARIES alrosconverters)
+catkin_package(LIBRARIES naoqi_driver_module naoqi_driver naoqi_driver_node)
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=deprecated-declarations")
@@ -33,42 +34,45 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 
 # create the different libraries
 add_library(
-  alrosconverters
+  naoqi_driver_module
   SHARED
-  ${CONVERTERS_SRC}
-  ${TOOLS_SRC}
+  src/autoload_registration.cpp
   )
-target_link_libraries(alrosconverters ${naoqi_libqi_LIBRARIES})
-add_dependencies(alrosconverters ${catkin_EXPORTED_TARGETS})
-install(TARGETS alrosconverters DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+target_link_libraries(naoqi_driver_module ${naoqi_libqi_LIBRARIES})
+install(TARGETS naoqi_driver_module DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
 add_library(
-  alros
+  naoqi_driver
   SHARED
-  ./src/autoload_registration.cpp
-  ${BRIDGE_SRC}
+  ${DRIVER_SRC}
+  ${CONVERTERS_SRC}
   ${PUBLISHER_SRC}
   ${SUBSCRIBER_SRC}
   ${RECORDER_SRC}
   ${TOOLS_SRC}
 )
 target_link_libraries(
-  alros
-  alrosconverters
+  naoqi_driver
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${orocos_kdl_LIBRARIES}
   )
-install(TARGETS alros DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+add_dependencies(naoqi_driver ${catkin_EXPORTED_TARGETS})
+install(TARGETS naoqi_driver DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+
+target_link_libraries(
+  naoqi_driver_module
+  naoqi_driver
+)
 
 # create the binary of the bridge
-add_executable(alrosbridge_bin src/external_registration.cpp)
+add_executable( naoqi_driver_node src/external_registration.cpp)
 target_link_libraries(
-  alrosbridge_bin
-  alros
+  naoqi_driver_node
+  naoqi_driver
   ${catkin_LIBRARIES}
 )
-install(TARGETS alrosbridge_bin DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(TARGETS naoqi_driver_node DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 # install the urdf for runtime loading
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share" DESTINATION "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/")
@@ -78,5 +82,5 @@ install(DIRECTORY share DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
 install(DIRECTORY launch DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}")
 
 # make sure there is a file describing a naoqi module
-file(WRITE ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/alros.mod "cpp")
-install(FILES ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/alros.mod DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/)
+file(WRITE ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/naoqi_driver_module.mod "cpp")
+install(FILES ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/naoqi_driver_module.mod DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}/qi/module/)

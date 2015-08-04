@@ -20,7 +20,7 @@
 */
 #include "camera.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -96,4 +96,4 @@ void CameraRecorder::setBufferDuration(float duration)
 }
 
 } //publisher
-} // alros
+} // naoqi

@@ -19,7 +19,7 @@
 #ifndef NAOQI_HELPERS_HPP
 #define NAOQI_HELPERS_HPP
 
-namespace alros
+namespace naoqi
 {
 namespace helpers
 {
@@ -46,6 +46,6 @@ static dataType::DataType getDataType(qi::AnyValue value)
 
 } // naoqi
 } // helpers
-} // alros
+} // naoqi
 
 #endif

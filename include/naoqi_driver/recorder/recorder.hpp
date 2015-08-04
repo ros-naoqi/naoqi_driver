@@ -29,9 +29,9 @@
 #include <rosbag/view.h>
 #include <geometry_msgs/TransformStamped.h>
 
-#include "alrosbridge/recorder/globalrecorder.hpp"
+#include "naoqi_driver/recorder/globalrecorder.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -90,7 +90,7 @@ public:
   * this will be called at first for initialization or again when master uri has changed
   * @param ros NodeHandle to advertise the recorder on
   */
-  void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency)
+  void reset( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float frequency)
   {
     recPtr_->reset( gr, frequency );
   }
@@ -127,7 +127,7 @@ private:
     virtual std::string topic() const = 0;
     virtual void writeDump(const ros::Time& time) = 0;
     virtual void setBufferDuration(float duration) = 0;
-    virtual void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency ) = 0;
+    virtual void reset( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float frequency ) = 0;
   };
 
 
@@ -141,7 +141,7 @@ private:
       recorder_( other )
     {}
 
-    void reset( boost::shared_ptr<alros::recorder::GlobalRecorder> gr, float frequency )
+    void reset( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr, float frequency )
     {
       recorder_->reset( gr, frequency );
     }
@@ -184,6 +184,6 @@ private:
 }; // class recorder
 
 } // recorder
-} //alros
+} //naoqi
 
 #endif

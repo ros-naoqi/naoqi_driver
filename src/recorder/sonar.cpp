@@ -20,7 +20,7 @@
 */
 #include "sonar.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace recorder
 {
@@ -102,4 +102,4 @@ void SonarRecorder::setBufferDuration(float duration)
 }
 
 } //publisher
-} // alros
+} // naoqi

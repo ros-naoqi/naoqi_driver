@@ -30,7 +30,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 
-namespace alros
+namespace naoqi
 {
 namespace subscriber
 {
@@ -51,5 +51,5 @@ private:
 }; // class Teleop
 
 } // subscriber
-}// alros
+}// naoqi
 #endif

@@ -20,13 +20,13 @@
 
 #include <rosgraph_msgs/Log.h>
 
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 #include "converter_base.hpp"
 
 #include <qicore/logmanager.hpp>
 #include <qicore/loglistener.hpp>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -53,6 +53,6 @@ private:
 };
 
 } //publisher
-} //alros
+} //naoqi
 
 #endif

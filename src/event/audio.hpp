@@ -30,8 +30,8 @@
 #include <ros/ros.h>
 #include <naoqi_bridge_msgs/AudioBuffer.h>
 
-#include <alrosbridge/tools.hpp>
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/tools.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 
 // Converter
 #include "../src/converters/audio.hpp"
@@ -40,7 +40,7 @@
 // Recorder
 #include "../recorder/basic_event.hpp"
 
-namespace alros
+namespace naoqi
 {
 
 /**
@@ -63,7 +63,7 @@ public:
   ~AudioEventRegister();
 
   void resetPublisher( ros::NodeHandle& nh );
-  void resetRecorder( boost::shared_ptr<alros::recorder::GlobalRecorder> gr );
+  void resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr );
 
   void startProcess();
   void stopProcess();
@@ -105,6 +105,6 @@ private:
 
 QI_REGISTER_OBJECT(AudioEventRegister, processRemote)
 
-} //alros
+} //naoqi
 
 #endif

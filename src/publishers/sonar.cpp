@@ -20,7 +20,7 @@
 */
 #include "sonar.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -57,4 +57,4 @@ void SonarPublisher::reset( ros::NodeHandle& nh )
 }
 
 } // publisher
-} //alros
+} //naoqi

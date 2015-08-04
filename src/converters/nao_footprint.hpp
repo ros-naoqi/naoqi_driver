@@ -30,7 +30,7 @@
 */
 #include "../helpers/transform_helpers.hpp"
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -103,12 +103,12 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
   //tf::transformTFToMsg( tf_base_to_footprint, message.transform);
   // publish transform with parent m_baseFrameId and new child m_baseFootPrintID
   // i.e. transform from m_baseFrameId to m_baseFootPrintID
-  tf2_buffer->setTransform( message, "alrosconverter", false );
+  tf2_buffer->setTransform( message, "naoqiconverter", false );
   tf_transforms.push_back( message );
 }
 
 } // nao
 } // converter
-} // alros
+} // naoqi
 
 #endif

@@ -26,7 +26,7 @@
 #include <sensor_msgs/JointState.h>
 #include <tf2_ros/transform_broadcaster.h>
 
-namespace alros
+namespace naoqi
 {
 namespace publisher
 {
@@ -67,6 +67,6 @@ private:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif

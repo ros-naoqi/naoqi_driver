@@ -16,8 +16,8 @@
 */
 
 
-#ifndef ALROS_BRIDGE_HPP
-#define ALROS_BRIDGE_HPP
+#ifndef NAOQI_DRIVER_HPP
+#define NAOQI_DRIVER_HPP
 
 #include <vector>
 #include <queue>
@@ -38,19 +38,19 @@
 /*
 * PUBLIC INTERFACE
 */
-#include <alrosbridge/converter/converter.hpp>
-#include <alrosbridge/publisher/publisher.hpp>
-#include <alrosbridge/subscriber/subscriber.hpp>
-#include <alrosbridge/recorder/recorder.hpp>
-#include <alrosbridge/event/event.hpp>
-#include <alrosbridge/recorder/globalrecorder.hpp>
+#include <naoqi_driver/converter/converter.hpp>
+#include <naoqi_driver/publisher/publisher.hpp>
+#include <naoqi_driver/subscriber/subscriber.hpp>
+#include <naoqi_driver/recorder/recorder.hpp>
+#include <naoqi_driver/event/event.hpp>
+#include <naoqi_driver/recorder/globalrecorder.hpp>
 
 namespace tf2_ros
 {
   class Buffer;
 }
 
-namespace alros
+namespace naoqi
 {
 
 namespace recorder
@@ -58,23 +58,23 @@ namespace recorder
   class GlobalRecorder;
 }
 /**
-* @brief Interface for ALRosBridge which is registered as a naoqi2 Module,
+* @brief Interface for naoqi driver which is registered as a naoqi2 Module,
 * once the external roscore ip is set, this class will advertise and publish ros messages
 */
-class Bridge
+class Driver
 {
 public:
   /**
-  * @brief Constructor for ALRosBridge
+  * @brief Constructor for naoqi driver
   * @param session[in] session pointer for naoqi2 service registration
   */
-  Bridge( qi::SessionPtr& session );
+  Driver( qi::SessionPtr& session );
 
   /**
-  * @brief Destructor for ALRosBridge,
+  * @brief Destructor for naoqi driver,
   * destroys all ros nodehandle and shutsdown all publisher
   */
-  ~Bridge();
+  ~Driver();
 
   void init();
 
@@ -147,7 +147,7 @@ public:
 
   std::string _whoIsYourDaddy()
   {
-    return "ask surya";
+    return "the coolest German in Paris";
   }
 
   /**
@@ -300,6 +300,6 @@ private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 };
 
-} // alros
+} // naoqi
 
 #endif

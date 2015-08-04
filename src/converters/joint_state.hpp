@@ -23,7 +23,7 @@
 */
 #include "converter_base.hpp"
 #include "../tools/robot_description.hpp"
-#include <alrosbridge/message_actions.h>
+#include <naoqi_driver/message_actions.h>
 
 /*
 * ROS includes
@@ -31,7 +31,7 @@
 #include <sensor_msgs/JointState.h>
 #include <robot_state_publisher/robot_state_publisher.h>
 
-namespace alros
+namespace naoqi
 {
 namespace converter
 {
@@ -83,6 +83,6 @@ private:
 }; // class
 
 } //publisher
-} // alros
+} // naoqi
 
 #endif
