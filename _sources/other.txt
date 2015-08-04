@@ -14,7 +14,7 @@ Android Teleop
 First, install the teleop app on your Android after installing rosjava and android_apps at http://wiki.ros.org/rosjava
 (or ask Karsten for the ``.apk``)
 
-When starting your roscore and this bridge, make sure you export your ``ROS_IP`` and ``ROS_MASTER_URI`` to your IP.
+When starting your roscore and this naoqi driver, make sure you export your ``ROS_IP`` and ``ROS_MASTER_URI`` to your IP.
 
 Then start motion on your robot:
 
