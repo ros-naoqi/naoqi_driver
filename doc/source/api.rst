@@ -9,13 +9,13 @@ All the following calls must be performed from the robot.
 
 In order to get the module to connect to your roscore, you should send it your IP.
 
-* ``void`` ALRosBridge:\:**setMasterURI** ( ``const std::string&`` **uri** )
+* ``void`` ROS-Driver:\:**setMasterURI** ( ``const std::string&`` **uri** )
 
   Set current master URI. The IP adress given is from defauth *eth0* network interface.
 
   *param:* **uri** - string in form of ``http://<ip>:11311``
 
-* ``void`` ALRosBridge:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
+* ``void`` ROS-Driver:\:**setMasterURINet** ( ``const std::string&`` **uri**, ``const std::string&`` **network_interface** )
 
   Set current master URI using a given network interface.
 
@@ -23,7 +23,7 @@ In order to get the module to connect to your roscore, you should send it your I
 
   *param:* **network_interface** - string. For example ``tether``.
 
-* ``const std::string&`` ALRosBridge:\:**getMasterURI** ()
+* ``const std::string&`` ROS-Driver:\:**getMasterURI** ()
 
   Get current master URI using a given network interface.
 
@@ -35,13 +35,13 @@ In order to get the module to connect to your roscore, you should send it your I
 
 The converters are responsible for operating conversion between NAOqi messages and ROS messages, in accordance with given frequency.
 
-* ``const std::vector< std::string >&`` ALRosBridge:\:**getAvailableConverters** ()
+* ``const std::vector< std::string >&`` ROS-Driver:\:**getAvailableConverters** ()
 
   Get all registered converters in the module.
 
   *return:* vector of string of all converter's topic name
 
-* ``void`` ALRosBridge:\:**registerMemoryConverter** ( ``const std::string&`` **key**, ``float`` **frequency**, ``int`` **type** )
+* ``void`` ROS-Driver:\:**registerMemoryConverter** ( ``const std::string&`` **key**, ``float`` **frequency**, ``int`` **type** )
 
   Register a new converter for the memory key given.
 
@@ -60,7 +60,7 @@ The converters are responsible for operating conversion between NAOqi messages a
     * 3 - String
     * 4 - Bool
 
-* ``void`` ALRosBridge:\:**addMemoryConverters** ( ``std::string`` **filePath** )
+* ``void`` ROS-Driver:\:**addMemoryConverters** ( ``std::string`` **filePath** )
 
   Add some new converters for memory keys. This call requires as argument the path to a JSON file (stored on the robot) structured as the following one.
   memKeys and topic must be present and filled. Frequency is optional, and if not there, the default value is 10 Hz.
@@ -82,15 +82,15 @@ The converters are responsible for operating conversion between NAOqi messages a
 
 **Publishers API**
 
-* ``void`` ALRosBridge:\:**startPublishing** ()
+* ``void`` ROS-Driver:\:**startPublishing** ()
 
   Start/enable publishing all registered publisher
 
-* ``void`` ALRosBridge:\:**stopPublishing** ()
+* ``void`` ROS-Driver:\:**stopPublishing** ()
 
   Stop/disable publishing all registered publisher
 
-* ``const std::vector< std::string >&`` ALRosBridge:\:**getSubscribedPublishers** ()
+* ``const std::vector< std::string >&`` ROS-Driver:\:**getSubscribedPublishers** ()
 
   Get all subscribed publishers.
 
@@ -100,13 +100,13 @@ The converters are responsible for operating conversion between NAOqi messages a
 
 **Recorders API**
 
-* ``void`` ALRosBridge:\:**startRecording** ()
+* ``void`` ROS-Driver:\:**startRecording** ()
 
   Start/enable recording all registered recorder.
 
-  This will record all topics in one ROSbag, named after current date & time. The ROSbag is stored in the exact path where the **ALRosBridge** module is launched (meaning that it will be stored on the robot if it's launched from here).
+  This will record all topics in one ROSbag, named after current date & time. The ROSbag is stored in the exact path where the **ROS-Driver** module is launched (meaning that it will be stored on the robot if it's launched from here).
 
-* ``void`` ALRosBridge:\:**stopRecording** ()
+* ``void`` ROS-Driver:\:**stopRecording** ()
 
   Stop/disable recording all registered recorder.
 

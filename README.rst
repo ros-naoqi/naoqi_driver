@@ -1,7 +1,7 @@
 Description
 ===========
 
-This is a NAOqi module that bridges with ROS. It publishes
+This is a naoqi driver module that bridges with ROS. It publishes
 several sensor data as well as the robot position.
 
 On the other hand it enables ROS to call parts of the

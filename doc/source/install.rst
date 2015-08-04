@@ -90,7 +90,7 @@ How to install it
     qibuild configure -c <tc_name>
     qibuild make -c <tc_name>
 
-  Once compilation is over, the resulting binary will be in *~/qibuild_ws/naoqi_driver/build-<tcname>/sdk/bin/alrosbridge_bin*
+  Once compilation is over, the resulting binary will be in *~/qibuild_ws/naoqi_driver/build-<tcname>/sdk/bin/naoqi_driver_node*
 
   If you encounter any compilation issue, (unable to find some dependencies), you might need to install them (through *apt-get install* for instance)
 
