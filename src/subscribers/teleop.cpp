@@ -40,16 +40,13 @@ void TeleopSubscriber::reset( ros::NodeHandle& nh )
 
 void TeleopSubscriber::callback( const geometry_msgs::TwistConstPtr& twist_msg )
 {
-  static const float max_x = 0.2;
-  static const float max_y = 0.2;
-  static const float max_th = 0.2;
-
-  const float vel_x = ( fabs(twist_msg->linear.x) > max_x) ? copysign(1,twist_msg->linear.x)*max_x : twist_msg->linear.x;
-  const float vel_y = ( fabs(twist_msg->linear.y) > max_y) ? copysign(1,twist_msg->linear.y)*max_y : twist_msg->linear.y;
-  const float vel_th = ( fabs(twist_msg->angular.z) > max_th) ? copysign(1,twist_msg->angular.z)*max_y : twist_msg->angular.z;
+  // no need to check for max velocity since motion clamps the velocities internally
+  const float vel_x = twist_msg->linear.x;
+  const float vel_y = twist_msg->linear.y;
+  const float vel_th = twist_msg->angular.z;
 
   std::cout << "going to move x: " << vel_x << " y: " << vel_y << " th: " << vel_th << std::endl;
-  p_motion_.call<void>("move", vel_x, vel_y, vel_th );
+  p_motion_.async<void>("move", vel_x, vel_y, vel_th );
 }
 
 } //publisher
