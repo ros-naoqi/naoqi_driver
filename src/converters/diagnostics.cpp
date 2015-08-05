@@ -54,9 +54,13 @@ namespace converter
 DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequency, const qi::SessionPtr& session ):
     BaseConverter( name, frequency, session ),
     p_memory_(session->service("ALMemory")),
+    p_body_temperature_(session->service("ALBodyTemperature")),
     temperature_warn_level_(68),
     temperature_error_level_(74)
 {
+  // Allow for temperature reporting (for CPU)
+  p_body_temperature_.call<void>("setEnableNotifications", true);
+
   // Get all the joint names
   qi::AnyObject p_motion = session->service("ALMotion");
   joint_names_ = p_motion.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
@@ -67,16 +71,17 @@ DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequ
   }
 
   // Get all the battery keys
-  all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Value"));
-  all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Charge/Sensor/Status"));
+  all_keys_.push_back(std::string("BatteryChargeChanged"));
+  all_keys_.push_back(std::string("BatteryPowerPluggedChanged"));
+  all_keys_.push_back(std::string("BatteryFullChargedFlagChanged"));
   all_keys_.push_back(std::string("Device/SubDeviceList/Battery/Current/Sensor/Value"));
 
-  std::string battery_status_keys[] = {"End off Discharge flag", "Near End Off Discharge flag", "Charge FET on",
-    "Discharge FET on", "Accu learn flag", "Discharging flag", "Full Charge Flag", "Charge Flag",
-    "Charge Temperature Alarm", "Over Charge Alarm", "Discharge Alarm", "Charge Over Current Alarm",
-    "Discharge Over Current Alarm (14A)", "Discharge Over Current Alarm (6A)", "Discharge Temperature Alarm",
-    "Power-Supply present"};
-  battery_status_keys_ = std::vector<std::string>(battery_status_keys, battery_status_keys+16);
+  std::string battery_status_keys[] = {"Charging", "Fully Charged"};
+  battery_status_keys_ = std::vector<std::string>(battery_status_keys, battery_status_keys+2);
+
+  // Get the CPU keys
+  // TODO check that: it is apparently always -1 ...
+  //all_keys_.push_back(std::string("HeadProcessorIsHot"));
 
   // TODO get ID from Device/DeviceList/ChestBoard/BodyId
 }
@@ -168,64 +173,62 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
 
   // Fill the message for the battery
   {
-    int battery_percentage = 100.0 * float(values[val++]);
-    int battery_status = int(float(values[val++]));
+    int battery_percentage = static_cast<int>(values[val++]);
 
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Battery/Battery");
+    status.name = std::string("/Power System/Battery");
     status.hardware_id = "battery";
     status.add("Percentage", battery_percentage);
-    std::stringstream battery_status_ss;
+    // Add the semantic info
+    std::stringstream ss;
     for( size_t i = 0; i < battery_status_keys_.size(); ++i) {
-      bool battery_status_bit = (1 << i) && battery_status;
-      status.add(battery_status_keys_[i], battery_status_bit);
-      battery_status_ss << int(battery_status_bit);
-    }
-    // Display the bit version of the status as a string
-    std::string battery_status_str = battery_status_ss.str();
-    std::reverse(battery_status_str.begin(), battery_status_str.end());
-    status.add("Status", battery_status_str);
+      bool value = bool(values[val++]);
+      status.add(battery_status_keys_[i], value);
 
-    std::ostringstream ss;
-    if (bool((1 << 6) && battery_status))
-    {
-      status.level = diagnostic_msgs::DiagnosticStatus::OK;
-      ss << "Battery fully charged";
-    }
-    else if (bool((1 << 7) && battery_status))
-    {
-      status.level = diagnostic_msgs::DiagnosticStatus::OK;
-      ss << "Charging (" << std::setw(4) << battery_percentage << "%%)";
-    }
-    else
-    {
-      if (battery_percentage > 60)
+      if (i == 0)
+      {
+        if (value)
+        {
+          status.level = diagnostic_msgs::DiagnosticStatus::OK;
+          ss << "Charging (" << std::setw(4) << battery_percentage << "%)";
+        }
+        else
+        {
+          if (battery_percentage > 60)
+          {
+              status.level = diagnostic_msgs::DiagnosticStatus::OK;
+              ss << "Battery OK (" << std::setw(4) << battery_percentage << "% left)";
+          }
+          else if (battery_percentage > 30)
+          {
+              status.level = diagnostic_msgs::DiagnosticStatus::WARN;
+              ss << "Battery discharging (" << std::setw(4) << battery_percentage << "% left)";
+          }
+          else
+          {
+              status.level = diagnostic_msgs::DiagnosticStatus::ERROR;
+              ss << "Battery almost empty (" << std::setw(4) << battery_percentage << "% left)";
+          }
+        }
+      }
+      else if ((i == 1) && value)
       {
         status.level = diagnostic_msgs::DiagnosticStatus::OK;
-        ss << "Battery OK (" << std::setw(4) << battery_percentage << "%% left)";
-      }
-      else if (battery_percentage > 30)
-      {
-        status.level = diagnostic_msgs::DiagnosticStatus::WARN;
-        ss << "Battery discharging (" << std::setw(4) << battery_percentage << "%% left)";
-      }
-      else
-      {
-        status.level = diagnostic_msgs::DiagnosticStatus::ERROR;
-        ss << "Battery almost empty (" << std::setw(4) << battery_percentage << "%% left)";
+        status.message = "Battery fully charged";
       }
     }
-    status.message = ss.str();
+    if (!ss.str().empty())
+      status.message = ss.str();
 
     max_level = status.level;
     msg.status.push_back(status);
   }
 
-  // Process the current information
+  // Process the current battery information
   {
     float current = float(values[val++]);
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Battery/Current");
+    status.name = std::string("/Power System/Current");
     status.hardware_id = "battery";
     status.add("Current", current);
     status.level = max_level;
@@ -242,7 +245,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   // Get the aggregated battery
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Battery");
+    status.name = std::string("/Power System");
     status.hardware_id = "battery";
     status.level = diagnostic_msgs::DiagnosticStatus::OK;
     setMessageFromStatus(status);
@@ -251,6 +254,18 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   }
 
   // TODO: CPU information should be obtained from system files like done in Python
+  // We can still get the temperature
+  {
+    diagnostic_updater::DiagnosticStatusWrapper status;
+    status.name = std::string("/Computer");
+    status.level = diagnostic_msgs::DiagnosticStatus::OK;
+    //status.add("Temperature", static_cast<float>(values[val++]));
+    // setting to -1 until we find the right key
+    status.add("Temperature", static_cast<float>(-1));
+    setMessageFromStatus(status);
+
+    msg.status.push_back(status);
+  }
 
   // TODO: wifi and ethernet statuses should be obtained from DBUS
 

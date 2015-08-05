@@ -63,6 +63,8 @@ private:
 
   /** Proxy to ALMemory */
   qi::AnyObject p_memory_;
+  /** Proxy to ALBodyTemperature */
+  qi::AnyObject p_body_temperature_;
 
   float temperature_warn_level_;
   float temperature_error_level_;
