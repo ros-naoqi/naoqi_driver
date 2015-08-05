@@ -27,7 +27,7 @@ How to install it
 
     mkdir -p ~/catkin_ws/src
     cd ~/catkin_ws/src
-    git clone https://github.com/ros-naoqi/naoqi-driver.git
+    git clone https://github.com/ros-naoqi/naoqi_driver.git
     # make sure you get all the dependencies installed
     rosdep install -i -y --from-paths ./naoqi_driver
     # build
