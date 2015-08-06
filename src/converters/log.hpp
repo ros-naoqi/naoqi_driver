@@ -46,6 +46,8 @@ public:
   void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
+  void set_qi_logger_level();
+
   qi::LogManagerPtr logger_;
   qi::LogListenerPtr listener_;
 
