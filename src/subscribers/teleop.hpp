@@ -29,6 +29,7 @@
  */
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <naoqi_bridge_msgs/JointAnglesWithSpeed.h>
 
 namespace naoqi
 {
@@ -38,15 +39,23 @@ namespace subscriber
 class TeleopSubscriber: public BaseSubscriber<TeleopSubscriber>
 {
 public:
-  TeleopSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session );
+  TeleopSubscriber( const std::string& name, const std::string& cmd_vel_topic, const std::string& joint_angles_topic, const qi::SessionPtr& session );
   ~TeleopSubscriber(){}
 
   void reset( ros::NodeHandle& nh );
-  void callback( const geometry_msgs::TwistConstPtr& twist_msg );
+  void cmd_vel_callback( const geometry_msgs::TwistConstPtr& twist_msg );
+  void joint_angles_callback( const naoqi_bridge_msgs::JointAnglesWithSpeedConstPtr& js_msg );
 
 private:
+
+  std::string cmd_vel_topic_;
+  std::string joint_angles_topic_;
+
   qi::AnyObject p_motion_;
-  ros::Subscriber sub_teleop_;
+  ros::Subscriber sub_cmd_vel_;
+  ros::Subscriber sub_joint_angles_;
+
+
 
 }; // class Teleop
 
