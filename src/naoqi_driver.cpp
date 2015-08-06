@@ -109,7 +109,7 @@ Driver::Driver( qi::SessionPtr& session )
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
-  dump_enabled_(false),
+  dump_enabled_(true),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(ros_env::getPrefix())),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
@@ -214,29 +214,18 @@ void Driver::rosLoop()
           actions.push_back(message_actions::LOG);
         }
 
+        // only call when we have at least one action to perform
         if (actions.size() >0)
         {
           conv.callAll( actions );
         }
 
-        //qi::Duration qi_now = qi::WallClock::now().time_since_epoch();
-        //ros::Time ros_now = ros::Time( 0, qi_now.count() );
-        //ros::Duration d(schedule - ros_now );
         ros::Duration d( schedule - ros::Time::now() );
         if ( d > ros::Duration(0))
         {
           d.sleep();
         }
 
-#if DEBUG
-        // check the publishing condition
-        // publishing enabled
-        // has to be registered
-        // has to be subscribed
-        ros::Time before = ros::Time::now();
-        ros::Time after = ros::Time::now();
-        std::cerr << "round trip last " << after-before << std::endl;
-#endif
         // Schedule for a future time or not
         conv_queue_.pop();
         if ( conv.frequency() != 0 )
