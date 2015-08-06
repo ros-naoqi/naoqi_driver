@@ -52,6 +52,7 @@ set(
 set(
   DRIVER_SRC
   src/naoqi_driver.cpp
+  src/helpers/driver_helpers.cpp
   src/recorder/globalrecorder.cpp
   src/event/basic.hxx
   src/event/basic.hpp

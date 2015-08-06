@@ -30,37 +30,7 @@ namespace helpers
 namespace driver
 {
 
-/** Function that returns the type of a robot
- */
-inline robot::Robot robot( const qi::SessionPtr& session)
-{
-  robot::Robot bot;
-
-  qi::AnyObject p_memory = session->service("ALMemory");
-  std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
-  std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
-
-  if (std::string(robot) == "nao")
-  {
-    bot = robot::NAO;
-    return bot;
-  }
-  if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
-  {
-    bot = robot::PEPPER;
-    return bot;
-  }
-  else
-  {
-    return robot::UNIDENTIFIED;
-  }
-}
-
-static const robot::Robot& getRobot( const qi::SessionPtr& session )
-{
-  static const robot::Robot r = robot( session );
-  return r;
-}
+const robot::Robot& getRobot( const qi::SessionPtr& session );
 
 } // driver
 } // helpers
