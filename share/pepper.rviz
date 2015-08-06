@@ -17,7 +17,7 @@ Panels:
         - /Sonar_Back1
         - /LaserScan1
       Splitter Ratio: 0.260047
-    Tree Height: 459
+    Tree Height: 491
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -364,11 +364,23 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        SurroundingFrontLaser_device_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         SurroundingFrontLaser_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        SurroundingLeftLaser_device_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         SurroundingLeftLaser_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        SurroundingRightLaser_device_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -458,11 +470,11 @@ Visualization Manager:
       Channel Name: z
       Class: rviz/DepthCloud
       Color: 255; 255; 255
-      Color Image Topic: /alrosbridge/camera/front/image_raw
+      Color Image Topic: /pepper_robot/camera/front/image_raw
       Color Transformer: RGB8
       Color Transport Hint: raw
       Decay Time: 0
-      Depth Map Topic: /alrosbridge/camera/depth/image_raw
+      Depth Map Topic: /pepper_robot/camera/depth/image_raw
       Depth Map Transport Hint: raw
       Enabled: true
       Invert Rainbow: false
@@ -485,7 +497,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /alrosbridge/camera/front/image_raw
+      Image Topic: /pepper_robot/camera/front/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -537,33 +549,93 @@ Visualization Manager:
           Value: true
         ImuTorsoGyrometer_frame:
           Value: true
+        LAnklePitch:
+          Value: true
         LBicep:
           Value: true
         LElbow:
           Value: true
+        LFootBumperLeft_frame:
+          Value: true
+        LFootBumperRight_frame:
+          Value: true
         LForeArm:
+          Value: true
+        LFsrFL_frame:
+          Value: true
+        LFsrFR_frame:
+          Value: true
+        LFsrRL_frame:
+          Value: true
+        LFsrRR_frame:
           Value: true
         LHandTouchBack_frame:
           Value: true
+        LHandTouchLeft_frame:
+          Value: true
+        LHandTouchRight_frame:
+          Value: true
+        LHip:
+          Value: true
+        LInfraRed_frame:
+          Value: true
+        LPelvis:
+          Value: true
         LShoulder:
           Value: true
+        LSonar_frame:
+          Value: true
         LSpeaker_frame:
+          Value: true
+        LThigh:
+          Value: true
+        LTibia:
           Value: true
         Neck:
           Value: true
         Pelvis:
           Value: true
+        RAnklePitch:
+          Value: true
         RBicep:
           Value: true
         RElbow:
           Value: true
+        RFootBumperLeft_frame:
+          Value: true
+        RFootBumperRight_frame:
+          Value: true
         RForeArm:
+          Value: true
+        RFsrFL_frame:
+          Value: true
+        RFsrFR_frame:
+          Value: true
+        RFsrRL_frame:
+          Value: true
+        RFsrRR_frame:
           Value: true
         RHandTouchBack_frame:
           Value: true
+        RHandTouchLeft_frame:
+          Value: true
+        RHandTouchRight_frame:
+          Value: true
+        RHip:
+          Value: true
+        RInfraRed_frame:
+          Value: true
+        RPelvis:
+          Value: true
         RShoulder:
           Value: true
+        RSonar_frame:
+          Value: true
         RSpeaker_frame:
+          Value: true
+        RThigh:
+          Value: true
+        RTibia:
           Value: true
         ShovelLaser_frame:
           Value: true
@@ -571,9 +643,15 @@ Visualization Manager:
           Value: true
         SonarFront_frame:
           Value: true
+        SurroundingFrontLaser_device_frame:
+          Value: true
         SurroundingFrontLaser_frame:
           Value: true
+        SurroundingLeftLaser_device_frame:
+          Value: true
         SurroundingLeftLaser_frame:
+          Value: true
+        SurroundingRightLaser_device_frame:
           Value: true
         SurroundingRightLaser_frame:
           Value: true
@@ -595,13 +673,23 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        gaze:
+          Value: true
+        l_ankle:
+          Value: true
         l_gripper:
+          Value: true
+        l_sole:
           Value: true
         l_wrist:
           Value: true
         odom:
           Value: true
+        r_ankle:
+          Value: true
         r_gripper:
+          Value: true
+        r_sole:
           Value: true
         r_wrist:
           Value: true
@@ -637,9 +725,15 @@ Visualization Manager:
                       {}
                     SonarFront_frame:
                       {}
+                    SurroundingFrontLaser_device_frame:
+                      {}
                     SurroundingFrontLaser_frame:
                       {}
+                    SurroundingLeftLaser_device_frame:
+                      {}
                     SurroundingLeftLaser_frame:
+                      {}
+                    SurroundingRightLaser_device_frame:
                       {}
                     SurroundingRightLaser_frame:
                       {}
@@ -709,7 +803,7 @@ Visualization Manager:
       Enabled: true
       Name: Sonar_Front
       Queue Size: 100
-      Topic: /alrosbridge/sonar/front
+      Topic: /pepper_robot/sonar/front
       Value: true
     - Alpha: 0.5
       Buffer Length: 1
@@ -718,7 +812,7 @@ Visualization Manager:
       Enabled: true
       Name: Sonar_Back
       Queue Size: 100
-      Topic: /alrosbridge/sonar/back
+      Topic: /pepper_robot/sonar/back
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -745,7 +839,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.05
       Style: Flat Squares
-      Topic: /alrosbridge/laser
+      Topic: /pepper_robot/laser
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -773,22 +867,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.88373
+      Distance: 2.5773
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.202885
-        Y: 0.741895
-        Z: 0.702972
+        X: 0.190334
+        Y: 0.0945528
+        Z: 0.656888
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.920398
+      Pitch: 0.545398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.44541
+      Yaw: 3.16541
     Saved: ~
 Window Geometry:
   Displays:
@@ -798,7 +892,7 @@ Window Geometry:
   Hide Right Dock: false
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000002a10000038ffc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003600000256000000b700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d0061006700650100000292000001330000001600ffffff00000001000000f10000038ffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007301000000360000038f0000009b00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000077e0000003efc0100000002fb0000000800540069006d006501000000000000077e0000024600fffffffb0000000800540069006d00650100000000000004500000000000000000000003e00000038f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000002a10000038ffc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005300fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003600000276000000b700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006501000001d8000001330000000000000000fb0000000a0049006d00610067006501000002b2000001130000001600ffffff00000001000000f10000038ffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007301000000360000038f0000009b00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000077e0000003efc0100000002fb0000000800540069006d006501000000000000077e0000024600fffffffb0000000800540069006d00650100000000000004500000000000000000000003e00000038f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
