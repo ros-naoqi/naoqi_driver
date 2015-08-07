@@ -114,7 +114,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   for(size_t i = 0; i < joint_names_.size(); ++i)
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Joints/") + joint_names_[i];
+    status.name = std::string("naoqi_driver_joints:") + joint_names_[i];
 
     double temperature = static_cast<double>(values[val++]);
     double stiffness = static_cast<double>(values[val++]);
@@ -122,12 +122,13 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     // Fill the status data
     status.hardware_id = joint_names_[i];
     status.add("Temperature", temperature);
+    status.add("Stiffness", stiffness);
 
     // Define the level
     if (temperature < temperature_warn_level_)
     {
       status.level = diagnostic_msgs::DiagnosticStatus::OK;
-      status.message = "Normal";
+      status.message = "OK";
     }
     else if (temperature < temperature_error_level_)
     {
@@ -157,7 +158,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   // Get the aggregated joints status
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Joints");
+    status.name = std::string("naoqi_driver_joints:Status");
     status.hardware_id = "joints";
     status.level = max_level;
     setMessageFromStatus(status);
@@ -176,7 +177,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     int battery_percentage = static_cast<int>(values[val++]);
 
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Power System/Battery");
+    status.name = std::string("naoqi_driver_battery:Status");
     status.hardware_id = "battery";
     status.add("Percentage", battery_percentage);
     // Add the semantic info
@@ -228,7 +229,7 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
   {
     float current = float(values[val++]);
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Power System/Current");
+    status.name = std::string("naoqi_driver_battery:Current");
     status.hardware_id = "battery";
     status.add("Current", current);
     status.level = max_level;
@@ -242,27 +243,15 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     msg.status.push_back(status);
   }
 
-  // Get the aggregated battery
-  {
-    diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Power System");
-    status.hardware_id = "battery";
-    status.level = diagnostic_msgs::DiagnosticStatus::OK;
-    setMessageFromStatus(status);
-
-    msg.status.push_back(status);
-  }
-
   // TODO: CPU information should be obtained from system files like done in Python
   // We can still get the temperature
   {
     diagnostic_updater::DiagnosticStatusWrapper status;
-    status.name = std::string("/Computer");
+    status.name = std::string("naoqi_driver_computer:CPU");
     status.level = diagnostic_msgs::DiagnosticStatus::OK;
     //status.add("Temperature", static_cast<float>(values[val++]));
     // setting to -1 until we find the right key
     status.add("Temperature", static_cast<float>(-1));
-    setMessageFromStatus(status);
 
     msg.status.push_back(status);
   }
