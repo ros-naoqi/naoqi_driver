@@ -46,9 +46,12 @@ public:
   void callAll( const std::vector<message_actions::MessageAction>& actions );
 
 private:
+  /** Function that sets the NAOqi log level to the ROS one */
   void set_qi_logger_level();
 
   qi::LogManagerPtr logger_;
+  /** Log level that is currently translated to ROS */
+  qi::LogLevel log_level_;
   qi::LogListenerPtr listener_;
 
   std::map<message_actions::MessageAction, Callback_t> callbacks_;

@@ -109,8 +109,11 @@ void logCallback(const qi::LogMessage& msg)
 
 LogConverter::LogConverter( const std::string& name, float frequency, const qi::SessionPtr& session )
   : BaseConverter( name, frequency, session ),
-    logger_( session->service("LogManager") )
+    logger_( session->service("LogManager") ),
+    // Default log level is info
+    log_level_(qi::LogLevel_Info)
 {
+  // Define the log equivalents
   LogLevel(qi::LogLevel_Silent, rosgraph_msgs::Log::DEBUG, ros::console::levels::Debug);
   LogLevel(qi::LogLevel_Fatal, rosgraph_msgs::Log::FATAL, ros::console::levels::Fatal);
   LogLevel(qi::LogLevel_Error, rosgraph_msgs::Log::ERROR, ros::console::levels::Error);
@@ -160,8 +163,14 @@ void LogConverter::set_qi_logger_level( )
 
   if (iter == loggers.end())
     return;
-  else
-    qi::log::setLogLevel(LogLevel::get_from_ros_console(iter->second).qi_);
+
+  qi::LogLevel new_level = LogLevel::get_from_ros_console(iter->second).qi_;
+  // Only change the log level if it has changed (otherwise, there is a flood of warnings)
+  if (new_level == log_level_)
+      return;
+
+  log_level_ = new_level;
+  qi::log::setLogLevel(log_level_);
 }
 
 } // publisher
