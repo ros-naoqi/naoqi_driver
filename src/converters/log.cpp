@@ -161,7 +161,7 @@ void LogConverter::set_qi_logger_level( )
   if (iter == loggers.end())
     return;
   else
-    listener_->setLevel(LogLevel::get_from_ros_console(iter->second).qi_);
+    qi::log::setLogLevel(LogLevel::get_from_ros_console(iter->second).qi_);
 }
 
 } // publisher
