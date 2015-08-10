@@ -32,11 +32,6 @@ int main(int argc, char** argv)
 
   /* launch naoqi service */
   qi::ApplicationSession app(argc, argv);
-  app.start();
-  boost::shared_ptr<naoqi::Driver> bs = qi::import("naoqi_driver_module").call<qi::Object<naoqi::Driver> >("ROS-Driver", app.session()).asSharedPtr();
-
-  app.session()->registerService("ROS-Driver", bs);
-
   /* In case you launch via roslaunch/rosrun we remove the ros args */
   std::vector<std::string> args_out;
   ros::removeROSArgs( argc, argv, args_out );
@@ -71,6 +66,15 @@ int main(int argc, char** argv)
     exit(0);
   }
 
+
+  // everything's correctly parsed - let's start the app!
+  app.start();
+  boost::shared_ptr<naoqi::Driver> bs = qi::import("naoqi_driver_module").call<qi::Object<naoqi::Driver> >("ROS-Driver", app.session(), vm["namespace"].as<std::string>()).asSharedPtr();
+
+  app.session()->registerService("ROS-Driver", bs);
+
+
+  // set ros paramters directly upfront if available
   if ( vm.count("roscore_ip") )
   {
     std::string roscore_ip = vm["roscore_ip"].as<std::string>();

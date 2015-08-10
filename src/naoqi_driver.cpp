@@ -103,7 +103,7 @@
 namespace naoqi
 {
 
-Driver::Driver( qi::SessionPtr& session )
+Driver::Driver( qi::SessionPtr& session, const std::string& prefix )
   : sessionPtr_( session ),
   robot_( helpers::driver::getRobot(session) ),
   freq_(15),
@@ -111,23 +111,10 @@ Driver::Driver( qi::SessionPtr& session )
   record_enabled_(false),
   dump_enabled_(true),
   keep_looping(true),
-  recorder_(boost::make_shared<recorder::GlobalRecorder>(ros_env::getPrefix())),
+  recorder_(boost::make_shared<recorder::GlobalRecorder>(prefix)),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
-  /*
-  if (robot_ == naoqi::robot::NAO)
-  {
-    naoqi::ros_env::setPrefix("nao_robot");
-  }
-  else if (robot_ == naoqi::robot::PEPPER)
-  {
-    naoqi::ros_env::setPrefix("pepper_robot");
-  }
-  else
-  {
-    naoqi::ros_env::setPrefix("undefined");
-  }
-  */
+  naoqi::ros_env::setPrefix(prefix);
 }
 
 Driver::~Driver()

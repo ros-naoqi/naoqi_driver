@@ -68,7 +68,7 @@ public:
   * @brief Constructor for naoqi driver
   * @param session[in] session pointer for naoqi2 service registration
   */
-  Driver( qi::SessionPtr& session );
+  Driver( qi::SessionPtr& session, const std::string& prefix );
 
   /**
   * @brief Destructor for naoqi driver,
