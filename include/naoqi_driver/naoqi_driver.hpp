@@ -203,6 +203,10 @@ public:
   */
   std::string stopRecording();
 
+  void startLogging();
+
+  void stopLogging();
+
   /**
    * @brief qicli call function to add on-the-fly some memory keys extractors
    */
@@ -225,7 +229,7 @@ private:
 
   bool publish_enabled_;
   bool record_enabled_;
-  bool dump_enabled_;
+  bool log_enabled_;
   bool keep_looping;
 
   const size_t freq_;

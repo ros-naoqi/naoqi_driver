@@ -109,7 +109,7 @@ Driver::Driver( qi::SessionPtr& session, const std::string& prefix )
   freq_(15),
   publish_enabled_(false),
   record_enabled_(false),
-  dump_enabled_(true),
+  log_enabled_(false),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(prefix)),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
@@ -197,7 +197,7 @@ void Driver::rosLoop()
         }
 
         // bufferize data in recorder
-        if ( !dump_enabled_ && rec_it != rec_map_.end() && conv.frequency() != 0)
+        if ( log_enabled_ && rec_it != rec_map_.end() && conv.frequency() != 0)
         {
           actions.push_back(message_actions::LOG);
         }
@@ -238,6 +238,14 @@ void Driver::rosLoop()
 
 std::string Driver::minidump(const std::string& prefix)
 {
+  if (!log_enabled_)
+  {
+    const std::string& err = "Log is not enabled, please enable logging before calling minidump";
+    std::cout << BOLDRED << err << std::endl
+              << RESETCOLOR << std::endl;
+    return err;
+  }
+
   // CHECK SIZE IN FOLDER
   long files_size = 0;
   boost::filesystem::path folderPath(boost::filesystem::current_path());
@@ -257,7 +265,7 @@ std::string Driver::minidump(const std::string& prefix)
   }
 
   // STOP BUFFERIZING
-  dump_enabled_ = true;
+  log_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.isDumping(true);
@@ -279,7 +287,7 @@ std::string Driver::minidump(const std::string& prefix)
   }
 
   // RESTART BUFFERIZING
-  dump_enabled_ = false;
+  log_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.isDumping(false);
@@ -289,6 +297,14 @@ std::string Driver::minidump(const std::string& prefix)
 
 std::string Driver::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
 {
+  if (!log_enabled_)
+  {
+    const std::string& err = "Log is not enabled, please enable logging before calling minidump";
+    std::cout << BOLDRED << err << std::endl
+              << RESETCOLOR << std::endl;
+    return err;
+  }
+
   // CHECK SIZE IN FOLDER
   long files_size = 0;
   boost::filesystem::path folderPath(boost::filesystem::current_path());
@@ -308,7 +324,7 @@ std::string Driver::minidumpConverters(const std::string& prefix, const std::vec
   }
 
   // STOP BUFFERIZING
-  dump_enabled_ = true;
+  log_enabled_ = false;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.isDumping(true);
@@ -346,7 +362,7 @@ std::string Driver::minidumpConverters(const std::string& prefix, const std::vec
     }
   }
   // RESTART BUFFERIZING
-  dump_enabled_ = false;
+  log_enabled_ = true;
   for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
   {
     iterator->second.isDumping(false);
@@ -989,6 +1005,16 @@ std::string Driver::stopRecording()
   return recorder_->stopRecord(::naoqi::ros_env::getROSIP("eth0"));
 }
 
+void Driver::startLogging()
+{
+  log_enabled_ = true;
+}
+
+void Driver::stopLogging()
+{
+  log_enabled_ = false;
+}
+
 void Driver::startRosLoop()
 {
   if (publisherThread_.get_id() ==  boost::thread::id())
@@ -1234,5 +1260,7 @@ QI_REGISTER_OBJECT( Driver,
                     removeFiles,
                     startRecording,
                     startRecordingConverters,
-                    stopRecording );
+                    stopRecording,
+                    startLogging,
+                    stopLogging );
 } //naoqi
