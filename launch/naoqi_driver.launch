@@ -4,6 +4,6 @@
   <arg name="roscore_ip"        default="127.0.0.1" />
   <arg name="network_interface" default="eth0" />
 
-  <node pkg="naoqi_driver" type="naoqi_driver_node" name="naoqi_driver" required="true" args="--qi-url=tcp://$(arg nao_ip):9559 $(arg roscore_ip) $(arg network_interface)" output="screen" />
+  <node pkg="naoqi_driver" type="naoqi_driver_node" name="naoqi_driver" required="true" args="--qi-url=tcp://$(arg nao_ip):9559 --roscore_ip=$(arg roscore_ip) --network_interface=$(arg network_interface)" output="screen" />
 
 </launch>

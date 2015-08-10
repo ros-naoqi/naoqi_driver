@@ -114,6 +114,7 @@ Driver::Driver( qi::SessionPtr& session )
   recorder_(boost::make_shared<recorder::GlobalRecorder>(ros_env::getPrefix())),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
+  /*
   if (robot_ == naoqi::robot::NAO)
   {
     naoqi::ros_env::setPrefix("nao_robot");
@@ -126,7 +127,7 @@ Driver::Driver( qi::SessionPtr& session )
   {
     naoqi::ros_env::setPrefix("undefined");
   }
-
+  */
 }
 
 Driver::~Driver()

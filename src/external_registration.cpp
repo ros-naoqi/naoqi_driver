@@ -20,6 +20,8 @@
 #include <qi/anymodule.hpp>
 #include <naoqi_driver/naoqi_driver.hpp>
 
+#include <boost/program_options.hpp>
+
 #include "naoqi_env.hpp"
 #include "helpers/driver_helpers.hpp"
 
@@ -39,15 +41,45 @@ int main(int argc, char** argv)
   std::vector<std::string> args_out;
   ros::removeROSArgs( argc, argv, args_out );
 
-  /* configure the ros communication according to the commandline arguments */
-  if ( args_out.size() > 1 && !std::string(args_out[1]).empty() )
+  namespace po = boost::program_options;
+  po::options_description desc("Options");
+  desc.add_options()
+    ("help,h", "print help message")
+    ("roscore_ip,r", po::value<std::string>(), "set the ip of the roscore to use")
+    ("network_interface,i", po::value<std::string>()->default_value("eth0"),  "set the network interface over which to connect")
+    ("namespace,n", po::value<std::string>()->default_value(""), "set an explicit namespace in case ROS namespace variables cannot be used");
+
+  po::variables_map vm;
+  try
   {
-    std::string network_interface = "eth0";
-    if ( args_out.size() > 2 ) network_interface = args_out[2];
+    po::store( po::parse_command_line(argc, argv, desc), vm );
+  }
+  catch (boost::program_options::invalid_command_line_syntax& e)
+  {
+    std::cout << "error " << e.what() << std::endl;
+    throw ros::Exception(e.what());
+  }
+  catch (boost::program_options::unknown_option& e)
+  {
+    std::cout << "error 2 " << e.what() << std::endl;
+    throw ros::Exception(e.what());
+  }
+
+  if( vm.count("help") )
+  {
+    std::cout << "This is the help message for the ROS-Driver C++ bridge" << std::endl << desc << std::endl;
+    exit(0);
+  }
+
+  if ( vm.count("roscore_ip") )
+  {
+    std::string roscore_ip = vm["roscore_ip"].as<std::string>();
+    std::string network_interface = vm["network_interface"].as<std::string>();
+
     std::cout << BOLDYELLOW << "using ip address: "
-              << BOLDCYAN << args_out[1] << " @ " << network_interface << RESETCOLOR << std::endl;
+              << BOLDCYAN << roscore_ip << " @ " << network_interface << RESETCOLOR << std::endl;
     bs->init();
-    bs->setMasterURINet( "http://"+std::string(args_out[1])+":11311", network_interface);
+    bs->setMasterURINet( "http://"+roscore_ip+":11311", network_interface);
   }
   else
   {
