@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2015-08-11)
+------------------
 * rename dump_enabled to log_enabled
 * introduce prefix to naoqi driver c'tor
 * switch to boost program options
