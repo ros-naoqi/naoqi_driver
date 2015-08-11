@@ -4,6 +4,30 @@ Changelog for package naoqi_rosbridge
 
 Forthcoming
 -----------
+* rename dump_enabled to log_enabled
+* introduce prefix to naoqi driver c'tor
+* switch to boost program options
+* do not set the log level if it has not changed
+* get a more generic way of setting the log level
+* publish to diagnostics as it should be
+* respect the ROS log level
+* cleanup main
+* update rviz configuration
+* extend teleop for set_angles
+* exclude driver helper to cpp for one-call only
+* cleanup battery diagnostics
+* remove max velocity
+* Merge pull request `#30 <https://github.com/ros-naoqi/naoqi_driver/issues/30>`_ from laurent-george/patch-1
+  fix git repo url
+* fix git repo url
+  it's a _ not a -
+* change doc for renaming to naoqi driver
+* renamed files for naoqi_driver
+* update doc to correct renaming
+* update doc to correct renaming
+* add stiffness and fix battery status
+* Contributors: George Laurent, Karsten Knese, Vincent Rabaud
+
 * remove legacy code
 * fix typo in package.xml
 * rename package to naoqi_driver
