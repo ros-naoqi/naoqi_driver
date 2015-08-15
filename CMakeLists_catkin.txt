@@ -24,7 +24,7 @@ find_package(catkin COMPONENTS
 find_package(OpenCV)
 find_package(orocos_kdl)
 
-catkin_package(LIBRARIES naoqi_driver_module naoqi_driver naoqi_driver_node)
+catkin_package(LIBRARIES naoqi_driver_module naoqi_driver)
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=deprecated-declarations")
