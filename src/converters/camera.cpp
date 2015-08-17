@@ -194,7 +194,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
 
   if (handle_.empty() )
   {
-    std::cerr << name_ << " Camera Handle is empty - cannot retrieve image" << std::endl;
+    std::cerr << name_ << "Camera Handle is empty - cannot retrieve image" << std::endl;
+    std::cerr << name_ << "Might be a NAOqi problem. Try to restart the ALVideoDevice." << std::endl;
     return;
   }
 
