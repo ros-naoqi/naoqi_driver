@@ -27,7 +27,7 @@ Please execute the following steps on your local computer, not from the robot
 
   In case you built via catkin, you can alternatively start the naoqi driver via rosrun ::
 
-  $ rosrun naoqi_driver naoqi_driver_node --qi-url=<yourRobotIP> <roscore_ip> <network_interface>
+  $ rosrun naoqi_driver naoqi_driver_node --qi-url=tcp://<yourRobotIP>:9559 --roscore_ip <roscore_ip> --network_interface <network_interface>
 
   The second parameter is available from version 1.2 (or compilation from source). Starting from version 1.2 (or compilation from source) you can alternatively start the bridge via a launch file ::
 
@@ -37,7 +37,7 @@ Please execute the following steps on your local computer, not from the robot
 
   In case you have a qibuild workspace, you can run the roscore by directly executing the binary ::
 
-  $ path/to/naoqi_driver_node --qi-url=<yourRobotIP> <roscore_ip> <network_interface>
+  $ path/to/naoqi_driver_node --qi-url=tcp://<yourRobotIP>:9559 --roscore_ip <roscore_ip> --network_interface <network_interface>
 
 
 The roscore IP is the IP of the computer where the roscore is running. This command is optional. If you don't specify, any ROS communication is disabled until you call setMasterURI. The second parameter ``network_interface`` specifies the network interface the bridge is connected. By default, this is set to ``eth0``. Changing this becomes important to establish a correct network connection between robot and computer, when you are connected via a different network device, such as wlan0 or vpn0 etc. In case you are not certain which device to use, verify with ``ifconfig`` and verify which network device has the correct IP.
