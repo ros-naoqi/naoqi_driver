@@ -119,7 +119,7 @@ $(document).ready(function() {
 </div>
 <div class="container">
 <div class="toggleable_div label_catkin"><p>In case you built via catkin, you can alternatively start the naoqi driver via rosrun</p>
-<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_driver naoqi_driver_node --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_interface&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ rosrun naoqi_driver naoqi_driver_node --qi-url=tcp://&lt;yourRobotIP&gt;:9559 --roscore_ip &lt;roscore_ip&gt; --network_interface &lt;network_interface&gt;
 </pre></div>
 </div>
 <p>The second parameter is available from version 1.2 (or compilation from source). Starting from version 1.2 (or compilation from source) you can alternatively start the bridge via a launch file</p>
@@ -129,7 +129,7 @@ $(document).ready(function() {
 </div></div>
 <div class="container">
 <div class="toggleable_div label_qibuild"><p>In case you have a qibuild workspace, you can run the roscore by directly executing the binary</p>
-<div class="highlight-python"><div class="highlight"><pre>$ path/to/naoqi_driver_node --qi-url=&lt;yourRobotIP&gt; &lt;roscore_ip&gt; &lt;network_interface&gt;
+<div class="highlight-python"><div class="highlight"><pre>$ path/to/naoqi_driver_node --qi-url=tcp://&lt;yourRobotIP&gt;:9559 --roscore_ip &lt;roscore_ip&gt; --network_interface &lt;network_interface&gt;
 </pre></div>
 </div>
 </div></div>
