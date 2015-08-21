@@ -48,6 +48,7 @@ add_library(
   ${CONVERTERS_SRC}
   ${PUBLISHER_SRC}
   ${SUBSCRIBER_SRC}
+  ${SERVICES_SRC}
   ${RECORDER_SRC}
   ${TOOLS_SRC}
 )

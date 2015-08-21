@@ -61,6 +61,12 @@
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
 
+
+/*
+ * SERVICES
+ */
+#include "services/robot_config.hpp"
+
 /*
  * RECORDERS
  */
@@ -134,6 +140,7 @@ void Driver::init()
   loadBootConfig();
   registerDefaultConverter();
   registerDefaultSubscriber();
+  registerDefaultServices();
   startRosLoop();
 }
 
@@ -782,6 +789,17 @@ void Driver::registerDefaultSubscriber()
   registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
 }
 
+void Driver::registerService( service::Service srv )
+{
+  services_.push_back( srv );
+}
+
+
+void Driver::registerDefaultServices()
+{
+  registerService( boost::make_shared<service::RobotConfigService>("robot config service", "getRobotConfig") );
+}
+
 std::vector<std::string> Driver::getAvailableConverters()
 {
   std::vector<std::string> conv_list;
@@ -853,6 +871,12 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
     {
       std::cout << "resetting subscriber " << sub.name() << std::endl;
       sub.reset( *nhPtr_ );
+    }
+
+    for_each( service::Service& srv, services_ )
+    {
+      std::cout << "resetting service " << srv.name() << std::endl;
+      srv.reset( *nhPtr_ );
     }
   }
 

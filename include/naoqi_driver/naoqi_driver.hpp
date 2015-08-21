@@ -41,6 +41,7 @@
 #include <naoqi_driver/converter/converter.hpp>
 #include <naoqi_driver/publisher/publisher.hpp>
 #include <naoqi_driver/subscriber/subscriber.hpp>
+#include <naoqi_driver/service/service.hpp>
 #include <naoqi_driver/recorder/recorder.hpp>
 #include <naoqi_driver/event/event.hpp>
 #include <naoqi_driver/recorder/globalrecorder.hpp>
@@ -160,6 +161,14 @@ public:
   void registerSubscriber( subscriber::Subscriber sub );
 
   /**
+   * @brief registers a service
+   * @param service to register
+   * @see Service
+   * @note it iwll be called by value to expose that internally there will be a copy,
+   * eventually this should be replaced by move semantics C++11
+   */
+  void registerService( service::Service srv );
+  /**
   * @brief qicli call function to get current master uri
   * @return string indicating http master uri
   */
@@ -244,6 +253,7 @@ private:
 
   void registerDefaultConverter();
   void registerDefaultSubscriber();
+  void registerDefaultServices();
   void insertEventConverter(const std::string& key, event::Event event);
 
   template <typename T1, typename T2, typename T3>
@@ -276,6 +286,7 @@ private:
   typedef std::map< std::string, event::Event>::iterator EventIter;
 
   std::vector< subscriber::Subscriber > subscribers_;
+  std::vector< service::Service > services_;
 
   float buffer_duration_;
 

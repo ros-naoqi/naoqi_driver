@@ -41,6 +41,11 @@ set(
   )
 
 set(
+  SERVICES_SRC
+  src/services/robot_config.cpp
+  )
+
+set(
   RECORDER_SRC
   src/recorder/camera.cpp
   src/recorder/diagnostics.cpp
@@ -86,6 +91,7 @@ qi_create_lib(
   ${CONVERTERS_SRC}
   ${PUBLISHER_SRC}
   ${SUBSCRIBER_SRC}
+  ${SERVICES_SRC}
   ${RECORDER_SRC}
   ${TOOLS_SRC}
 )
