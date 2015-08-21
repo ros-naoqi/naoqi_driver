@@ -797,7 +797,7 @@ void Driver::registerService( service::Service srv )
 
 void Driver::registerDefaultServices()
 {
-  registerService( boost::make_shared<service::RobotConfigService>("robot config service", "getRobotConfig") );
+  registerService( boost::make_shared<service::RobotConfigService>("robot config service", "get_robot_config") );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
