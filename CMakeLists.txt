@@ -19,6 +19,7 @@ set(
   src/converters/memory/string.cpp
   src/converters/sonar.cpp
   src/converters/log.cpp
+  src/converters/odom.cpp
   )
 set(
   TOOLS_SRC
