@@ -39,6 +39,7 @@
 #include "converters/memory/int.hpp"
 #include "converters/memory/string.hpp"
 #include "converters/log.hpp"
+#include "converters/odom.hpp"
 
 /*
  * PUBLISHERS
@@ -576,6 +577,10 @@ void Driver::registerDefaultConverter()
 
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
+  
+  bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
+  size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
+  
 
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
@@ -802,7 +807,21 @@ void Driver::registerDefaultConverter()
     }
   }
 
+  
+  /** Odom */
+  if ( odom_enabled )
+  {
+    boost::shared_ptr<publisher::BasicPublisher<nav_msgs::Odometry> > lp = boost::make_shared<publisher::BasicPublisher<nav_msgs::Odometry> >( "odom" );
+    boost::shared_ptr<recorder::BasicRecorder<nav_msgs::Odometry> > lr = boost::make_shared<recorder::BasicRecorder<nav_msgs::Odometry> >( "odom" );
+    boost::shared_ptr<converter::OdomConverter> lc = boost::make_shared<converter::OdomConverter>( "odom", odom_frequency, sessionPtr_ );
+    lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<nav_msgs::Odometry>::publish, lp, _1) );
+    lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::write, lr, _1) );
+    lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::bufferize, lr, _1) );
+    registerConverter( lc, lp, lr );
+  }
+  
 }
+
 
 // public interface here
 void Driver::registerSubscriber( subscriber::Subscriber sub )
