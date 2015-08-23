@@ -63,6 +63,7 @@ How to install it
     qibuild add-config <tc_name> -t <tc_name>
 
   By default, qitoolchains don't come with ROS packages. So we need to add them manually.
+
   .. code-block:: console
 
     # Add a package that will find your local ROS installation
