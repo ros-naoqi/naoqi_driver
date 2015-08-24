@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['messageaction',['MessageAction',['../namespacealros_1_1message__actions.html#a96dcea417d53be267e91ddd0a7374ae2',1,'alros::message_actions']]]
+  ['messageaction',['MessageAction',['../namespacenaoqi_1_1message__actions.html#af7780f83f326808c7452a6232ca612d7',1,'naoqi::message_actions']]]
 ];

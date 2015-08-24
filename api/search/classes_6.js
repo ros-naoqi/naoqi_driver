@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['getinstalledbehaviors',['GetInstalledBehaviors',['../structnaoqi__msgs_1_1GetInstalledBehaviors.html',1,'naoqi_msgs']]],
-  ['getinstalledbehaviorsrequest_5f',['GetInstalledBehaviorsRequest_',['../structnaoqi__msgs_1_1GetInstalledBehaviorsRequest__.html',1,'naoqi_msgs']]],
-  ['getinstalledbehaviorsresponse_5f',['GetInstalledBehaviorsResponse_',['../structnaoqi__msgs_1_1GetInstalledBehaviorsResponse__.html',1,'naoqi_msgs']]],
-  ['gettruepose',['GetTruepose',['../structnaoqi__msgs_1_1GetTruepose.html',1,'naoqi_msgs']]],
-  ['gettrueposerequest_5f',['GetTrueposeRequest_',['../structnaoqi__msgs_1_1GetTrueposeRequest__.html',1,'naoqi_msgs']]],
-  ['gettrueposeresponse_5f',['GetTrueposeResponse_',['../structnaoqi__msgs_1_1GetTrueposeResponse__.html',1,'naoqi_msgs']]],
-  ['globalrecorder',['GlobalRecorder',['../classalros_1_1recorder_1_1GlobalRecorder.html',1,'alros::recorder']]]
+  ['imuconverter',['ImuConverter',['../classnaoqi_1_1converter_1_1ImuConverter.html',1,'naoqi::converter']]],
+  ['infoconverter',['InfoConverter',['../classnaoqi_1_1converter_1_1InfoConverter.html',1,'naoqi::converter']]],
+  ['infopublisher',['InfoPublisher',['../classnaoqi_1_1publisher_1_1InfoPublisher.html',1,'naoqi::publisher']]]
 ];

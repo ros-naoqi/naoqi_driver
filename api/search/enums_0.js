@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['datatype',['DataType',['../namespacealros_1_1dataType.html#a24e487aa7dc5c94d7e2ef81fed49e59d',1,'alros::dataType']]]
+  ['datatype',['DataType',['../namespacenaoqi_1_1dataType.html#a638b60c2f6f83e44d8335913f184bdd0',1,'naoqi::dataType']]]
 ];

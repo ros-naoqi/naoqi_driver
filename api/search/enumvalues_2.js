@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['float',['Float',['../namespacealros_1_1dataType.html#a24e487aa7dc5c94d7e2ef81fed49e59dac1a254e9bd38e9a6becbd2fcd5103635',1,'alros::dataType']]]
+  ['float',['Float',['../namespacenaoqi_1_1dataType.html#a638b60c2f6f83e44d8335913f184bdd0ae53fb6d8db5b4056aca5878622d51df8',1,'naoqi::dataType']]]
 ];

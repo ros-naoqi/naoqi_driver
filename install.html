@@ -144,13 +144,13 @@ $(document).ready(function() {
 <span class="go">qibuild add-config &lt;tc_name&gt; -t &lt;tc_name&gt;</span>
 </pre></div>
 </div>
-<p>By default, qitoolchains don&#8217;t come with ROS packages. So we need to add them manually.
-.. code-block:: console</p>
-<blockquote>
-<div># Add a package that will find your local ROS installation
-cd ~/qibuild_ws
-git clone <a class="reference external" href="https://github.com/ros-naoqi/ros-toolchain.git">https://github.com/ros-naoqi/ros-toolchain.git</a>
-./ros-toolchain/update_toolchain.sh local_ros &lt;tc_name&gt;</div></blockquote>
+<p>By default, qitoolchains don&#8217;t come with ROS packages. So we need to add them manually.</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">#</span> Add a package that will find your <span class="nb">local </span>ROS installation
+<span class="go">cd ~/qibuild_ws</span>
+<span class="go">git clone https://github.com/ros-naoqi/ros-toolchain.git</span>
+<span class="go">./ros-toolchain/update_toolchain.sh local_ros &lt;tc_name&gt;</span>
+</pre></div>
+</div>
 <p>Download the dependencies of the alrosbridge:</p>
 <div class="highlight-console"><div class="highlight"><pre><span class="go">cd ~/qibuild_ws</span>
 <span class="go">qisrc add https://github.com/aldebaran/gtest.git</span>
@@ -224,7 +224,7 @@ git clone <a class="reference external" href="https://github.com/ros-naoqi/ros-t
     </div>
     <div class="footer">
         &copy; Copyright 2015, Aldebaran, Inc.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

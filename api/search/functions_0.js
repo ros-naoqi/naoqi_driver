@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_5fregistermemoryconverter',['_registerMemoryConverter',['../classalros_1_1Bridge.html#a2bf4f4aa5d8a9dc589568b051aa63351',1,'alros::Bridge']]],
-  ['_5fwhoisyourdaddy',['_whoIsYourDaddy',['../classalros_1_1Bridge.html#a547273ff5c0a31ad6b52c5fcf4898405',1,'alros::Bridge']]]
+  ['_5fregistermemoryconverter',['_registerMemoryConverter',['../classnaoqi_1_1Driver.html#a77f3c925ba0f16fb15a1e41ac767a6b0',1,'naoqi::Driver']]],
+  ['_5fwhoisyourdaddy',['_whoIsYourDaddy',['../classnaoqi_1_1Driver.html#a4c93d05a5b29776ea981b397a9af0a36',1,'naoqi::Driver']]]
 ];

@@ -1,16 +1,16 @@
 var searchData=
 [
-  ['event',['Event',['../classalros_1_1event_1_1Event.html',1,'alros::event']]],
-  ['event',['Event',['../classalros_1_1event_1_1Event.html#a1a11f61cdafd6555ee0ff4c41959f452',1,'alros::event::Event']]],
+  ['event',['Event',['../classnaoqi_1_1event_1_1Event.html',1,'naoqi::event']]],
+  ['event',['Event',['../classnaoqi_1_1event_1_1Event.html#a2351348c684fd887368d5bdda3abbada',1,'naoqi::event::Event']]],
   ['event_2ehpp',['event.hpp',['../event_8hpp.html',1,'']]],
-  ['event_5fmap_5f',['event_map_',['../classalros_1_1Bridge.html#a813febb1d75f412458165d1a7330a4dc',1,'alros::Bridge']]],
-  ['eventconcept',['EventConcept',['../structalros_1_1event_1_1Event_1_1EventConcept.html',1,'alros::event::Event']]],
-  ['eventconstiter',['EventConstIter',['../classalros_1_1Bridge.html#ae397f081636b3dfcca4b58dcacda70a1',1,'alros::Bridge']]],
-  ['eventiter',['EventIter',['../classalros_1_1Bridge.html#ae0caf1ab1169d52143af602f35d8508f',1,'alros::Bridge']]],
-  ['eventmodel',['EventModel',['../structalros_1_1event_1_1Event_1_1EventModel.html#ad57718ea0286723a57806b53654ee20a',1,'alros::event::Event::EventModel']]],
-  ['eventmodel',['EventModel',['../structalros_1_1event_1_1Event_1_1EventModel.html',1,'alros::event::Event']]],
-  ['eventptr_5f',['eventPtr_',['../classalros_1_1event_1_1Event.html#a592f90ac771bda578caf633e9042804e',1,'alros::event::Event']]],
-  ['eventregister',['EventRegister',['../classalros_1_1EventRegister.html',1,'alros']]],
-  ['eventregister',['EventRegister',['../classalros_1_1EventRegister.html#a690b42934093db31ede0afa462644bde',1,'alros::EventRegister::EventRegister()'],['../classalros_1_1EventRegister.html#ab0cd88f997841e144f529551c50ad74e',1,'alros::EventRegister::EventRegister(const std::string &amp;key, const qi::SessionPtr &amp;session)']]],
+  ['event_5fmap_5f',['event_map_',['../classnaoqi_1_1Driver.html#a651792ef4f9f07c4ec7da73003b85788',1,'naoqi::Driver']]],
+  ['eventconcept',['EventConcept',['../structnaoqi_1_1event_1_1Event_1_1EventConcept.html',1,'naoqi::event::Event']]],
+  ['eventconstiter',['EventConstIter',['../classnaoqi_1_1Driver.html#a29160b242a8ca2ad06d6fe555c5888b4',1,'naoqi::Driver']]],
+  ['eventiter',['EventIter',['../classnaoqi_1_1Driver.html#a4361405a5a8471ddd5f1bf531b26fd27',1,'naoqi::Driver']]],
+  ['eventmodel',['EventModel',['../structnaoqi_1_1event_1_1Event_1_1EventModel.html#aa738e90453401602a7bdc5a765650a25',1,'naoqi::event::Event::EventModel']]],
+  ['eventmodel',['EventModel',['../structnaoqi_1_1event_1_1Event_1_1EventModel.html',1,'naoqi::event::Event']]],
+  ['eventptr_5f',['eventPtr_',['../classnaoqi_1_1event_1_1Event.html#af9c6209f8dc708c94a051c1553f975bb',1,'naoqi::event::Event']]],
+  ['eventregister',['EventRegister',['../classnaoqi_1_1EventRegister.html',1,'naoqi']]],
+  ['eventregister',['EventRegister',['../classnaoqi_1_1EventRegister.html#a50a0ef24c3c6edade4b9e263b2d5a66a',1,'naoqi::EventRegister::EventRegister()'],['../classnaoqi_1_1EventRegister.html#ae6023886646c3fdd88c06d4a1fe76521',1,'naoqi::EventRegister::EventRegister(const std::string &amp;key, const qi::SessionPtr &amp;session)']]],
   ['external_5fregistration_2ecpp',['external_registration.cpp',['../external__registration_8cpp.html',1,'']]]
 ];

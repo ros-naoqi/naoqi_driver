@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['pepper',['PEPPER',['../namespacealros.html#a0f01c3442711ffe6d9855a05ebcc39acad420340eeb1f91c6d446f15fb39a9a35',1,'alros']]],
-  ['publish',['PUBLISH',['../namespacealros_1_1message__actions.html#a96dcea417d53be267e91ddd0a7374ae2a7ee03b654eb3fcb8c796a2900b5ff03e',1,'alros::message_actions']]]
+  ['pepper',['PEPPER',['../namespacenaoqi_1_1robot.html#a68e054e062676b094a8fe19327e5e9e4af2393b3af9bd08ae0877fb28e9aef3e2',1,'naoqi::robot']]],
+  ['publish',['PUBLISH',['../namespacenaoqi_1_1message__actions.html#af7780f83f326808c7452a6232ca612d7a676ba6c49cda584b4b0c2f1d357be8c2',1,'naoqi::message_actions']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['data',['data',['../structnaoqi__msgs_1_1AudioBuffer__.html#a72eae82acc1cf1540bd5ca20a935d02c',1,'naoqi_msgs::AudioBuffer_']]],
-  ['data_5fnames_5flist_5f',['data_names_list_',['../classalros_1_1converter_1_1ImuConverter.html#a67c78fb071427d9d29244a7dfb00dbab',1,'alros::converter::ImuConverter::data_names_list_()'],['../classalros_1_1converter_1_1MemoryListConverter.html#a9d02850125d7db2571edd74361058ae0',1,'alros::converter::MemoryListConverter::data_names_list_()']]]
+  ['data_5fnames_5flist_5f',['data_names_list_',['../classnaoqi_1_1converter_1_1ImuConverter.html#aef944b49bfdcf5698bce4ea46e038634',1,'naoqi::converter::ImuConverter::data_names_list_()'],['../classnaoqi_1_1converter_1_1MemoryListConverter.html#a5fe198325209004cc45b758ea2c328e9',1,'naoqi::converter::MemoryListConverter::data_names_list_()']]]
 ];
