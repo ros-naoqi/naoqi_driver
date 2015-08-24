@@ -25,6 +25,8 @@
 #include <ros/service_server.h>
 #include <std_srvs/Empty.h>
 
+#include <naoqi_bridge_msgs/GetRobotInfo.h>
+
 namespace naoqi
 {
 namespace service
@@ -49,7 +51,7 @@ public:
 
   void reset( ros::NodeHandle& nh );
 
-  bool callback( std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp );
+  bool callback( naoqi_bridge_msgs::GetRobotInfoRequest& req, naoqi_bridge_msgs::GetRobotInfoResponse& resp );
 
 
 private:

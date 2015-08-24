@@ -21,6 +21,8 @@
 
 #include <naoqi_driver/tools.hpp>
 
+#include <naoqi_bridge_msgs/RobotInfo.h>
+
 #include <qi/applicationsession.hpp>
 
 namespace naoqi
@@ -30,7 +32,9 @@ namespace helpers
 namespace driver
 {
 
-const robot::Robot& getRobot( const qi::SessionPtr& session );
+robot::Robot getRobot( const qi::SessionPtr& session );
+
+const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
 
 } // driver
 } // helpers

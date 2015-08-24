@@ -33,7 +33,7 @@ void RobotConfigService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &RobotConfigService::callback, this);
 }
 
-bool RobotConfigService::callback( std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp )
+bool RobotConfigService::callback( naoqi_bridge_msgs::GetRobotInfoRequest& req, naoqi_bridge_msgs::GetRobotInfoResponse& resp )
 {
   std::cout << "triggering robot config service" << std::endl;
   return true;
