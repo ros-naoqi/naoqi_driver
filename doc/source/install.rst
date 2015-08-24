@@ -86,7 +86,7 @@ How to install it
   .. code-block:: console
 
     cd ~/qibuild_ws
-    qisrc add https://github.com/ros-naoqi/naoqi-driver.git
+    qisrc add https://github.com/ros-naoqi/naoqi_driver.git
     cd naoqi_driver
     qibuild configure -c <tc_name>
     qibuild make -c <tc_name>
