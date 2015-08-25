@@ -16,6 +16,7 @@
 */
 
 #include "robot_config.hpp"
+#include "../helpers/driver_helpers.hpp"
 
 namespace naoqi
 {
@@ -37,6 +38,7 @@ void RobotConfigService::reset( ros::NodeHandle& nh )
 bool RobotConfigService::callback( naoqi_bridge_msgs::GetRobotInfoRequest& req, naoqi_bridge_msgs::GetRobotInfoResponse& resp )
 {
   std::cout << "triggering robot config service" << std::endl;
+  resp.info = helpers::driver::getRobotInfo(session_);
   return true;
 }
 
