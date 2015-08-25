@@ -44,15 +44,15 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
 
   if (std::string(robot) == "nao")
   {
-    info.robot_model = naoqi_bridge_msgs::RobotInfo::NAO;
+    info.type = naoqi_bridge_msgs::RobotInfo::NAO;
   }
   if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
   {
-    info.robot_model = naoqi_bridge_msgs::RobotInfo::PEPPER;
+    info.type = naoqi_bridge_msgs::RobotInfo::PEPPER;
   }
   if (std::string(robot) == "romeo" )
   {
-    info.robot_model = naoqi_bridge_msgs::RobotInfo::ROMEO;
+    info.type = naoqi_bridge_msgs::RobotInfo::ROMEO;
   }
 
   // Get the data from RobotConfig
@@ -75,9 +75,9 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
 robot::Robot getRobot( const qi::SessionPtr& session )
 {
   // TODO: return the type from naoqi_bridge_msgs::RobotInfo
-  if ( getRobotInfo(session).robot_model == naoqi_bridge_msgs::RobotInfo::NAO )
+  if ( getRobotInfo(session).type == naoqi_bridge_msgs::RobotInfo::NAO )
     return robot::NAO;
-  if ( getRobotInfo(session).robot_model == naoqi_bridge_msgs::RobotInfo::PEPPER )
+  if ( getRobotInfo(session).type == naoqi_bridge_msgs::RobotInfo::PEPPER )
     return robot::PEPPER;
 }
 
