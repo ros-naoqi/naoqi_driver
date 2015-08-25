@@ -26,6 +26,7 @@
 #include <std_srvs/Empty.h>
 
 #include <naoqi_bridge_msgs/GetRobotInfo.h>
+#include <qi/session.hpp>
 
 namespace naoqi
 {
@@ -35,7 +36,7 @@ namespace service
 class RobotConfigService
 {
 public:
-  RobotConfigService( const std::string& name, const std::string& topic );
+  RobotConfigService( const std::string& name, const std::string& topic, const qi::SessionPtr& session );
 
   ~RobotConfigService(){};
 
@@ -55,9 +56,10 @@ public:
 
 
 private:
-  const  std::string name_;
-  const  std::string topic_;
+  const std::string name_;
+  const std::string topic_;
 
+  const qi::SessionPtr& session_;
   ros::ServiceServer service_;
 };
 

@@ -22,9 +22,10 @@ namespace naoqi
 namespace service
 {
 
-RobotConfigService::RobotConfigService( const std::string& name, const std::string& topic )
+RobotConfigService::RobotConfigService( const std::string& name, const std::string& topic, const qi::SessionPtr& session )
   : name_(name),
-  topic_(topic)
+  topic_(topic),
+  session_(session)
 {}
 
 void RobotConfigService::reset( ros::NodeHandle& nh )
