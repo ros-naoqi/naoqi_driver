@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.2 (2015-08-26)
+------------------
 * build and run dependency v004 for bridge msgs
 * fill robot config data
 * implement robot config service call
