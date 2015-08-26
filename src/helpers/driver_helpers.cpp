@@ -59,16 +59,110 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   qi::AnyObject p_motion = session->service("ALMotion");
   std::vector<std::vector<qi::AnyValue> > config = p_motion.call<std::vector<std::vector<qi::AnyValue> > >("getRobotConfig");
 
-  for (size_t i=0; i<config[0].size(); ++i)
+  // TODO, fill with the proper string matches from http://doc.aldebaran.com/2-1/naoqi/motion/tools-general-api.html#ALMotionProxy::getRobotConfig
+
+  for (size_t i=0; i<config[0].size();++i)
   {
-    // TODO, fill with the proper string matches from http://doc.aldebaran.com/2-1/naoqi/motion/tools-general-api.html#ALMotionProxy::getRobotConfig
+    if (config[0][i].as<std::string>() == "Model Type")
+    {
+      try{
+        info.model = config[1][i].as<std::string>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
 
-//    if (config[1][i].kind() == qi::TypeKind_Int)
-//      info.config_int_[config[0][i].asString()] = config[1][i].toInt();
-//    if (config[1][i].kind() == qi::TypeKind_String)
-//      info.config_string_[config[0][i].asString()] = config[1][i].asString();
+    if (config[0][i].as<std::string>() == "Head Version")
+    {
+      try{
+        info.head_version = config[1][i].as<std::string>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Body Version")
+    {
+      try{
+        info.body_version = config[1][i].as<std::string>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Arm Version")
+    {
+      try{
+        info.arm_version = config[1][i].as<std::string>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Laser")
+    {
+      try{
+        info.has_laser = config[1][i].as<bool>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Extended Arms")
+    {
+      try{
+        info.has_extended_arms = config[1][i].as<bool>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Number of Legs")
+    {
+      try{
+        info.number_of_legs = config[1][i].as<int>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Number of Arms")
+    {
+      try{
+        info.number_of_arms = config[1][i].as<int>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
+    if (config[0][i].as<std::string>() == "Number of Hands")
+    {
+      try{
+        info.number_of_hands = config[1][i].as<int>();
+      }
+      catch(const std::exception& e)
+      {
+        std::cout << "Error in robot config variable " << (config[0][i]).as<std::string>() << std::endl;
+      }
+    }
+
   }
-
   return info;
 }
 

@@ -31,13 +31,11 @@ RobotConfigService::RobotConfigService( const std::string& name, const std::stri
 
 void RobotConfigService::reset( ros::NodeHandle& nh )
 {
-  std::cout << "i will advertise my ros service on topic " << topic_ << std::endl;
   service_ = nh.advertiseService(topic_, &RobotConfigService::callback, this);
 }
 
 bool RobotConfigService::callback( naoqi_bridge_msgs::GetRobotInfoRequest& req, naoqi_bridge_msgs::GetRobotInfoResponse& resp )
 {
-  std::cout << "triggering robot config service" << std::endl;
   resp.info = helpers::driver::getRobotInfo(session_);
   return true;
 }
