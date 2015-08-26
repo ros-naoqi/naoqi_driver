@@ -2,6 +2,28 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* build and run dependency v004 for bridge msgs
+* fill robot config data
+* implement robot config service call
+* change to latest robotinfo msg
+* add sessionptr to service
+* fill the service to get the robot info
+* Merge pull request `#38 <https://github.com/ros-naoqi/naoqi_driver/issues/38>`_ from antegallya/patch-1
+  Fix repo url in install.rst
+* Fix repo url in install.rst
+* Merge pull request `#37 <https://github.com/ros-naoqi/naoqi_driver/issues/37>`_ from antegallya/patch-1
+  Fix a code-block in install.rst
+* Fix a code-block in install.rst
+* rename service topic to ros standard
+* add license declaration
+* add support for ros services
+* update doc
+* enhance error message in camera converter
+* naoqi_driver_node is an executable not a library
+* Contributors: Karsten Knese, Pierre Hauweele, Vincent Rabaud
+
 0.5.1 (2015-08-11)
 ------------------
 * rename dump_enabled to log_enabled
