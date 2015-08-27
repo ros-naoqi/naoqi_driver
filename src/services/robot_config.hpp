@@ -23,7 +23,6 @@
 
 #include <ros/node_handle.h>
 #include <ros/service_server.h>
-#include <std_srvs/Empty.h>
 
 #include <naoqi_bridge_msgs/GetRobotInfo.h>
 #include <qi/session.hpp>
