@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.4 (2015-08-27)
+------------------
 * remove useless include
 * add V Rabaud as a maintainer
 * Contributors: Vincent Rabaud
