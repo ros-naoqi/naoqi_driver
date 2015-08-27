@@ -2,6 +2,11 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix correct loading of urdf
+* Contributors: Karsten Knese
+
 0.5.4 (2015-08-27)
 ------------------
 * remove useless include
