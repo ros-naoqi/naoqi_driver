@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.5 (2015-08-27)
+------------------
 * fix correct loading of urdf
 * Contributors: Karsten Knese
 
