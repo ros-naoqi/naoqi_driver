@@ -38,7 +38,8 @@ enum Robot
 {
   UNIDENTIFIED,
   NAO,
-  PEPPER
+  PEPPER,
+  ROMEO
 };
 }
 

@@ -32,12 +32,14 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   static qi::SessionPtr session_old;
 
   if (session_old == session)
+  {
     return info;
+  }
 
   session_old = session;
 
   // Get the robot type
-  std::cout << "I am going to call RobotModel proxy" << std::endl;
+  std::cout << "Receiving information about robot model" << std::endl;
   qi::AnyObject p_memory = session->service("ALMemory");
   std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
   std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
@@ -166,18 +168,30 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   return info;
 }
 
-robot::Robot getRobot( const qi::SessionPtr& session )
+const robot::Robot& getRobot( const qi::SessionPtr& session )
 {
-  // TODO: return the type from naoqi_bridge_msgs::RobotInfo
+  static robot::Robot robot = robot::UNIDENTIFIED;
+
   if ( getRobotInfo(session).type == naoqi_bridge_msgs::RobotInfo::NAO )
-    return robot::NAO;
+  {
+    robot = robot::NAO;
+  }
   if ( getRobotInfo(session).type == naoqi_bridge_msgs::RobotInfo::PEPPER )
-    return robot::PEPPER;
+  {
+    robot = robot::PEPPER;
+  }
+  if ( getRobotInfo(session).type == naoqi_bridge_msgs::RobotInfo::ROMEO )
+  {
+    robot = robot::ROMEO;
+  }
+
+  return robot;
 }
 
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session )
 {
-  return getRobotInfoLocal(session);
+  static naoqi_bridge_msgs::RobotInfo robot_info =  getRobotInfoLocal(session);
+  return robot_info;
 }
 
 } // driver

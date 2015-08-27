@@ -61,43 +61,6 @@ public:
     return frequency_;
   }
 
-  /** Function that returns the type of a robot
-   */
-  /*
-  inline Robot robot() const
-  {
-    if (robot_ != UNIDENTIFIED)
-      return robot_;
-
-    qi::AnyObject p_memory = session_->service("ALMemory");
-    std::string robot;
-    try{
-      robot = p_memory.call<qi::AnyValue>("getData", "RobotConfig/Body/Type" ).toString();
-    }
-    catch(std::runtime_error& e)
-    {
-      return UNIDENTIFIED;
-    }
-
-    std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
-    std::cout << "found robot variable " << robot << std::endl;
-    if (std::string(robot) == "nao")
-    {
-      robot_ = NAO;
-      return robot_;
-    }
-    else if (std::string(robot) == "pepper" || std::string(robot) == "juliette")
-    {
-      robot_ = PEPPER;
-      return robot_;
-    }
-    else
-    {
-      robot_ = UNIDENTIFIED;
-      return robot_;
-    }
-  }*/
-
 protected:
   std::string name_;
 
