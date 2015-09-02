@@ -39,6 +39,10 @@ std::string getRobotDescription( const robot::Robot& robot){
     {
       urdf_path = helpers::filesystem::getURDF("nao.urdf");
     }
+    else if ( robot == robot::ROMEO )
+    {
+      urdf_path = helpers::filesystem::getURDF("romeo.urdf");
+    }
     else
     {
       std::cerr << " could not load urdf file from disk " << std::endl;
