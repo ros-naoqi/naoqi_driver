@@ -28,6 +28,7 @@
 /*
 * ROS includes
 */
+#include <urdf/model.h>
 #include <sensor_msgs/JointState.h>
 #include <robot_state_publisher/robot_state_publisher.h>
 
@@ -42,6 +43,8 @@ class JointStateConverter : public BaseConverter<JointStateConverter>
   typedef boost::function<void(sensor_msgs::JointState&, std::vector<geometry_msgs::TransformStamped>&) > Callback_t;
 
   typedef boost::shared_ptr<tf2_ros::Buffer> BufferPtr;
+
+  typedef std::map<std::string, boost::shared_ptr<urdf::JointMimic> > MimicMap;
 
 public:
   JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session );
@@ -73,6 +76,9 @@ private:
 
   /** Robot Description in xml format **/
   std::string robot_desc_;
+
+  /** MimicJoint List **/
+  MimicMap mimic_;
 
   /** JointState Message **/
   sensor_msgs::JointState msg_joint_states_;
