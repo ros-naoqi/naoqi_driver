@@ -30,6 +30,7 @@
 /*
 * ROS includes
 */
+#include <urdf/model.h>
 #include <kdl_parser/kdl_parser.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
@@ -59,11 +60,20 @@ void JointStateConverter::reset()
     std::cout << "error in loading robot description" << std::endl;
     return;
   }
+  urdf::Model model;
+  model.initString( robot_desc_ );
   KDL::Tree tree;
-  kdl_parser::treeFromString( robot_desc_, tree );
+  kdl_parser::treeFromUrdfModel( model, tree );
 
   addChildren( tree.getRootSegment() );
 
+  // set mimic joint list
+  mimic_.clear();
+  for(std::map< std::string, boost::shared_ptr< urdf::Joint > >::iterator i = model.joints_.begin(); i != model.joints_.end(); i++){
+    if(i->second->mimic){
+      mimic_.insert(make_pair(i->first, i->second->mimic));
+    }
+  }
   // pre-fill joint states message
   msg_joint_states_.name = p_motion_.call<std::vector<std::string> >("getBodyNames", "Body" );
 }
@@ -102,6 +112,14 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
       ++itName, ++itPos)
   {
     joint_state_map[*itName] = *itPos;
+  }
+
+  // for mimic map
+  for(MimicMap::iterator i = mimic_.begin(); i != mimic_.end(); i++){
+    if(joint_state_map.find(i->second->joint_name) != joint_state_map.end()){
+      double pos = joint_state_map[i->second->joint_name] * i->second->multiplier + i->second->offset;
+      joint_state_map[i->first] = pos;
+    }
   }
 
   // reset the transforms we want to use at this time
