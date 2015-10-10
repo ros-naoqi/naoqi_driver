@@ -25,6 +25,15 @@
 #include "naoqi_env.hpp"
 #include "helpers/driver_helpers.hpp"
 
+std::pair<std::string, std::string> ros_node_name_parser(const std::string& o) {
+  if(o.find("__name:=") == 0) {
+    return std::make_pair(std::string("node_name"), o.substr(std::string("__name:=").size()));
+  } else {
+    return std::make_pair(std::string(), std::string());
+  }
+}
+
+
 int main(int argc, char** argv)
 {
   /* adjust the SDK prefix in case you compiled via catkin*/
@@ -37,17 +46,20 @@ int main(int argc, char** argv)
   ros::removeROSArgs( argc, argv, args_out );
 
   namespace po = boost::program_options;
-  po::options_description desc("Options");
+  po::options_description desc("Options"), all_desc("Options");
   desc.add_options()
     ("help,h", "print help message")
     ("roscore_ip,r", po::value<std::string>(), "set the ip of the roscore to use")
-    ("network_interface,i", po::value<std::string>()->default_value("eth0"),  "set the network interface over which to connect")
-    ("namespace,n", po::value<std::string>()->default_value(""), "set an explicit namespace in case ROS namespace variables cannot be used");
+    ("network_interface,i", po::value<std::string>()->default_value("eth0"),  "set the network interface over which to connect");
+
+  all_desc.add_options()
+    ("node_name,n", po::value<std::string>()->default_value("naoqi_driver"), "this node name");
+  all_desc.add(desc);
 
   po::variables_map vm;
   try
   {
-    po::store( po::parse_command_line(argc, argv, desc), vm );
+    po::store( po::command_line_parser(argc, argv).options(all_desc).extra_parser(ros_node_name_parser).run(), vm );
   }
   catch (boost::program_options::invalid_command_line_syntax& e)
   {
@@ -69,7 +81,7 @@ int main(int argc, char** argv)
 
   // everything's correctly parsed - let's start the app!
   app.start();
-  boost::shared_ptr<naoqi::Driver> bs = qi::import("naoqi_driver_module").call<qi::Object<naoqi::Driver> >("ROS-Driver", app.session(), vm["namespace"].as<std::string>()).asSharedPtr();
+  boost::shared_ptr<naoqi::Driver> bs = qi::import("naoqi_driver_module").call<qi::Object<naoqi::Driver> >("ROS-Driver", app.session(), vm["node_name"].as<std::string>()).asSharedPtr();
 
   app.session()->registerService("ROS-Driver", bs);
 
