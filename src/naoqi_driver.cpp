@@ -890,7 +890,7 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
     }
   }
   // Start publishing again
-  publish_enabled_ = true;
+  startPublishing();
 
   if ( !keep_looping )
   {
