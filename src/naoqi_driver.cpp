@@ -25,6 +25,7 @@
  * CONVERTERS
  */
 #include "converters/audio.hpp"
+#include "converters/bumper.hpp"
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
@@ -574,6 +575,8 @@ void Driver::registerDefaultConverter()
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
 
+  bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
+  size_t bumper_frequency             = boot_config_.get( "converters.bumper.frequency", 10);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -757,6 +760,19 @@ void Driver::registerDefaultConverter()
       event_map_.find("audio")->second.isPublishing(true);
     }
   }
+
+  /** BUMPER **/
+  if ( bumper_enabled )
+  {
+    boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> > bmpp = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> >( "bumper" );
+    //boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::Bumper> > bmpr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::Bumper> >( "bumper" );
+    boost::shared_ptr<converter::BumperConverter> bmpc = boost::make_shared<converter::BumperConverter>( "bumper", bumper_frequency, sessionPtr_);
+    bmpc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::Bumper>::publish, bmpp, _1) );
+    //bmpc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::Bumper>::write, bmpr, _1) );
+    //bmpc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::Bumper>::bufferize, bmpr, _1) );
+    registerPublisher( bmpc, bmpp );
+  }
+
 }
 
 // public interface here

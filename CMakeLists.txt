@@ -5,6 +5,7 @@ project(naoqi_driver)
 set(
   CONVERTERS_SRC
   src/converters/audio.cpp
+  src/converters/bumper.cpp
   src/converters/camera.cpp
   src/converters/diagnostics.cpp
   src/converters/imu.cpp
