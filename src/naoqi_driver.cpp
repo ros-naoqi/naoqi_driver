@@ -60,7 +60,7 @@
  */
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
-
+#include "subscribers/photocapture.hpp"
 
 /*
  * SERVICES
@@ -787,6 +787,7 @@ void Driver::registerDefaultSubscriber()
     return;
   registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", "/joint_angles", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::PhotoCaptureSubscriber>("photocapture", "/photo_capture", sessionPtr_));
 }
 
 void Driver::registerService( service::Service srv )
