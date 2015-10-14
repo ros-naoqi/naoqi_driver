@@ -821,7 +821,18 @@
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
   </link>
-  <link name="RFsrFToeRearRight_frame"/>
+  <link name="RFsrFToeRearRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/ToeRearRight_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrFToeRearRight_frame"/>
@@ -842,14 +853,36 @@
     <origin rpy="0 0 1.5708" xyz="-0.01135 -0.04225 0.16011"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrRearCenter_frame"/>
+  <link name="RFsrRearCenter_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/CenterRear_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrRearCenter_frame"/>
     <origin rpy="0 0 0" xyz="0.01448 -0.0145 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrFrontCenter_frame"/>
+  <link name="RFsrFrontCenter_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/CenterFront_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrFrontCenter_frame"/>
@@ -862,7 +895,18 @@
     <child link="CameraLeftEye_optical_frame"/>
     <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
   </joint>
-  <link name="LFsrHeelRight_frame"/>
+  <link name="LFsrHeelRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/HeelRight_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrHeelRight_frame"/>
@@ -888,21 +932,54 @@
     <child link="CameraRightEye_optical_frame"/>
     <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
   </joint>
-  <link name="RFsrFToeFrontRight_frame"/>
+  <link name="RFsrFToeFrontRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/ToeFrontRight_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrFToeFrontRight_frame"/>
     <origin rpy="0 0 0" xyz="0.16098 -0.024 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrHeelRight_frame"/>
+  <link name="RFsrHeelRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/HeelRight_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrHeelRight_frame"/>
     <origin rpy="0 0 0" xyz="-0.04602 -0.017 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrFToeRearLeft_frame"/>
+  <link name="RFsrFToeRearLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/ToeRearLeft_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrFToeRearLeft_frame"/>
@@ -916,14 +993,36 @@
     <origin rpy="0 0 0" xyz="0.06185 0.0087 -0.1582"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrFToeRearRight_frame"/>
+  <link name="LFsrFToeRearRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/ToeRearRight_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrFToeRearRight_frame"/>
     <origin rpy="0 0 0" xyz="0.12698 -0.0315 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrHeelLeft_frame"/>
+  <link name="LFsrHeelLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/HeelLeft_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrHeelLeft_frame"/>
@@ -944,14 +1043,36 @@
     <origin rpy="0 0 0" xyz="0.06185 0.0087 -0.1582"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrFToeRearLeft_frame"/>
+  <link name="LFsrFToeRearLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/ToeRearLeft_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrFToeRearLeft_frame"/>
     <origin rpy="0 0 0" xyz="0.11898 0.0335 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrRearCenter_frame"/>
+  <link name="LFsrRearCenter_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/CenterRear_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrRearCenter_frame"/>
@@ -971,14 +1092,36 @@
     <child link="CameraLeft_optical_frame"/>
     <origin rpy="-1.57079632679 0 -1.57079632679" xyz="0 0 0"/>
   </joint>
-  <link name="LFsrFToeFrontRight_frame"/>
+  <link name="LFsrFToeFrontRight_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/ToeFrontRight_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrFToeFrontRight_frame"/>
     <origin rpy="0 0 0" xyz="0.17298 -0.023 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrHeelLeft_frame"/>
+  <link name="RFsrHeelLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/HeelLeft_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrHeelLeft_frame"/>
@@ -992,21 +1135,54 @@
     <origin rpy="0 0 1.5708" xyz="-0.01135 -0.04225 0.16011"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrFrontCenter_frame"/>
+  <link name="LFsrFrontCenter_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/CenterFront_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrFrontCenter_frame"/>
     <origin rpy="0 0 0" xyz="0.07498 0.01275 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="RFsrFToeFrontLeft_frame"/>
+  <link name="RFsrFToeFrontLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="RFoot/FSR/ToeFrontLeft_sensor_fixedjoint" type="fixed">
     <parent link="r_ankle"/>
     <child link="RFsrFToeFrontLeft_frame"/>
     <origin rpy="0 0 0" xyz="0.17298 0.023 -0.06226"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="LFsrFToeFrontLeft_frame"/>
+  <link name="LFsrFToeFrontLeft_frame">
+    <collision>
+      <geometry>
+        <box size="0.01 0.01 0.005"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2e-06"/>
+      <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+    </inertial>
+  </link>
   <joint name="LFoot/FSR/ToeFrontLeft_sensor_fixedjoint" type="fixed">
     <parent link="l_ankle"/>
     <child link="LFsrFToeFrontLeft_frame"/>
@@ -1638,4 +1814,3 @@
     <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
 </robot>
-
