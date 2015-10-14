@@ -200,6 +200,24 @@ std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<fl
   return result;
 }
 
+std::vector<int> fromAnyValueToIntegerVector(qi::AnyValue& value, std::vector<int>& result){
+  qi::AnyReferenceVector anyrefs = value.asListValuePtr();
+
+  for(int i=0; i<anyrefs.size();i++)
+  {
+    try
+    {
+      result.push_back(anyrefs[i].content().toInt());
+    }
+    catch(std::runtime_error& e)
+    {
+      result.push_back(-1);
+      std::cout << e.what() << "=> set to -1" << std::endl;
+    }
+  }
+  return result;
+}
+
 std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::vector<std::string>& result){
   qi::AnyReferenceVector anyrefs = value.asListValuePtr();
 
@@ -215,6 +233,25 @@ std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::ve
       std::cout << e.what() << " => set to 'Not available'" << std::endl;
     }
   }
+  return result;
+}
+
+std::vector<std::pair<std::string, bool> > fromAnyValueToStringBoolPairVector(qi::AnyValue& value, std::vector<std::pair<std::string, bool> >& result){
+  qi::AnyReferenceVector anyrefs1 = value.asListValuePtr();
+
+  for(int i=0; i<anyrefs1.size();i++)
+  {
+    try
+    {
+      qi::AnyReferenceVector anyrefs2 = anyrefs1[i].asTupleValuePtr();
+      result.push_back(std::pair<std::string, bool>(anyrefs[i].content()[0].toString(), anyrefs[i].content()[1].toInt()==1));
+    }
+    catch(std::runtime_error& e)
+    {
+      std::cout << e.what() << std::endl;
+    }
+  }
+  std::cerr << std::endl;
   return result;
 }
 

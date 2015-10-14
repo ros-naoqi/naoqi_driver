@@ -38,6 +38,10 @@ std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::ve
 
 std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<float>& result);
 
+std::vector<int> fromAnyValueToIntegerVector(qi::AnyValue& value, std::vector<int>& result);
+
+std::vector<std::pair<std::string, bool> > fromAnyValueToStringBoolPairVector(qi::AnyValue& value, std::vector<std::pair<std::string, bool> >& result);
+
 }
 
 }
