@@ -48,7 +48,7 @@ BumperEventRegister::BumperEventRegister( const std::string& name, const std::ve
 {
   publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> >( name );
   //recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> >( name );
-  converter_ = boost::make_shared<converter::BumperEventConverter>( name, frequency, session );
+  converter_ = boost::make_shared<converter::TouchEventConverter<naoqi_bridge_msgs::Bumper> >( name, frequency, session );
 
   converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::Bumper>::publish, publisher_, _1) );
   //converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::write, recorder_, _1) );
@@ -206,7 +206,7 @@ TactileTouchEventRegister::TactileTouchEventRegister( const std::string& name, c
 {
   publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch> >( name );
   //recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> >( name );
-  converter_ = boost::make_shared<converter::TactileTouchEventConverter>( name, frequency, session );
+  converter_ = boost::make_shared<converter::TouchEventConverter<naoqi_bridge_msgs::TactileTouch> >( name, frequency, session );
 
   converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch>::publish, publisher_, _1) );
   //converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::write, recorder_, _1) );

@@ -84,7 +84,7 @@ private:
   void onEvent();
 
 private:
-  boost::shared_ptr<converter::BumperEventConverter> converter_;
+  boost::shared_ptr<converter::TouchEventConverter<naoqi_bridge_msgs::Bumper> > converter_;
   boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> > publisher_;
   //boost::shared_ptr<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> > recorder_;
 
@@ -138,7 +138,7 @@ private:
   void onEvent();
 
 private:
-  boost::shared_ptr<converter::TactileTouchEventConverter> converter_;
+  boost::shared_ptr<converter::TouchEventConverter<naoqi_bridge_msgs::TactileTouch> > converter_;
   boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch> > publisher_;
   //boost::shared_ptr<recorder::BasicEventRecorder<naoqi_bridge_msgs::TactileTouch> > recorder_;
 
