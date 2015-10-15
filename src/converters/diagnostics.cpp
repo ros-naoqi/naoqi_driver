@@ -54,12 +54,14 @@ namespace converter
 DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequency, const qi::SessionPtr& session ):
     BaseConverter( name, frequency, session ),
     p_memory_(session->service("ALMemory")),
-    p_body_temperature_(session->service("ALBodyTemperature")),
     temperature_warn_level_(68),
     temperature_error_level_(74)
 {
   // Allow for temperature reporting (for CPU)
-  p_body_temperature_.call<void>("setEnableNotifications", true);
+  if ((robot_ == robot::PEPPER) || (robot_ == robot::NAO)) {
+    p_body_temperature_ = session->service("ALBodyTemperature");
+    p_body_temperature_.call<void>("setEnableNotifications", true);
+  }
 
   // Get all the joint names
   qi::AnyObject p_motion = session->service("ALMotion");
