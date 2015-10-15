@@ -38,6 +38,7 @@ set(
   SUBSCRIBER_SRC
   src/subscribers/teleop.cpp
   src/subscribers/moveto.cpp
+  src/subscribers/photocapture.cpp
   )
 
 set(
