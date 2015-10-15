@@ -30,24 +30,29 @@ namespace naoqi{
 
 namespace converter{
 
-BumperEventConverter::BumperEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session)
-    : BaseConverter(name, frequency, session)
+template <class T>
+TouchEventConverter<T>::TouchEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session)
+  : BaseConverter<TouchEventConverter<T> >(name, frequency, session)
 {
 }
 
-BumperEventConverter::~BumperEventConverter() {
+template <class T>
+TouchEventConverter<T>::~TouchEventConverter() {
 }
 
-void BumperEventConverter::reset()
+template <class T>
+void TouchEventConverter<T>::reset()
 {
 }
 
-void BumperEventConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
+template <class T>
+void TouchEventConverter<T>::registerCallback( const message_actions::MessageAction action, Callback_t cb )
 {
   callbacks_[action] = cb;
 }
 
-void BumperEventConverter::callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_bridge_msgs::Bumper& msg)
+template <class T>
+void TouchEventConverter<T>::callAll(const std::vector<message_actions::MessageAction>& actions, T& msg)
 {
   msg_ = msg;
   for_each( message_actions::MessageAction action, actions )
@@ -56,34 +61,9 @@ void BumperEventConverter::callAll(const std::vector<message_actions::MessageAct
   }
 }
 
-////
-
-TactileTouchEventConverter::TactileTouchEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session)
-    : BaseConverter(name, frequency, session)
-{
-}
-
-TactileTouchEventConverter::~TactileTouchEventConverter() {
-}
-
-void TactileTouchEventConverter::reset()
-{
-}
-
-void TactileTouchEventConverter::registerCallback( const message_actions::MessageAction action, Callback_t cb )
-{
-  callbacks_[action] = cb;
-}
-
-void TactileTouchEventConverter::callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_bridge_msgs::TactileTouch& msg)
-{
-  msg_ = msg;
-  for_each( message_actions::MessageAction action, actions )
-  {
-    callbacks_[action](msg_);
-  }
-}
-
+// http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
+template class TouchEventConverter<naoqi_bridge_msgs::Bumper>;
+template class TouchEventConverter<naoqi_bridge_msgs::TactileTouch>;
 }
 
 }

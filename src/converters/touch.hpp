@@ -39,49 +39,29 @@ namespace naoqi{
 
 namespace converter{
 
-class BumperEventConverter : public BaseConverter<BumperEventConverter>
+template <class T>
+class TouchEventConverter : public BaseConverter<TouchEventConverter<T> >
 {
 
-  typedef boost::function<void(naoqi_bridge_msgs::Bumper&) > Callback_t;
+  typedef boost::function<void(T&) > Callback_t;
 
 public:
-  BumperEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
+  TouchEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
 
-  ~BumperEventConverter();
+  ~TouchEventConverter();
 
   virtual void reset();
 
   void registerCallback( const message_actions::MessageAction action, Callback_t cb );
 
-  void callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_bridge_msgs::Bumper& msg);
+  void callAll(const std::vector<message_actions::MessageAction>& actions, T& msg);
 
 private:
   /** Registered Callbacks **/
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
-  naoqi_bridge_msgs::Bumper msg_;
+  T msg_;
 };
 
-class TactileTouchEventConverter : public BaseConverter<TactileTouchEventConverter>
-{
-
-  typedef boost::function<void(naoqi_bridge_msgs::TactileTouch&) > Callback_t;
-
-public:
-  TactileTouchEventConverter(const std::string& name, const float& frequency, const qi::SessionPtr& session);
-
-  ~TactileTouchEventConverter();
-
-  virtual void reset();
-
-  void registerCallback( const message_actions::MessageAction action, Callback_t cb );
-
-  void callAll(const std::vector<message_actions::MessageAction>& actions, naoqi_bridge_msgs::TactileTouch& msg);
-
-private:
-  /** Registered Callbacks **/
-  std::map<message_actions::MessageAction, Callback_t> callbacks_;
-  naoqi_bridge_msgs::TactileTouch msg_;
-};
 }
 
 }
