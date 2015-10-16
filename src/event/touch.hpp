@@ -51,7 +51,8 @@ namespace naoqi
 * @note a type erasure pattern in implemented here to avoid strict inheritance,
 * thus each possible publisher instance has to implement the virtual functions mentioned in the concept
 */
-class BumperEventRegister: public boost::enable_shared_from_this<BumperEventRegister>
+template<class T>
+class TouchEventRegister: public boost::enable_shared_from_this<TouchEventRegister<T> >
 {
 
 public:
@@ -59,9 +60,9 @@ public:
   /**
   * @brief Constructor for recorder interface
   */
-  BumperEventRegister();
-  BumperEventRegister(const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session );
-  ~BumperEventRegister();
+  TouchEventRegister();
+  TouchEventRegister(const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session );
+  ~TouchEventRegister();
 
   void resetPublisher( ros::NodeHandle& nh );
   void resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr );
@@ -77,6 +78,9 @@ public:
   void isDumping(bool state);
 
   void touchCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message);
+  void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::Bumper &msg);
+  void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::TactileTouch &msg);
+  
 
 private:
   void registerCallback();
@@ -84,15 +88,13 @@ private:
   void onEvent();
 
 private:
-  boost::shared_ptr<converter::TouchEventConverter<naoqi_bridge_msgs::Bumper> > converter_;
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> > publisher_;
-  //boost::shared_ptr<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> > recorder_;
+  boost::shared_ptr<converter::TouchEventConverter<T> > converter_;
+  boost::shared_ptr<publisher::BasicPublisher<T> > publisher_;
+  //boost::shared_ptr<recorder::BasicEventRecorder<T> > recorder_;
 
   qi::SessionPtr session_;
-  qi::AnyObject p_touch_;
   qi::AnyObject p_memory_;
   unsigned int serviceId;
-  std::vector<std::string> keys_;
   std::string name_;
 
   boost::mutex mutex_;
@@ -102,62 +104,41 @@ private:
   bool isRecording_;
   bool isDumping_;
 
+protected:
+  std::vector<std::string> keys_;
 }; // class
 
 
-class TactileTouchEventRegister: public boost::enable_shared_from_this<TactileTouchEventRegister>
+class BumperEventRegister: public TouchEventRegister<naoqi_bridge_msgs::Bumper>
 {
-
 public:
+  BumperEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : TouchEventRegister<naoqi_bridge_msgs::Bumper>(name, keys, frequency, session) {}
+};
 
-  /**
-  * @brief Constructor for recorder interface
-  */
-  TactileTouchEventRegister();
-  TactileTouchEventRegister(const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session );
-  ~TactileTouchEventRegister();
+class TactileTouchEventRegister: public TouchEventRegister<naoqi_bridge_msgs::TactileTouch>
+{
+public:
+  TactileTouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : TouchEventRegister<naoqi_bridge_msgs::TactileTouch>(name, keys, frequency, session) {}
+};
 
-  void resetPublisher( ros::NodeHandle& nh );
-  void resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr );
+//QI_REGISTER_OBJECT(BumperEventRegister, touchCallback)
+//QI_REGISTER_OBJECT(TactileTouchEventRegister, touchCallback)
 
-  void startProcess();
-  void stopProcess();
+static bool _qiregisterTouchEventRegisterBumper() {
+  ::qi::ObjectTypeBuilder<TouchEventRegister<naoqi_bridge_msgs::Bumper> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, TouchEventRegister<naoqi_bridge_msgs::Bumper>, touchCallback)
+    b.registerType();
+  return true;
+  }
+static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterTouchEventRegisterBumper();
 
-  void writeDump(const ros::Time& time);
-  void setBufferDuration(float duration);
-
-  void isRecording(bool state);
-  void isPublishing(bool state);
-  void isDumping(bool state);
-
-  void touchCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message);
-
-private:
-  void registerCallback();
-  void unregisterCallback();
-  void onEvent();
-
-private:
-  boost::shared_ptr<converter::TouchEventConverter<naoqi_bridge_msgs::TactileTouch> > converter_;
-  boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch> > publisher_;
-  //boost::shared_ptr<recorder::BasicEventRecorder<naoqi_bridge_msgs::TactileTouch> > recorder_;
-
-  qi::SessionPtr session_;
-  qi::AnyObject p_touch_;
-  qi::AnyObject p_memory_;
-  unsigned int serviceId;
-  std::vector<std::string> keys_;
-  std::string name_;
-
-  boost::mutex mutex_;
-
-  bool isStarted_;
-  bool isPublishing_;
-  bool isRecording_;
-  bool isDumping_;
-
-}; // class
-
+static bool _qiregisterTouchEventRegisterTactileTouch() {
+  ::qi::ObjectTypeBuilder<TouchEventRegister<naoqi_bridge_msgs::TactileTouch> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, TouchEventRegister<naoqi_bridge_msgs::TactileTouch>, touchCallback)
+    b.registerType();
+  return true;
+  }
+static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterTouchEventRegisterTactileTouch();
 
 } //naoqi
 
