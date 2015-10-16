@@ -32,27 +32,28 @@
 namespace naoqi
 {
 
-BumperEventRegister::BumperEventRegister()
+template<class T>
+TouchEventRegister<T>::TouchEventRegister()
 {
 }
 
-BumperEventRegister::BumperEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session )
+template<class T>
+TouchEventRegister<T>::TouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session )
   : serviceId(0),
     p_memory_( session->service("ALMemory")),
-    p_touch_( session->service("ALTouch")),
     session_(session),
     isStarted_(false),
     isPublishing_(false),
     isRecording_(false),
     isDumping_(false)
 {
-  publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::Bumper> >( name );
-  //recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> >( name );
-  converter_ = boost::make_shared<converter::TouchEventConverter<naoqi_bridge_msgs::Bumper> >( name, frequency, session );
+  publisher_ = boost::make_shared<publisher::BasicPublisher<T> >( name );
+  //recorder_ = boost::make_shared<recorder::BasicEventRecorder<T> >( name );
+  converter_ = boost::make_shared<converter::TouchEventConverter<T> >( name, frequency, session );
 
-  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::Bumper>::publish, publisher_, _1) );
-  //converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::write, recorder_, _1) );
-  //converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::bufferize, recorder_, _1) );
+  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<T>::publish, publisher_, _1) );
+  //converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<T>::write, recorder_, _1) );
+  //converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<T>::bufferize, recorder_, _1) );
 
   keys_.resize(keys.size());
   size_t i = 0;
@@ -62,53 +63,65 @@ BumperEventRegister::BumperEventRegister( const std::string& name, const std::ve
   name_ = name;
 }
 
-BumperEventRegister::~BumperEventRegister()
+template<class T>
+TouchEventRegister<T>::~TouchEventRegister()
 {
   stopProcess();
 }
 
-void BumperEventRegister::resetPublisher(ros::NodeHandle& nh)
+template<class T>
+void TouchEventRegister<T>::resetPublisher(ros::NodeHandle& nh)
 {
   publisher_->reset(nh);
 }
 
-void BumperEventRegister::resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr )
+template<class T>
+void TouchEventRegister<T>::resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr )
 {
   //recorder_->reset(gr, converter_->frequency());
 }
 
-void BumperEventRegister::startProcess()
+template<class T>
+void TouchEventRegister<T>::startProcess()
 {
   boost::mutex::scoped_lock start_lock(mutex_);
   if (!isStarted_)
   {
     if(!serviceId)
     {
-      serviceId = session_->registerService("ROS-Driver-Bumper", shared_from_this());
-      for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it)
-        p_memory_.call<void>("subscribeToEvent",it->c_str(), "ROS-Driver-Bumper", "touchCallback");
-      std::cout << "Bumper : Start" << std::endl;
+      //std::string serviceName = std::string("ROS-Driver-") + typeid(T).name();
+      std::string serviceName = std::string("ROS-Driver-") + keys_[0];
+      serviceId = session_->registerService(serviceName, this->shared_from_this());
+      for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it) {
+        std::cerr << *it << std::endl;
+        p_memory_.call<void>("subscribeToEvent",it->c_str(), serviceName, "touchCallback");
+      }
+      std::cout << serviceName << " : Start" << std::endl;
     }
     isStarted_ = true;
   }
 }
 
-void BumperEventRegister::stopProcess()
+template<class T>
+void TouchEventRegister<T>::stopProcess()
 {
   boost::mutex::scoped_lock stop_lock(mutex_);
   if (isStarted_)
   {
+    //std::string serviceName = std::string("ROS-Driver-") + typeid(T).name();
+    std::string serviceName = std::string("ROS-Driver-") + keys_[0];
     if(serviceId){
-      p_touch_.call<void>("unsubscribeToEvent", "ROS-Driver-Bumper");
+      p_memory_.call<void>("unsubscribeToEvent", serviceName, "touchCallback");
       session_->unregisterService(serviceId);
       serviceId = 0;
     }
-    std::cout << "Bumper: Stop" << std::endl;
+    std::cout << serviceName << " : Stop" << std::endl;
     isStarted_ = false;
   }
 }
 
-void BumperEventRegister::writeDump(const ros::Time& time)
+template<class T>
+void TouchEventRegister<T>::writeDump(const ros::Time& time)
 {
   if (isStarted_)
   {
@@ -116,44 +129,81 @@ void BumperEventRegister::writeDump(const ros::Time& time)
   }
 }
 
-void BumperEventRegister::setBufferDuration(float duration)
+template<class T>
+void TouchEventRegister<T>::setBufferDuration(float duration)
 {
   //recorder_->setBufferDuration(duration);
 }
 
-void BumperEventRegister::isRecording(bool state)
+template<class T>
+void TouchEventRegister<T>::isRecording(bool state)
 {
   boost::mutex::scoped_lock rec_lock(mutex_);
   isRecording_ = state;
 }
 
-void BumperEventRegister::isPublishing(bool state)
+template<class T>
+void TouchEventRegister<T>::isPublishing(bool state)
 {
   boost::mutex::scoped_lock pub_lock(mutex_);
   isPublishing_ = state;
 }
 
-void BumperEventRegister::isDumping(bool state)
+template<class T>
+void TouchEventRegister<T>::isDumping(bool state)
 {
   boost::mutex::scoped_lock dump_lock(mutex_);
   isDumping_ = state;
 }
 
-void BumperEventRegister::registerCallback()
+template<class T>
+void TouchEventRegister<T>::registerCallback()
 {
 }
 
-void BumperEventRegister::unregisterCallback()
+template<class T>
+void TouchEventRegister<T>::unregisterCallback()
 {
 }
 
-void BumperEventRegister::touchCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message)
+template<class T>
+void TouchEventRegister<T>::touchCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message)
 {
-  naoqi_bridge_msgs::Bumper msg = naoqi_bridge_msgs::Bumper();
+  T msg = T();
   
   bool state =  value.toFloat() > 0.5f;
 
-  std::cerr << key << " " << state << std::endl;
+  //std::cerr << key << " " << state << std::endl;
+
+  touchCallbackMessage(key, state, msg);
+
+  std::vector<message_actions::MessageAction> actions;
+  boost::mutex::scoped_lock callback_lock(mutex_);
+  if (isStarted_) {
+    // CHECK FOR PUBLISH
+    if ( isPublishing_ && publisher_->isSubscribed() )
+    {
+      actions.push_back(message_actions::PUBLISH);
+    }
+    // CHECK FOR RECORD
+    if ( isRecording_ )
+    {
+      //actions.push_back(message_actions::RECORD);
+    }
+    if ( !isDumping_ )
+    {
+      //actions.push_back(message_actions::LOG);
+    }
+    if (actions.size() >0)
+    {
+      converter_->callAll( actions, msg );
+    }
+  }
+}
+
+template<class T>
+void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::Bumper &msg)
+{
   int i = 0;
   for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
   {
@@ -161,157 +211,12 @@ void BumperEventRegister::touchCallback(std::string &key, qi::AnyValue &value, q
       msg.bumper = i;
       msg.state = state?(naoqi_bridge_msgs::Bumper::statePressed):(naoqi_bridge_msgs::Bumper::stateReleased);
     }
-  }    
-
-  isPublishing_ = true;
-  std::vector<message_actions::MessageAction> actions;
-  boost::mutex::scoped_lock callback_lock(mutex_);
-  if (isStarted_) {
-    // CHECK FOR PUBLISH
-    if ( isPublishing_ && publisher_->isSubscribed() )
-    {
-      actions.push_back(message_actions::PUBLISH);
-    }
-    // CHECK FOR RECORD
-    if ( isRecording_ )
-    {
-      //actions.push_back(message_actions::RECORD);
-    }
-    if ( !isDumping_ )
-    {
-      //actions.push_back(message_actions::LOG);
-    }
-    if (actions.size() >0)
-    {
-      converter_->callAll( actions, msg );
-    }
   }
 }
 
-////
-
-TactileTouchEventRegister::TactileTouchEventRegister()
+template<class T>
+void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::TactileTouch &msg)
 {
-}
-
-TactileTouchEventRegister::TactileTouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session )
-  : serviceId(0),
-    p_memory_( session->service("ALMemory")),
-    p_touch_( session->service("ALTouch")),
-    session_(session),
-    isStarted_(false),
-    isPublishing_(false),
-    isRecording_(false),
-    isDumping_(false)
-{
-  publisher_ = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch> >( name );
-  //recorder_ = boost::make_shared<recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper> >( name );
-  converter_ = boost::make_shared<converter::TouchEventConverter<naoqi_bridge_msgs::TactileTouch> >( name, frequency, session );
-
-  converter_->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::TactileTouch>::publish, publisher_, _1) );
-  //converter_->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::write, recorder_, _1) );
-  //converter_->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicEventRecorder<naoqi_bridge_msgs::Bumper>::bufferize, recorder_, _1) );
-
-  keys_.resize(keys.size());
-  size_t i = 0;
-  for(std::vector<std::string>::const_iterator it = keys.begin(); it != keys.end(); ++it, ++i)
-    keys_[i] = *it;
-
-  name_ = name;
-}
-
-TactileTouchEventRegister::~TactileTouchEventRegister()
-{
-  stopProcess();
-}
-
-void TactileTouchEventRegister::resetPublisher(ros::NodeHandle& nh)
-{
-  publisher_->reset(nh);
-}
-
-void TactileTouchEventRegister::resetRecorder( boost::shared_ptr<naoqi::recorder::GlobalRecorder> gr )
-{
-  //recorder_->reset(gr, converter_->frequency());
-}
-
-void TactileTouchEventRegister::startProcess()
-{
-  boost::mutex::scoped_lock start_lock(mutex_);
-  if (!isStarted_)
-  {
-    if(!serviceId)
-    {
-      serviceId = session_->registerService("ROS-Driver-TactileTouch", shared_from_this());
-      for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it)
-        p_memory_.call<void>("subscribeToEvent",it->c_str(), "ROS-Driver-TactileTouch", "touchCallback");
-      std::cout << "TactileTouch : Start" << std::endl;
-    }
-    isStarted_ = true;
-  }
-}
-
-void TactileTouchEventRegister::stopProcess()
-{
-  boost::mutex::scoped_lock stop_lock(mutex_);
-  if (isStarted_)
-  {
-    if(serviceId){
-      p_touch_.call<void>("unsubscribeToEvent", "ROS-Driver-TactileTouch");
-      session_->unregisterService(serviceId);
-      serviceId = 0;
-    }
-    std::cout << "TactileTouch: Stop" << std::endl;
-    isStarted_ = false;
-  }
-}
-
-void TactileTouchEventRegister::writeDump(const ros::Time& time)
-{
-  if (isStarted_)
-  {
-    //recorder_->writeDump(time);
-  }
-}
-
-void TactileTouchEventRegister::setBufferDuration(float duration)
-{
-  //recorder_->setBufferDuration(duration);
-}
-
-void TactileTouchEventRegister::isRecording(bool state)
-{
-  boost::mutex::scoped_lock rec_lock(mutex_);
-  isRecording_ = state;
-}
-
-void TactileTouchEventRegister::isPublishing(bool state)
-{
-  boost::mutex::scoped_lock pub_lock(mutex_);
-  isPublishing_ = state;
-}
-
-void TactileTouchEventRegister::isDumping(bool state)
-{
-  boost::mutex::scoped_lock dump_lock(mutex_);
-  isDumping_ = state;
-}
-
-void TactileTouchEventRegister::registerCallback()
-{
-}
-
-void TactileTouchEventRegister::unregisterCallback()
-{
-}
-
-void TactileTouchEventRegister::touchCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message)
-{
-  naoqi_bridge_msgs::TactileTouch msg = naoqi_bridge_msgs::TactileTouch();
-  
-  bool state =  value.toFloat() > 0.5f;
-
-  std::cerr << key << " " << state << std::endl;
   int i = 0;
   for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
   {
@@ -319,34 +224,11 @@ void TactileTouchEventRegister::touchCallback(std::string &key, qi::AnyValue &va
       msg.button = i;
       msg.state = state?(naoqi_bridge_msgs::TactileTouch::statePressed):(naoqi_bridge_msgs::TactileTouch::stateReleased);
     }
-  }    
-
-  isPublishing_ = true;
-  std::vector<message_actions::MessageAction> actions;
-  boost::mutex::scoped_lock callback_lock(mutex_);
-  if (isStarted_) {
-    // CHECK FOR PUBLISH
-    if ( isPublishing_ && publisher_->isSubscribed() )
-    {
-      actions.push_back(message_actions::PUBLISH);
-    }
-    // CHECK FOR RECORD
-    if ( isRecording_ )
-    {
-      //actions.push_back(message_actions::RECORD);
-    }
-    if ( !isDumping_ )
-    {
-      //actions.push_back(message_actions::LOG);
-    }
-    if (actions.size() >0)
-    {
-      converter_->callAll( actions, msg );
-    }
   }
 }
 
-QI_REGISTER_OBJECT(BumperEventRegister, touchCallback)
-QI_REGISTER_OBJECT(TactileTouchEventRegister, touchCallback)
+// http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
+template class TouchEventRegister<naoqi_bridge_msgs::Bumper>;
+template class TouchEventRegister<naoqi_bridge_msgs::TactileTouch>;
 
 }//namespace
