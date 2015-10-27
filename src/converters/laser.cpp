@@ -130,7 +130,8 @@ static const char* laserMemoryKeys[] = {
 
 LaserConverter::LaserConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session ):
   BaseConverter( name, frequency, session ),
-  p_memory_(session->service("ALMemory"))
+  p_memory_(session->service("ALMemory")),
+  has_ext_laser(false)
 {
 }
 
@@ -141,6 +142,35 @@ void LaserConverter::registerCallback( message_actions::MessageAction action, Ca
 
 void LaserConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
+  // If Pepper has an external URG
+  if(has_ext_laser){
+    qi::AnyValue anyvalues;
+    try{
+      anyvalues = p_memory_.call<qi::AnyValue>("getData", "Device/Laser/Value");
+    } catch (const std::exception& e) {
+      std::cerr << "Could not get data from external LASER sensor. " << std::endl;
+    }
+
+    size_t len = anyvalues.size();
+
+    msg_.header.stamp = ros::Time::now();
+
+    for( size_t i=0; i<len; i++)
+    {
+      qi::AnyReferenceVector anyrefs = anyvalues[i].asListValuePtr();
+      int ind = (anyrefs[1].content().toFloat() + 2.0923) / (M_PI/512.0);
+      msg_.ranges[ind] = anyrefs[0].content().toFloat()/1000.0;
+    }
+
+    for_each( message_actions::MessageAction action, actions )
+    {
+      callbacks_[action](msg_);
+    }
+
+    return;
+  }
+
+  // Normal laser sensor
   static const std::vector<std::string> laser_keys_value(laserMemoryKeys, laserMemoryKeys+90);
 
   std::vector<float> result_value;
@@ -212,13 +242,44 @@ void LaserConverter::callAll( const std::vector<message_actions::MessageAction>&
 
 void LaserConverter::reset( )
 {
-  msg_.header.frame_id = "base_footprint";
-  msg_.angle_min = -2.0944;   // -120
-  msg_.angle_max = 2.0944;    // +120
-  msg_.angle_increment = (2*2.0944) / (15+15+15+8+8); // 240 deg FoV / 61 points (blind zones inc)
-  msg_.range_min = 0.1; // in m
-  msg_.range_max = 1.5; // in m
-  msg_.ranges = std::vector<float>(61, -1.0f);
+  try{
+      qi::AnyValue anyvalues = p_memory_.call<qi::AnyValue>("getData", "Device/Laser/Value");
+      has_ext_laser = true;
+  } catch (const std::exception& e) {
+    std::cerr << "Could not get data from external LASER sensor. " << std::endl;
+  }
+
+  if(has_ext_laser){
+    try{
+      p_laser_ = session_->service("ALLaser");
+    } catch (const std::exception& e) {
+      std::cerr << "Could not get ALLaser. " << std::endl;
+    }
+
+    try{
+      p_laser_.call<qi::AnyValue>("setOpeningAngle", -2.0923, 2.0923);
+      p_laser_.call<qi::AnyValue>("setDetectingLength", 20, 5600);
+      p_laser_.call<qi::AnyValue>("laserON");
+    } catch (const std::exception& e) {
+      std::cerr << "Could not set laser angle. " << std::endl;
+    }
+
+    msg_.header.frame_id = "ExternalLaser_frame";
+    msg_.angle_min = -2.0923;   // -120
+    msg_.angle_max = 2.0923;    // +120
+    msg_.angle_increment = (2*2.0923) / 683; // 240 deg FoV / 683 points
+    msg_.range_min = 0.02; // in m
+    msg_.range_max = 5.6; // in m
+    msg_.ranges = std::vector<float>(1024, -1.0f);
+  }else{
+    msg_.header.frame_id = "base_footprint";
+    msg_.angle_min = -2.0944;   // -120
+    msg_.angle_max = 2.0944;    // +120
+    msg_.angle_increment = (2*2.0944) / (15+15+15+8+8); // 240 deg FoV / 61 points (blind zones inc)
+    msg_.range_min = 0.1; // in m
+    msg_.range_max = 1.5; // in m
+    msg_.ranges = std::vector<float>(61, -1.0f);
+  }
 }
 
 } //converter
