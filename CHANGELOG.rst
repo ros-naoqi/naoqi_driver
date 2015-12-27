@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.6 (2015-12-27)
+------------------
 * register audio_enabled only when audio is set enabled
 * launch/naoqi_driver.launch : support nao_port
 * fixing body temperature for Romeo
