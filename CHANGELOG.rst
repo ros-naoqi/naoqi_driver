@@ -2,6 +2,19 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* register audio_enabled only when audio is set enabled
+* launch/naoqi_driver.launch : support nao_port
+* fixing body temperature for Romeo
+* missing romeo.urdf
+* update to the latest URDF
+* call startPublishing instaed of set true to publish_enabled\_
+* update to the latest urdf
+* add subscribers/speech.cpp
+* converters/joint_state.cpp: support mimic joint tf publisher
+* Contributors: Karsten Knese, Kei Okada, Surya Ambrose, Vincent Rabaud, nlyubova
+
 0.5.5 (2015-08-27)
 ------------------
 * fix correct loading of urdf
