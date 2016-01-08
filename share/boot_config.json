@@ -86,6 +86,10 @@
     {
       "enabled"       : true
     },
+    "people":
+    {
+      "enabled"       : true
+    },
     "odom":
     {
       "enabled"       : true,
