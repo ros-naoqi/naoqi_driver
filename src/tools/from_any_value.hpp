@@ -22,7 +22,7 @@
 * LOCAL includes
 */
 #include "naoqi_image.hpp"
-
+#include "naoqi_facedetected.hpp"
 /*
 * ALDEBARAN includes
 */
@@ -33,6 +33,8 @@ namespace naoqi {
 namespace tools {
 
 NaoqiImage fromAnyValueToNaoqiImage(qi::AnyValue& value);
+
+NaoqiFaceDetected fromAnyValueToNaoqiFaceDetected(qi::AnyValue& value);
 
 std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::vector<std::string>& result);
 
