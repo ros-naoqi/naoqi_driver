@@ -73,6 +73,10 @@
     "audio":
     {
       "enabled"       : true
+    },
+    "people":
+    {
+      "enabled"       : true
     }
   }
 }

@@ -11,6 +11,7 @@ find_package(catkin COMPONENTS
   image_transport
   kdl_parser
   naoqi_bridge_msgs
+  nao_interaction_msgs
   naoqi_libqi
   naoqi_libqicore
   robot_state_publisher

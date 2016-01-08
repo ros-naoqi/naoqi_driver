@@ -26,6 +26,7 @@
  */
 #include "converters/audio.hpp"
 #include "converters/touch.hpp"
+#include "converters/people.hpp"
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
@@ -85,6 +86,7 @@
 #include "event/basic.hpp"
 #include "event/audio.hpp"
 #include "event/touch.hpp"
+#include "event/people.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
@@ -579,6 +581,7 @@ void Driver::registerDefaultConverter()
 
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
+  bool people_enabled                 = boot_config_.get( "converters.people.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -801,6 +804,21 @@ void Driver::registerDefaultConverter()
     }
   }
 
+  /** PEOPLE **/
+  if ( people_enabled )
+  {
+    std::vector<std::string> people_events;
+    people_events.push_back("FaceDetected");
+    boost::shared_ptr<FaceDetectedEventRegister> event_register =
+      boost::make_shared<FaceDetectedEventRegister>( "face_detected", people_events, 0, sessionPtr_ );
+    insertEventConverter("face_detected", event_register);
+    if (keep_looping) {
+      event_map_.find("face_detected")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("face_detected")->second.isPublishing(true);
+    }
+  }
 }
 
 // public interface here
