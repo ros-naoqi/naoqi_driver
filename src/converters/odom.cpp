@@ -52,15 +52,11 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   
   int FRAME_WORLD = 1;
   bool use_sensor = true;
+  // documentation of getPosition available here: http://doc.aldebaran.com/2-1/naoqi/motion/control-cartesian.html
   std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", FRAME_WORLD, use_sensor );
   
   const ros::Time& odom_stamp = ros::Time::now();
   std::vector<float> al_speed_data = p_motion_.call<std::vector<float> >( "getRobotVelocity" );
-  
-  
-  //std::cout << "ODOM val" << al_odometry_data << std::endl;
-  //std::cout << "ODOM speed" << al_speed_data << std::endl;
-  
   
   const float& odomX  =  al_odometry_data[0];
   const float& odomY  =  al_odometry_data[1];
@@ -72,8 +68,7 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   const float& dX = al_speed_data[0];
   const float& dY = al_speed_data[1];
   const float& dWZ = al_speed_data[2];
-  
-  
+
   //since all odometry is 6DOF we'll need a quaternion created from yaw
   tf2::Quaternion tf_quat;
   tf_quat.setRPY( odomWX, odomWY, odomWZ );
@@ -96,8 +91,6 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   msg_odom.twist.twist.angular.x = 0;
   msg_odom.twist.twist.angular.y = 0;
   msg_odom.twist.twist.angular.z = dWZ;
-  
-  
 
   for_each( message_actions::MessageAction action, actions )
   {
