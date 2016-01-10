@@ -5,6 +5,8 @@ project(naoqi_driver)
 set(
   CONVERTERS_SRC
   src/converters/audio.cpp
+  src/converters/touch.cpp
+  src/converters/people.cpp
   src/converters/camera.cpp
   src/converters/diagnostics.cpp
   src/converters/imu.cpp
@@ -63,6 +65,8 @@ set(
   src/event/basic.hxx
   src/event/basic.hpp
   src/event/audio.cpp
+  src/event/touch.cpp
+  src/event/people.cpp
   )
 
 # use catkin if qibuild is not found
