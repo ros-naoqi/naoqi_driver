@@ -73,6 +73,14 @@
     "audio":
     {
       "enabled"       : true
+    },
+    "bumper":
+    {
+      "enabled"       : true
+    },
+    "tactile":
+    {
+      "enabled"       : true
     }
   }
 }
