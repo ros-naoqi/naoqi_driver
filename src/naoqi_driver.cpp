@@ -25,6 +25,7 @@
  * CONVERTERS
  */
 #include "converters/audio.hpp"
+#include "converters/touch.hpp"
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
@@ -83,6 +84,7 @@
  */
 #include "event/basic.hpp"
 #include "event/audio.hpp"
+#include "event/touch.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
@@ -575,6 +577,8 @@ void Driver::registerDefaultConverter()
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
 
+  bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
+  bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -760,6 +764,45 @@ void Driver::registerDefaultConverter()
       event_map_.find("audio")->second.isPublishing(true);
     }
   }
+
+  /** TOUCH **/
+  if ( bumper_enabled )
+  {
+    std::vector<std::string> bumper_events;
+    bumper_events.push_back("RightBumperPressed");
+    bumper_events.push_back("LeftBumperPressed");
+    if (robot_ == robot::PEPPER)
+    {
+      bumper_events.push_back("BackBumperPressed");
+    }
+    boost::shared_ptr<BumperEventRegister> event_register =
+      boost::make_shared<BumperEventRegister>( "bumper", bumper_events, 0, sessionPtr_ );
+    insertEventConverter("bumper", event_register);
+    if (keep_looping) {
+      event_map_.find("bumper")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("bumper")->second.isPublishing(true);
+    }
+  }
+
+  if ( tactile_enabled )
+  {
+    std::vector<std::string> tactile_touch_events;
+    tactile_touch_events.push_back("FrontTactilTouched");
+    tactile_touch_events.push_back("MiddleTactilTouched");
+    tactile_touch_events.push_back("RearTactilTouched");
+    boost::shared_ptr<TactileTouchEventRegister> event_register =
+      boost::make_shared<TactileTouchEventRegister>( "tactile_touch", tactile_touch_events, 0, sessionPtr_ );
+    insertEventConverter("tactile_touch", event_register);
+    if (keep_looping) {
+      event_map_.find("tactile_touch")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("tactile_touch")->second.isPublishing(true);
+    }
+  }
+
 }
 
 // public interface here
