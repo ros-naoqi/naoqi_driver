@@ -111,7 +111,9 @@ void TouchEventRegister<T>::stopProcess()
     //std::string serviceName = std::string("ROS-Driver-") + typeid(T).name();
     std::string serviceName = std::string("ROS-Driver-") + keys_[0];
     if(serviceId){
-      p_memory_.call<void>("unsubscribeToEvent", serviceName, "touchCallback");
+      for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it) {
+        p_memory_.call<void>("unsubscribeToEvent",it->c_str(), serviceName);
+      }
       session_->unregisterService(serviceId);
       serviceId = 0;
     }
