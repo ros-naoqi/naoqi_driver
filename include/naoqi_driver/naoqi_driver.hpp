@@ -148,7 +148,7 @@ public:
 
   std::string _whoIsYourDaddy()
   {
-    return "the coolest German in Paris";
+    return "A sugar bear";
   }
 
   /**

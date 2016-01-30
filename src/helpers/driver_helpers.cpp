@@ -29,14 +29,14 @@ namespace driver
 static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& session)
 {
   static naoqi_bridge_msgs::RobotInfo info;
-  static qi::SessionPtr session_old;
+  static qi::Url robot_url;
 
-  if (session_old == session)
+  if (robot_url == session->url())
   {
     return info;
   }
 
-  session_old = session;
+  robot_url = session->url();
 
   // Get the robot type
   std::cout << "Receiving information about robot model" << std::endl;
