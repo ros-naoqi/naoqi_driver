@@ -91,10 +91,8 @@ int main(int argc, char** argv)
     bs->init();
   }
 
-  //! @note Must call ow._stopService when the application stops to do the clean-up
-  app.atStop(boost::function<void()>(
-                 boost::bind(&naoqi::Driver::stopService, boost::ref(bs))));
-
   app.run();
+  bs->stopService();
   app.session()->close();
+  return 0;
 }
