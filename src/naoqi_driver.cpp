@@ -112,7 +112,7 @@
 namespace naoqi
 {
 
-Driver::Driver( qi::SessionPtr& session, const std::string& prefix )
+Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   : sessionPtr_( session ),
   robot_( helpers::driver::getRobot(session) ),
   freq_(15),
