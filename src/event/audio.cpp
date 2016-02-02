@@ -162,6 +162,7 @@ void AudioEventRegister::unregisterCallback()
 
 void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, qi::AnyValue altimestamp, qi::AnyValue buffer)
 {
+  boost::mutex::scoped_lock callback_lock(mutex_);
   naoqi_bridge_msgs::AudioBuffer msg = naoqi_bridge_msgs::AudioBuffer();
   msg.header.stamp = ros::Time::now();
   msg.frequency = 48000;
@@ -174,7 +175,6 @@ void AudioEventRegister::processRemote(int nbOfChannels, int samplesByChannel, q
   msg.data = std::vector<int16_t>(remoteBuffer, remoteBuffer+bufferSize);
 
   std::vector<message_actions::MessageAction> actions;
-  boost::mutex::scoped_lock callback_lock(mutex_);
   if (isStarted_) {
     // CHECK FOR PUBLISH
     if ( isPublishing_ && publisher_->isSubscribed() )
