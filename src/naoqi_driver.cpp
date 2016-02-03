@@ -112,7 +112,7 @@
 namespace naoqi
 {
 
-Driver::Driver( qi::SessionPtr& session, const std::string& prefix )
+Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   : sessionPtr_( session ),
   robot_( helpers::driver::getRobot(session) ),
   freq_(15),
@@ -588,12 +588,11 @@ void Driver::registerDefaultConverter()
    * topic, he/she will receive the information published before, as the publisher is latched.
    */
   /** Info publisher **/
-  boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
-
   if ( info_enabled )
   {
     boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_);
     boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
+    boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
     inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
     inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
     inc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::bufferize, inr, _1) );

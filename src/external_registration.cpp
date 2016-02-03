@@ -27,9 +27,6 @@
 
 int main(int argc, char** argv)
 {
-  /* adjust the SDK prefix in case you compiled via catkin*/
-  naoqi::naoqi_env::adjustSDKPrefix();
-
   /* launch naoqi service */
   qi::ApplicationSession app(argc, argv);
   /* In case you launch via roslaunch/rosrun we remove the ros args */
@@ -69,10 +66,9 @@ int main(int argc, char** argv)
 
   // everything's correctly parsed - let's start the app!
   app.start();
-  boost::shared_ptr<naoqi::Driver> bs = qi::import("naoqi_driver_module").call<qi::Object<naoqi::Driver> >("ROS-Driver", app.session(), vm["namespace"].as<std::string>()).asSharedPtr();
+  boost::shared_ptr<naoqi::Driver> bs = boost::make_shared<naoqi::Driver>(app.session(), vm["namespace"].as<std::string>());
 
   app.session()->registerService("ROS-Driver", bs);
-
 
   // set ros paramters directly upfront if available
   if ( vm.count("roscore_ip") )
@@ -91,10 +87,8 @@ int main(int argc, char** argv)
     bs->init();
   }
 
-  //! @note Must call ow._stopService when the application stops to do the clean-up
-  app.atStop(boost::function<void()>(
-                 boost::bind(&naoqi::Driver::stopService, boost::ref(bs))));
-
   app.run();
+  bs->stopService();
   app.session()->close();
+  return 0;
 }

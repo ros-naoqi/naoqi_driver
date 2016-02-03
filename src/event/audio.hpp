@@ -94,7 +94,8 @@ private:
   std::vector<uint8_t> channelMap;
   unsigned int serviceId;
 
-  boost::mutex mutex_;
+  boost::mutex subscription_mutex_;
+  boost::mutex processing_mutex_;
 
   bool isStarted_;
   bool isPublishing_;
