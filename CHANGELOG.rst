@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2016-02-04)
+------------------
 * Fix termination issues (`#62 <https://github.com/ros-naoqi/naoqi_driver/pull/62>`_)
 
   * Fix deadlock in audio termination
