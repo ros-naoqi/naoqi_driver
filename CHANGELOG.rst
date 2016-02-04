@@ -2,6 +2,33 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix termination issues (`#62 <https://github.com/ros-naoqi/naoqi_driver/pull/62>`_)
+
+  * Fix deadlock in audio termination
+    Calling subscribe or unsubscribe while the callback is being called
+    is already protected on naoqi side. So no need to protect it on the bridge
+    side, this is what previously led to a deadlock.
+    We only need mutex protection on configuration variable (publishing,
+    recording, logging) and also make sure calling subscribe and unsubscribe
+    at the same time is not possible (even though this is also protected in
+    naoqi).
+    Change-Id: Iae604c047046fec9e24832dd4df5017ff4ae724f
+  * Do not use qi::import for retrieving naoqi_driver
+    Change-Id: I1443ce10576f10ceda5041139c90a3df2e65f043
+  * unsubscribe each events
+  * Fix stopService being called twice
+  * Do not create info converter if not necessary
+  * Fix segfault on termination
+* `#58 <https://github.com/ros-naoqi/naoqi_driver/pull/58>`_ is not compatible with previous version... (`#60 <https://github.com/ros-naoqi/naoqi_driver/pull/60>`_)
+* Add tactile and bumper in boot_config.json  (`#59 <https://github.com/ros-naoqi/naoqi_driver/pull/59>`_)
+* fix when no name space is found (`#58 <https://github.com/ros-naoqi/naoqi_driver/pull/58>`_)
+* use template for TouchEventRegister
+* use template class(TouchEventConverter) in conveerters/touch.{cpp,hpp}
+* add touch event and converters
+* Contributors: Kei Okada, Surya Ambrose, Vincent Rabaud
+
 0.5.6 (2015-12-27)
 ------------------
 * register audio_enabled only when audio is set enabled
