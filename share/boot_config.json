@@ -82,6 +82,10 @@
     {
       "enabled"       : true
     },
+    "hand":
+    {
+      "enabled"       : true
+    },
     "odom":
     {
       "enabled"       : true,
