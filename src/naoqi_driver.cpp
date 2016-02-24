@@ -565,6 +565,7 @@ void Driver::registerDefaultConverter()
   size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
   size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
   size_t camera_depth_recorder_fps    = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
+  size_t camera_depth_color_space     = boot_config_.get( "converters.depth_camera.color_space", 23);
 
   bool camera_ir_enabled              = boot_config_.get( "converters.ir_camera.enabled", true);
   size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 1); // QVGA
