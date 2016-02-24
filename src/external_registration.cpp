@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
 
   // everything's correctly parsed - let's start the app!
-  app.start();
+  app.startSession();
   boost::shared_ptr<naoqi::Driver> bs = boost::make_shared<naoqi::Driver>(app.session(), vm["namespace"].as<std::string>());
 
   app.session()->registerService("ROS-Driver", bs);

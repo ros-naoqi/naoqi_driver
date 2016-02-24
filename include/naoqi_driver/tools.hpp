@@ -62,7 +62,7 @@ enum DataType
 
 } // naoqi
 
-QI_TYPE_ENUM_REGISTER(naoqi::Topics);
-QI_TYPE_ENUM_REGISTER(naoqi::dataType::DataType);
+QI_TYPE_ENUM(naoqi::Topics);
+QI_TYPE_ENUM(naoqi::dataType::DataType);
 
 #endif
