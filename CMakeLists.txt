@@ -67,6 +67,12 @@ set(
   src/event/touch.cpp
   )
 
+#### Set compilation flags {{{
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+endif()
+#### }}}
+
 # use catkin if qibuild is not found
 if(DEFINED qibuild_DIR)
   find_package(qibuild QUIET)
