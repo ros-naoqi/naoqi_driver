@@ -62,7 +62,12 @@ enum DataType
 
 } // naoqi
 
+#if LIBQI_VERSION>24
+QI_TYPE_ENUM(naoqi::Topics);
+QI_TYPE_ENUM(naoqi::dataType::DataType);
+#else
 QI_TYPE_ENUM_REGISTER(naoqi::Topics);
 QI_TYPE_ENUM_REGISTER(naoqi::dataType::DataType);
+#endif
 
 #endif
