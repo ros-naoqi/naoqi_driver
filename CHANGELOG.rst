@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.8 (2016-05-19)
+------------------
 * Update maintainership
 * Fix broken compilation with libqi-2.5 (`#67 <https://github.com/ros-naoqi/naoqi_driver/issues/67>`_)
   -std=gnu++11 is not mandatory as this flag will be added when importing libqi
