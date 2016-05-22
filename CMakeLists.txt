@@ -45,6 +45,7 @@ set(
 set(
   SERVICES_SRC
   src/services/robot_config.cpp
+  src/services/speech_recognition.cpp
   )
 
 set(
