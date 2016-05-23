@@ -23,6 +23,7 @@
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
 #include <std_srvs/Empty.h>
+#include <list>
 
 #include <qi/applicationsession.hpp>
 

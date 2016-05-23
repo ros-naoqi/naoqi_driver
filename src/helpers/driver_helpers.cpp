@@ -198,9 +198,13 @@ const std_srvs::Empty& startSpeechRecognition( const qi::SessionPtr& session)
 {
   qi::AnyObject p_memory = session->service("ALSpeechRecognition");
   std::cout << "speech recognition service loaded" << std::endl;
+  // I need to learn how to use dynamic reconfigure
   p_memory.call<void>("setLanguage", "Japanese" );
-  //char vocabulary[2][20]={"はい", "いいえ"};
-  //p_memory.call<std::string>("setVocabulary", vocabulary, false);
+  std::list<std::string> vocab;
+  vocab.push_back("ペッパー");
+  vocab.push_back("ナオ");
+  p_memory.call<void>("setVocabulary", vocab, false);
+  // 
   p_memory.call<void>("subscribe", "test");
 }
 
