@@ -194,14 +194,21 @@ const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session 
   return robot_info;
 }
 
-const naoqi_bridge_msgs::WordRecognized& startSpeechRecognition( const qi::SessionPtr& session)
+const std_srvs::Empty& startSpeechRecognition( const qi::SessionPtr& session)
 {
   qi::AnyObject p_memory = session->service("ALSpeechRecognition");
   std::cout << "speech recognition service loaded" << std::endl;
-  p_memory.call<std::string>("setLanguage", "Japanese" );
+  p_memory.call<void>("setLanguage", "Japanese" );
   //char vocabulary[2][20]={"はい", "いいえ"};
   //p_memory.call<std::string>("setVocabulary", vocabulary, false);
-  p_memory.call<std::string>("subscribe", "test");
+  p_memory.call<void>("subscribe", "test");
+}
+
+const std_srvs::Empty& stopSpeechRecognition( const qi::SessionPtr& session)
+{
+  qi::AnyObject p_memory = session->service("ALSpeechRecognition");
+  std::cout << "speech recognition service unloaded" << std::endl;
+  p_memory.call<void>("unsubscribe", "test");
 }
 
 } // driver

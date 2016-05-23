@@ -16,8 +16,8 @@
  */
 
 
-#ifndef SPEECH_RECOGNITION_SERVICE_HPP
-#define SPEECH_RECOGNITION_SERVICE_HPP
+#ifndef STOP_SPEECH_RECOGNITION_SERVICE_HPP
+#define STOP_SPEECH_RECOGNITION_SERVICE_HPP
 
 #include <iostream>
 
@@ -32,12 +32,12 @@ namespace naoqi
 namespace service
 {
 
-class SpeechRecognitionService
+class StopSpeechRecognitionService
 {
 public:
-  SpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service,  const qi::SessionPtr& session );
+  StopSpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service,  const qi::SessionPtr& session );
 
-  ~SpeechRecognitionService(){};
+  ~StopSpeechRecognitionService(){};
 
   std::string name() const
   {

@@ -15,7 +15,7 @@
  *
  */
 
-#include "speech_recognition.hpp"
+#include "start_speech_recognition.hpp"
 #include "../helpers/driver_helpers.hpp"
 
 namespace naoqi
@@ -23,22 +23,20 @@ namespace naoqi
 namespace service
 {
 
-  SpeechRecognitionService::SpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service, const qi::SessionPtr& session )
+  StartSpeechRecognitionService::StartSpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service, const qi::SessionPtr& session )
     : name_(name),
       topic_(topic),
       start_service_(start_service),
       session_(session)
   {}
 
-  void SpeechRecognitionService::reset( ros::NodeHandle& nh )
+  void StartSpeechRecognitionService::reset( ros::NodeHandle& nh )
   {
-    service_ = nh.advertiseService(topic_, &SpeechRecognitionService::callback, this);
+    service_ = nh.advertiseService(topic_, &StartSpeechRecognitionService::callback, this);
   }
 
-  bool SpeechRecognitionService::callback( std_srvs::EmptyRequest& req, std_srvs::EmptyResponse& resp )
+  bool StartSpeechRecognitionService::callback( std_srvs::EmptyRequest& req, std_srvs::EmptyResponse& resp )
   {
-    //resp.info = helpers::driver::getRobotInfo(session_);
-    std::cout << "triggering speech recognition service" << std::endl;
     helpers::driver::startSpeechRecognition(session_);
     return true;
   }
