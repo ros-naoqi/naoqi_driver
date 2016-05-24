@@ -7,6 +7,7 @@ find_package(catkin COMPONENTS
   cv_bridge
   diagnostic_msgs
   diagnostic_updater
+  dynamic_reconfigure
   geometry_msgs
   image_transport
   kdl_parser
@@ -25,6 +26,8 @@ find_package(OpenCV)
 find_package(orocos_kdl)
 
 add_definitions(-DLIBQI_VERSION=${naoqi_libqi_VERSION_MAJOR}${naoqi_libqi_VERSION_MINOR})
+
+generate_dynamic_reconfigure_options(cfg/NaoqiSpeech.cfg)
 
 catkin_package(LIBRARIES naoqi_driver_module naoqi_driver)
 
