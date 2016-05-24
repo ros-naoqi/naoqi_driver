@@ -35,7 +35,7 @@ namespace service
 class StartSpeechRecognitionService
 {
 public:
-  StartSpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service,  const qi::SessionPtr& session );
+  StartSpeechRecognitionService( const std::string& name, const std::string& topic, const qi::SessionPtr& session );
 
   ~StartSpeechRecognitionService(){};
 
@@ -49,11 +49,6 @@ public:
     return topic_;
   }
 
-  bool start_service() const
-  {
-    return start_service_;
-  }
-
   void reset( ros::NodeHandle& nh );
 
   bool callback( std_srvs::EmptyRequest& req, std_srvs::EmptyResponse& resp );
@@ -62,7 +57,6 @@ public:
 private:
   const std::string name_;
   const std::string topic_;
-  const bool start_service_;
 
   const qi::SessionPtr& session_;
   ros::ServiceServer service_;

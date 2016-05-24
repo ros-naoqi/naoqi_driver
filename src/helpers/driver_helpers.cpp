@@ -204,7 +204,7 @@ const std_srvs::Empty& startSpeechRecognition( const qi::SessionPtr& session)
   vocab.push_back("ペッパー");
   vocab.push_back("ナオ");
   p_memory.call<void>("setVocabulary", vocab, false);
-  // 
+  //
   p_memory.call<void>("subscribe", "test");
 }
 

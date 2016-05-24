@@ -23,10 +23,9 @@ namespace naoqi
 namespace service
 {
 
-  StopSpeechRecognitionService::StopSpeechRecognitionService( const std::string& name, const std::string& topic, const bool& start_service, const qi::SessionPtr& session )
+  StopSpeechRecognitionService::StopSpeechRecognitionService( const std::string& name, const std::string& topic, const qi::SessionPtr& session )
     : name_(name),
       topic_(topic),
-      start_service_(start_service),
       session_(session)
   {}
 
