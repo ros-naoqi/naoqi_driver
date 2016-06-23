@@ -290,7 +290,7 @@ std::string Bridge::minidump(const std::string& prefix)
   {
     iterator->second.isDumping(false);
   }
-  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord();
 }
 
 std::string Bridge::minidumpConverters(const std::string& prefix, const std::vector<std::string>& names)
@@ -359,7 +359,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   }
   if ( is_started )
   {
-    return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+    return recorder_->stopRecord();
   }
   else
   {
@@ -976,7 +976,7 @@ std::string Bridge::stopRecording()
   {
     iterator->second.isRecording(false);
   }
-  return recorder_->stopRecord(::alros::ros_env::getROSIP("eth0"));
+  return recorder_->stopRecord();
 }
 
 void Bridge::startRosLoop()

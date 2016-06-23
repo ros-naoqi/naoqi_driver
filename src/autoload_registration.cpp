@@ -26,9 +26,9 @@
 #include <qi/anymodule.hpp>
 
 /**
-* @brief starter code for registrating the ALRosBridge module via the autoload.ini.
+* @brief starter code for registrating the ALFlightRecorder module via the autoload.ini.
 */
 void registerRosBridge(qi::ModuleBuilder* mb) {
-  mb->advertiseFactory<alros::Bridge, qi::SessionPtr>("ALRosBridge");
+  mb->advertiseFactory<alros::Bridge, qi::SessionPtr>("ALFlightRecorder");
 }
 QI_REGISTER_MODULE("alros", &registerRosBridge);

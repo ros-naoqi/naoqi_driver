@@ -32,8 +32,8 @@ int main(int argc, char** argv)
   //app.session()->loadService( "alros.BridgeService" );
   //app.session()->registerService("BridgeService",
   // qi::import("alros").call<qi::AnyObject>("BridgeService", app.session()));
-  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALRosBridge", app.session()).asSharedPtr();
-  app.session()->registerService("ALRosBridge", bs);
+  boost::shared_ptr<alros::Bridge> bs = qi::import("alros").call<qi::Object<alros::Bridge> >("ALFlightRecorder", app.session()).asSharedPtr();
+  app.session()->registerService("ALFlightRecorder", bs);
 
 
   if ( argc > 1 )

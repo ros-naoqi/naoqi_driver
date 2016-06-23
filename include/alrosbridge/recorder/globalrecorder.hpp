@@ -72,7 +72,7 @@ public:
   /**
   * @brief Terminate the recording of the ROSbag
   */
-  std::string stopRecord(const std::string& robot_ip = "<ROBOT_IP>");
+  std::string stopRecord();
 
   /**
   * @brief Insert data into the ROSbag

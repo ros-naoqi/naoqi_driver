@@ -91,15 +91,15 @@ void AudioEventRegister::startProcess()
   {
     if(!serviceId)
     {
-      serviceId = session_->registerService("ALRosBridge_Audio", shared_from_this());
+      serviceId = session_->registerService("ALFlightRecorder_Audio", shared_from_this());
       p_audio_.call<void>(
               "setClientPreferences",
-              "ALRosBridge_Audio",
+              "ALFlightRecorder_Audio",
               48000,
               0,
               0
               );
-      p_audio_.call<void>("subscribe","ALRosBridge_Audio");
+      p_audio_.call<void>("subscribe","ALFlightRecorder_Audio");
       std::cout << "Audio Extractor: Start" << std::endl;
     }
     isStarted_ = true;
@@ -112,7 +112,7 @@ void AudioEventRegister::stopProcess()
   if (isStarted_)
   {
     if(serviceId){
-      p_audio_.call<void>("unsubscribe", "ALRosBridge_Audio");
+      p_audio_.call<void>("unsubscribe", "ALFlightRecorder_Audio");
       session_->unregisterService(serviceId);
       serviceId = 0;
     }
