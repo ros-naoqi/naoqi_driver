@@ -36,9 +36,11 @@ namespace subscriber
 MovetoSubscriber::MovetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session,
                                     const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
   BaseSubscriber( name, topic, session ),
-  p_motion_( session->service("ALMotion") ),
   tf2_buffer_( tf2_buffer )
-{}
+{
+  session->waitForService("ALMotion");
+  p_motion_ = session->service("ALMotion");
+}
 
 void MovetoSubscriber::reset( ros::NodeHandle& nh )
 {

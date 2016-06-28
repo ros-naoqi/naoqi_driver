@@ -39,9 +39,11 @@ namespace converter {
 
 
   ImuConverter::ImuConverter(const std::string& name, const IMU::Location& location,  const float& frequency, const qi::SessionPtr& session):
-    BaseConverter(name, frequency, session),
-    p_memory_(session->service("ALMemory"))
+    BaseConverter(name, frequency, session)
   {
+    session->waitForService("ALMemory");
+    p_memory_ = session->service("ALMemory");
+
     if(location == IMU::TORSO){
       msg_imu_.header.frame_id = "base_link";
       data_names_list_.push_back("DCM/Time");

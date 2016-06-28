@@ -65,9 +65,10 @@ void logCallback(const qi::LogMessage& msg)
 }
 
 LogConverter::LogConverter( const std::string& name, float frequency, const qi::SessionPtr& session )
-  : BaseConverter( name, frequency, session ),
-    logger_( session->service("LogManager") )
+  : BaseConverter( name, frequency, session )
 {
+  session->waitForService("LogManager");
+  logger_ = session->service("LogManager");
   float levels[] = {rosgraph_msgs::Log::DEBUG, rosgraph_msgs::Log::FATAL, rosgraph_msgs::Log::ERROR,
     rosgraph_msgs::Log::WARN, rosgraph_msgs::Log::INFO, rosgraph_msgs::Log::DEBUG, rosgraph_msgs::Log::DEBUG};
   LOG_LEVELS = std::vector<rosgraph_msgs::Log::_level_type>(levels, levels + 7);

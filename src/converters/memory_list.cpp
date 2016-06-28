@@ -32,9 +32,11 @@ namespace converter {
 
 MemoryListConverter::MemoryListConverter(const std::vector<std::string>& key_list, const std::string &name, const float &frequency, const qi::SessionPtr &session):
     BaseConverter(name, frequency, session),
-    p_memory_(session->service("ALMemory")),
     _key_list(key_list)
-{}
+{
+  session->waitForService("ALMemory");
+  p_memory_ = session->service("ALMemory");
+}
 
 void MemoryListConverter::reset(){
 

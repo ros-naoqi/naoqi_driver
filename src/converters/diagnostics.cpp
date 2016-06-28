@@ -39,12 +39,14 @@ namespace converter
 
 DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequency, const qi::SessionPtr& session ):
     BaseConverter( name, frequency, session ),
-    p_memory_(session->service("ALMemory")),
     temperature_warn_level_(68),
     temperature_error_level_(74)
 {
-  // Get all the joint names
+  session->waitForService("ALMemory");
+  p_memory_ = session->service("ALMemory");
+  session->waitForService("ALMotion");
   qi::AnyObject p_motion = session->service("ALMotion");
+  // Get all the joint names
   joint_names_ = p_motion.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
 
   for(std::vector<std::string>::const_iterator it = joint_names_.begin(); it != joint_names_.end(); ++it)

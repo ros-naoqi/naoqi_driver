@@ -122,7 +122,6 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
 
 CameraConverter::CameraConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const int& camera_source, const int& resolution )
   : BaseConverter( name, frequency, session ),
-    p_video_( session->service("ALVideoDevice") ),
     camera_source_(camera_source),
     resolution_(resolution),
     // change in case of depth camera
@@ -131,6 +130,9 @@ CameraConverter::CameraConverter( const std::string& name, const float& frequenc
     cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
     camera_info_( camera_info_definitions::getCameraInfo(camera_source, resolution) )
 {
+  session->waitForService("ALVideoDevice");
+  p_video_ = session->service("ALVideoDevice");
+
   if ( camera_source == AL::kTopCamera )
   {
     msg_frameid_ = "CameraTop_optical_frame";

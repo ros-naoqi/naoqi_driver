@@ -38,14 +38,17 @@ AudioEventRegister::AudioEventRegister()
 
 AudioEventRegister::AudioEventRegister( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : serviceId(0),
-    p_audio_( session->service("ALAudioDevice")),
-    p_robot_model_(session->service("ALRobotModel")),
     session_(session),
     isStarted_(false),
     isPublishing_(false),
     isRecording_(false),
     isDumping_(false)
 {
+  session->waitForService("ALAudioDevice");
+  p_audio_ = session->service("ALAudioDevice");
+  session->waitForService("ALRobotModel");
+  p_robot_model_ = session->service("ALRobotModel");
+
   int micConfig = p_robot_model_.call<int>("_getMicrophoneConfig");
   if(micConfig){
     channelMap.push_back(3);

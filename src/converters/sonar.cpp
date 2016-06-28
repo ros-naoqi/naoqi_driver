@@ -34,10 +34,14 @@ namespace converter
 
 SonarConverter::SonarConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : BaseConverter( name, frequency, session ),
-    p_memory_( session->service("ALMemory") ),
-    p_sonar_( session->service("ALSonar") ),
     is_subscribed_(false)
 {
+  session->waitForService("ALMemory");
+  p_memory_ = session->service("ALMemory");
+
+  session->waitForService("ALSonar");
+  p_sonar_ = session->service("ALSonar");
+
   std::vector<std::string> keys;
   if (robot() == PEPPER) {
     keys.push_back("Device/SubDeviceList/Platform/Front/Sonar/Sensor/Value");

@@ -33,9 +33,11 @@ namespace converter
 
 MemoryBoolConverter::MemoryBoolConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const std::string& memory_key )
   : BaseConverter( name, frequency, session ),
-    memory_key_(memory_key),
-    p_memory_( session->service("ALMemory") )
-{}
+    memory_key_(memory_key)
+{
+  session->waitForService("ALMemory");
+  p_memory_ = session->service("ALMemory");
+}
 
 void MemoryBoolConverter::registerCallback( message_actions::MessageAction action, Callback_t cb )
 {

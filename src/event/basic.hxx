@@ -38,12 +38,14 @@ EventRegister<Converter, Publisher, Recorder>::EventRegister()
 template <typename Converter, typename Publisher, typename Recorder>
 EventRegister<Converter, Publisher, Recorder>::EventRegister( const std::string& key, const qi::SessionPtr& session )
   : key_(key),
-    p_memory_( session->service("ALMemory") ),
     isStarted_(false),
     isPublishing_(false),
     isRecording_(false),
     isDumping_(false)
 {
+  session->waitForService("ALMemory");
+  p_memory_ = session->service("ALMemory");
+
   publisher_ = boost::make_shared<Publisher>( key_ );
   recorder_ = boost::make_shared<Recorder>( key_ );
   converter_ = boost::make_shared<Converter>( key_, 0, session, key_ );

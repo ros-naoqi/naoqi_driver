@@ -27,9 +27,11 @@ namespace subscriber
 {
 
 TeleopSubscriber::TeleopSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session ):
-  BaseSubscriber( name, topic, session ),
-  p_motion_( session->service("ALMotion") )
-{}
+  BaseSubscriber( name, topic, session )
+{
+  session->waitForService("ALMotion");
+  p_motion_ = session->service("ALMotion");
+}
 
 void TeleopSubscriber::reset( ros::NodeHandle& nh )
 {
