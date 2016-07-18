@@ -48,9 +48,10 @@ bool MemoryBoolConverter::convert()
 {
   bool success = false;
   try {
-    bool value = p_memory_.call<bool>("getData", memory_key_);
+    qi::AnyValue value = p_memory_.call<qi::AnyValue>("getData", memory_key_);
+    bool cast_value = static_cast<bool>(value.toUInt());
     msg_.header.stamp = ros::Time::now();
-    msg_.data = value;
+    msg_.data = cast_value;
     success = true;
   } catch (const std::exception& e) {
     std::cerr << "Exception caught in MemoryBoolConverter: " << e.what() << std::endl;

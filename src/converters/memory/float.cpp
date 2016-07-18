@@ -49,9 +49,10 @@ bool MemoryFloatConverter::convert()
   bool success = false;
   try
   {
-    float value = p_memory_.call<float>("getData", memory_key_);
+    qi::AnyValue value = p_memory_.call<qi::AnyValue>("getData", memory_key_);
+    float cast_value = value.toFloat();
     msg_.header.stamp = ros::Time::now();
-    msg_.data = value;
+    msg_.data = cast_value;
     success = true;
   }
   catch( const std::exception& e )

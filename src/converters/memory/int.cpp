@@ -49,9 +49,10 @@ bool MemoryIntConverter::convert()
   bool success = false;
   try
   {
-    int value = p_memory_.call<int>("getData", memory_key_);
-    msg_.header.stamp = ros::Time::now();
-    msg_.data = value;
+      qi::AnyValue value = p_memory_.call<qi::AnyValue>("getData", memory_key_);
+      int cast_value = value.toInt();
+      msg_.header.stamp = ros::Time::now();
+      msg_.data = cast_value;
     success = true;
   }
   catch( const std::exception& e)

@@ -49,9 +49,10 @@ bool MemoryStringConverter::convert()
   bool success = false;
   try
   {
-    std::string value = p_memory_.call<std::string>("getData", memory_key_);
+    qi::AnyValue value = p_memory_.call<qi::AnyValue>("getData", memory_key_);
+    std::string cast_value = value.toString();
     msg_.header.stamp = ros::Time::now();
-    msg_.data = value;
+    msg_.data = cast_value;
     success = true;
   }
   catch( const std::exception& e )
