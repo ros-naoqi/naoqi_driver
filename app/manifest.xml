@@ -1,11 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.2" uuid="alrosbridge">
+<package version="0.0.6" uuid="flightrecorder">
  <services>
-  <!-- <service autorun="false" execStart="./run.sh" name="alrosbridge"/> -->
-  <service autorun="true" execStart="run.sh" name="alrosbridge"/>
+  <service autorun="true" execStart="run.sh" name="flightrecorder"/>
  </services>
  <executableFiles>
   <file path="./run.sh"/>
-  <!--  <file path="bin/alros_bin"/> -->
  </executableFiles>
+ <requirements>
+  <naoqiRequirement minVersion="2.4" />
+  <robotRequirement model="JULIETTE"/>
+ </requirements>
 </package>
