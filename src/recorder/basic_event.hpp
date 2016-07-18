@@ -80,10 +80,15 @@ public:
 
   virtual void writeDump(const ros::Time& time)
   {
-    boost::mutex::scoped_lock lock_write_buffer( mutex_ );
-    removeOlderThan(time);
+    std::list<T> buffer_cpy;
+    {
+      boost::mutex::scoped_lock lock_copy_buffer( buffer_mutex_ );
+      removeOlderThan(time);
+      buffer_cpy = buffer_;
+    }
+
     typename std::list<T>::iterator it;
-    for (it = buffer_.begin(); it != buffer_.end(); it++)
+    for (it = buffer_cpy.begin(); it != buffer_cpy.end(); it++)
     {
       if (!it->header.stamp.isZero()) {
         gr_->write(topic_, *it, it->header.stamp);
@@ -96,11 +101,10 @@ public:
 
   virtual void bufferize(const T& msg)
   {
-    boost::mutex::scoped_lock lock_bufferize( mutex_ );
+    boost::mutex::scoped_lock lock_bufferize( buffer_mutex_ );
     typename std::list<T>::iterator it;
     removeOld();
     buffer_.push_back(msg);
-
   }
 
   virtual void reset(boost::shared_ptr<GlobalRecorder> gr, float conv_frequency)
@@ -111,7 +115,7 @@ public:
 
   virtual void setBufferDuration(float duration)
   {
-    boost::mutex::scoped_lock lock_bufferize( mutex_ );
+    boost::mutex::scoped_lock lock_bufferize( buffer_mutex_ );
     buffer_duration_ = duration;
   }
 
@@ -157,7 +161,7 @@ protected:
 
   std::list<T> buffer_;
   float buffer_duration_;
-  boost::mutex mutex_;
+  boost::mutex buffer_mutex_;
 
   bool is_initialized_;
   bool is_subscribed_;

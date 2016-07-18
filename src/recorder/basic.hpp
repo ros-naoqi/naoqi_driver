@@ -83,9 +83,14 @@ public:
 
   virtual void writeDump(const ros::Time& time)
   {
-    boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+    boost::circular_buffer<T> buffer_cpy;
+    {
+      boost::mutex::scoped_lock lock_copy_buffer( mutex_ );
+      buffer_cpy = buffer_;
+    }
+
     typename boost::circular_buffer<T>::iterator it;
-    for (it = buffer_.begin(); it != buffer_.end(); it++)
+    for (it = buffer_cpy.begin(); it != buffer_cpy.end(); it++)
     {
       if (!it->header.stamp.isZero()) {
         gr_->write(topic_, *it, it->header.stamp);

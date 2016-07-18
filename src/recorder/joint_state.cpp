@@ -48,14 +48,21 @@ void JointStateRecorder::write( const sensor_msgs::JointState& js_msg,
 
 void JointStateRecorder::writeDump(const ros::Time& time)
 {
-  boost::mutex::scoped_lock lock_write_buffer( mutex_ );
+  boost::circular_buffer< std::vector<geometry_msgs::TransformStamped> > bufferTF_cpy;
+  boost::circular_buffer<sensor_msgs::JointState> bufferJoinState_cpy;
+  {
+    boost::mutex::scoped_lock lock_copy_buffer( mutex_ );
+    bufferTF_cpy = bufferTF_;
+    bufferJoinState_cpy = bufferJoinState_;
+  }
+
   boost::circular_buffer< std::vector<geometry_msgs::TransformStamped> >::iterator it_tf;
-  for (it_tf = bufferTF_.begin(); it_tf != bufferTF_.end(); it_tf++)
+  for (it_tf = bufferTF_cpy.begin(); it_tf != bufferTF_cpy.end(); it_tf++)
   {
     gr_->write("/tf", *it_tf);
   }
-  for (boost::circular_buffer<sensor_msgs::JointState>::iterator it_js = bufferJoinState_.begin();
-       it_js != bufferJoinState_.end(); it_js++)
+  for (boost::circular_buffer<sensor_msgs::JointState>::iterator it_js = bufferJoinState_cpy.begin();
+       it_js != bufferJoinState_cpy.end(); it_js++)
   {
     if (!it_js->header.stamp.isZero()) {
       gr_->write(topic_, *it_js, it_js->header.stamp);

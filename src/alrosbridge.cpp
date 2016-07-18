@@ -257,21 +257,21 @@ std::string Bridge::minidump(const std::string& prefix)
   }
 
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
   if (record_enabled_)
   {
     stopRecording();
   }
 
-  // STOP BUFFERIZING
-  dump_enabled_ = true;
-  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
-  {
-    iterator->second.isDumping(true);
-  }
+//  // STOP BUFFERIZING
+//  dump_enabled_ = true;
+//  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+//  {
+//    iterator->second.isDumping(true);
+//  }
   ros::Time time = ros::Time::now();
 
   // START A NEW ROSBAG
-  boost::mutex::scoped_lock lock_record( mutex_record_ );
   recorder_->startRecord(prefix);
 
   // WRITE ALL BUFFER INTO THE ROSBAG
@@ -284,12 +284,12 @@ std::string Bridge::minidump(const std::string& prefix)
     iterator->second.writeDump(time);
   }
 
-  // RESTART BUFFERIZING
-  dump_enabled_ = false;
-  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
-  {
-    iterator->second.isDumping(false);
-  }
+//  // RESTART BUFFERIZING
+//  dump_enabled_ = false;
+//  for(EventIter iterator = event_map_.begin(); iterator != event_map_.end(); iterator++)
+//  {
+//    iterator->second.isDumping(false);
+//  }
   return recorder_->stopRecord();
 }
 
@@ -308,6 +308,7 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   }
 
   // IF A ROSBAG WAS OPENED, FIRST CLOSE IT
+  boost::mutex::scoped_lock lock_record( mutex_record_ );
   if (record_enabled_)
   {
     stopRecording();
@@ -322,7 +323,6 @@ std::string Bridge::minidumpConverters(const std::string& prefix, const std::vec
   ros::Time time = ros::Time::now();
 
   // WRITE CHOOSEN BUFFER INTO THE ROSBAG
-  boost::mutex::scoped_lock lock_record( mutex_record_ );
 
   bool is_started = false;
   for_each( const std::string& name, names)
@@ -962,7 +962,6 @@ void Bridge::startRecordingConverters(const std::vector<std::string>& names)
 
 std::string Bridge::stopRecording()
 {
-  boost::mutex::scoped_lock lock_record( mutex_record_ );
   record_enabled_ = false;
   for_each( converter::Converter& conv, converters_ )
   {
@@ -1144,6 +1143,13 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
       insertEventConverter(key, event_register);
       break;
     }
+  case 5:
+  {
+      boost::shared_ptr<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > > event_register =
+          boost::make_shared<EventRegister<converter::MemoryStringConverter,publisher::BasicPublisher<naoqi_bridge_msgs::StringStamped>,recorder::BasicEventRecorder<naoqi_bridge_msgs::StringStamped> > >( key, sessionPtr_ );
+      insertEventConverter(key, event_register);
+      break;
+  }
   default:
     {
       std::cout << BOLDRED << "Wrong data type. Available type are: " << std::endl
@@ -1151,7 +1157,8 @@ bool Bridge::registerEventConverter(const std::string& key, const dataType::Data
                    << "\t > 1 - Float" << std::endl
                    << "\t > 2 - Int" << std::endl
                    << "\t > 3 - String" << std::endl
-                   << "\t > 4 - Bool" << RESETCOLOR << std::endl;
+                   << "\t > 4 - Bool" << std::endl
+                   << "\t > 5 - AnyValue to String" << RESETCOLOR << std::endl;
       return false;
     }
   }

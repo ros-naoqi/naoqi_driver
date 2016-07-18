@@ -149,26 +149,28 @@ template <typename Converter, typename Publisher, typename Recorder>
 void EventRegister<Converter, Publisher, Recorder>::onEvent()
 {
   std::vector<message_actions::MessageAction> actions;
-  boost::mutex::scoped_lock callback_lock(mutex_);
-  if (isStarted_) {
-    // CHECK FOR PUBLISH
-    if ( isPublishing_ && publisher_->isSubscribed() )
-    {
-      actions.push_back(message_actions::PUBLISH);
+  if (mutex_.try_lock()) {
+    if (isStarted_) {
+      // CHECK FOR PUBLISH
+      if ( isPublishing_ && publisher_->isSubscribed() )
+      {
+        actions.push_back(message_actions::PUBLISH);
+      }
+      // CHECK FOR RECORD
+      if ( isRecording_ )
+      {
+        actions.push_back(message_actions::RECORD);
+      }
+      if ( !isDumping_ )
+      {
+        actions.push_back(message_actions::LOG);
+      }
+      if (actions.size() >0)
+      {
+        converter_->callAll( actions );
+      }
     }
-    // CHECK FOR RECORD
-    if ( isRecording_ )
-    {
-      actions.push_back(message_actions::RECORD);
-    }
-    if ( !isDumping_ )
-    {
-      actions.push_back(message_actions::LOG);
-    }
-    if (actions.size() >0)
-    {
-      converter_->callAll( actions );
-    }
+    mutex_.unlock();
   }
 }
 
