@@ -58,7 +58,7 @@
     "joint_states":
     {
       "enabled"       : true,
-      "frequency"     : 15
+      "frequency"     : 50
     },
     "laser":
     {

@@ -569,7 +569,7 @@ void Driver::registerDefaultConverter()
   size_t camera_ir_recorder_fps       = boot_config_.get( "converters.ir_camera.recorder_fps", 5);
 
   bool joint_states_enabled           = boot_config_.get( "converters.joint_states.enabled", true);
-  size_t joint_states_frequency       = boot_config_.get( "converters.joint_states.frequency", 15);
+  size_t joint_states_frequency       = boot_config_.get( "converters.joint_states.frequency", 50);
 
   bool laser_enabled                  = boot_config_.get( "converters.laser.enabled", true);
   size_t laser_frequency              = boot_config_.get( "converters.laser.frequency", 10);
