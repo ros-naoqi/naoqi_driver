@@ -1,0 +1,29 @@
+<launch>
+<!--  <node pkg="tf" name="depth_to_top_camera_frame_publisher" type="static_transform_publisher" args="0.039 0.044 0.035 0.000 0.000 0.000 CameraTop_optical_frame CameraDepth_optical_frame 1"/>
+  <node pkg="tf" name="depth_to_top_camera_frame_publisher" type="static_transform_publisher" args="-0.05 0.12 0.0 0.0 0.0 -0.07 CameraTop_optical_frame CameraDepth_optical_frame 1"/>
+  
+-->
+  <node pkg="tf" name="depth_to_top_camera_frame_publisher" type="static_transform_publisher" args="-0.035 0.03 0.035 0.0 0.0 -0.07 CameraTop_optical_frame CameraDepth_optical_frame 1"/>
+  
+  <node pkg="image_proc" type="image_proc" name="rgb_processing" output="screen" ns="/naoqi_driver_node/camera/front" />
+
+  <node pkg="nodelet" type="nodelet" name="register_depth" output="screen"
+        args="standalone depth_image_proc/register" >
+    <remap from="rgb/camera_info" to="/naoqi_driver_node/camera/front/camera_info"/>
+    <remap from="depth/camera_info" to="/naoqi_driver_node/camera/depth/camera_info"/>
+    <remap from="depth/image_rect" to="/naoqi_driver_node/camera/depth/image_raw"/>
+    <remap from="depth_registered/camera_info" to="/naoqi_driver_node/camera/depth_registered/camera_info"/>
+    <remap from="depth_registered/image_rect" to="/naoqi_driver_node/camera/depth_registered/image_rect"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="cloudify" output="screen"
+        args="standalone depth_image_proc/point_cloud_xyzrgb" >
+    <remap from="rgb/camera_info" to="/naoqi_driver_node/camera/front/camera_info"/>
+    <remap from="rgb/image_rect_color" to="/naoqi_driver_node/camera/front/image_rect_color"/>
+    <remap from="depth_registered/image_rect" to="/naoqi_driver_node/camera/depth_registered/image_rect"/>
+    <remap from="depth_registered/points" to="/naoqi_driver_node/camera/depth_registered/points"/>
+  </node>
+</launch>
+
+
+
