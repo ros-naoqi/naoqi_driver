@@ -19,6 +19,7 @@
 #define PEOPLE_EVENT_REGISTER_HPP
 
 #include <string>
+#include <cmath>
 
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -29,6 +30,9 @@
 
 #include <ros/ros.h>
 #include <nao_interaction_msgs/FaceDetected.h>
+#include <nao_interaction_msgs/FacesDetected.h>
+#include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/Pose.h>
 
 #include <naoqi_driver/tools.hpp>
 #include <naoqi_driver/recorder/globalrecorder.hpp>
@@ -79,13 +83,14 @@ public:
   void isDumping(bool state);
 
   void peopleCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message);
-  void peopleCallbackMessage(std::string &key, tools::NaoqiFaceDetected &faces, nao_interaction_msgs::FaceDetected &msg);
-  
+  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FacesDetected &msg);
+  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, geometry_msgs::PoseArray &msg);
 
 private:
   void registerCallback();
   void unregisterCallback();
   void onEvent();
+  geometry_msgs::Point toCartesian(float dist, float azi, float inc);
 
 private:
   boost::shared_ptr<converter::PeopleEventConverter<T> > converter_;
@@ -103,27 +108,44 @@ private:
   bool isPublishing_;
   bool isRecording_;
   bool isDumping_;
+  
+  ros::Publisher p;
 
 protected:
   std::vector<std::string> keys_;
 }; // class
 
 
-class FaceDetectedEventRegister: public PeopleEventRegister<nao_interaction_msgs::FaceDetected>
+class FaceDetectedEventRegister: public PeopleEventRegister<nao_interaction_msgs::FacesDetected>
 {
 public:
-  FaceDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::FaceDetected>(name, keys, frequency, session) {}
+  FaceDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::FacesDetected>(name, keys, frequency, session) {}
+};
+
+class PersonDetectedEventRegister: public PeopleEventRegister<geometry_msgs::PoseArray>
+{
+public:
+  PersonDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<geometry_msgs::PoseArray>(name, keys, frequency, session) {}
 };
 
 //QI_REGISTER_OBJECT(FaceDetectEventRegister, peopleCallback)
+//QI_REGISTER_OBJECT(PersonDetectedEventRegister, peopleCallback)
 
 static bool _qiregisterPeopleEventRegisterFaceDetected() {
-  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::FaceDetected> > b;
-  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::FaceDetected>, peopleCallback)
+  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::FacesDetected> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::FacesDetected>, peopleCallback)
     b.registerType();
   return true;
   }
 static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterFaceDetected();
+
+static bool _qiregisterPeopleEventRegisterPersonDetected() {
+  ::qi::ObjectTypeBuilder<PeopleEventRegister<geometry_msgs::PoseArray> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<geometry_msgs::PoseArray>, peopleCallback)
+    b.registerType();
+  return true;
+  }
+static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterPersonDetected();
 
 } //naoqi
 

@@ -27,6 +27,7 @@
 #include <naoqi_driver/recorder/globalrecorder.hpp>
 #include <naoqi_driver/message_actions.h>
 #include "../tools/from_any_value.hpp"
+#include <typeinfo>
 
 #include "people.hpp"
 
@@ -112,7 +113,9 @@ void PeopleEventRegister<T>::stopProcess()
     //std::string serviceName = std::string("ROS-Driver-") + typeid(T).name();
     std::string serviceName = std::string("ROS-Driver-") + keys_[0];
     if(serviceId){
-      p_memory_.call<void>("unsubscribeToEvent", serviceName, "peopleCallback");
+      for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it) {
+        p_memory_.call<void>("unsubscribeToEvent",it->c_str(), serviceName);
+      }
       session_->unregisterService(serviceId);
       serviceId = 0;
     }
@@ -171,20 +174,8 @@ template<class T>
 void PeopleEventRegister<T>::peopleCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message)
 {
   T msg = T();
-  
-  tools::NaoqiFaceDetected faces;
-  try {
-    faces = tools::fromAnyValueToNaoqiFaceDetected(value);
-  }
-  catch(std::runtime_error& e)
-  {
-    std::cout << "Cannot retrieve facedetect" << std::endl;
-    return;
-  }
 
-  if ( faces.face_info.size() > 0 ) { // sometimes value does not have face information..
-    peopleCallbackMessage(key, faces, msg);
-  }
+  peopleCallbackMessage(key, value, msg);
 
   std::vector<message_actions::MessageAction> actions;
   boost::mutex::scoped_lock callback_lock(mutex_);
@@ -212,52 +203,100 @@ void PeopleEventRegister<T>::peopleCallback(std::string &key, qi::AnyValue &valu
 }
 
 template<class T>
-void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, tools::NaoqiFaceDetected &faces, nao_interaction_msgs::FaceDetected &msg)
+void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FacesDetected &msg)
 {
+  tools::NaoqiFaceDetected faces;
+  try {
+    faces = tools::fromAnyValueToNaoqiFaceDetected(value);
+  }
+  catch(std::runtime_error& e)
+  {
+    std::cout << "Cannot retrieve facedetect" << std::endl;
+    return;
+  }
+  if ( faces.face_info.size() == 0 ) return;
+  
   msg.header.frame_id = "";
-  msg.header.stamp = ros::Time(faces.timestamp.timestamp_s, faces.timestamp.timestamp_us);
+  msg.header.stamp = ros::Time::now(); // ros::Time(faces.timestamp.timestamp_s, faces.timestamp.timestamp_us); // This gives time till start not the system time
 
-  if ( faces.face_info.size() > 0 ) {
-    msg.face_id.data = faces.face_info[0].extra_info[0].face_id;
-    msg.score_reco.data = faces.face_info[0].extra_info[0].score_reco;
-    msg.face_label.data = faces.face_info[0].extra_info[0].face_label;
+  nao_interaction_msgs::FaceDetected face;
+  for(int i = 0; i < faces.face_info.size(); i++) {
+    face.face_id.data = faces.face_info[i].extra_info[0].face_id;
+    face.score_reco.data = faces.face_info[i].extra_info[0].score_reco;
+    face.face_label.data = faces.face_info[i].extra_info[0].face_label;
 
-    msg.shape_alpha.data = faces.face_info[0].shape_info.alpha;
-    msg.shape_beta.data  = faces.face_info[0].shape_info.beta;
-    msg.shape_sizeX.data = faces.face_info[0].shape_info.sizeX;
-    msg.shape_sizeY.data = faces.face_info[0].shape_info.sizeY;
+    face.shape_alpha.data = faces.face_info[i].shape_info.alpha;
+    face.shape_beta.data  = faces.face_info[i].shape_info.beta;
+    face.shape_sizeX.data = faces.face_info[i].shape_info.sizeX;
+    face.shape_sizeY.data = faces.face_info[i].shape_info.sizeY;
 
-    msg.right_eye_eyeCenter_x.data = faces.face_info[0].extra_info[0].right_eye_points.eye_center_x;
-    msg.right_eye_eyeCenter_y.data = faces.face_info[0].extra_info[0].right_eye_points.eye_center_y;
-    msg.right_eye_noseSideLimit_x.data = faces.face_info[0].extra_info[0].right_eye_points.nose_side_limit_x;
-    msg.right_eye_noseSideLimit_y.data = faces.face_info[0].extra_info[0].right_eye_points.nose_side_limit_y;
-    msg.right_eye_earSideLimit_x.data = faces.face_info[0].extra_info[0].right_eye_points.ear_side_limit_x;
-    msg.right_eye_earSideLimit_y.data = faces.face_info[0].extra_info[0].right_eye_points.ear_side_limit_y;
+    face.right_eye_eyeCenter_x.data = faces.face_info[i].extra_info[0].right_eye_points.eye_center_x;
+    face.right_eye_eyeCenter_y.data = faces.face_info[i].extra_info[0].right_eye_points.eye_center_y;
+    face.right_eye_noseSideLimit_x.data = faces.face_info[i].extra_info[0].right_eye_points.nose_side_limit_x;
+    face.right_eye_noseSideLimit_y.data = faces.face_info[i].extra_info[0].right_eye_points.nose_side_limit_y;
+    face.right_eye_earSideLimit_x.data = faces.face_info[i].extra_info[0].right_eye_points.ear_side_limit_x;
+    face.right_eye_earSideLimit_y.data = faces.face_info[i].extra_info[0].right_eye_points.ear_side_limit_y;
 
-    msg.left_eye_eyeCenter_x.data = faces.face_info[0].extra_info[0].left_eye_points.eye_center_x;
-    msg.left_eye_eyeCenter_y.data = faces.face_info[0].extra_info[0].left_eye_points.eye_center_y;
-    msg.left_eye_noseSideLimit_x.data = faces.face_info[0].extra_info[0].left_eye_points.nose_side_limit_x;
-    msg.left_eye_noseSideLimit_y.data = faces.face_info[0].extra_info[0].left_eye_points.nose_side_limit_y;
-    msg.left_eye_earSideLimit_x.data = faces.face_info[0].extra_info[0].left_eye_points.ear_side_limit_x;
-    msg.left_eye_earSideLimit_y.data = faces.face_info[0].extra_info[0].left_eye_points.ear_side_limit_y;
+    face.left_eye_eyeCenter_x.data = faces.face_info[i].extra_info[0].left_eye_points.eye_center_x;
+    face.left_eye_eyeCenter_y.data = faces.face_info[i].extra_info[0].left_eye_points.eye_center_y;
+    face.left_eye_noseSideLimit_x.data = faces.face_info[i].extra_info[0].left_eye_points.nose_side_limit_x;
+    face.left_eye_noseSideLimit_y.data = faces.face_info[i].extra_info[0].left_eye_points.nose_side_limit_y;
+    face.left_eye_earSideLimit_x.data = faces.face_info[i].extra_info[0].left_eye_points.ear_side_limit_x;
+    face.left_eye_earSideLimit_y.data = faces.face_info[i].extra_info[0].left_eye_points.ear_side_limit_y;
 
-    msg.nose_bottomCenterLimit_x.data = faces.face_info[0].extra_info[0].nose_points.bottom_center_limit_x;
-    msg.nose_bottomCenterLimit_y.data = faces.face_info[0].extra_info[0].nose_points.bottom_center_limit_y;
-    msg.nose_bottomLeftLimit_x.data = faces.face_info[0].extra_info[0].nose_points.bottom_left_limit_x;
-    msg.nose_bottomLeftLimit_y.data = faces.face_info[0].extra_info[0].nose_points.bottom_left_limit_y;
-    msg.nose_bottomRightLimit_x.data = faces.face_info[0].extra_info[0].nose_points.bottom_right_limit_x;
-    msg.nose_bottomRightLimit_y.data = faces.face_info[0].extra_info[0].nose_points.bottom_right_limit_y;
+    face.nose_bottomCenterLimit_x.data = faces.face_info[i].extra_info[0].nose_points.bottom_center_limit_x;
+    face.nose_bottomCenterLimit_y.data = faces.face_info[i].extra_info[0].nose_points.bottom_center_limit_y;
+    face.nose_bottomLeftLimit_x.data = faces.face_info[i].extra_info[0].nose_points.bottom_left_limit_x;
+    face.nose_bottomLeftLimit_y.data = faces.face_info[i].extra_info[0].nose_points.bottom_left_limit_y;
+    face.nose_bottomRightLimit_x.data = faces.face_info[i].extra_info[0].nose_points.bottom_right_limit_x;
+    face.nose_bottomRightLimit_y.data = faces.face_info[i].extra_info[0].nose_points.bottom_right_limit_y;
 
-    msg.mouth_leftLimit_x.data = faces.face_info[0].extra_info[0].mouth_points.left_limit_x;
-    msg.mouth_leftLimit_y.data = faces.face_info[0].extra_info[0].mouth_points.left_limit_y;
-    msg.mouth_rightLimit_x.data = faces.face_info[0].extra_info[0].mouth_points.right_limit_x;
-    msg.mouth_rightLimit_y.data = faces.face_info[0].extra_info[0].mouth_points.right_limit_y;
-    msg.mouth_topLimit_x.data = faces.face_info[0].extra_info[0].mouth_points.top_limit_x;
-    msg.mouth_topLimit_y.data = faces.face_info[0].extra_info[0].mouth_points.top_limit_y;
+    face.mouth_leftLimit_x.data = faces.face_info[i].extra_info[0].mouth_points.left_limit_x;
+    face.mouth_leftLimit_y.data = faces.face_info[i].extra_info[0].mouth_points.left_limit_y;
+    face.mouth_rightLimit_x.data = faces.face_info[i].extra_info[0].mouth_points.right_limit_x;
+    face.mouth_rightLimit_y.data = faces.face_info[i].extra_info[0].mouth_points.right_limit_y;
+    face.mouth_topLimit_x.data = faces.face_info[i].extra_info[0].mouth_points.top_limit_x;
+    face.mouth_topLimit_y.data = faces.face_info[i].extra_info[0].mouth_points.top_limit_y;
+    
+    msg.faces.push_back(face);
   }
 }
 
+template<class T>
+geometry_msgs::Point PeopleEventRegister<T>::toCartesian(float dist, float azi, float inc) {
+    geometry_msgs::Point p;
+    p.x = dist * std::sin(inc) * std::cos(azi) * (-1); // Inverted
+    p.y = dist * std::sin(inc) * std::sin(azi);
+    p.z = dist * std::cos(inc);
+    return p;
+}
+
+template<class T>
+void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, geometry_msgs::PoseArray &msg)
+{
+    tools::NaoqiPersonDetected people;
+    try {
+        people = tools::fromAnyValueToNaoqiPersonDetected(value);
+    }
+    catch(std::runtime_error& e)
+    {
+      std::cout << "Cannot retrieve persondetected: " << e.what() << std::endl;
+      return;
+    }
+    msg.header.frame_id = "CameraDepth_optical_frame";
+    msg.header.stamp = ros::Time::now(); //ros::Time(people.timestamp.timestamp_s, people.timestamp.timestamp_us); // This gives time till start not the system time
+    
+    for(int i = 0; i < people.person_info.size(); i++) {
+        geometry_msgs::Pose p;
+        p.position = toCartesian(people.person_info[i].distance_to_camera, people.person_info[i].pitch_angle_in_image, people.person_info[i].yaw_angle_in_image);
+        p.orientation.w = 1.0;
+        
+        msg.poses.push_back(p);
+    }
+}
+
 // http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
-template class PeopleEventRegister<nao_interaction_msgs::FaceDetected>;
+template class PeopleEventRegister<nao_interaction_msgs::FacesDetected>;
+template class PeopleEventRegister<geometry_msgs::PoseArray>;
 
 }//namespace
