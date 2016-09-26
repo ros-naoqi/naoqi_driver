@@ -36,6 +36,8 @@ NaoqiImage fromAnyValueToNaoqiImage(qi::AnyValue& value);
 
 NaoqiFaceDetected fromAnyValueToNaoqiFaceDetected(qi::AnyValue& value);
 
+NaoqiPersonDetected fromAnyValueToNaoqiPersonDetected(qi::AnyValue& value);
+
 std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::vector<std::string>& result);
 
 std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<float>& result);

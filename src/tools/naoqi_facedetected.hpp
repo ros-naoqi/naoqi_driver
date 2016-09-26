@@ -77,6 +77,12 @@ struct NaoqiTimeStamp{
   int timestamp_s;
   int timestamp_us;
 };
+struct NaoqiPersonInfo{
+    int id;
+    float distance_to_camera;
+    float pitch_angle_in_image;
+    float yaw_angle_in_image;
+};
 
 
 struct NaoqiFaceDetected{
@@ -84,6 +90,19 @@ struct NaoqiFaceDetected{
   struct NaoqiTimeStamp timestamp;
   //[ FaceInfo[N], Time_Filtered_Reco_Info ]
   std::vector<struct NaoqiFaceInfo> face_info;
+  //CameraPose_InTorsoFrame,
+  float camera_pose_in_torso_frame[6];
+  //CameraPose_InRobotFrame,
+  float camera_pose_in_robot_frame[6];
+  //Camera_Id
+  int camera_id;
+};
+
+struct NaoqiPersonDetected{
+  //TimeStamp,
+  struct NaoqiTimeStamp timestamp;
+  // Person info
+  std::vector<struct NaoqiPersonInfo> person_info;
   //CameraPose_InTorsoFrame,
   float camera_pose_in_torso_frame[6];
   //CameraPose_InRobotFrame,

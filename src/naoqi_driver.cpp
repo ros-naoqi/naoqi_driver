@@ -859,6 +859,20 @@ void Driver::registerDefaultConverter()
       event_map_.find("face_detected")->second.isPublishing(true);
     }
   }
+  if ( people_enabled )
+  {
+    std::vector<std::string> people_events;
+    people_events.push_back("PeoplePerception/PeopleDetected");
+    boost::shared_ptr<PersonDetectedEventRegister> event_register =
+      boost::make_shared<PersonDetectedEventRegister>( "people_detected", people_events, 0, sessionPtr_ );
+    insertEventConverter("people_detected", event_register);
+    if (keep_looping) {
+      event_map_.find("people_detected")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("people_detected")->second.isPublishing(true);
+    }
+  }
 }
 
 
