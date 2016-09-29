@@ -28,9 +28,7 @@
 * ROS includes
 */
 #include <nao_interaction_msgs/FacesDetected.h>
-#include <geometry_msgs/PoseArray.h>
-#include <geometry_msgs/Pose.h>
-
+#include <nao_interaction_msgs/PersonCharacteristicsArray.h>
 /*
 * ALDEBARAN includes
 */

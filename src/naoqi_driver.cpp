@@ -588,6 +588,7 @@ void Driver::registerDefaultConverter()
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.hand.enabled", true);
+  bool face_enabled                   = boot_config_.get( "converters.face.enabled", true);
   bool people_enabled                 = boot_config_.get( "converters.people.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
@@ -845,7 +846,7 @@ void Driver::registerDefaultConverter()
   }
   
   /** PEOPLE **/
-  if ( people_enabled )
+  if ( face_enabled )
   {
     std::vector<std::string> people_events;
     people_events.push_back("FaceDetected");
