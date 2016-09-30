@@ -233,7 +233,7 @@ void PeopleEventRegister<T>::peopleCallback(std::string &key, qi::AnyValue &valu
 }
 
 template<class T>
-void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FacesDetected &msg)
+void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FaceDetectedArray &msg)
 {
     std::cout<<"THERE"<<std::endl;
   tools::NaoqiFaceDetected faces;
@@ -290,7 +290,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
     face.mouth_topLimit_x.data = faces.face_info[i].extra_info[0].mouth_points.top_limit_x;
     face.mouth_topLimit_y.data = faces.face_info[i].extra_info[0].mouth_points.top_limit_y;
     
-    msg.faces.push_back(face);
+    msg.face_array.push_back(face);
   }
 }
 
@@ -304,7 +304,7 @@ geometry_msgs::Point PeopleEventRegister<T>::toCartesian(float dist, float azi, 
 }
 
 template<class T>
-void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::PersonCharacteristicsArray &msg)
+void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::PersonDetectedArray &msg)
 {
     std::cout<<"HERE"<<std::endl;
     tools::NaoqiPersonDetected people;
@@ -329,31 +329,31 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
         
         qi::AnyValue data = (qi::AnyValue)p_memory_.call<qi::AnyValue>("getListData", keys);
         
-        nao_interaction_msgs::PersonCharacteristics pc;
-        pc.face.gender = -1; // Since 0 = female, initialising as -1 to disambigute no data from femal.
+        nao_interaction_msgs::PersonDetected pd;
+        pd.face.gender = -1; // Since 0 = female, initialising as -1 to disambigute no data from femal.
         
         /* People Perception */
         try {
-            pc.id = people.person_info[i].id;
-            pc.person.distance = people.person_info[i].distance_to_camera;
-            pc.person.yaw = people.person_info[i].yaw_angle_in_image;
-            pc.person.pitch = people.person_info[i].pitch_angle_in_image;
-            pc.person.position.position = toCartesian(pc.person.distance, pc.person.pitch, pc.person.yaw);
-            pc.person.position.orientation.w = 1.0;
+            pd.id = people.person_info[i].id;
+            pd.person.distance = people.person_info[i].distance_to_camera;
+            pd.person.yaw = people.person_info[i].yaw_angle_in_image;
+            pd.person.pitch = people.person_info[i].pitch_angle_in_image;
+            pd.person.position.position = toCartesian(pd.person.distance, pd.person.pitch, pd.person.yaw);
+            pd.person.position.orientation.w = 1.0;
             
             if(data.size() != 9) {
-                msg.person_array.push_back(pc);
+                msg.person_array.push_back(pd);
                 ROS_DEBUG("Could not retrieve any face information");
                 continue;
             }
             
             try {
-                pc.person.face_detected = (bool)data[0].content().asInt32();
+                pd.person.face_detected = (bool)data[0].content().asInt32();
             } catch(...) {
                 ROS_DEBUG("Error retreiving face detected");
             }
             
-            if(pc.person.face_detected) {
+            if(pd.person.face_detected) {
                 /* Gaze Analysis */
                 try {
                     qi::AnyReference gaze = data[1].content();
@@ -365,10 +365,10 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                         if(yaw.kind() == qi::TypeKind_Float && pitch.kind() == qi::TypeKind_Float) {
                             tf::Quaternion q;
                             q.setRPY(0.0, pitch.asFloat(), yaw.asFloat());
-                            pc.gaze.gaze.x = q.x();
-                            pc.gaze.gaze.y = q.y();
-                            pc.gaze.gaze.z = q.z();
-                            pc.gaze.gaze.w = q.w();
+                            pd.gaze.gaze_angle.x = q.x();
+                            pd.gaze.gaze_angle.y = q.y();
+                            pd.gaze.gaze_angle.z = q.z();
+                            pd.gaze.gaze_angle.w = q.w();
                         } else {
                             ROS_DEBUG("Could not retrieve yaw/pitch");
                         }
@@ -389,10 +389,10 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                         if(yaw.kind() == qi::TypeKind_Float && pitch.kind() == qi::TypeKind_Float && roll.kind() == qi::TypeKind_Float) {
                             tf::Quaternion q;
                             q.setRPY(roll.asFloat(), pitch.asFloat(), yaw.asFloat());
-                            pc.gaze.head_angle.x = q.x();
-                            pc.gaze.head_angle.y = q.y();
-                            pc.gaze.head_angle.z = q.z();
-                            pc.gaze.head_angle.w = q.w();
+                            pd.gaze.head_angle.x = q.x();
+                            pd.gaze.head_angle.y = q.y();
+                            pd.gaze.head_angle.z = q.z();
+                            pd.gaze.head_angle.w = q.w();
                         } else {
                             ROS_DEBUG("Could not retrieve yaw/pitch/roll");
                         }
@@ -403,8 +403,8 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving head angle: " << e.what());
                 }
                 try {
-                    pc.gaze.looking_at_robot = (bool)data[3].content().asInt32();
-                    pc.gaze.looking_at_robot_score = data[4].content().asFloat();
+                    pd.gaze.looking_at_robot = (bool)data[3].content().asInt32();
+                    pd.gaze.looking_at_robot_score = data[4].content().asFloat();
                 } catch(std::runtime_error& e) {
                     ROS_DEBUG_STREAM("Error retrieving looking at robot: " << e.what());
                 }
@@ -418,8 +418,8 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                         age = age_props[0].content();
                         conf = age_props[1].content();
                         if(age.kind() == qi::TypeKind_Float && conf.kind() == qi::TypeKind_Float) {
-                            pc.face.age = (int)age.asFloat();
-                            pc.face.age_confidence = conf.asFloat();
+                            pd.face.age = (int)age.asFloat();
+                            pd.face.age_confidence = conf.asFloat();
                         } else {
                             ROS_DEBUG("Could not retrieve age and confidence");
                         }
@@ -437,8 +437,8 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                         gender = gender_props[0].content();
                         conf = gender_props[1].content();
                         if(gender.kind() == qi::TypeKind_Float && conf.kind() == qi::TypeKind_Float) {
-                            pc.face.gender = (int)gender.asFloat();
-                            pc.face.gender_confidence = conf.asFloat();
+                            pd.face.gender = (int)gender.asFloat();
+                            pd.face.gender_confidence = conf.asFloat();
                         } else {
                             ROS_DEBUG("Could not retrieve gender and confidence");
                         }
@@ -456,8 +456,8 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                         smile_degree = smile_props[0].content();
                         conf = smile_props[1].content();
                         if(smile_degree.kind() == qi::TypeKind_Float && conf.kind() == qi::TypeKind_Float) {
-                            pc.face.smile_degree = smile_degree.asFloat();
-                            pc.face.smile_degree_confidence = conf.asFloat();
+                            pd.face.smile_degree = smile_degree.asFloat();
+                            pd.face.smile_degree_confidence = conf.asFloat();
                         } else {
                             ROS_DEBUG("Could not retrieve smile degree and confidence");
                         }
@@ -482,11 +482,11 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                                 && surprised.kind() == qi::TypeKind_Float
                                 && angry.kind() == qi::TypeKind_Float
                                 && sad.kind() == qi::TypeKind_Float) {
-                            pc.face.expression_properties.neutral = neutral.asFloat();
-                            pc.face.expression_properties.happy = happy.asFloat();
-                            pc.face.expression_properties.surprised = surprised.asFloat();
-                            pc.face.expression_properties.angry = angry.asFloat();
-                            pc.face.expression_properties.sad = sad.asFloat();
+                            pd.face.expression_properties.neutral = neutral.asFloat();
+                            pd.face.expression_properties.happy = happy.asFloat();
+                            pd.face.expression_properties.surprised = surprised.asFloat();
+                            pd.face.expression_properties.angry = angry.asFloat();
+                            pd.face.expression_properties.sad = sad.asFloat();
                         } else {
                             ROS_DEBUG("Could not retrieve neutral/happy/surprised/angry/sad");
                         }
@@ -502,12 +502,12 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
         }
         
         
-        msg.person_array.push_back(pc);
+        msg.person_array.push_back(pd);
     }
 }
 
 // http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
-template class PeopleEventRegister<nao_interaction_msgs::FacesDetected>;
-template class PeopleEventRegister<nao_interaction_msgs::PersonCharacteristicsArray>;
+template class PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray>;
+template class PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>;
 
 }//namespace

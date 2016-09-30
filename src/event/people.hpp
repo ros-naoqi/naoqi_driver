@@ -29,9 +29,8 @@
 #include <qi/session.hpp>
 
 #include <ros/ros.h>
-#include <nao_interaction_msgs/FaceDetected.h>
-#include <nao_interaction_msgs/FacesDetected.h>
-#include <nao_interaction_msgs/PersonCharacteristicsArray.h>
+#include <nao_interaction_msgs/FaceDetectedArray.h>
+#include <nao_interaction_msgs/PersonDetectedArray.h>
 #include <tf/transform_datatypes.h>
 
 #include <naoqi_driver/tools.hpp>
@@ -83,8 +82,8 @@ public:
   void isDumping(bool state);
 
   void peopleCallback(std::string &key, qi::AnyValue &value, qi::AnyValue &message);
-  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FacesDetected &msg);
-  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::PersonCharacteristicsArray &msg);
+  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FaceDetectedArray &msg);
+  void peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::PersonDetectedArray &msg);
 
 private:
   void registerCallback();
@@ -123,32 +122,32 @@ protected:
 }; // class
 
 
-class FaceDetectedEventRegister: public PeopleEventRegister<nao_interaction_msgs::FacesDetected>
+class FaceDetectedEventRegister: public PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray>
 {
 public:
-  FaceDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::FacesDetected>(name, keys, frequency, session) {}
+  FaceDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray>(name, keys, frequency, session) {}
 };
 
-class PersonCharacteristicsEventRegister: public PeopleEventRegister<nao_interaction_msgs::PersonCharacteristicsArray>
+class PersonCharacteristicsEventRegister: public PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>
 {
 public:
-  PersonCharacteristicsEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::PersonCharacteristicsArray>(name, keys, frequency, session) {}
+  PersonCharacteristicsEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>(name, keys, frequency, session) {}
 };
 
 //QI_REGISTER_OBJECT(FaceDetectEventRegister, peopleCallback)
 //QI_REGISTER_OBJECT(PersonCharacteristicsEventRegister, peopleCallback)
 
 static bool _qiregisterPeopleEventRegisterFaceDetected() {
-  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::FacesDetected> > b;
-  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::FacesDetected>, peopleCallback)
+  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray>, peopleCallback)
     b.registerType();
   return true;
   }
 static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterFaceDetected();
 
 static bool _qiregisterPeopleEventRegisterPersonCharacteristics() {
-  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::PersonCharacteristicsArray> > b;
-  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::PersonCharacteristicsArray>, peopleCallback)
+  ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>, peopleCallback)
     b.registerType();
   return true;
   }
