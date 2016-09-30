@@ -128,14 +128,14 @@ public:
   FaceDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray>(name, keys, frequency, session) {}
 };
 
-class PersonCharacteristicsEventRegister: public PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>
+class PersonDetectedEventRegister: public PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>
 {
 public:
-  PersonCharacteristicsEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>(name, keys, frequency, session) {}
+  PersonDetectedEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>(name, keys, frequency, session) {}
 };
 
 //QI_REGISTER_OBJECT(FaceDetectEventRegister, peopleCallback)
-//QI_REGISTER_OBJECT(PersonCharacteristicsEventRegister, peopleCallback)
+//QI_REGISTER_OBJECT(PersonDetectedEventRegister, peopleCallback)
 
 static bool _qiregisterPeopleEventRegisterFaceDetected() {
   ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::FaceDetectedArray> > b;
@@ -145,13 +145,13 @@ static bool _qiregisterPeopleEventRegisterFaceDetected() {
   }
 static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterFaceDetected();
 
-static bool _qiregisterPeopleEventRegisterPersonCharacteristics() {
+static bool _qiregisterPeopleEventRegisterPersonDetected() {
   ::qi::ObjectTypeBuilder<PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray> > b;
   QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, PeopleEventRegister<nao_interaction_msgs::PersonDetectedArray>, peopleCallback)
     b.registerType();
   return true;
   }
-static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterPersonCharacteristics();
+static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterPeopleEventRegisterPersonDetected();
 
 } //naoqi
 
