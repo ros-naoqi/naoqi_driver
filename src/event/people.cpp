@@ -235,7 +235,6 @@ void PeopleEventRegister<T>::peopleCallback(std::string &key, qi::AnyValue &valu
 template<class T>
 void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::FaceDetectedArray &msg)
 {
-    std::cout<<"THERE"<<std::endl;
   tools::NaoqiFaceDetected faces;
   try {
     faces = tools::fromAnyValueToNaoqiFaceDetected(value);
@@ -248,7 +247,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
   if ( faces.face_info.size() == 0 ) return;
   
   msg.header.frame_id = "CameraTop_optical_frame";
-  msg.header.stamp = ros::Time::now(); // ros::Time(faces.timestamp.timestamp_s, faces.timestamp.timestamp_us); // This gives time till start not the system time
+  msg.header.stamp = ros::Time::now();
 
   for(int i = 0; i < faces.face_info.size(); i++) {
     nao_interaction_msgs::FaceDetected face;
@@ -306,7 +305,6 @@ geometry_msgs::Point PeopleEventRegister<T>::toCartesian(float dist, float azi, 
 template<class T>
 void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValue &value, nao_interaction_msgs::PersonDetectedArray &msg)
 {
-    std::cout<<"HERE"<<std::endl;
     tools::NaoqiPersonDetected people;
     try {
         people = tools::fromAnyValueToNaoqiPersonDetected(value);
@@ -318,7 +316,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
     }
     
     msg.header.frame_id = "CameraDepth_optical_frame";
-    msg.header.stamp = ros::Time::now(); //ros::Time(people.timestamp.timestamp_s, people.timestamp.timestamp_us); // This gives time till start not the system time
+    msg.header.stamp = ros::Time::now();
     
     for(int i = 0; i < people.person_info.size(); i++) {
         std::string sid = num_to_str<int>(people.person_info[i].id);
@@ -500,7 +498,6 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
         } catch(std::runtime_error& e) {
             ROS_DEBUG_STREAM("Error retrieving person information: " << e.what());
         }
-        
         
         msg.person_array.push_back(pd);
     }
