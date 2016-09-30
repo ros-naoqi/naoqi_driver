@@ -41,6 +41,7 @@
 #include "converters/memory/string.hpp"
 #include "converters/log.hpp"
 #include "converters/odom.hpp"
+#include "converters/battery.hpp"
 
 /*
  * PUBLISHERS
@@ -584,6 +585,9 @@ void Driver::registerDefaultConverter()
   bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
   size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
   
+  bool battery_enabled                = boot_config_.get( "converters.battery.enabled", true);
+  size_t battery_frequency            = boot_config_.get( "converters.battery.frequency", 10);
+
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
   bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
