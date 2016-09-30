@@ -70,6 +70,11 @@
       "enabled"       : true,
       "frequency"     : 10
     },
+    "battery":
+    {
+      "enabled"       : true,
+      "frequency"     : 10
+    },
     "audio":
     {
       "enabled"       : true

@@ -21,6 +21,7 @@ set(
   src/converters/sonar.cpp
   src/converters/log.cpp
   src/converters/odom.cpp
+  src/converters/battery.cpp
   )
 set(
   TOOLS_SRC
