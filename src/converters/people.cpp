@@ -62,8 +62,8 @@ void PeopleEventConverter<T>::callAll(const std::vector<message_actions::Message
 }
 
 // http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
-template class PeopleEventConverter<nao_interaction_msgs::FacesDetected>;
-template class PeopleEventConverter<nao_interaction_msgs::PersonCharacteristicsArray>;
+template class PeopleEventConverter<nao_interaction_msgs::FaceDetectedArray>;
+template class PeopleEventConverter<nao_interaction_msgs::PersonDetectedArray>;
 }
 
 }
