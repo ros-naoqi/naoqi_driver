@@ -86,6 +86,10 @@
     {
       "enabled"       : true
     },
+    "face":
+    {
+      "enabled"       : true
+    },
     "people":
     {
       "enabled"       : true
