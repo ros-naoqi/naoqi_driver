@@ -46,6 +46,7 @@ PeopleEventRegister<T>::PeopleEventRegister( const std::string& name, const std:
     p_people_( session->service("ALPeoplePerception") ),
     p_gaze_( session->service("ALGazeAnalysis") ),
     p_face_( session->service("ALFaceCharacteristics") ),
+    p_waving_( session->service("ALWavingDetection") ),
     session_(session),
     isStarted_(false),
     isPublishing_(false),
@@ -54,6 +55,7 @@ PeopleEventRegister<T>::PeopleEventRegister( const std::string& name, const std:
     prefix("PeoplePerception/Person/")
 {
   memory_keys.push_back("/IsFaceDetected");
+  memory_keys.push_back("/IsWaving");
   memory_keys.push_back("/GazeDirection");
   memory_keys.push_back("/HeadAngles");
   memory_keys.push_back("/IsLookingAtRobot");
@@ -119,6 +121,8 @@ void PeopleEventRegister<T>::startProcess()
           p_gaze_.call<void>("subscribe", "ROS");
           std::cout<<serviceName<<" -> Face : Start"<<std::endl;
           p_face_.call<void>("subscribe", "ROS");
+          std::cout<<serviceName<<" -> Waving : Start"<<std::endl;
+          p_waving_.call<void>("subscribe", "ROS");
       }
       std::cout << serviceName << " : Start" << std::endl;
     }
@@ -142,6 +146,8 @@ void PeopleEventRegister<T>::stopProcess()
           p_gaze_.call<void>("unsubscribe", "ROS");
           std::cout<<serviceName<<" -> Face : Stop"<<std::endl;
           p_face_.call<void>("unsubscribe", "ROS");
+          std::cout<<serviceName<<" -> Waving : Stop"<<std::endl;
+          p_waving_.call<void>("unsubscribe", "ROS");
       }
       for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it) {
         p_memory_.call<void>("unsubscribeToEvent",it->c_str(), serviceName);
@@ -339,22 +345,28 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
             pd.person.position.position = toCartesian(pd.person.distance, pd.person.pitch, pd.person.yaw);
             pd.person.position.orientation.w = 1.0;
             
-            if(data.size() != 9) {
+            if(data.size() != keys.size()) {
                 msg.person_array.push_back(pd);
                 ROS_DEBUG("Could not retrieve any face information");
                 continue;
             }
             
             try {
-                pd.person.face_detected = (bool)data[0].content().asInt32();
+                pd.person.face_detected = (bool)data[0].content().asInt32(); 
             } catch(...) {
                 ROS_DEBUG("Error retreiving face detected");
+            }
+            
+            try {
+                pd.person.is_waving = (bool)data[1].content().asInt32();
+            } catch(...) {
+                ROS_INFO("Error retreiving if waving");
             }
             
             if(pd.person.face_detected) {
                 /* Gaze Analysis */
                 try {
-                    qi::AnyReference gaze = data[1].content();
+                    qi::AnyReference gaze = data[2].content();
                     if(gaze.kind() == qi::TypeKind_List && gaze.size() == 2)
                     {
                         qi::AnyReference g, yaw, pitch;
@@ -377,7 +389,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving gaze angle: " << e.what());
                 }
                 try {
-                    qi::AnyReference head_angle = data[2].content();
+                    qi::AnyReference head_angle = data[3].content();
                     if(head_angle.kind() == qi::TypeKind_List && head_angle.size() == 3)
                     {
                         qi::AnyReference yaw, pitch, roll;
@@ -401,15 +413,15 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving head angle: " << e.what());
                 }
                 try {
-                    pd.gaze.looking_at_robot = (bool)data[3].content().asInt32();
-                    pd.gaze.looking_at_robot_score = data[4].content().asFloat();
+                    pd.gaze.looking_at_robot = (bool)data[4].content().asInt32();
+                    pd.gaze.looking_at_robot_score = data[5].content().asFloat();
                 } catch(std::runtime_error& e) {
                     ROS_DEBUG_STREAM("Error retrieving looking at robot: " << e.what());
                 }
                 
                 /* Face Charcteristics */
                 try {
-                    qi::AnyReference age_props = data[5].content();
+                    qi::AnyReference age_props = data[6].content();
                     if(age_props.kind() == qi::TypeKind_List && age_props.size() == 2)
                     {
                         qi::AnyReference age, conf;
@@ -428,7 +440,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving age: " << e.what());
                 }
                 try {
-                qi::AnyReference gender_props = data[6].content();
+                qi::AnyReference gender_props = data[7].content();
                     if(gender_props.kind() == qi::TypeKind_List && gender_props.size() == 2)
                     {
                         qi::AnyReference gender, conf;
@@ -447,7 +459,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving gender: " << e.what());
                 }
                 try {
-                    qi::AnyReference smile_props = data[7].content();
+                    qi::AnyReference smile_props = data[8].content();
                     if(smile_props.kind() == qi::TypeKind_List && smile_props.size() == 2)
                     {
                         qi::AnyReference smile_degree, conf;
@@ -466,7 +478,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
                     ROS_DEBUG_STREAM("Error retrieving smile: " << e.what());
                 }
                 try {
-                    qi::AnyReference expression_props = data[8].content();
+                    qi::AnyReference expression_props = data[9].content();
                     if(expression_props.kind() == qi::TypeKind_List && expression_props.size() == 5)
                     {
                         qi::AnyReference neutral, happy, surprised, angry, sad;
