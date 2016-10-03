@@ -45,6 +45,7 @@ set(
   src/subscribers/moveto.cpp
   src/subscribers/speech.cpp
   src/subscribers/animated_speech.cpp
+  src/subscribers/play_animation.cpp
   )
 
 set(
