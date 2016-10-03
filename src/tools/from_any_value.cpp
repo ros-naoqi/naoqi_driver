@@ -584,7 +584,7 @@ NaoqiFaceDetected fromAnyValueToNaoqiFaceDetected(qi::AnyValue& value){
   qi::AnyReference ref;
 
   if ( anyref.size() != 5 ) {
-    return result;
+    throw std::runtime_error("AnyValue does not have the expected size to be transformed to face detected");
   }
   /** TimeStamp_ **/
   ref = anyref[0].content();
@@ -610,7 +610,7 @@ NaoqiFaceDetected fromAnyValueToNaoqiFaceDetected(qi::AnyValue& value){
 
   //CameraPose_InTorsoFrame,
   ref = anyref[2].content();
-  for (int i = 0; i < 6; i++ ){
+  for (int i = 0; i < ref.size(); i++ ){
     if(ref[i].content().kind() == qi::TypeKind_Float)
     {
       result.camera_pose_in_torso_frame[i] = ref[i].content().asFloat();
@@ -623,7 +623,7 @@ NaoqiFaceDetected fromAnyValueToNaoqiFaceDetected(qi::AnyValue& value){
   }
   //CameraPose_InRobotFrame,
   ref = anyref[3].content();
-  for (int i = 0; i < 6; i++ ){
+  for (int i = 0; i < ref.size(); i++ ){
     if(ref[i].content().kind() == qi::TypeKind_Float)
     {
       result.camera_pose_in_robot_frame[i] = ref[i].content().asFloat();
@@ -715,7 +715,7 @@ NaoqiPersonDetected fromAnyValueToNaoqiPersonDetected(qi::AnyValue& value) {
     qi::AnyReference ref;
   
     if ( anyref.size() != 5 ) {
-      return result;
+      throw std::runtime_error("AnyValue does not have the expected size to be transformed to person detected");
     }
     /** TimeStamp_ **/
     ref = anyref[0].content();
@@ -741,7 +741,7 @@ NaoqiPersonDetected fromAnyValueToNaoqiPersonDetected(qi::AnyValue& value) {
     
     //CameraPose_InTorsoFrame,
     ref = anyref[2].content();
-    for (int i = 0; i < 6; i++ ){
+    for (int i = 0; i < ref.size(); i++ ){
       if(ref[i].content().kind() == qi::TypeKind_Float)
       {
         result.camera_pose_in_torso_frame[i] = ref[i].content().asFloat();
@@ -754,7 +754,7 @@ NaoqiPersonDetected fromAnyValueToNaoqiPersonDetected(qi::AnyValue& value) {
     }
     //CameraPose_InRobotFrame,
     ref = anyref[3].content();
-    for (int i = 0; i < 6; i++ ){
+    for (int i = 0; i < ref.size(); i++ ){
       if(ref[i].content().kind() == qi::TypeKind_Float)
       {
         result.camera_pose_in_robot_frame[i] = ref[i].content().asFloat();

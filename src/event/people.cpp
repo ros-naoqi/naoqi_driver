@@ -247,7 +247,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
   }
   catch(std::runtime_error& e)
   {
-    std::cout << "Cannot retrieve facedetect" << std::endl;
+    ROS_DEBUG_STREAM("Cannot retrieve facedetect: " << e.what());
     return;
   }
   if ( faces.face_info.size() == 0 ) return;
@@ -317,7 +317,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
     }
     catch(std::runtime_error& e)
     {
-      std::cout << "Cannot retrieve persondetected: " << e.what() << std::endl;
+      ROS_DEBUG_STREAM("Cannot retrieve persondetected: " << e.what());
       return;
     }
     
@@ -360,7 +360,7 @@ void PeopleEventRegister<T>::peopleCallbackMessage(std::string &key, qi::AnyValu
             try {
                 pd.person.is_waving = (bool)data[1].content().asInt32();
             } catch(...) {
-                ROS_INFO("Error retreiving if waving");
+                ROS_DEBUG("Error retreiving if waving");
             }
             
             if(pd.person.face_detected) {
