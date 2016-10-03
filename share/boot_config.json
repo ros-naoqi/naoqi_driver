@@ -76,10 +76,10 @@
       "frequency"     : 10
     },
     "odom":
-        {
-          "enabled"       : true,
-          "frequency"     : 15
-        },
+    {
+      "enabled"       : true,
+      "frequency"     : 15
+    },
     "audio":
     {
       "enabled"       : true
