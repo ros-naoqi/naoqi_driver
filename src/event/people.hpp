@@ -103,7 +103,7 @@ private:
   //boost::shared_ptr<recorder::BasicEventRecorder<T> > recorder_;
 
   qi::SessionPtr session_;
-  qi::AnyObject p_memory_, p_people_, p_gaze_, p_face_;
+  qi::AnyObject p_memory_, p_people_, p_gaze_, p_face_, p_waving_;
   unsigned int serviceId;
   std::string name_;
 
