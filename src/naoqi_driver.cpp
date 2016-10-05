@@ -42,6 +42,7 @@
 #include "converters/log.hpp"
 #include "converters/battery.hpp"
 #include "converters/odom.hpp"
+#include "converters/sound.hpp"
 
 /*
  * PUBLISHERS
@@ -90,6 +91,7 @@
 #include "event/audio.hpp"
 #include "event/touch.hpp"
 #include "event/people.hpp"
+#include "event/sound.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
@@ -541,6 +543,11 @@ void Driver::registerDefaultConverter()
   bool audio_enabled                  = boot_config_.get( "converters.audio.enabled", true);
   size_t audio_frequency              = boot_config_.get( "converters.audio.frequency", 1);
 
+  bool sound_enabled                  = boot_config_.get( "converters.sound.enabled", true);
+  size_t sound_frequency              = boot_config_.get( "converters.sound.frequency", 1);
+  bool sound_energy                   = boot_config_.get( "converters.sound.energy", true);
+  float sound_sensitivity             = boot_config_.get( "converters.sound.sensitivity", 0.9);
+
   bool logs_enabled                   = boot_config_.get( "converters.logs.enabled", true);
   size_t logs_frequency               = boot_config_.get( "converters.logs.frequency", 10);
 
@@ -802,6 +809,23 @@ void Driver::registerDefaultConverter()
     }
     if (publish_enabled_) {
       event_map_.find("audio")->second.isPublishing(true);
+    }
+  }
+  
+  if( sound_enabled ) {
+    /** Sound **/
+    std::vector<std::string> sound_events;
+    sound_events.push_back("ALSoundLocalization/SoundLocated");
+    boost::shared_ptr<SoundLocalizedEventRegister> event_register =
+      boost::make_shared<SoundLocalizedEventRegister>( "sound_localized", sound_events, 0, sessionPtr_ );
+    event_register->setEnergyComputation(sound_energy);
+    event_register->setSensitivity(sound_sensitivity);
+    insertEventConverter("sound_localized", event_register);
+    if (keep_looping) {
+      event_map_.find("sound_localized")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("sound_localized")->second.isPublishing(true);
     }
   }
 
