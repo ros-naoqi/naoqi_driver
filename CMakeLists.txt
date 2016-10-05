@@ -52,6 +52,7 @@ set(
 set(
   SERVICES_SRC
   src/services/robot_config.cpp
+  src/services/behavior_manager.cpp
   )
 
 set(

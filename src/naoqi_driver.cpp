@@ -73,6 +73,7 @@
  * SERVICES
  */
 #include "services/robot_config.hpp"
+#include "services/behavior_manager.hpp"
 
 /*
  * RECORDERS
@@ -972,6 +973,10 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getInstalledBehaviors", "/naoqi_driver/get_installed_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getRunningBehaviors", "/naoqi_driver/get_running_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("startBehavior", "/naoqi_driver/start_behaviour", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/stop_behaviour", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
