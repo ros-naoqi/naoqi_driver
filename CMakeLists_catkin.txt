@@ -18,6 +18,7 @@ find_package(catkin COMPONENTS
   rosbag_storage
   rosgraph_msgs
   sensor_msgs
+  std_srvs
   tf2_geometry_msgs
   tf2_msgs
   tf2_ros
