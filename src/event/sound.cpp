@@ -215,11 +215,11 @@ void SoundEventRegister<T>::soundCallbackMessage(std::string &key, qi::AnyValue 
   }
   catch(std::runtime_error& e)
   {
-    ROS_INFO_STREAM("Could not transform AnyValue into list: " << e.what());
+    ROS_DEBUG_STREAM("Could not transform AnyValue into list: " << e.what());
   }
   
   if(anyref.size() != 4) {
-    ROS_INFO("Could not retrieve sound location");
+    ROS_DEBUG("Could not retrieve sound location");
     return;
   }
   
@@ -238,10 +238,10 @@ void SoundEventRegister<T>::soundCallbackMessage(std::string &key, qi::AnyValue 
       msg.confidence.data = conf.asFloat();
       msg.energy.data = ener.asFloat();
     } else{
-      ROS_INFO("Could not retrieve azi/ele/conf/ener");
+      ROS_DEBUG("Could not retrieve azi/ele/conf/ener");
     }
   } else {
-    ROS_INFO("Could not retrieve sound location");
+    ROS_DEBUG("Could not retrieve sound location");
   }
 }
 
