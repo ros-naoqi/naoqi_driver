@@ -84,6 +84,12 @@
     {
       "enabled"       : true
     },
+    "sound":
+    {
+      "enabled"       : true,
+      "energy"        : true,
+      "sensitivity"   : 0.9
+    },
     "bumper":
     {
       "enabled"       : true
