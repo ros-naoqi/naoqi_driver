@@ -20,7 +20,6 @@ set(
   src/converters/memory/string.cpp
   src/converters/sonar.cpp
   src/converters/log.cpp
-  src/converters/odom.cpp
   src/converters/battery.cpp
   src/converters/odom.cpp
   src/converters/sound.cpp
@@ -53,6 +52,7 @@ set(
   SERVICES_SRC
   src/services/robot_config.cpp
   src/services/behavior_manager.cpp
+  src/services/localization.cpp
   )
 
 set(

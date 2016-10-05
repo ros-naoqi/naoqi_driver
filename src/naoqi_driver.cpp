@@ -74,6 +74,7 @@
  */
 #include "services/robot_config.hpp"
 #include "services/behavior_manager.hpp"
+#include "services/localization.hpp"
 
 /*
  * RECORDERS
@@ -594,8 +595,8 @@ void Driver::registerDefaultConverter()
   bool battery_enabled                = boot_config_.get( "converters.battery.enabled", true);
   size_t battery_frequency            = boot_config_.get( "converters.battery.frequency", 10);
 
-  bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
-  size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
+  bool odom_enabled                   = boot_config_.get( "converters.odom.enabled", true);
+  size_t odom_frequency               = boot_config_.get( "converters.odom.frequency", 10);
 
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
@@ -978,6 +979,8 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::BehaviorManagerInfoService>("getRunningBehaviors", "/naoqi_driver/get_running_behaviors", sessionPtr_) );
   registerService( boost::make_shared<service::BehaviorManagerControlService>("startBehavior", "/naoqi_driver/start_behaviour", sessionPtr_) );
   registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/stop_behaviour", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationService>("learnHome", "/naoqi_driver/learn_home", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationService>("goToHome", "/naoqi_driver/go_to_home", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
