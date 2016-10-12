@@ -17,13 +17,12 @@ How it works
 ============
 
 The **naoqi_driver** module is a NAOqi module that also acts
-as a ROS node. As there is no **roscore** on the robot, it
-needs to be given the IP of the **roscore** in order to be
+as a ROS node. It needs to be given the IP of the **roscore** in order to be
 registered as a node in the ROS processing graph. Usually,
-you will start your **roscore** on your local desktop.
+you will start your **roscore** on your local desktop 
+(or on a robot in case of instaling ROS there).
 
-Once connected, normal ROS communication is happening between
-your robot, running NAOqi OS, and your desktop, running ROS.
+Once connected, ROS communicates with NAOqi OS running on your robot.
 
 
 For further information, you can go `here <http://ros-naoqi.github.io/naoqi_driver/>`_ or build the doc:
