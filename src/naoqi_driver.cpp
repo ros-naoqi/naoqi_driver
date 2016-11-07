@@ -582,8 +582,8 @@ void Driver::registerDefaultConverter()
   size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
   
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
-  bool hand_enabled                   = boot_config_.get( "converters.hand.enabled", true);
-  bool head_enabled                   = boot_config_.get( "converters.head.enabled", true);
+  bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
+  bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always

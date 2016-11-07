@@ -78,11 +78,11 @@
     {
       "enabled"       : true
     },
-    "hand":
+    "touch_hand":
     {
       "enabled"       : true
     },
-    "head":
+    "touch_head":
     {
       "enabled"       : true
     },
