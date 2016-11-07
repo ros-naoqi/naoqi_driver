@@ -28,6 +28,7 @@
 * ROS includes
 */
 #include <naoqi_bridge_msgs/Bumper.h>
+#include <naoqi_bridge_msgs/HandTouch.h>
 #include <naoqi_bridge_msgs/TactileTouch.h>
 
 /*
