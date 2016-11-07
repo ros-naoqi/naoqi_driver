@@ -581,10 +581,9 @@ void Driver::registerDefaultConverter()
   bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
   size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
   
-
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
-  bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
-  bool hand_enabled                   = boot_config_.get( "converters.hand.enabled", true);
+  bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
+  bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -791,42 +790,42 @@ void Driver::registerDefaultConverter()
     }
   }
 
-  if ( tactile_enabled )
+  if ( hand_enabled )
   {
-    std::vector<std::string> tactile_touch_events;
-    tactile_touch_events.push_back("FrontTactilTouched");
-    tactile_touch_events.push_back("MiddleTactilTouched");
-    tactile_touch_events.push_back("RearTactilTouched");
-    boost::shared_ptr<TactileTouchEventRegister> event_register =
-      boost::make_shared<TactileTouchEventRegister>( "tactile_touch", tactile_touch_events, 0, sessionPtr_ );
-    insertEventConverter("tactile_touch", event_register);
+    std::vector<std::string> hand_touch_events;
+    hand_touch_events.push_back("HandRightBackTouched");
+    hand_touch_events.push_back("HandRightLeftTouched");
+    hand_touch_events.push_back("HandRightRightTouched");
+    hand_touch_events.push_back("HandLeftBackTouched");
+    hand_touch_events.push_back("HandLeftLeftTouched");
+    hand_touch_events.push_back("HandLeftRightTouched");
+    boost::shared_ptr<HandTouchEventRegister> event_register =
+      boost::make_shared<HandTouchEventRegister>( "hand_touch", hand_touch_events, 0, sessionPtr_ );
+    insertEventConverter("hand_touch", event_register);
     if (keep_looping) {
-      event_map_.find("tactile_touch")->second.startProcess();
+      event_map_.find("hand_touch")->second.startProcess();
     }
     if (publish_enabled_) {
-      event_map_.find("tactile_touch")->second.isPublishing(true);
+      event_map_.find("hand_touch")->second.isPublishing(true);
     }
   }
 
-  if ( hand_enabled )
-    {
-      std::vector<std::string> hand_touch_events;
-      hand_touch_events.push_back("HandRightBackTouched");
-      hand_touch_events.push_back("HandRightLeftTouched");
-      hand_touch_events.push_back("HandRightRightTouched");
-      hand_touch_events.push_back("HandLeftBackTouched");
-      hand_touch_events.push_back("HandLeftLeftTouched");
-      hand_touch_events.push_back("HandLeftRightTouched");
-      boost::shared_ptr<HandTouchEventRegister> event_register =
-	boost::make_shared<HandTouchEventRegister>( "hand_touch", hand_touch_events, 0, sessionPtr_ );
-      insertEventConverter("hand_touch", event_register);
-      if (keep_looping) {
-	event_map_.find("hand_touch")->second.startProcess();
-      }
-      if (publish_enabled_) {
-	event_map_.find("hand_touch")->second.isPublishing(true);
-      }
+  if ( head_enabled )
+  {
+    std::vector<std::string> head_touch_events;
+    head_touch_events.push_back("FrontTactilTouched");
+    head_touch_events.push_back("MiddleTactilTouched");
+    head_touch_events.push_back("RearTactilTouched");
+    boost::shared_ptr<HeadTouchEventRegister> event_register =
+      boost::make_shared<HeadTouchEventRegister>( "head_touch", head_touch_events, 0, sessionPtr_ );
+    insertEventConverter("head_touch", event_register);
+    if (keep_looping) {
+      event_map_.find("head_touch")->second.startProcess();
     }
+    if (publish_enabled_) {
+      event_map_.find("head_touch")->second.isPublishing(true);
+    }
+  }
   
   /** Odom */
   if ( odom_enabled )
