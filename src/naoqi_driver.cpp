@@ -26,6 +26,7 @@
  */
 #include "converters/audio.hpp"
 #include "converters/touch.hpp"
+#include "converters/people.hpp"
 #include "converters/camera.hpp"
 #include "converters/diagnostics.hpp"
 #include "converters/imu.hpp"
@@ -39,7 +40,9 @@
 #include "converters/memory/int.hpp"
 #include "converters/memory/string.hpp"
 #include "converters/log.hpp"
+#include "converters/battery.hpp"
 #include "converters/odom.hpp"
+#include "converters/sound.hpp"
 
 /*
  * PUBLISHERS
@@ -63,12 +66,14 @@
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
 #include "subscribers/speech.hpp"
-
+#include "subscribers/animated_speech.hpp"
+#include "subscribers/play_animation.hpp"
 
 /*
  * SERVICES
  */
 #include "services/robot_config.hpp"
+#include "services/behavior_manager.hpp"
 
 /*
  * RECORDERS
@@ -86,6 +91,8 @@
 #include "event/basic.hpp"
 #include "event/audio.hpp"
 #include "event/touch.hpp"
+#include "event/people.hpp"
+#include "event/sound.hpp"
 
 /*
  * STATIC FUNCTIONS INCLUDE
@@ -537,6 +544,11 @@ void Driver::registerDefaultConverter()
   bool audio_enabled                  = boot_config_.get( "converters.audio.enabled", true);
   size_t audio_frequency              = boot_config_.get( "converters.audio.frequency", 1);
 
+  bool sound_enabled                  = boot_config_.get( "converters.sound.enabled", true);
+  size_t sound_frequency              = boot_config_.get( "converters.sound.frequency", 1);
+  bool sound_energy                   = boot_config_.get( "converters.sound.energy", true);
+  float sound_sensitivity             = boot_config_.get( "converters.sound.sensitivity", 0.9);
+
   bool logs_enabled                   = boot_config_.get( "converters.logs.enabled", true);
   size_t logs_frequency               = boot_config_.get( "converters.logs.frequency", 10);
 
@@ -563,6 +575,7 @@ void Driver::registerDefaultConverter()
   size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
   size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
   size_t camera_depth_recorder_fps    = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
+  size_t camera_depth_color_space     = boot_config_.get( "converters.depth_camera.color_space", 23);
 
   bool camera_ir_enabled              = boot_config_.get( "converters.ir_camera.enabled", true);
   size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 1); // QVGA
@@ -578,13 +591,17 @@ void Driver::registerDefaultConverter()
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
   
+  bool battery_enabled                = boot_config_.get( "converters.battery.enabled", true);
+  size_t battery_frequency            = boot_config_.get( "converters.battery.frequency", 10);
+
   bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
   size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
-  
 
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool tactile_enabled                = boot_config_.get( "converters.tactile.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.hand.enabled", true);
+  bool face_enabled                   = boot_config_.get( "converters.face.enabled", true);
+  bool people_enabled                 = boot_config_.get( "converters.people.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -756,6 +773,31 @@ void Driver::registerDefaultConverter()
     usc->registerCallback( message_actions::LOG, boost::bind(&recorder::SonarRecorder::bufferize, usr, _1) );
     registerConverter( usc, usp, usr );
   }
+  
+  if(robot_ == robot::PEPPER) {
+      if ( battery_enabled )
+      {
+        boost::shared_ptr<publisher::BasicPublisher<nao_interaction_msgs::BatteryInfo> > bp = boost::make_shared<publisher::BasicPublisher<nao_interaction_msgs::BatteryInfo> >( "battery" );
+        boost::shared_ptr<recorder::BasicRecorder<nao_interaction_msgs::BatteryInfo> > br = boost::make_shared<recorder::BasicRecorder<nao_interaction_msgs::BatteryInfo> >( "battery" );
+        boost::shared_ptr<converter::BatteryConverter> bc = boost::make_shared<converter::BatteryConverter>( "battery", battery_frequency, sessionPtr_ );
+        bc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<nao_interaction_msgs::BatteryInfo>::publish, bp, _1) );
+        bc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<nao_interaction_msgs::BatteryInfo>::write, br, _1) );
+        bc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<nao_interaction_msgs::BatteryInfo>::bufferize, br, _1) );
+        registerConverter( bc, bp, br );
+      }
+  }
+  
+  /** Odom */
+    if ( odom_enabled )
+    {
+      boost::shared_ptr<publisher::BasicPublisher<nav_msgs::Odometry> > lp = boost::make_shared<publisher::BasicPublisher<nav_msgs::Odometry> >( "odom" );
+      boost::shared_ptr<recorder::BasicRecorder<nav_msgs::Odometry> > lr = boost::make_shared<recorder::BasicRecorder<nav_msgs::Odometry> >( "odom" );
+      boost::shared_ptr<converter::OdomConverter> lc = boost::make_shared<converter::OdomConverter>( "odom", odom_frequency, sessionPtr_ );
+      lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<nav_msgs::Odometry>::publish, lp, _1) );
+      lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::write, lr, _1) );
+      lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::bufferize, lr, _1) );
+      registerConverter( lc, lp, lr );
+    }
 
   if ( audio_enabled ) {
     /** Audio */
@@ -767,6 +809,23 @@ void Driver::registerDefaultConverter()
     }
     if (publish_enabled_) {
       event_map_.find("audio")->second.isPublishing(true);
+    }
+  }
+  
+  if( sound_enabled ) {
+    /** Sound **/
+    std::vector<std::string> sound_events;
+    sound_events.push_back("ALSoundLocalization/SoundLocated");
+    boost::shared_ptr<SoundLocalizedEventRegister> event_register =
+      boost::make_shared<SoundLocalizedEventRegister>( "sound_localized", sound_events, 0, sessionPtr_ );
+    event_register->setEnergyComputation(sound_energy);
+    event_register->setSensitivity(sound_sensitivity);
+    insertEventConverter("sound_localized", event_register);
+    if (keep_looping) {
+      event_map_.find("sound_localized")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("sound_localized")->second.isPublishing(true);
     }
   }
 
@@ -840,6 +899,35 @@ void Driver::registerDefaultConverter()
     registerConverter( lc, lp, lr );
   }
   
+  /** PEOPLE **/
+  if ( face_enabled )
+  {
+    std::vector<std::string> people_events;
+    people_events.push_back("FaceDetected");
+    boost::shared_ptr<FaceDetectedEventRegister> event_register =
+      boost::make_shared<FaceDetectedEventRegister>( "face_detected", people_events, 0, sessionPtr_ );
+    insertEventConverter("face_detected", event_register);
+    if (keep_looping) {
+      event_map_.find("face_detected")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("face_detected")->second.isPublishing(true);
+    }
+  }
+  if ( people_enabled )
+  {
+    std::vector<std::string> people_events;
+    people_events.push_back("PeoplePerception/PeopleDetected");
+    boost::shared_ptr<PersonDetectedEventRegister> event_register =
+      boost::make_shared<PersonDetectedEventRegister>( "people_detected", people_events, 0, sessionPtr_ );
+    insertEventConverter("people_detected", event_register);
+    if (keep_looping) {
+      event_map_.find("people_detected")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("people_detected")->second.isPublishing(true);
+    }
+  }
 }
 
 
@@ -872,6 +960,8 @@ void Driver::registerDefaultSubscriber()
   registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", "/joint_angles", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::SpeechSubscriber>("speech", "/speech", sessionPtr_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::AnimatedSpeechSubscriber>("animated_speech", "/animated_speech", sessionPtr_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::PlayAnimationSubscriber>("play_animation", "/play_animation", sessionPtr_) );
 }
 
 void Driver::registerService( service::Service srv )
@@ -883,6 +973,10 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getInstalledBehaviors", "/naoqi_driver/get_installed_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getRunningBehaviors", "/naoqi_driver/get_running_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("startBehavior", "/naoqi_driver/start_behaviour", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/stop_behaviour", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

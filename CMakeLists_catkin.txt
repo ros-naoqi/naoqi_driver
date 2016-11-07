@@ -11,12 +11,14 @@ find_package(catkin COMPONENTS
   image_transport
   kdl_parser
   naoqi_bridge_msgs
+  nao_interaction_msgs
   naoqi_libqi
   naoqi_libqicore
   robot_state_publisher
   rosbag_storage
   rosgraph_msgs
   sensor_msgs
+  std_srvs
   tf2_geometry_msgs
   tf2_msgs
   tf2_ros

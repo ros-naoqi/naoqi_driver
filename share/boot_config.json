@@ -70,15 +70,35 @@
       "enabled"       : true,
       "frequency"     : 10
     },
+    "battery":
+    {
+      "enabled"       : true,
+      "frequency"     : 10
+    },
+    "odom":
+    {
+      "enabled"       : true,
+      "frequency"     : 15
+    },
     "audio":
     {
       "enabled"       : true
+    },
+    "sound":
+    {
+      "enabled"       : true,
+      "energy"        : true,
+      "sensitivity"   : 0.9
     },
     "bumper":
     {
       "enabled"       : true
     },
-    "tactile":
+    "face":
+    {
+      "enabled"       : true
+    },
+    "people":
     {
       "enabled"       : true
     },
