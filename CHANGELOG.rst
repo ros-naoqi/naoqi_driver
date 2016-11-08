@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.9 (2016-11-08)
+------------------
 * -Vincent Rabaud as a maintainer, +Natalia Lyubova
 * Merge pull request `#75 <https://github.com/ros-naoqi/naoqi_driver/issues/75>`_ from kochigami/rename-tactile-touch-to-head-touch
   rename tactile touch to head touch
