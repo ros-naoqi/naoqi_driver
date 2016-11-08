@@ -7,7 +7,7 @@
   <author>Karsten Knese</author>
   <maintainer email="surya.ambrose@gmail.com">Surya Ambrose</maintainer>
   <maintainer email="karsten.knese@gmail.com">Karsten Knese</maintainer>
-  <maintainer email="vincent.rabaud@gmail.com">Vincent Rabaud</maintainer>
+  <maintainer email="natalia.lyubova@gmail.com">Natalia Lyubova</maintainer>
   <license>BSD</license>
 
   <build_depend>boost</build_depend>
