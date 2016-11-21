@@ -53,6 +53,7 @@ set(
   src/services/robot_config.cpp
   src/services/behavior_manager.cpp
   src/services/localization.cpp
+  src/services/tracking.cpp
   )
 
 set(

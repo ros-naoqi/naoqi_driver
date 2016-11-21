@@ -75,6 +75,7 @@
 #include "services/robot_config.hpp"
 #include "services/behavior_manager.hpp"
 #include "services/localization.hpp"
+#include "services/tracking.hpp"
 
 /*
  * RECORDERS
@@ -981,6 +982,11 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/stop_behaviour", sessionPtr_) );
   registerService( boost::make_shared<service::LocalizationService>("learnHome", "/naoqi_driver/learn_home", sessionPtr_) );
   registerService( boost::make_shared<service::LocalizationService>("goToHome", "/naoqi_driver/go_to_home", sessionPtr_) );
+  registerService( boost::make_shared<service::TrackerEmptyServices>("stopTracker", "/naoqi_driver/tracker/stop_tracker", sessionPtr_) );
+  registerService( boost::make_shared<service::TrackerEmptyServices>("unregisterAllTargets", "/naoqi_driver/tracker/unregister_all_targets", sessionPtr_) );
+  registerService( boost::make_shared<service::TrackerSetModeService>("setMode", "/naoqi_driver/tracker/set_mode", sessionPtr_) );
+  registerService( boost::make_shared<service::TrackerStartTrackingService>("track", "/naoqi_driver/tracker/track", sessionPtr_) );
+  registerService( boost::make_shared<service::TrackerSetTargetService>("registerTarget", "/naoqi_driver/tracker/register_target", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
