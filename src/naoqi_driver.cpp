@@ -76,6 +76,7 @@
 #include "services/behavior_manager.hpp"
 #include "services/localization.hpp"
 #include "services/tracking.hpp"
+#include "services/breathing.hpp"
 
 /*
  * RECORDERS
@@ -964,17 +965,24 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
-  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getInstalledBehaviors", "/naoqi_driver/get_installed_behaviors", sessionPtr_) );
-  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getRunningBehaviors", "/naoqi_driver/get_running_behaviors", sessionPtr_) );
-  registerService( boost::make_shared<service::BehaviorManagerControlService>("startBehavior", "/naoqi_driver/start_behaviour", sessionPtr_) );
-  registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/stop_behaviour", sessionPtr_) );
-  registerService( boost::make_shared<service::LocalizationService>("learnHome", "/naoqi_driver/learn_home", sessionPtr_) );
-  registerService( boost::make_shared<service::LocalizationService>("goToHome", "/naoqi_driver/go_to_home", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getInstalledBehaviors", "/naoqi_driver/behaviour_manager/get_installed_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerInfoService>("getRunningBehaviors", "/naoqi_driver/behaviour_manager/get_running_behaviors", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("startBehavior", "/naoqi_driver/behaviour_manager/start_behaviour", sessionPtr_) );
+  registerService( boost::make_shared<service::BehaviorManagerControlService>("stopBehavior", "/naoqi_driver/behaviour_manager/stop_behaviour", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationTriggerService>("ALLocalization-learnHome", "/naoqi_driver/localization/learn_home", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationTriggerService>("ALLocalization-goToHome", "/naoqi_driver/localization/go_to_home", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationEmptyService>("ALLocalization-stopAll", "/naoqi_driver/localization/stop_all", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationCheckService>("ALLocalization-isDataAvailable", "/naoqi_driver/localization/is_data_available", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationGetErrorMessageService>("ALLocalization-getMessageFromErrorCode", "/naoqi_driver/localization/get_message_from_error_code", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationTriggerStringService>("ALLocalization-clear", "/naoqi_driver/localization/clear", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationTriggerStringService>("ALLocalization-load", "/naoqi_driver/localization/load", sessionPtr_) );
+  registerService( boost::make_shared<service::LocalizationTriggerStringService>("ALLocalization-save", "/naoqi_driver/localization/save", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerEmptyServices>("stopTracker", "/naoqi_driver/tracker/stop_tracker", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerEmptyServices>("unregisterAllTargets", "/naoqi_driver/tracker/unregister_all_targets", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerSetModeService>("setMode", "/naoqi_driver/tracker/set_mode", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerStartTrackingService>("track", "/naoqi_driver/tracker/track", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerSetTargetService>("registerTarget", "/naoqi_driver/tracker/register_target", sessionPtr_) );
+  registerService( boost::make_shared<service::EnableBreathingService>("setBreathEnabled", "/naoqi_driver/motion/set_breath_enabled", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

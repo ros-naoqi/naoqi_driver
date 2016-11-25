@@ -23,24 +23,68 @@ namespace naoqi
 namespace service
 {
 
-LocalizationService::LocalizationService( const std::string& name, const std::string& topic, const qi::SessionPtr& session )
-  : name_(name),
-  topic_(topic),
-  session_(session),
-  p_localization_(session->service("ALLocalization"))
-{}
-
-void LocalizationService::reset( ros::NodeHandle& nh )
+void LocalizationEmptyService::reset( ros::NodeHandle& nh )
 {
-  service_ = nh.advertiseService(topic_, &LocalizationService::callback, this);
+  service_ = nh.advertiseService(topic_, &LocalizationEmptyService::callback, this);
 }
 
-bool LocalizationService::callback(std_srvs::EmptyRequest &req, std_srvs::EmptyResponse &resp )
+bool LocalizationEmptyService::callback(std_srvs::EmptyRequest& req, std_srvs::EmptyResponse& resp)
 {
-  p_localization_.call<bool>(name_);
+  p_localization_.call<void>(func_);
   return true;
 }
 
+// ##############
+
+void LocalizationTriggerService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &LocalizationTriggerService::callback, this);
+}
+
+bool LocalizationTriggerService::callback(nao_interaction_msgs::LocalizationTriggerRequest& req, nao_interaction_msgs::LocalizationTriggerResponse& resp)
+{
+  resp.result = p_localization_.call<int>(func_);
+  return true;
+}
+
+// ##############
+
+void LocalizationTriggerStringService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &LocalizationTriggerStringService::callback, this);
+}
+
+bool LocalizationTriggerStringService::callback(nao_interaction_msgs::LocalizationTriggerStringRequest& req, nao_interaction_msgs::LocalizationTriggerStringResponse& resp)
+{
+  resp.result = p_localization_.call<int>(func_, req.value);
+  return true;
+}
+
+// ##############
+
+void LocalizationCheckService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &LocalizationCheckService::callback, this);
+}
+
+bool LocalizationCheckService::callback(nao_interaction_msgs::LocalizationCheckRequest& req, nao_interaction_msgs::LocalizationCheckResponse& resp)
+{
+  resp.result = p_localization_.call<bool>(func_);
+  return true;
+}
+
+// ##############
+
+void LocalizationGetErrorMessageService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &LocalizationGetErrorMessageService::callback, this);
+}
+
+bool LocalizationGetErrorMessageService::callback(nao_interaction_msgs::LocalizationGetErrorMessageRequest& req, nao_interaction_msgs::LocalizationGetErrorMessageResponse& resp)
+{
+  resp.error_message = p_localization_.call<std::string>(func_, req.error_code);
+  return true;
+}
 
 }
 }

@@ -54,6 +54,7 @@ set(
   src/services/behavior_manager.cpp
   src/services/localization.cpp
   src/services/tracking.cpp
+  src/services/breathing.cpp
   )
 
 set(
