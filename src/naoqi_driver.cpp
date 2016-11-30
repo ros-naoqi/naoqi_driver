@@ -789,18 +789,6 @@ void Driver::registerDefaultConverter()
         registerConverter( bc, bp, br );
       }
   }
-  
-  /** Odom */
-    if ( odom_enabled )
-    {
-      boost::shared_ptr<publisher::BasicPublisher<nav_msgs::Odometry> > lp = boost::make_shared<publisher::BasicPublisher<nav_msgs::Odometry> >( "odom" );
-      boost::shared_ptr<recorder::BasicRecorder<nav_msgs::Odometry> > lr = boost::make_shared<recorder::BasicRecorder<nav_msgs::Odometry> >( "odom" );
-      boost::shared_ptr<converter::OdomConverter> lc = boost::make_shared<converter::OdomConverter>( "odom", odom_frequency, sessionPtr_ );
-      lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<nav_msgs::Odometry>::publish, lp, _1) );
-      lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::write, lr, _1) );
-      lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::bufferize, lr, _1) );
-      registerConverter( lc, lp, lr );
-    }
 
   if ( audio_enabled ) {
     /** Audio */
