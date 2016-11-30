@@ -77,6 +77,8 @@
 #include "services/localization.hpp"
 #include "services/tracking.hpp"
 #include "services/breathing.hpp"
+#include "services/text_to_speech.hpp"
+#include "services/animated_speech.hpp"
 
 /*
  * RECORDERS
@@ -985,6 +987,8 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::TrackerPointAtService>("ALTracker-pointAt", "/naoqi_driver/tracker/point_at", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerLookAtService>("ALTracker-lookAt", "/naoqi_driver/tracker/look_at", sessionPtr_) );
   registerService( boost::make_shared<service::EnableBreathingService>("setBreathEnabled", "/naoqi_driver/motion/set_breath_enabled", sessionPtr_) );
+  registerService( boost::make_shared<service::TextToSpeechSayService>("ALTextToSpeech-say", "/naoqi_driver/tts/say", sessionPtr_) );
+  registerService( boost::make_shared<service::AnimatedSpeechSayService>("ALAnimatedSpeech-say", "/naoqi_driver/animated_speech/say", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

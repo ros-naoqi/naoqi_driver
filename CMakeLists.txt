@@ -55,6 +55,8 @@ set(
   src/services/localization.cpp
   src/services/tracking.cpp
   src/services/breathing.cpp
+  src/services/text_to_speech.cpp
+  src/services/animated_speech.cpp
   )
 
 set(
