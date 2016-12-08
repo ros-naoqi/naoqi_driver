@@ -54,9 +54,10 @@ set(
   src/services/behavior_manager.cpp
   src/services/localization.cpp
   src/services/tracking.cpp
-  src/services/breathing.cpp
+  src/services/motion.cpp
   src/services/text_to_speech.cpp
   src/services/animated_speech.cpp
+  src/services/robot_posture.cpp
   )
 
 set(

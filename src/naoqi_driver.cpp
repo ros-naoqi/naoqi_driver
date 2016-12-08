@@ -76,9 +76,10 @@
 #include "services/behavior_manager.hpp"
 #include "services/localization.hpp"
 #include "services/tracking.hpp"
-#include "services/breathing.hpp"
+#include "services/motion.hpp"
 #include "services/text_to_speech.hpp"
 #include "services/animated_speech.hpp"
+#include "services/robot_posture.hpp"
 
 /*
  * RECORDERS
@@ -986,9 +987,14 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::TrackerSetTargetService>("ALTracker-registerTarget", "/naoqi_driver/tracker/register_target", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerPointAtService>("ALTracker-pointAt", "/naoqi_driver/tracker/point_at", sessionPtr_) );
   registerService( boost::make_shared<service::TrackerLookAtService>("ALTracker-lookAt", "/naoqi_driver/tracker/look_at", sessionPtr_) );
-  registerService( boost::make_shared<service::EnableBreathingService>("setBreathEnabled", "/naoqi_driver/motion/set_breath_enabled", sessionPtr_) );
+  registerService( boost::make_shared<service::EnableBreathingService>("ALMotion-setBreathEnabled", "/naoqi_driver/motion/set_breath_enabled", sessionPtr_) );
+  registerService( boost::make_shared<service::MotionEmptyService>("ALMotion-wakeUp", "/naoqi_driver/motion/wake_up", sessionPtr_) );
+  registerService( boost::make_shared<service::MotionEmptyService>("ALMotion-rest", "/naoqi_driver/motion/rest", sessionPtr_) );
+  registerService( boost::make_shared<service::MoveToService>("ALMotion-moveTo", "/naoqi_driver/motion/move_to", sessionPtr_, tf2_buffer_) );
   registerService( boost::make_shared<service::TextToSpeechSayService>("ALTextToSpeech-say", "/naoqi_driver/tts/say", sessionPtr_) );
   registerService( boost::make_shared<service::AnimatedSpeechSayService>("ALAnimatedSpeech-say", "/naoqi_driver/animated_speech/say", sessionPtr_) );
+  registerService( boost::make_shared<service::RobotPostureEmptyService>("ALRobotPosture-stopMove", "/naoqi_driver/robot_posture/stop_all", sessionPtr_) );
+  registerService( boost::make_shared<service::RobotPostureGoToService>("ALRobotPosture-goToPosture", "/naoqi_driver/robot_posture/go_to_posture", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
