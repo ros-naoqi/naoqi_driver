@@ -1,0 +1,10 @@
+{
+	"memKeys": [
+		"Device/SubDeviceList/Battery/Charge/Sensor/Value",
+	        "Device/SubDeviceList/Battery/Charge/Sensor/TotalVoltage",
+	        "Device/SubDeviceList/Platform/ILS/Sensor/Value",
+	        "Device/SubDeviceList/Battery/Charge/Sensor/Charging"
+        ],
+        "topic": "battery_test",
+	"frequency": 10
+}
