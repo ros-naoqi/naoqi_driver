@@ -65,6 +65,7 @@
  */
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
+#include "subscribers/navigateto.hpp"
 #include "subscribers/speech.hpp"
 #include "subscribers/animated_speech.hpp"
 #include "subscribers/play_animation.hpp"
@@ -77,6 +78,7 @@
 #include "services/localization.hpp"
 #include "services/tracking.hpp"
 #include "services/motion.hpp"
+#include "services/navigation.hpp"
 #include "services/text_to_speech.hpp"
 #include "services/animated_speech.hpp"
 #include "services/robot_posture.hpp"
@@ -702,7 +704,6 @@ void Driver::registerDefaultConverter()
     registerConverter( bcc, bcp, bcr );
   }
 
-
   if(robot_ == robot::PEPPER)
   {
     /** Depth Camera */
@@ -953,7 +954,8 @@ void Driver::registerDefaultSubscriber()
   if (!subscribers_.empty())
     return;
   registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", "/joint_angles", sessionPtr_) );
-  registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
+  //registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::NavigatetoSubscriber>("navigateto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::SpeechSubscriber>("speech", "/speech", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::AnimatedSpeechSubscriber>("animated_speech", "/animated_speech", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::PlayAnimationSubscriber>("play_animation", "/play_animation", sessionPtr_) );
@@ -991,6 +993,7 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::MotionEmptyService>("ALMotion-wakeUp", "/naoqi_driver/motion/wake_up", sessionPtr_) );
   registerService( boost::make_shared<service::MotionEmptyService>("ALMotion-rest", "/naoqi_driver/motion/rest", sessionPtr_) );
   registerService( boost::make_shared<service::MoveToService>("ALMotion-moveTo", "/naoqi_driver/motion/move_to", sessionPtr_, tf2_buffer_) );
+  registerService( boost::make_shared<service::NavigateToService>("ALNavigation-navigateTo", "/naoqi_driver/navigation/navigate_to", sessionPtr_, tf2_buffer_) );
   registerService( boost::make_shared<service::TextToSpeechSayService>("ALTextToSpeech-say", "/naoqi_driver/tts/say", sessionPtr_) );
   registerService( boost::make_shared<service::AnimatedSpeechSayService>("ALAnimatedSpeech-say", "/naoqi_driver/animated_speech/say", sessionPtr_) );
   registerService( boost::make_shared<service::RobotPostureEmptyService>("ALRobotPosture-stopMove", "/naoqi_driver/robot_posture/stop_all", sessionPtr_) );

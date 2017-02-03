@@ -43,6 +43,7 @@ set(
   SUBSCRIBER_SRC
   src/subscribers/teleop.cpp
   src/subscribers/moveto.cpp
+  src/subscribers/navigateto.cpp
   src/subscribers/speech.cpp
   src/subscribers/animated_speech.cpp
   src/subscribers/play_animation.cpp
@@ -55,6 +56,7 @@ set(
   src/services/localization.cpp
   src/services/tracking.cpp
   src/services/motion.cpp
+  src/services/navigation.cpp
   src/services/text_to_speech.cpp
   src/services/animated_speech.cpp
   src/services/robot_posture.cpp
