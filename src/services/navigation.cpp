@@ -79,5 +79,56 @@ bool NavigateToService::callback(nao_interaction_msgs::GoToPoseRequest& req, nao
     return true;
 }
 
+void NavigateToInMapService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &NavigateToInMapService::callback, this);
+  pose.reserve(3);
+  pose.resize(3);
+}
+
+bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp)
+{
+    if ( req.pose.header.frame_id == "odom" )
+    {
+      double yaw = helpers::transform::getYaw(req.pose.pose);
+      std::cout << "odom to navigate x: " <<  req.pose.pose.position.x << " y: " << req.pose.pose.position.y << " z: " << req.pose.pose.position.z << " yaw: " << yaw << std::endl;
+      pose[0] = req.pose.pose.position.x;
+      pose[1] = req.pose.pose.position.y;
+      pose[2] = yaw;
+      p_navigation_.call<void>(func_, pose);
+    }
+    else
+    {
+      geometry_msgs::PoseStamped pose_msg_bf;
+      //geometry_msgs::TransformStamped tf_trans;
+      //tf_listenerPtr_->waitForTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(5) );
+      bool canTransform = tf2_buffer_->canTransform("base_footprint", req.pose.header.frame_id, ros::Time(0), ros::Duration(2) );
+      if (!canTransform) {
+        std::cout << "Cannot transform from " << req.pose.header.frame_id << " to base_footprint" << std::endl;
+        return false;
+      }
+      try
+      {
+        tf2_buffer_->transform( req.pose, pose_msg_bf, "base_footprint", ros::Time(0), req.pose.header.frame_id );
+        double yaw = helpers::transform::getYaw(pose_msg_bf.pose);
+        std::cout << "going to navigate x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
+        pose[0] = pose_msg_bf.pose.position.x;
+        pose[1] = pose_msg_bf.pose.position.y;
+        pose[2] = yaw;
+        p_navigation_.call<void>(func_, pose);
+
+      } catch( const tf2::LookupException& e)
+      {
+        std::cout << e.what() << std::endl;
+        std::cout << "navigateto position in frame_id " << req.pose.header.frame_id << "is not supported in any other base frame than basefootprint" << std::endl;
+      }
+      catch( const tf2::ExtrapolationException& e)
+      {
+        std::cout << "received an error on the time lookup" << std::endl;
+      }
+    }
+    return true;
+}
+
 }
 }
