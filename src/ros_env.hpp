@@ -89,7 +89,7 @@ static void setMasterURI( const std::string& uri, const std::string& network_int
   remap["__master"] = uri;
   remap["__ip"] = ::naoqi::ros_env::getROSIP(network_interface);
   // init ros without a sigint-handler in order to shutdown correctly by naoqi
-  ros::init(remap, std::string("naoqi_driver_node"), ros::init_options::NoSigintHandler);
+  ros::init( remap, (::naoqi::ros_env::getPrefix()) , ros::init_options::NoSigintHandler );
   // to prevent shutdown based on no existing nodehandle
   ros::start();
 
