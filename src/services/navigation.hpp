@@ -110,13 +110,30 @@ private:
 class NavigateToInMapService : public NavigationService
 {
 public:
-  NavigateToInMapService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer) {}
+  NavigateToInMapService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer)
+  {
+    pose.reserve(3);
+    pose.resize(3);
+  }
+
   void reset(ros::NodeHandle& nh);
   bool callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp);
 
 private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
   std::vector<float> pose;
+};
+
+class FindFreeZoneService : public NavigationService
+{
+public:
+  FindFreeZoneService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer) {}
+
+  void reset(ros::NodeHandle& nh);
+  bool callback(const float& radius, const float& constraint);
+
+private:
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 };
 
 } // service
