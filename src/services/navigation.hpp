@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Aldebaran
+ * Copyright 2017 SoftBank Robotics Europe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,18 +122,6 @@ public:
 private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
   std::vector<float> pose;
-};
-
-class FindFreeZoneService : public NavigationService
-{
-public:
-  FindFreeZoneService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer) {}
-
-  void reset(ros::NodeHandle& nh);
-  bool callback(const float& radius, const float& constraint);
-
-private:
-  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
 };
 
 } // service

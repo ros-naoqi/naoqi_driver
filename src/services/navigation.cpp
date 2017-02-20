@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Aldebaran
+ * Copyright 2017 SoftBank Robotics Europe
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,8 +82,6 @@ bool NavigateToService::callback(nao_interaction_msgs::GoToPoseRequest& req, nao
 void NavigateToInMapService::reset( ros::NodeHandle& nh )
 {
   service_ = nh.advertiseService(topic_, &NavigateToInMapService::callback, this);
-  pose.reserve(3);
-  pose.resize(3);
 }
 
 bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp)
