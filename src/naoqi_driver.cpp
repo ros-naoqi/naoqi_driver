@@ -999,6 +999,7 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::AnimatedSpeechSayService>("ALAnimatedSpeech-say", "/naoqi_driver/animated_speech/say", sessionPtr_) );
   registerService( boost::make_shared<service::RobotPostureEmptyService>("ALRobotPosture-stopMove", "/naoqi_driver/robot_posture/stop_all", sessionPtr_) );
   registerService( boost::make_shared<service::RobotPostureGoToService>("ALRobotPosture-goToPosture", "/naoqi_driver/robot_posture/go_to_posture", sessionPtr_) );
+  registerService( boost::make_shared<service::ExploreService>("ALNavigation-explore", "/naoqi_driver/navigation/explore", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

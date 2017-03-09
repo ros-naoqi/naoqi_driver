@@ -27,6 +27,7 @@
 
 #include <std_srvs/Empty.h>
 #include <nao_interaction_msgs/GoToPose.h>
+#include <nao_interaction_msgs/Explore.h>
 #include <qi/session.hpp>
 #include <tf2_ros/buffer.h>
 
@@ -122,6 +123,14 @@ public:
 private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
   std::vector<float> pose;
+};
+
+class ExploreService : public NavigationService
+{
+public:
+  ExploreService(const std::string& name, const std::string& topic, const qi::SessionPtr& session) : NavigationService(name, topic, session) {}
+  void reset(ros::NodeHandle& nh);
+  bool callback(nao_interaction_msgs::ExploreRequest& req, nao_interaction_msgs::ExploreResponse& resp);
 };
 
 } // service

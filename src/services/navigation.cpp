@@ -128,5 +128,22 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
     return true;
 }
 
+void ExploreService::reset( ros::NodeHandle& nh )
+{
+  service_ = nh.advertiseService(topic_, &ExploreService::callback, this);
+}
+
+bool ExploreService::callback(nao_interaction_msgs::ExploreRequest& req, nao_interaction_msgs::ExploreResponse& resp) //int radius
+{
+  bool res(false);
+  int error_code = p_navigation_.call<int>(func_, req.radius);
+  if (error_code != 0)
+    ROS_ERROR("Exploration failed.");
+  else
+    res = true;
+
+  return res;
+}
+
 }
 }
