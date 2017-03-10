@@ -84,12 +84,13 @@ void NavigateToInMapService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &NavigateToInMapService::callback, this);
 }
 
-bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp)
+bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req,
+                                      nao_interaction_msgs::GoToPoseResponse& resp)
 {
-    if ( req.pose.header.frame_id == "odom" )
+    if ( req.pose.header.frame_id == "map" )
     {
       double yaw = helpers::transform::getYaw(req.pose.pose);
-      std::cout << "odom to navigate x: " << req.pose.pose.position.x
+      std::cout << "map to navigate x: " << req.pose.pose.position.x
                 << " y: " << req.pose.pose.position.y
                 << " z: " << req.pose.pose.position.z
                 << " yaw: " << yaw << std::endl;
@@ -101,14 +102,14 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
     else
     {
       geometry_msgs::PoseStamped pose_msg_bf;
-      bool canTransform = tf2_buffer_->canTransform("odom", req.pose.header.frame_id, ros::Time(0), ros::Duration(2) );
+      bool canTransform = tf2_buffer_->canTransform("map", req.pose.header.frame_id, ros::Time(0), ros::Duration(2) );
       if (!canTransform) {
-        std::cout << "Cannot transform from " << req.pose.header.frame_id << " to odom" << std::endl;
+        std::cout << "Cannot transform from " << req.pose.header.frame_id << " to map" << std::endl;
         return false;
       }
       try
       {
-        tf2_buffer_->transform( req.pose, pose_msg_bf, "odom", ros::Time(0), req.pose.header.frame_id );
+        tf2_buffer_->transform( req.pose, pose_msg_bf, "map", ros::Time(0), req.pose.header.frame_id );
         double yaw = helpers::transform::getYaw(pose_msg_bf.pose);
         std::cout << "going to navigate x: " << pose_msg_bf.pose.position.x
                   << " y: " << pose_msg_bf.pose.position.y
@@ -123,7 +124,7 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
       {
         std::cout << e.what() << std::endl;
         std::cout << "navigateto position in frame_id " << req.pose.header.frame_id
-                  << "is not supported in any other base frame than odom" << std::endl;
+                  << "is not supported in any other base frame than map" << std::endl;
       }
       catch( const tf2::ExtrapolationException& e)
       {
