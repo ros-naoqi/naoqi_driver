@@ -89,7 +89,10 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
     if ( req.pose.header.frame_id == "odom" )
     {
       double yaw = helpers::transform::getYaw(req.pose.pose);
-      std::cout << "odom to navigate x: " <<  req.pose.pose.position.x << " y: " << req.pose.pose.position.y << " z: " << req.pose.pose.position.z << " yaw: " << yaw << std::endl;
+      std::cout << "odom to navigate x: " << req.pose.pose.position.x
+                << " y: " << req.pose.pose.position.y
+                << " z: " << req.pose.pose.position.z
+                << " yaw: " << yaw << std::endl;
       pose[0] = req.pose.pose.position.x;
       pose[1] = req.pose.pose.position.y;
       pose[2] = yaw;
@@ -98,18 +101,19 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
     else
     {
       geometry_msgs::PoseStamped pose_msg_bf;
-      //geometry_msgs::TransformStamped tf_trans;
-      //tf_listenerPtr_->waitForTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(5) );
-      bool canTransform = tf2_buffer_->canTransform("base_footprint", req.pose.header.frame_id, ros::Time(0), ros::Duration(2) );
+      bool canTransform = tf2_buffer_->canTransform("odom", req.pose.header.frame_id, ros::Time(0), ros::Duration(2) );
       if (!canTransform) {
-        std::cout << "Cannot transform from " << req.pose.header.frame_id << " to base_footprint" << std::endl;
+        std::cout << "Cannot transform from " << req.pose.header.frame_id << " to odom" << std::endl;
         return false;
       }
       try
       {
-        tf2_buffer_->transform( req.pose, pose_msg_bf, "base_footprint", ros::Time(0), req.pose.header.frame_id );
+        tf2_buffer_->transform( req.pose, pose_msg_bf, "odom", ros::Time(0), req.pose.header.frame_id );
         double yaw = helpers::transform::getYaw(pose_msg_bf.pose);
-        std::cout << "going to navigate x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
+        std::cout << "going to navigate x: " << pose_msg_bf.pose.position.x
+                  << " y: " << pose_msg_bf.pose.position.y
+                  << " z: " << pose_msg_bf.pose.position.z
+                  << " yaw: " << yaw << std::endl;
         pose[0] = pose_msg_bf.pose.position.x;
         pose[1] = pose_msg_bf.pose.position.y;
         pose[2] = yaw;
@@ -118,7 +122,8 @@ bool NavigateToInMapService::callback(nao_interaction_msgs::GoToPoseRequest& req
       } catch( const tf2::LookupException& e)
       {
         std::cout << e.what() << std::endl;
-        std::cout << "navigateto position in frame_id " << req.pose.header.frame_id << "is not supported in any other base frame than basefootprint" << std::endl;
+        std::cout << "navigateto position in frame_id " << req.pose.header.frame_id
+                  << "is not supported in any other base frame than odom" << std::endl;
       }
       catch( const tf2::ExtrapolationException& e)
       {
@@ -133,7 +138,7 @@ void ExploreService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &ExploreService::callback, this);
 }
 
-bool ExploreService::callback(nao_interaction_msgs::ExploreRequest& req, nao_interaction_msgs::ExploreResponse& resp) //int radius
+bool ExploreService::callback(nao_interaction_msgs::ExploreRequest& req, nao_interaction_msgs::ExploreResponse& resp)
 {
   //explore
   bool res(false);
