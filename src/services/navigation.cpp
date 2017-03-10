@@ -144,8 +144,16 @@ bool ExploreService::callback(nao_interaction_msgs::ExploreRequest& req, nao_int
   //explore
   bool res(false);
   int error_code = p_navigation_.call<int>(func_, req.radius);
+
+  //stop exploration if it did not stop yet
+  p_navigation_.call<void>("stopExploration");
+
   if (error_code != 0)
+  {
     ROS_ERROR("Exploration failed.");
+    resp.path_to_map = "";
+    return res;
+  }
   else
     res = true;
 
@@ -153,10 +161,7 @@ bool ExploreService::callback(nao_interaction_msgs::ExploreRequest& req, nao_int
   p_navigation_.call<void>("stopExploration");
 
   //save exploration
-  if (res)
-    resp.path_to_map = p_navigation_.call<std::string>("saveExploration");
-  else
-    resp.path_to_map = "";
+  resp.path_to_map = p_navigation_.call<std::string>("saveExploration");
 
   return res;
 }
