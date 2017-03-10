@@ -69,6 +69,7 @@
 #include "subscribers/speech.hpp"
 #include "subscribers/animated_speech.hpp"
 #include "subscribers/play_animation.hpp"
+#include "subscribers/relocalizeinmap.hpp"
 
 /*
  * SERVICES
@@ -954,11 +955,11 @@ void Driver::registerDefaultSubscriber()
   if (!subscribers_.empty())
     return;
   registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", "/joint_angles", sessionPtr_) );
-  //registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::NavigatetoSubscriber>("navigateto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::SpeechSubscriber>("speech", "/speech", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::AnimatedSpeechSubscriber>("animated_speech", "/animated_speech", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::PlayAnimationSubscriber>("play_animation", "/play_animation", sessionPtr_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::RelocalizeSubscriber>("relocalizeInMap", "/initialpose", sessionPtr_, tf2_buffer_) );
 }
 
 void Driver::registerService( service::Service srv )
