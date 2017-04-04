@@ -11,7 +11,7 @@
     },
     "bottom_camera":
     {
-      "enabled"       : true,
+      "enabled"       : false,
       "resolution"    : 1,
       "fps"           : 10,
       "recorder_fps"  : 5
