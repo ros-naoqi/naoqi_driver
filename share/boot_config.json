@@ -75,11 +75,6 @@
       "enabled"       : true,
       "frequency"     : 10
     },
-    "odom":
-    {
-      "enabled"       : true,
-      "frequency"     : 15
-    },
     "audio":
     {
       "enabled"       : true
@@ -102,6 +97,11 @@
     {
       "enabled"       : true
     },
+    "odom":
+    {
+      "enabled"       : true,
+      "frequency"     : 50
+    },
     "face":
     {
       "enabled"       : true
@@ -109,11 +109,6 @@
     "people":
     {
       "enabled"       : true
-    },
-    "odom":
-    {
-      "enabled"       : true,
-      "frequency"     : 15
     }
   }
 }
