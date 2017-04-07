@@ -53,6 +53,9 @@ void RelocalizeSubscriber::reset( ros::NodeHandle& nh )
 
 void RelocalizeSubscriber::callback( const geometry_msgs::PoseWithCovarianceStamped& pose_msg )
 {
+  //stop localization
+  p_navigation_.call<void>("stopLocalization");
+
   if ( pose_msg.header.frame_id == "map" )
   {
     double yaw = helpers::transform::getYaw(pose_msg.pose.pose);
@@ -66,8 +69,16 @@ void RelocalizeSubscriber::callback( const geometry_msgs::PoseWithCovarianceStam
     pose[0] = pose_msg.pose.pose.position.x;
     pose[1] = pose_msg.pose.pose.position.y;
     pose[2] = yaw;
-    p_navigation_.async<void>(name_, pose);
+    p_navigation_.call<void>(name_, pose);
   }
+  else
+  {
+    std::cout << name_ << " in frame " << pose_msg.header.frame_id
+              << " is not supported; use the map frame" << std::endl;
+  }
+
+  //start localization
+  p_navigation_.call<void>("startLocalization");
 }
 
 } //publisher
