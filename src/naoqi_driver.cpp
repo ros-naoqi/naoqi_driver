@@ -1001,6 +1001,8 @@ void Driver::registerDefaultServices()
   registerService( boost::make_shared<service::RobotPostureEmptyService>("ALRobotPosture-stopMove", "/naoqi_driver/robot_posture/stop_all", sessionPtr_) );
   registerService( boost::make_shared<service::RobotPostureGoToService>("ALRobotPosture-goToPosture", "/naoqi_driver/robot_posture/go_to_posture", sessionPtr_) );
   registerService( boost::make_shared<service::ExploreService>("ALNavigation-explore", "/naoqi_driver/navigation/explore", sessionPtr_) );
+  registerService( boost::make_shared<service::LoadExplorationService>("ALNavigation-loadExploration", "/naoqi_driver/navigation/load_exploration", sessionPtr_) );
+  registerService( boost::make_shared<service::RelocalizeInMapService>("ALNavigation-relocalizeInMap", "/naoqi_driver/navigation/relocalize_in_map", sessionPtr_, tf2_buffer_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

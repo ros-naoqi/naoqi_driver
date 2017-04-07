@@ -28,6 +28,8 @@
 #include <std_srvs/Empty.h>
 #include <nao_interaction_msgs/GoToPose.h>
 #include <nao_interaction_msgs/Explore.h>
+#include <nao_interaction_msgs/LoadExploration.h>
+#include <nao_interaction_msgs/RelocalizeInMap.h>
 #include <qi/session.hpp>
 #include <tf2_ros/buffer.h>
 
@@ -39,7 +41,9 @@ namespace service
 class NavigationService
 {
 public:
-  NavigationService( const std::string& name, const std::string& topic, const qi::SessionPtr& session ):
+  NavigationService(const std::string& name,
+                    const std::string& topic,
+                    const qi::SessionPtr& session):
       name_(name),
       topic_(topic),
       session_(session),
@@ -90,18 +94,34 @@ protected:
 class NavigationEmptyService : public NavigationService
 {
 public:
-  NavigationEmptyService(const std::string& name, const std::string& topic, const qi::SessionPtr& session) : NavigationService(name, topic, session) {}
+  NavigationEmptyService(const std::string& name,
+                         const std::string& topic,
+                         const qi::SessionPtr& session):
+    NavigationService(name, topic, session)
+  {}
+
   void reset(ros::NodeHandle& nh);
-  bool callback(std_srvs::EmptyRequest& req, std_srvs::EmptyResponse& resp);
+
+  bool callback(std_srvs::EmptyRequest& req,
+                std_srvs::EmptyResponse& resp);
 
 };
 
 class NavigateToService : public NavigationService
 {
 public:
-  NavigateToService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer) {}
+  NavigateToService(const std::string& name,
+                    const std::string& topic,
+                    const qi::SessionPtr& session,
+                    const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
+    NavigationService(name, topic, session),
+    tf2_buffer_(tf2_buffer)
+  {}
+
   void reset(ros::NodeHandle& nh);
-  bool callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp);
+
+  bool callback(nao_interaction_msgs::GoToPoseRequest& req,
+                nao_interaction_msgs::GoToPoseResponse& resp);
 
 private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
@@ -111,14 +131,21 @@ private:
 class NavigateToInMapService : public NavigationService
 {
 public:
-  NavigateToInMapService(const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer) : NavigationService(name, topic, session), tf2_buffer_(tf2_buffer)
+  NavigateToInMapService(const std::string& name,
+                         const std::string& topic,
+                         const qi::SessionPtr& session,
+                         const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
+    NavigationService(name, topic, session),
+    tf2_buffer_(tf2_buffer)
   {
     pose.reserve(3);
     pose.resize(3);
   }
 
   void reset(ros::NodeHandle& nh);
-  bool callback(nao_interaction_msgs::GoToPoseRequest& req, nao_interaction_msgs::GoToPoseResponse& resp);
+
+  bool callback(nao_interaction_msgs::GoToPoseRequest& req,
+                nao_interaction_msgs::GoToPoseResponse& resp);
 
 private:
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
@@ -128,9 +155,54 @@ private:
 class ExploreService : public NavigationService
 {
 public:
-  ExploreService(const std::string& name, const std::string& topic, const qi::SessionPtr& session) : NavigationService(name, topic, session) {}
+  ExploreService(const std::string& name,
+                 const std::string& topic,
+                 const qi::SessionPtr& session):
+    NavigationService(name, topic, session)
+  {}
+
   void reset(ros::NodeHandle& nh);
-  bool callback(nao_interaction_msgs::ExploreRequest& req, nao_interaction_msgs::ExploreResponse& resp);
+
+  bool callback(nao_interaction_msgs::ExploreRequest& req,
+                nao_interaction_msgs::ExploreResponse& resp);
+};
+
+class RelocalizeInMapService : public NavigationService
+{
+public:
+  RelocalizeInMapService(const std::string& name,
+                         const std::string& topic,
+                         const qi::SessionPtr& session,
+                         const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
+    NavigationService(name, topic, session),
+    tf2_buffer_(tf2_buffer)
+  {
+    pose.reserve(3);
+    pose.resize(3);
+  }
+
+  void reset(ros::NodeHandle& nh);
+
+  bool callback(nao_interaction_msgs::RelocalizeInMapRequest& req,
+                nao_interaction_msgs::RelocalizeInMapResponse& resp);
+
+private:
+  boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
+  std::vector<float> pose;
+};
+
+class LoadExplorationService : public NavigationService
+{
+public:
+  LoadExplorationService(const std::string& name,
+                         const std::string& topic,
+                         const qi::SessionPtr& session):
+    NavigationService(name, topic, session) {}
+
+  void reset(ros::NodeHandle& nh);
+
+  bool callback(nao_interaction_msgs::LoadExplorationRequest& req,
+                nao_interaction_msgs::LoadExplorationResponse& resp);
 };
 
 } // service
