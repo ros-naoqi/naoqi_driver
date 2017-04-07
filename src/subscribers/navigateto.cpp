@@ -72,7 +72,7 @@ void NavigatetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& p
     pose[0] = pose_msg->pose.position.x;
     pose[1] = pose_msg->pose.position.y;
     pose[2] = yaw;
-    p_navigation_.call<void>("navigateToInMap", pose);
+    p_navigation_.async<void>("navigateToInMap", pose);
   }
   else
   {
