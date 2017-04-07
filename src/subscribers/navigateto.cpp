@@ -23,7 +23,6 @@
 /*
  * ROS includes
  */
-//#include <tf/transform_datatypes.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include "../helpers/transform_helpers.hpp"
@@ -33,8 +32,10 @@ namespace naoqi
 namespace subscriber
 {
 
-NavigatetoSubscriber::NavigatetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session,
-                                    const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
+NavigatetoSubscriber::NavigatetoSubscriber( const std::string& name,
+                                            const std::string& topic,
+                                            const qi::SessionPtr& session,
+                                            const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer):
   BaseSubscriber( name, topic, session ),
   p_navigation_( session->service("ALNavigation") ),
   tf2_buffer_( tf2_buffer )
@@ -76,20 +77,26 @@ void NavigatetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& p
   }
   else
   {
+    std::string frame = "base_footprint";
     geometry_msgs::PoseStamped pose_msg_bf;
-    bool canTransform = tf2_buffer_->canTransform("base_footprint",
+    bool canTransform = tf2_buffer_->canTransform(frame,
                                                   pose_msg->header.frame_id,
                                                   ros::Time(0),
                                                   ros::Duration(2) );
     if (!canTransform)
     {
       std::cout << "Cannot transform from " << pose_msg->header.frame_id
-                << " to base_footprint" << std::endl;
+                << " to " << frame << std::endl;
       return;
     }
     try
     {
-      tf2_buffer_->transform( *pose_msg, pose_msg_bf, "base_footprint", ros::Time(0), pose_msg->header.frame_id );
+      tf2_buffer_->transform( *pose_msg,
+                              pose_msg_bf,
+                              frame,
+                              ros::Time(0),
+                              pose_msg->header.frame_id );
+
       double yaw = helpers::transform::getYaw(pose_msg_bf.pose);
       std::cout << "odom to navigate x: " << pose_msg_bf.pose.position.x
                 << " y: " << pose_msg_bf.pose.position.y
@@ -104,7 +111,7 @@ void NavigatetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& p
     {
       std::cout << e.what() << std::endl;
       std::cout << "navigateto position in frame_id " << pose_msg->header.frame_id
-                << "is not supported in other base frame than basefootprint" << std::endl;
+                << " is not supported; use the " << frame << " frame" << std::endl;
     }
     catch( const tf2::ExtrapolationException& e)
     {

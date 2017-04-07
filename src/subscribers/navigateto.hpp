@@ -39,7 +39,10 @@ namespace subscriber
 class NavigatetoSubscriber: public BaseSubscriber<NavigatetoSubscriber>
 {
 public:
-  NavigatetoSubscriber( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
+  NavigatetoSubscriber( const std::string& name,
+                        const std::string& topic,
+                        const qi::SessionPtr& session,
+                        const boost::shared_ptr<tf2_ros::Buffer>& tf2_buffer );
   ~NavigatetoSubscriber(){}
 
   void reset( ros::NodeHandle& nh );
@@ -49,7 +52,7 @@ private:
   qi::AnyObject p_navigation_;
   ros::Subscriber sub_navigateto_;
   boost::shared_ptr<tf2_ros::Buffer> tf2_buffer_;
-}; // class Teleop
+};
 
 } // subscriber
 }// naoqi
