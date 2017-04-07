@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     ("help,h", "print help message")
     ("roscore_ip,r", po::value<std::string>(), "set the ip of the roscore to use")
     ("network_interface,i", po::value<std::string>()->default_value("eth0"),  "set the network interface over which to connect")
-    ("namespace,n", po::value<std::string>()->default_value(""), "set an explicit namespace in case ROS namespace variables cannot be used");
+    ("namespace,n", po::value<std::string>()->default_value("naoqi_driver_node"), "set an explicit namespace in case ROS namespace variables cannot be used");
 
   po::variables_map vm;
   try
