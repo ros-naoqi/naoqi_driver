@@ -124,7 +124,6 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   recorder_(boost::make_shared<recorder::GlobalRecorder>(prefix)),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
-  naoqi::ros_env::setPrefix(prefix);
   if(prefix == ""){
     std::cout << "Error driver prefix must not be empty" << std::endl;
     throw new ros::Exception("Error driver prefix must not be empty");
