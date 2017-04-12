@@ -124,7 +124,14 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   recorder_(boost::make_shared<recorder::GlobalRecorder>(prefix)),
   buffer_duration_(helpers::recorder::bufferDefaultDuration)
 {
-  naoqi::ros_env::setPrefix(prefix);
+  if(prefix == ""){
+    std::cout << "Error driver prefix must not be empty" << std::endl;
+    throw new ros::Exception("Error driver prefix must not be empty");
+  }
+  else {
+    naoqi::ros_env::setPrefix(prefix);
+  }
+
 }
 
 Driver::~Driver()
@@ -577,10 +584,10 @@ void Driver::registerDefaultConverter()
 
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
-  
+
   bool odom_enabled                  = boot_config_.get( "converters.odom.enabled", true);
   size_t odom_frequency              = boot_config_.get( "converters.odom.frequency", 10);
-  
+
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
   bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
@@ -826,7 +833,7 @@ void Driver::registerDefaultConverter()
       event_map_.find("head_touch")->second.isPublishing(true);
     }
   }
-  
+
   /** Odom */
   if ( odom_enabled )
   {
@@ -838,7 +845,7 @@ void Driver::registerDefaultConverter()
     lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::bufferize, lr, _1) );
     registerConverter( lc, lp, lr );
   }
-  
+
 }
 
 
