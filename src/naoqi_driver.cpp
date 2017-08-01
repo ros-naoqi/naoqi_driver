@@ -69,6 +69,8 @@
  * SERVICES
  */
 #include "services/robot_config.hpp"
+#include "services/set_language.hpp"
+#include "services/get_language.hpp"
 
 /*
  * RECORDERS
@@ -889,6 +891,8 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
+  registerService( boost::make_shared<service::SetLanguageService>("set language service", "/naoqi_driver/set_language", sessionPtr_) );
+  registerService( boost::make_shared<service::GetLanguageService>("get language service", "/naoqi_driver/get_language", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

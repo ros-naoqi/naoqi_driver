@@ -46,6 +46,8 @@ set(
 set(
   SERVICES_SRC
   src/services/robot_config.cpp
+  src/services/set_language.cpp
+  src/services/get_language.cpp
   )
 
 set(
