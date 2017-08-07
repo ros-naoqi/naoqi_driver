@@ -46,6 +46,8 @@ set(
 set(
   SERVICES_SRC
   src/services/robot_config.cpp
+  src/services/set_volume.cpp
+  src/services/get_volume.cpp
   )
 
 set(
