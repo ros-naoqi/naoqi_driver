@@ -23,6 +23,12 @@
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
 
+#include <naoqi_bridge_msgs/SetVolume.h>
+
+#include <naoqi_bridge_msgs/GetVolume.h>
+
+#include <std_srvs/Empty.h>
+
 #include <qi/applicationsession.hpp>
 
 namespace naoqi
@@ -35,6 +41,10 @@ namespace driver
 const robot::Robot& getRobot( const qi::SessionPtr& session );
 
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
+
+const bool& setVolume( const qi::SessionPtr& session, naoqi_bridge_msgs::SetVolumeRequest req );
+
+const int& getVolume( const qi::SessionPtr& session, naoqi_bridge_msgs::GetVolumeRequest req );
 
 } // driver
 } // helpers
