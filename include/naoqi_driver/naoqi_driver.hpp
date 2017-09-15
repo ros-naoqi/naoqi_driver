@@ -164,7 +164,7 @@ public:
    * @brief registers a service
    * @param service to register
    * @see Service
-   * @note it iwll be called by value to expose that internally there will be a copy,
+   * @note it will be called by value to expose that internally there will be a copy,
    * eventually this should be replaced by move semantics C++11
    */
   void registerService( service::Service srv );
