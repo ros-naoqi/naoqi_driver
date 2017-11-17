@@ -63,13 +63,51 @@ DiagnosticsConverter::DiagnosticsConverter( const std::string& name, float frequ
     p_body_temperature_.call<void>("setEnableNotifications", true);
   }
 
+  std::vector<std::vector<float> > joint_limits;
+  qi::AnyValue qi_joint_limits;
+
   // Get all the joint names
-  qi::AnyObject p_motion = session->service("ALMotion");
-  joint_names_ = p_motion.call<std::vector<std::string> >("getBodyNames", "JointActuators" );
+  this->p_motion_ = session->service("ALMotion");
+  joint_names_ = this->p_motion_.call<std::vector<std::string> >("getBodyNames", "JointActuators");
 
   for(std::vector<std::string>::const_iterator it = joint_names_.begin(); it != joint_names_.end(); ++it) {
     all_keys_.push_back(std::string("Device/SubDeviceList/") + (*it) + std::string("/Temperature/Sensor/Value"));
     all_keys_.push_back(std::string("Device/SubDeviceList/") + (*it) + std::string("/Hardness/Actuator/Value"));
+
+    // Get the joint limits
+    joint_limits.clear();
+
+    try {
+         qi_joint_limits = this->p_motion_.call<qi::AnyValue>(
+                    "getLimits",
+                    (*it));
+
+    } catch (const std::exception &e) {
+        std::cerr << "Exception caught in DiagnosticsConverter: "
+                  << e.what()
+                  << std::endl;
+        continue;
+    }
+
+    try {
+        tools::fromAnyValueToFloatVectorVector(qi_joint_limits, joint_limits);
+
+    } catch (std::exception &e) {
+        std::cerr << "Error while converting the qi value corresponding to "
+                  << "the joint's limits : "
+                  << e.what()
+                  << std::endl;
+        continue;
+    }
+
+    this->joint_limit_map_[(*it)].push_back(
+                static_cast<double>(joint_limits[0][0]));
+    this->joint_limit_map_[(*it)].push_back(
+                static_cast<double>(joint_limits[0][1]));
+    this->joint_limit_map_[(*it)].push_back(
+                static_cast<double>(joint_limits[0][2]));
+    this->joint_limit_map_[(*it)].push_back(
+                static_cast<double>(joint_limits[0][3]));
   }
 
   // Get all the battery keys
@@ -125,6 +163,10 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     status.hardware_id = joint_names_[i];
     status.add("Temperature", temperature);
     status.add("Stiffness", stiffness);
+    status.add("minAngle", this->joint_limit_map_[joint_names_[i]][0]);
+    status.add("maxAngle", this->joint_limit_map_[joint_names_[i]][1]);
+    status.add("maxVelocity", this->joint_limit_map_[joint_names_[i]][2]);
+    status.add("maxTorque", this->joint_limit_map_[joint_names_[i]][3]);
 
     // Define the level
     if (temperature < temperature_warn_level_)
@@ -241,7 +283,6 @@ void DiagnosticsConverter::callAll( const std::vector<message_actions::MessageAc
     else
       ss << "Total Current: " << std::setw(5) << current << " Ampere (discharging)";
     status.message = ss.str();
-
     msg.status.push_back(status);
   }
 

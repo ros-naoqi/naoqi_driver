@@ -38,8 +38,11 @@ std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::ve
 
 std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<float>& result);
 
-}
+void fromAnyValueToFloatVectorVector(
+        qi::AnyValue &value,
+        std::vector< std::vector<float> > &result);
 
+}
 }
 
 #endif // FROM_ANY_VALUE_HPP

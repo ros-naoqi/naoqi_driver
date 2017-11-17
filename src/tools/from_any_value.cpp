@@ -218,5 +218,44 @@ std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::ve
   return result;
 }
 
+
+void fromAnyValueToFloatVectorVector(
+        qi::AnyValue &value,
+        std::vector< std::vector<float> > &result) {
+
+  qi::AnyReferenceVector anyrefs;
+
+  try {
+    anyrefs = value.asListValuePtr();
+
+  } catch (const std::exception& e) {
+    throw std::exception(e);
+  }
+
+  result.resize(anyrefs.size());
+
+  for(int i=0; i<anyrefs.size(); i++) {
+    qi::AnyReferenceVector anyref;
+
+    try {
+      anyref = anyrefs[i].asListValuePtr();
+
+    } catch (const std::exception& e) {
+      throw std::exception(e);
+    }
+
+    result[i].resize(anyref.size());
+
+    for(int j=0; j<anyref.size(); j++) {
+      try {
+        result[i][j] = anyref[j].content().toFloat();
+
+      } catch(std::runtime_error& e) {
+        throw std::exception(e);
+      }
+    }
+
+  }
+}
 }
 }
