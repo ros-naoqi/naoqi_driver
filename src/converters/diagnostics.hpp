@@ -60,9 +60,12 @@ private:
   std::vector<std::string> all_keys_;
   /** Keys for the battery status */
   std::vector<std::string> battery_status_keys_;
-
+  /** Map storing the joints informations */
+  std::map<std::string, std::vector<double> > joint_limit_map_;
   /** Proxy to ALMemory */
   qi::AnyObject p_memory_;
+  /** Proxy to ALMotion */
+  qi::AnyObject p_motion_;
   /** Proxy to ALBodyTemperature */
   qi::AnyObject p_body_temperature_;
 
