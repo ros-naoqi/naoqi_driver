@@ -99,6 +99,7 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
     if ( resolution == AL::kVGA )
     {
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHVGA();
+      ROS_WARN("VGA resolution is not supported for the depth camera, please use QVGA");
       return cam_info_msg;
     }
     else if( resolution == AL::kQVGA )
