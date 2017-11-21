@@ -15,6 +15,7 @@ find_package(catkin COMPONENTS
   naoqi_libqicore
   robot_state_publisher
   rosbag_storage
+  rosconsole
   rosgraph_msgs
   sensor_msgs
   tf2_geometry_msgs

@@ -23,6 +23,7 @@
   <build_depend>orocos_kdl</build_depend>
   <build_depend>robot_state_publisher</build_depend>
   <build_depend>rosbag_storage</build_depend>
+  <build_depend>rosconsole</build_depend>
   <build_depend>rosgraph_msgs</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>tf2_geometry_msgs</build_depend>
@@ -41,6 +42,7 @@
   <run_depend>orocos_kdl</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>rosbag_storage</run_depend>
+  <run_depend>rosconsole</run_depend>
   <run_depend>tf2_ros</run_depend>
 
   <conflict>nao_driver</conflict>
