@@ -27,6 +27,7 @@
 * ROS includes
 */
 #include <cv_bridge/cv_bridge.h>
+#include <ros/console.h>
 
 /*
 * CV includes
@@ -99,7 +100,7 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
     if ( resolution == AL::kVGA )
     {
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHVGA();
-      ROS_WARN("VGA resolution is not supported for the depth camera, please use QVGA");
+      ROS_WARN("VGA resolution is not supported for the depth camera, use QVGA or lower");
       return cam_info_msg;
     }
     else if( resolution == AL::kQVGA )
