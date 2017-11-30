@@ -1,0 +1,48 @@
+branches:
+    only:
+      - master
+
+notifications:
+    on_success: never
+    on_failure: never
+
+os :
+  - linux
+
+dist:
+  - trusty
+
+sudo:
+  - required
+
+
+language:
+  - generic
+
+services:
+  - docker
+
+matrix:
+  include:
+    - env: DOCKER_VERSION=indigo-desktop-trusty
+    - env: DOCKER_VERSION=jade-desktop-trusty
+    - env: DOCKER_VERSION=kinetic-desktop-xenial
+    - env: DOCKER_VERSION=lunar-desktop-xenial
+    - env: DOCKER_VERSION=lunar-desktop-stretch
+
+env:
+  global:
+    - CI_SOURCE_PATH=$(pwd)
+
+install:
+  - sudo docker pull osrf/ros:$DOCKER_VERSION
+
+script:
+  - sudo docker run -t -d --name=$DOCKER_VERSION -v $CI_SOURCE_PATH/../:/catkin_ws/src/ osrf/ros:$DOCKER_VERSION bash
+  - sudo docker exec -i $DOCKER_VERSION apt-get update
+  - sudo docker exec -i $DOCKER_VERSION rosdep install -i -y --from-paths /catkin_ws/src/naoqi_driver
+  - sudo docker exec -i $DOCKER_VERSION bash -c 'source /opt/ros/*/setup.bash; catkin_make --directory catkin_ws/'
+  - sudo docker exec -i $DOCKER_VERSION bash -c 'source /opt/ros/*/setup.bash; catkin_make run_tests --directory /catkin_ws/'
+
+after_script:
+  - sudo docker stop $DOCKER_VERSION

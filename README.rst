@@ -33,3 +33,35 @@ For further information, you can go `here <http://ros-naoqi.github.io/naoqi_driv
   cd doc
   doxygen Doxyfile
   sphinx-build -b html ./source/ ./build/
+
+
+Travis - Continuous Integration
+===============================
+
+.. |indigo| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/1
+    :alt: Indigo with Ubuntu Trusty
+    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
+
+.. |jade| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/2
+    :alt: Jade with Ubuntu Trusty
+    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
+
+.. |kinetic| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/3
+    :alt: Kinetic with Ubuntu Xenial
+    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
+
+.. |lunar| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/4
+    :alt: Lunar with Ubuntu Xenial
+    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
+
++-------------+---------------+---------------+
+| ROS Release | Ubuntu Trusty | Ubuntu Xenial |
++=============+===============+===============+
+| Lunar       | N/A           | |lunar|       |
++-------------+---------------+---------------+
+| Kinetic     | N/A           | |kinetic|     |
++-------------+---------------+---------------+
+| Jade        | |jade|        | N/A           |
++-------------+---------------+---------------+
+| Indigo      | |indigo|      | N/A           |
++-------------+---------------+---------------+
