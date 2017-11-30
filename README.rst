@@ -35,24 +35,8 @@ For further information, you can go `here <http://ros-naoqi.github.io/naoqi_driv
   sphinx-build -b html ./source/ ./build/
 
 
-Build status
-============
-
-.. |i_log| image:: https://raw.github.com/ros/ros_tutorials/indigo-devel/turtlesim/images/indigo.png
-    :width: 40
-    :height: 45
-
-.. |j_log| image:: https://raw.github.com/ros/ros_tutorials/jade-devel/turtlesim/images/jade.png
-    :width: 40
-    :height: 45
-
-.. |k_log| image:: https://raw.github.com/ros/ros_tutorials/kinetic-devel/turtlesim/images/kinetic.png
-    :width: 40
-    :height: 45
-
-.. |l_log| image:: https://raw.githubusercontent.com/ros/ros_tutorials/lunar-devel/turtlesim/images/lunar.png
-    :width: 40
-    :height: 45
+Travis - Continuous Integration
+===============================
 
 .. |indigo| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/readme_test/1
     :alt: Indigo with Ubuntu Trusty
@@ -70,14 +54,14 @@ Build status
     :alt: Lunar with Ubuntu Xenial
     :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
 
-+----------------+---------------+---------------+
-| ROS Release    | Ubuntu Trusty | Ubuntu Xenial |
-+================+===============+===============+
-||l_log| Lunar   | N/A           | |lunar|       |
-+----------------+---------------+---------------+
-||k_log| Kinetic | N/A           | |kinetic|     |
-+----------------+---------------+---------------+
-||j_log| Jade    | |jade|        | N/A           |
-+----------------+---------------+---------------+
-||i_log| Indigo  | |indigo|      | N/A           |
-+----------------+---------------+---------------+
++-------------+---------------+---------------+
+| ROS Release | Ubuntu Trusty | Ubuntu Xenial |
++=============+===============+===============+
+| Lunar       | N/A           | |lunar|       |
++-------------+---------------+---------------+
+| Kinetic     | N/A           | |kinetic|     |
++-------------+---------------+---------------+
+| Jade        | |jade|        | N/A           |
++-------------+---------------+---------------+
+| Indigo      | |indigo|      | N/A           |
++-------------+---------------+---------------+
