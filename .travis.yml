@@ -25,7 +25,6 @@ services:
 matrix:
   include:
     - env: DOCKER_VERSION=indigo-desktop-trusty
-    - env: DOCKER_VERSION=jade-desktop-trusty
     - env: DOCKER_VERSION=kinetic-desktop-xenial
     - env: DOCKER_VERSION=lunar-desktop-xenial
     - env: DOCKER_VERSION=lunar-desktop-stretch
