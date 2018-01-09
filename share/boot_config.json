@@ -1,4 +1,5 @@
 {
+  "_comment": "QQVGA = 0, QVGA = 1, VGA = 2",
   "converters":
   {
     "front_camera":
