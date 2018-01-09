@@ -24,7 +24,7 @@
 #include <ros/node_handle.h>
 #include <ros/service_server.h>
 
-#include <naoqi_bridge_msgs/SetVolume.h>
+#include <nao_interaction_msgs/SetAudioMasterVolume.h>
 #include <qi/session.hpp>
 
 namespace naoqi
@@ -51,7 +51,7 @@ public:
 
   void reset( ros::NodeHandle& nh );
 
-  bool callback( naoqi_bridge_msgs::SetVolumeRequest& req, naoqi_bridge_msgs::SetVolumeResponse& resp );
+  bool callback( nao_interaction_msgs::SetAudioMasterVolumeRequest& req, nao_interaction_msgs::SetAudioMasterVolumeResponse& resp );
 
 
 private:

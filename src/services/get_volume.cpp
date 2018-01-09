@@ -34,9 +34,9 @@ namespace service
     service_ = nh.advertiseService(topic_, &GetVolumeService::callback, this);
   }
 
-  bool GetVolumeService::callback( naoqi_bridge_msgs::GetVolumeRequest& req, naoqi_bridge_msgs::GetVolumeResponse& resp )
+  bool GetVolumeService::callback( nao_interaction_msgs::GetAudioMasterVolumeRequest& req, nao_interaction_msgs::GetAudioMasterVolumeResponse& resp )
   {
-    resp.volume = helpers::driver::getVolume(session_, req);
+    resp.master_volume.data = helpers::driver::getVolume(session_, req);
     return true;
   }
 

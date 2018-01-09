@@ -34,10 +34,15 @@ namespace service
     service_ = nh.advertiseService(topic_, &SetVolumeService::callback, this);
   }
 
-  bool SetVolumeService::callback( naoqi_bridge_msgs::SetVolumeRequest& req, naoqi_bridge_msgs::SetVolumeResponse& resp )
+  bool SetVolumeService::callback( nao_interaction_msgs::SetAudioMasterVolumeRequest& req, nao_interaction_msgs::SetAudioMasterVolumeResponse& resp )
   {
-    resp.success = helpers::driver::setVolume(session_, req);
-    return true;
+    if (req.master_volume.data < 0 or req.master_volume.data > 100){
+      return true;
+    }
+    else{
+      helpers::driver::setVolume(session_, req);
+      return true;
+    }
   }
 
 

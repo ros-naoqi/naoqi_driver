@@ -23,9 +23,9 @@
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
 
-#include <naoqi_bridge_msgs/SetVolume.h>
+#include <nao_interaction_msgs/SetAudioMasterVolume.h>
 
-#include <naoqi_bridge_msgs/GetVolume.h>
+#include <nao_interaction_msgs/GetAudioMasterVolume.h>
 
 #include <std_srvs/Empty.h>
 
@@ -42,9 +42,9 @@ const robot::Robot& getRobot( const qi::SessionPtr& session );
 
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
 
-const bool& setVolume( const qi::SessionPtr& session, naoqi_bridge_msgs::SetVolumeRequest req );
+const bool& setVolume( const qi::SessionPtr& session, nao_interaction_msgs::SetAudioMasterVolumeRequest req );
 
-const int& getVolume( const qi::SessionPtr& session, naoqi_bridge_msgs::GetVolumeRequest req );
+const int& getVolume( const qi::SessionPtr& session, nao_interaction_msgs::GetAudioMasterVolumeRequest req );
 
 } // driver
 } // helpers
