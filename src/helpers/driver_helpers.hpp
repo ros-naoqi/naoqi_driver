@@ -22,6 +22,8 @@
 #include <naoqi_driver/tools.hpp>
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
+#include <std_srvs/Empty.h>
+#include <list>
 
 #include <qi/applicationsession.hpp>
 
@@ -36,6 +38,9 @@ const robot::Robot& getRobot( const qi::SessionPtr& session );
 
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
 
+const std_srvs::Empty& startSpeechRecognition( const qi::SessionPtr& session );
+
+const std_srvs::Empty& stopSpeechRecognition( const qi::SessionPtr& session );
 } // driver
 } // helpers
 } // naoqi

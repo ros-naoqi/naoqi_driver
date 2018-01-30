@@ -194,6 +194,27 @@ const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session 
   return robot_info;
 }
 
+const std_srvs::Empty& startSpeechRecognition( const qi::SessionPtr& session)
+{
+  qi::AnyObject p_memory = session->service("ALSpeechRecognition");
+  std::cout << "speech recognition service loaded" << std::endl;
+  // I need to learn how to use dynamic reconfigure
+  p_memory.call<void>("setLanguage", "Japanese" );
+  std::list<std::string> vocab;
+  vocab.push_back("ペッパー");
+  vocab.push_back("ナオ");
+  p_memory.call<void>("setVocabulary", vocab, false);
+  //
+  p_memory.call<void>("subscribe", "test");
+}
+
+const std_srvs::Empty& stopSpeechRecognition( const qi::SessionPtr& session)
+{
+  qi::AnyObject p_memory = session->service("ALSpeechRecognition");
+  std::cout << "speech recognition service unloaded" << std::endl;
+  p_memory.call<void>("unsubscribe", "test");
+}
+
 } // driver
 } // helpers
 } // naoqi
