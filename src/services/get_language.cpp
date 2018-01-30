@@ -34,9 +34,9 @@ void GetLanguageService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &GetLanguageService::callback, this);
 }
 
-bool GetLanguageService::callback( naoqi_bridge_msgs::GetLanguageRequest& req, naoqi_bridge_msgs::GetLanguageResponse& resp )
+bool GetLanguageService::callback( naoqi_bridge_msgs::GetStringRequest& req, naoqi_bridge_msgs::GetStringResponse& resp )
 {
-  resp.language = helpers::driver::getLanguage(session_, req);
+  resp.data = helpers::driver::getLanguage(session_, req);
   return true;
 }
 

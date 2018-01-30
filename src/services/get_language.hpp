@@ -24,7 +24,7 @@
 #include <ros/node_handle.h>
 #include <ros/service_server.h>
 
-#include <naoqi_bridge_msgs/GetLanguage.h>
+#include <naoqi_bridge_msgs/GetString.h>
 #include <qi/session.hpp>
 
 namespace naoqi
@@ -51,7 +51,7 @@ public:
 
   void reset( ros::NodeHandle& nh );
 
-  bool callback( naoqi_bridge_msgs::GetLanguageRequest& req, naoqi_bridge_msgs::GetLanguageResponse& resp );
+  bool callback( naoqi_bridge_msgs::GetStringRequest& req, naoqi_bridge_msgs::GetStringResponse& resp );
 
 
 private:

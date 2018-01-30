@@ -34,7 +34,7 @@ void SetLanguageService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &SetLanguageService::callback, this);
 }
 
-bool SetLanguageService::callback( naoqi_bridge_msgs::SetLanguageRequest& req, naoqi_bridge_msgs::SetLanguageResponse& resp )
+bool SetLanguageService::callback( naoqi_bridge_msgs::SetStringRequest& req, naoqi_bridge_msgs::SetStringResponse& resp )
 {
   resp.success = helpers::driver::setLanguage(session_, req);
   return true;

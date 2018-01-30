@@ -194,21 +194,20 @@ const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session 
   return robot_info;
 }
 
-/** Function that sets language for robot
+/** Function that sets language for a robot
  */
-static std_srvs::Empty& setLanguageLocal( const qi::SessionPtr& session, naoqi_bridge_msgs::SetLanguageRequest req)
+static std_srvs::Empty& setLanguageLocal( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req)
 {
   static qi::Url robot_url;
 
   robot_url = session->url();
 
-  // Get the robot type
   std::cout << "Receiving service call of setting speech language" << std::endl;
   qi::AnyObject p_text_to_speech = session->service("ALTextToSpeech");
-  p_text_to_speech.call<void>("setLanguage", req.language);
+  p_text_to_speech.call<void>("setLanguage", req.data);
 }
 
-const bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetLanguageRequest req)
+const bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req)
 {
   try{
     setLanguageLocal(session, req);
@@ -219,7 +218,7 @@ const bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetLa
   }
 }
 
-/** Function that gets language set at robot
+/** Function that gets language set to a robot
  */
   static std::string& getLanguageLocal( const qi::SessionPtr& session)
 {
@@ -228,14 +227,13 @@ const bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetLa
 
   robot_url = session->url();
 
-  // Get the robot type
   std::cout << "Receiving service call of getting speech language" << std::endl;
   qi::AnyObject p_text_to_speech = session->service("ALTextToSpeech");
   language = p_text_to_speech.call<std::string>("getLanguage");
   return language;
 }
 
-  const std::string& getLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::GetLanguageRequest req)
+  const std::string& getLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::GetStringRequest req)
 {
   std::string language;
   try{
