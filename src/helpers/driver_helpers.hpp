@@ -23,6 +23,8 @@
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
 
+#include <naoqi_bridge_msgs/SetString.h>
+
 #include <qi/applicationsession.hpp>
 
 namespace naoqi
@@ -35,6 +37,10 @@ namespace driver
 const robot::Robot& getRobot( const qi::SessionPtr& session );
 
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
+
+bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req );
+
+std::string& getLanguage( const qi::SessionPtr& session );
 
 } // driver
 } // helpers
