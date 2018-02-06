@@ -30,6 +30,7 @@
 #include <naoqi_bridge_msgs/Bumper.h>
 #include <naoqi_bridge_msgs/HandTouch.h>
 #include <naoqi_bridge_msgs/HeadTouch.h>
+#include <std_msgs/Bool.h>
 
 /*
 * ALDEBARAN includes

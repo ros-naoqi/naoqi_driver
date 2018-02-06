@@ -86,6 +86,10 @@
     {
       "enabled"       : true
     },
+    "chest_button":
+    {
+      "enabled"       : true
+    },
     "odom":
     {
       "enabled"       : true,
