@@ -223,6 +223,24 @@ std::string& getLanguage( const qi::SessionPtr& session )
   return language;
 }
 
+/** Function that fades eye leds
+ */
+std_msgs::Empty& fadeLeds( const qi::SessionPtr& session, naoqi_bridge_msgs::FadeLedsRequest req )
+{
+  std::cout << "Receiving service call of fading leds" << std::endl;
+  qi::AnyObject p_leds = session->service("ALLeds");
+  p_leds.call<void>("fadeRGB", req.fade_rgb.led_name, req.fade_rgb.color.r, req.fade_rgb.color.g, req.fade_rgb.color.b, req.fade_rgb.fade_duration.toSec());
+}
+
+/** Function that reset leds color
+ */
+std_msgs::Empty& resetLeds( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req )
+{
+  std::cout << "Receiving service call of resetting leds" << std::endl;
+  qi::AnyObject p_leds = session->service("ALLeds");
+  p_leds.call<void>("reset", req.data);
+}
+
 } // driver
 } // helpers
 } // naoqi
