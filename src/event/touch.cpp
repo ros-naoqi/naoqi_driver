@@ -243,13 +243,12 @@ void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, 
 }
 
 template<class T>
-void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, std_msgs::Bool &msg)
+void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::ChestButtonPressed &msg)
 {
-  int i = 0;
-  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it, ++i)
+  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it)
   {
     if ( key == it->c_str() ) {
-      msg.data = state;
+      msg.state = state?(naoqi_bridge_msgs::ChestButtonPressed::statePressed):(naoqi_bridge_msgs::ChestButtonPressed::stateReleased);
     }
   }
 }
@@ -258,6 +257,6 @@ void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, 
 template class TouchEventRegister<naoqi_bridge_msgs::Bumper>;
 template class TouchEventRegister<naoqi_bridge_msgs::HandTouch>;
 template class TouchEventRegister<naoqi_bridge_msgs::HeadTouch>;
-template class TouchEventRegister<std_msgs::Bool>;
+template class TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed>;
 
 }//namespace
