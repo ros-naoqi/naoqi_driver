@@ -200,6 +200,25 @@ std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<fl
   return result;
 }
 
+std::vector<int> fromAnyValueToIntVector(qi::AnyValue& value, std::vector<int>& result){
+  qi::AnyReferenceVector anyrefs = value.asListValuePtr();
+
+  for(int i=0; i<anyrefs.size();i++)
+  {
+    try
+    {
+      result.push_back(anyrefs[i].content().toInt());
+    }
+    catch(std::runtime_error& e)
+    {
+      result.push_back(-1.0);
+      std::cout << e.what() << "=> set to -1" << std::endl;
+    }
+  }
+  return result;
+}
+
+
 std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::vector<std::string>& result){
   qi::AnyReferenceVector anyrefs = value.asListValuePtr();
 

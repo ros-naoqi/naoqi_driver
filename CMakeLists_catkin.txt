@@ -19,6 +19,7 @@ find_package(catkin COMPONENTS
   rosgraph_msgs
   sensor_msgs
   tf2_geometry_msgs
+  people_msgs
   tf2_msgs
   tf2_ros
 )

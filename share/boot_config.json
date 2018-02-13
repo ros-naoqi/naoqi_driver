@@ -37,7 +37,7 @@
     },
     "logs":
     {
-      "enabled"       : true,
+      "enabled"       : false,
       "frequency"     : 1
     },
     "diag":
@@ -64,6 +64,11 @@
     {
       "enabled"       : true,
       "frequency"     : 10
+    },
+    "people":
+    {
+      "enabled"       : true,
+      "frequency"     : 1
     },
     "sonar":
     {
