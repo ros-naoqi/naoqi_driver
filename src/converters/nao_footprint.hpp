@@ -52,7 +52,7 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
     tf_odom_to_left_foot  = tf2_buffer->lookupTransform("odom", "l_sole",    time );
     tf_odom_to_right_foot = tf2_buffer->lookupTransform("odom", "r_sole",    time );
     tf_odom_to_base       = tf2_buffer->lookupTransform("odom", "base_link", time );
-  } catch (const tf::TransformException& ex){
+  } catch (const tf2::TransformException& ex){
     ROS_ERROR("NAO Footprint error %s",ex.what());
     return ;
   }
