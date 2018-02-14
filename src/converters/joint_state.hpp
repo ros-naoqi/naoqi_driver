@@ -30,6 +30,7 @@
 */
 #include <urdf/model.h>
 #include <sensor_msgs/JointState.h>
+#include <tf2_ros/buffer.h>
 #include <robot_state_publisher/robot_state_publisher.h>
 
 namespace naoqi
