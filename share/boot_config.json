@@ -37,7 +37,7 @@
     },
     "logs":
     {
-      "enabled"       : true,
+      "enabled"       : false,
       "frequency"     : 1
     },
     "diag":
