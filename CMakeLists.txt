@@ -48,6 +48,8 @@ set(
   src/services/robot_config.cpp
   src/services/set_language.cpp
   src/services/get_language.cpp
+  src/services/fade_leds.cpp
+  src/services/reset_leds.cpp
   )
 
 set(

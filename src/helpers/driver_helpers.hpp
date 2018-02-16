@@ -23,7 +23,11 @@
 
 #include <naoqi_bridge_msgs/RobotInfo.h>
 
+#include <std_msgs/Empty.h>
+
 #include <naoqi_bridge_msgs/SetString.h>
+
+#include <naoqi_bridge_msgs/FadeLeds.h>
 
 #include <qi/applicationsession.hpp>
 
@@ -41,6 +45,10 @@ const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session 
 bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req );
 
 std::string& getLanguage( const qi::SessionPtr& session );
+
+std_msgs::Empty& fadeLeds( const qi::SessionPtr& session, naoqi_bridge_msgs::FadeLedsRequest req );
+
+std_msgs::Empty& resetLeds( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req );
 
 } // driver
 } // helpers
