@@ -2,6 +2,37 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* disable logs as default (reference `#68 <https://github.com/ros-naoqi/naoqi_driver/issues/68>`_) (`#88 <https://github.com/ros-naoqi/naoqi_driver/issues/88>`_)
+* Missing tf2 include and tf2 exception type (`#103 <https://github.com/ros-naoqi/naoqi_driver/issues/103>`_)
+  * Add missing include tf2_ros/buffer.h
+  * Catch tf2::TransformException
+* add services for get and set language (`#87 <https://github.com/ros-naoqi/naoqi_driver/issues/87>`_)
+* C-style comments are not syntactically correct in JSON (`#98 <https://github.com/ros-naoqi/naoqi_driver/issues/98>`_)
+  * C-style comments are not syntactically correct in JSON
+* Remove Jade from Travis description (`#95 <https://github.com/ros-naoqi/naoqi_driver/issues/95>`_)
+  * Remove Jade from Travis description and CI matrix
+  * Correct badges according to the Travis matrix modification, and add Debian stretch badge
+* Adding a maintainer
+* Ci (`#94 <https://github.com/ros-naoqi/naoqi_driver/issues/94>`_)
+  * Add .travis.yml
+* Adding a warning for VGA resolution for depth camera (`#93 <https://github.com/ros-naoqi/naoqi_driver/issues/93>`_)
+  Adding a warning for VGA resolution for depth camera
+* Merge pull request `#92 <https://github.com/ros-naoqi/naoqi_driver/issues/92>`_ from Pandhariix/add_joint_limits
+  Add joint limits to the diagnostics
+* Start adding joints limits to the diagnostic
+  Add double layered float vector converter method
+  Add the joints limit map, and add the joints limits to the diagnostic message
+* Update gitignore
+* Fix typo in naoqi_driver.hpp
+* Merge pull request `#85 <https://github.com/ros-naoqi/naoqi_driver/issues/85>`_ from PacoDu/fix_node_name_empty
+  Fix node name empty related to pepper_robot issue `#35 <https://github.com/ros-naoqi/naoqi_driver/issues/35>`_
+* Update naoqi_driver.cpp
+  Error while merging, setPrefix removed.
+* Fix node name issue `#35 <https://github.com/ros-naoqi/naoqi_driver/issues/35>`_
+* Contributors: Dupont Paco, Esteve Fernandez, Kanae Kochigami, Maxime Busy, Natalia Lyubova, Paco Dupont, Shane Loretz, Surya Ambrose
+
 0.5.9 (2016-11-08)
 ------------------
 * -Vincent Rabaud as a maintainer, +Natalia Lyubova
