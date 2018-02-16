@@ -2,8 +2,8 @@
 Changelog for package naoqi_rosbridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.10 (2018-02-16)
+-------------------
 * disable logs as default (reference `#68 <https://github.com/ros-naoqi/naoqi_driver/issues/68>`_) (`#88 <https://github.com/ros-naoqi/naoqi_driver/issues/88>`_)
 * Missing tf2 include and tf2 exception type (`#103 <https://github.com/ros-naoqi/naoqi_driver/issues/103>`_)
   * Add missing include tf2_ros/buffer.h
