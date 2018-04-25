@@ -91,6 +91,7 @@ int main(int argc, char** argv)
     bs->init();
   }
 
+  std::cout << BOLDYELLOW << "naoqi_driver initialized" << RESETCOLOR << std::endl;
   app.run();
   bs->stopService();
   app.session()->close();
