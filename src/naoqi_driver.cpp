@@ -890,9 +890,9 @@ void Driver::registerService( service::Service srv )
 
 void Driver::registerDefaultServices()
 {
-  registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
-  registerService( boost::make_shared<service::SetLanguageService>("set language service", "/naoqi_driver/set_language", sessionPtr_) );
-  registerService( boost::make_shared<service::GetLanguageService>("get language service", "/naoqi_driver/get_language", sessionPtr_) );
+  registerService( boost::make_shared<service::RobotConfigService>("get_robot_config", "/naoqi_driver/get_robot_config", sessionPtr_) );
+  registerService( boost::make_shared<service::SetLanguageService>("set_language", "/naoqi_driver/set_language", sessionPtr_) );
+  registerService( boost::make_shared<service::GetLanguageService>("get_language", "/naoqi_driver/get_language", sessionPtr_) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
@@ -964,13 +964,11 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
 
     for_each( subscriber::Subscriber& sub, subscribers_ )
     {
-      std::cout << "resetting subscriber " << sub.name() << std::endl;
       sub.reset( *nhPtr_ );
     }
 
     for_each( service::Service& srv, services_ )
     {
-      std::cout << "resetting service " << srv.name() << std::endl;
       srv.reset( *nhPtr_ );
     }
   }

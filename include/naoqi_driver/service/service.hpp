@@ -60,6 +60,7 @@ public:
   {
     std::cout << name() << " is resetting" << std::endl;
     srvPtr_->reset( nh );
+    std::cout << name() << " reset" << std::endl;
   }
 
   /**
