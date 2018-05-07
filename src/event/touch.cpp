@@ -242,9 +242,21 @@ void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, 
   }
 }
 
+template<class T>
+void TouchEventRegister<T>::touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::ChestButtonPressed &msg)
+{
+  for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it)
+  {
+    if ( key == it->c_str() ) {
+      msg.state = state?(naoqi_bridge_msgs::ChestButtonPressed::statePressed):(naoqi_bridge_msgs::ChestButtonPressed::stateReleased);
+    }
+  }
+}
+
 // http://stackoverflow.com/questions/8752837/undefined-reference-to-template-class-constructor
 template class TouchEventRegister<naoqi_bridge_msgs::Bumper>;
 template class TouchEventRegister<naoqi_bridge_msgs::HandTouch>;
 template class TouchEventRegister<naoqi_bridge_msgs::HeadTouch>;
+template class TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed>;
 
 }//namespace

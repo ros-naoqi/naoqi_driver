@@ -65,6 +65,7 @@ void TouchEventConverter<T>::callAll(const std::vector<message_actions::MessageA
 template class TouchEventConverter<naoqi_bridge_msgs::Bumper>;
 template class TouchEventConverter<naoqi_bridge_msgs::HandTouch>;
 template class TouchEventConverter<naoqi_bridge_msgs::HeadTouch>;
+template class TouchEventConverter<naoqi_bridge_msgs::ChestButtonPressed>;
 }
 
 }

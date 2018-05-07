@@ -31,6 +31,7 @@
 #include <naoqi_bridge_msgs/Bumper.h>
 #include <naoqi_bridge_msgs/HandTouch.h>
 #include <naoqi_bridge_msgs/HeadTouch.h>
+#include <naoqi_bridge_msgs/ChestButtonPressed.h>
 
 #include <naoqi_driver/tools.hpp>
 #include <naoqi_driver/recorder/globalrecorder.hpp>
@@ -82,6 +83,7 @@ public:
   void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::Bumper &msg);
   void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::HandTouch &msg);
   void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::HeadTouch &msg);
+  void touchCallbackMessage(std::string &key, bool &state, naoqi_bridge_msgs::ChestButtonPressed &msg);
   
 
 private:
@@ -129,6 +131,12 @@ public:
   HandTouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : TouchEventRegister<naoqi_bridge_msgs::HandTouch>(name, keys, frequency, session) {}
 };
 
+class ChestTouchEventRegister: public TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed>
+{
+public:
+  ChestTouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session ) : TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed>(name, keys, frequency, session) {}
+};
+
 //QI_REGISTER_OBJECT(BumperEventRegister, touchCallback)
 //QI_REGISTER_OBJECT(HeadTouchEventRegister, touchCallback)
 
@@ -155,6 +163,14 @@ static bool _qiregisterTouchEventRegisterHeadTouch() {
   return true;
   }
 static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterTouchEventRegisterHeadTouch();
+
+static bool _qiregisterTouchEventRegisterChestTouch() {
+  ::qi::ObjectTypeBuilder<TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed> > b;
+  QI_VAARGS_APPLY(__QI_REGISTER_ELEMENT, TouchEventRegister<naoqi_bridge_msgs::ChestButtonPressed>, touchCallback)
+    b.registerType();
+  return true;
+  }
+static bool BOOST_PP_CAT(__qi_registration, __LINE__) = _qiregisterTouchEventRegisterChestTouch();
 
 } //naoqi
 

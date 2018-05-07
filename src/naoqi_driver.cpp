@@ -593,6 +593,7 @@ void Driver::registerDefaultConverter()
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
   bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
+  bool chest_enabled                  = boot_config_.get( "converters.chest_button.enabled", true);
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -833,6 +834,21 @@ void Driver::registerDefaultConverter()
     }
     if (publish_enabled_) {
       event_map_.find("head_touch")->second.isPublishing(true);
+    }
+  }
+
+  if ( chest_enabled )
+  {
+    std::vector<std::string> chest_touch_events;
+    chest_touch_events.push_back("ChestButtonPressed");
+    boost::shared_ptr<ChestTouchEventRegister> event_register =
+      boost::make_shared<ChestTouchEventRegister>( "chest_touch", chest_touch_events, 0, sessionPtr_ );
+    insertEventConverter("chest_touch", event_register);
+    if (keep_looping) {
+      event_map_.find("chest_touch")->second.startProcess();
+    }
+    if (publish_enabled_) {
+      event_map_.find("chest_touch")->second.isPublishing(true);
     }
   }
 
