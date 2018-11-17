@@ -48,6 +48,7 @@ set(
   src/services/robot_config.cpp
   src/services/set_language.cpp
   src/services/get_language.cpp
+  src/services/play_audio_file.cpp
   )
 
 set(
