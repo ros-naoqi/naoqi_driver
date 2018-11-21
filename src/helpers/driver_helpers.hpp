@@ -25,6 +25,12 @@
 
 #include <naoqi_bridge_msgs/SetString.h>
 
+#include <nao_interaction_msgs/SetAudioMasterVolume.h>
+
+#include <nao_interaction_msgs/GetAudioMasterVolume.h>
+
+#include <std_srvs/Empty.h>
+
 #include <qi/applicationsession.hpp>
 
 namespace naoqi
@@ -42,6 +48,9 @@ bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRe
 
 std::string& getLanguage( const qi::SessionPtr& session );
 
+const bool& setVolume( const qi::SessionPtr& session, nao_interaction_msgs::SetAudioMasterVolumeRequest req );
+
+const int& getVolume( const qi::SessionPtr& session );
 } // driver
 } // helpers
 } // naoqi

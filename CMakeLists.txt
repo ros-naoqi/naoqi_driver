@@ -48,6 +48,8 @@ set(
   src/services/robot_config.cpp
   src/services/set_language.cpp
   src/services/get_language.cpp
+  src/services/set_volume.cpp
+  src/services/get_volume.cpp
   )
 
 set(
