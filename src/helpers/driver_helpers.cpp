@@ -223,6 +223,57 @@ std::string& getLanguage( const qi::SessionPtr& session )
   return language;
 }
 
+/** Function that sets volume for robot
+ */
+static std_srvs::Empty& setVolumeLocal( const qi::SessionPtr& session, nao_interaction_msgs::SetAudioMasterVolumeRequest req)
+{
+  static qi::Url robot_url;
+
+  robot_url = session->url();
+
+  std::cout << "Receiving service call of setting volume" << std::endl;
+  qi::AnyObject p_audio_device = session->service("ALAudioDevice");
+  p_audio_device.call<void>("setOutputVolume", req.master_volume.data);
+}
+
+const bool& setVolume( const qi::SessionPtr& session, nao_interaction_msgs::SetAudioMasterVolumeRequest req)
+{
+  try{
+    setVolumeLocal(session, req);
+    return true;
+  }
+  catch(const std::exception& e){
+    return false;
+  }
+}
+
+/** Function that gets volume for robot
+ */
+static int& getVolumeLocal( const qi::SessionPtr& session )
+{
+  static qi::Url robot_url;
+  static int volume;
+
+  robot_url = session->url();
+
+  std::cout << "Receiving service call of getting volume" << std::endl;
+  qi::AnyObject p_audio_device = session->service("ALAudioDevice");
+  volume = p_audio_device.call<int>("getOutputVolume");
+  return volume;
+}
+
+const int& getVolume( const qi::SessionPtr& session)
+{
+  static int volume;
+  try{
+    volume = getVolumeLocal(session);
+    return volume;
+  }
+  catch(const std::exception& e){
+    return volume;
+  }
+}
+
 } // driver
 } // helpers
 } // naoqi
