@@ -113,6 +113,64 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQVGA();
       return cam_info_msg;
     }
+    else if (resolution == AL::k720p){
+        static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTH720P();
+        return cam_info_msg;
+    }
+    else if (resolution == AL::kQ720p){
+        static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQ720P();
+        return cam_info_msg;
+    }
+    else if (resolution == AL::kQQ720p){
+        static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQ720P();
+        return cam_info_msg;
+    }
+    else if (resolution == AL::kQQQ720p){
+        static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQ720P();
+        return cam_info_msg;
+    }
+    else if (resolution == AL::kQQQQ720p){
+        static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQQ720P();
+        return cam_info_msg;
+    }
+  }
+  else if (camera_source == AL::kInfraredOrStereoCamera) {
+    if ( resolution == AL::kVGA )
+    {
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHVGA();
+      ROS_WARN("VGA resolution is not supported for the depth camera, use QVGA or lower");
+      return cam_info_msg;
+    }
+    else if( resolution == AL::kQVGA )
+    {
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQVGA();
+      return cam_info_msg;
+    }
+    else if( resolution == AL::kQQVGA )
+    {
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQVGA();
+      return cam_info_msg;
+    }
+    else if (resolution == AL::k720px2){
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTH720PX2();
+      return cam_info_msg;
+    }
+    else if (resolution == AL::kQ720px2){
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQ720PX2();
+      return cam_info_msg;
+    }
+    else if (resolution == AL::kQQ720px2){
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQ720PX2();
+      return cam_info_msg;
+    }
+    else if (resolution == AL::kQQQ720px2){
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQ720PX2();
+      return cam_info_msg;
+    }
+    else if (resolution == AL::kQQQQ720px2){
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQQ720P();
+      return cam_info_msg;
+    }
   }
   else{
     std::cout << "no camera information found for camera_source " << camera_source << " and res: " << resolution << std::endl;
@@ -122,8 +180,13 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
 
 } // camera_info_definitions
 
-CameraConverter::CameraConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const int& camera_source, const int& resolution )
-  : BaseConverter( name, frequency, session ),
+CameraConverter::CameraConverter(
+  const std::string& name,
+  const float& frequency,
+  const qi::SessionPtr& session,
+  const int& camera_source,
+  const int& resolution,
+  const bool& has_stereo) : BaseConverter( name, frequency, session ),
     p_video_( session->service("ALVideoDevice") ),
     camera_source_(camera_source),
     resolution_(resolution),
@@ -133,28 +196,35 @@ CameraConverter::CameraConverter( const std::string& name, const float& frequenc
     cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
     camera_info_( camera_info_definitions::getCameraInfo(camera_source, resolution) )
 {
-  if ( camera_source == AL::kTopCamera )
-  {
-    msg_frameid_ = "CameraTop_optical_frame";
-  }
-  else if (camera_source == AL::kBottomCamera )
-  {
-    msg_frameid_ = "CameraBottom_optical_frame";
-  }
-  else if (camera_source_ == AL::kDepthCamera )
-  {
-    msg_frameid_ = "CameraDepth_optical_frame";
-  }
-  // Overwrite the parameters for the infrared
-  else if (camera_source_ == AL::kInfraredCamera )
-  {
-    // Reset to kDepth since it's the same device handle
-    camera_source_ = AL::kDepthCamera;
-    msg_frameid_ = "CameraDepth_optical_frame";
-    colorspace_ = AL::kInfraredColorSpace;
-    msg_colorspace_ = "16UC1";
-    cv_mat_type_ = CV_16U;
-    camera_info_ = camera_info_definitions::getCameraInfo(camera_source_, resolution_);
+  switch (camera_source) {
+    case AL::kTopCamera:
+      msg_frameid_ = "CameraTop_optical_frame";
+      break;
+
+    case AL::kBottomCamera:
+      msg_frameid_ = "CameraBottom_optical_frame";
+      break;
+
+    case AL::kDepthCamera:
+      msg_frameid_ = "CameraDepth_optical_frame";
+
+      if (has_stereo)
+        colorspace_ = AL::kDepthColorSpace;
+
+      break;
+
+    case AL::kInfraredOrStereoCamera:
+      msg_frameid_ = "CameraDepth_optical_frame";
+
+      if (!has_stereo) {
+        camera_source_ = AL::kDepthCamera;
+        colorspace_ = AL::kInfraredColorSpace;
+        msg_colorspace_ = "16UC1";
+        cv_mat_type_ = CV_16U;
+      }
+
+      camera_info_ = camera_info_definitions::getCameraInfo(camera_source_, resolution_);
+      break;
   }
 }
 
