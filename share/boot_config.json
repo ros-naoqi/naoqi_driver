@@ -19,7 +19,15 @@
     "depth_camera":
     {
       "enabled"       : true,
-      "resolution"    : 1,
+      "xtion_resolution": 1,
+      "stereo_resolution": 9,
+      "fps"           : 10,
+      "recorder_fps"  : 5
+    },
+    "stereo_camera":
+    {
+      "enabled"       : true,
+      "resolution"    : 15,
       "fps"           : 10,
       "recorder_fps"  : 5
     },
@@ -93,4 +101,3 @@
     }
   }
 }
-
