@@ -42,19 +42,29 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   std::cout << "Receiving information about robot model" << std::endl;
   qi::AnyObject p_memory = session->service("ALMemory");
   std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
+  std::string version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
   std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
 
   if (std::string(robot) == "nao")
   {
     info.type = naoqi_bridge_msgs::RobotInfo::NAO;
+    std::cout << BOLDYELLOW << "Robot detected: "
+              << BOLDCYAN << "NAO " << version
+              << RESETCOLOR << std::endl;
   }
   if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
   {
     info.type = naoqi_bridge_msgs::RobotInfo::PEPPER;
+    std::cout << BOLDYELLOW << "Robot detected: "
+              << BOLDCYAN << "Pepper " << version
+              << RESETCOLOR << std::endl;
   }
   if (std::string(robot) == "romeo" )
   {
     info.type = naoqi_bridge_msgs::RobotInfo::ROMEO;
+    std::cout << BOLDYELLOW << "Robot detected: "
+              << BOLDCYAN << "Romeo " << version
+              << RESETCOLOR << std::endl;
   }
 
   // Get the data from RobotConfig
