@@ -152,23 +152,23 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
       return cam_info_msg;
     }
     else if (resolution == AL::k720px2){
-      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTH720PX2();
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoStereo720PX2();
       return cam_info_msg;
     }
     else if (resolution == AL::kQ720px2){
-      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQ720PX2();
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoStereoQ720PX2();
       return cam_info_msg;
     }
     else if (resolution == AL::kQQ720px2){
-      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQ720PX2();
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoStereoQQ720PX2();
       return cam_info_msg;
     }
     else if (resolution == AL::kQQQ720px2){
-      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQ720PX2();
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoStereoQQQ720PX2();
       return cam_info_msg;
     }
     else if (resolution == AL::kQQQQ720px2){
-      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoDEPTHQQQQ720P();
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoStereoQQQQ720PX2();
       return cam_info_msg;
     }
   }

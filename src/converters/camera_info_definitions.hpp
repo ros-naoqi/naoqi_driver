@@ -223,6 +223,113 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQVGA()
 
   return cam_info_msg;
 }
+
+/**
+* STEREO CAMERA
+*/
+inline sensor_msgs::CameraInfo createCameraInfoStereo(
+        const int &width,
+        const int &height,
+        const float &reductionFactor) {
+
+  sensor_msgs::CameraInfo cam_info_msg;
+
+  cam_info_msg.header.frame_id = "CameraDepth_optical_frame";
+
+  const size_t nK = 9;
+  const size_t nD = 5;
+  const size_t nR = 9;
+  const size_t nP = 12;
+
+  float kTab[nK] = {703.102356f/reductionFactor, 0, 647.821594f/reductionFactor,
+                    0, 702.432312f/reductionFactor, 380.971680f/reductionFactor,
+                    0, 0, 1 };
+
+  float dTab[nD] = {-0.168594331,
+                    .00881872326,
+                    -0.000182721298,
+                    -0.0000145479062,
+                    0.0137237618};
+
+  float rTab[nR] = {0.999984741, 0.000130843779, 0.00552622462,
+                    -0.000111592424, 0.999993920, -0.00348380185,
+                    -0.00552664697, 0.00348313176, 0.999978662};
+
+  float pTab[nP] = {569.869568f/reductionFactor, 0, 644.672058f/reductionFactor, 0,
+                    0, 569.869568f/reductionFactor, 393.368958f/reductionFactor, 0,
+                    0, 0, 1, 0 };
+
+
+  cam_info_msg.width = width;
+  cam_info_msg.height = height;
+
+  for (int i = 0; i < nK; ++i)
+    cam_info_msg.K.at(i) = kTab[i];
+
+  cam_info_msg.distortion_model = "plumb_bob";
+  cam_info_msg.D.assign(dTab, dTab + nD);
+
+  for (int i = 0; i < nR; ++i)
+    cam_info_msg.R.at(i) = rTab[i];
+
+  for (int i = 0; i < nP; ++i)
+    cam_info_msg.P.at(i) = pTab[i];
+
+  return cam_info_msg;
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoDEPTH720P()
+{
+  return createCameraInfoStereo(1280, 720, 1.0);
+}
+
+
+inline sensor_msgs::CameraInfo createCameraInfoDEPTHQ720P()
+{
+  return createCameraInfoStereo(640, 360, 2.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQ720P()
+{
+  return createCameraInfoStereo(320, 180, 4.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQQ720P()
+{
+  return createCameraInfoStereo(160, 90, 8.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoDEPTHQQQQ720P()
+{
+  return createCameraInfoStereo(80, 45, 16.0);
+}
+
+// Complete methods for stereo image parameteres
+inline sensor_msgs::CameraInfo createCameraInfoStereo720PX2()
+{
+  return createCameraInfoStereo(2560, 720, 1.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoStereoQ720PX2()
+{
+    return createCameraInfoStereo(1280, 360, 2.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoStereoQQ720PX2()
+{
+    return createCameraInfoStereo(640, 180, 4.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoStereoQQQ720PX2()
+{
+    return createCameraInfoStereo(320, 90, 8.0);
+}
+
+inline sensor_msgs::CameraInfo createCameraInfoStereoQQQQ720PX2()
+{
+    return createCameraInfoStereo(160, 45, 16.0);
+}
+
 } // camera_info_definitions
 } //publisher
 } //naoqi
