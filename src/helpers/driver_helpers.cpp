@@ -223,6 +223,32 @@ std::string& getLanguage( const qi::SessionPtr& session )
   return language;
 }
 
+/**
+ * Function that detects if the robot is using stereo cameras to compute depth
+ */
+bool isDepthStereo(const qi::SessionPtr &session) {
+ std::vector<std::string> sensor_names;
+
+ try {
+   qi::AnyObject p_motion = session->service("ALMotion");
+   sensor_names = p_motion.call<std::vector<std::string>>("getSensorNames");
+
+   if (std::find(sensor_names.begin(),
+                 sensor_names.end(),
+                 "CameraStereo") != sensor_names.end()) {
+     return true;
+   }
+
+   else {
+     return false;
+   }
+
+ } catch (const std::exception &e) {
+   std::cerr << e.what() << std::endl;
+   return false;
+ }
+}
+
 } // driver
 } // helpers
 } // naoqi
