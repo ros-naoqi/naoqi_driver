@@ -241,7 +241,7 @@ bool isDepthStereo(const qi::SessionPtr &session) {
 
  try {
    qi::AnyObject p_motion = session->service("ALMotion");
-   sensor_names = p_motion.call<std::vector<std::string>>("getSensorNames");
+   sensor_names = p_motion.call<std::vector<std::string> >("getSensorNames");
 
    if (std::find(sensor_names.begin(),
                  sensor_names.end(),
