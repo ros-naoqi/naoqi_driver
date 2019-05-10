@@ -124,7 +124,8 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   log_enabled_(false),
   keep_looping(true),
   recorder_(boost::make_shared<recorder::GlobalRecorder>(prefix)),
-  buffer_duration_(helpers::recorder::bufferDefaultDuration)
+  buffer_duration_(helpers::recorder::bufferDefaultDuration),
+  has_stereo(helpers::driver::isDepthStereo(session))
 {
   if(prefix == ""){
     std::cout << "Error driver prefix must not be empty" << std::endl;
@@ -568,10 +569,17 @@ void Driver::registerDefaultConverter()
   size_t camera_bottom_fps            = boot_config_.get( "converters.bottom_camera.fps", 10);
   size_t camera_bottom_recorder_fps   = boot_config_.get( "converters.bottom_camera.recorder_fps", 5);
 
-  bool camera_depth_enabled           = boot_config_.get( "converters.depth_camera.enabled", true);
-  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
-  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
-  size_t camera_depth_recorder_fps    = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
+  size_t camera_depth_resolution;
+  bool camera_depth_enabled             = boot_config_.get( "converters.depth_camera.enabled", true);
+  size_t camera_depth_xtion_resolution  = boot_config_.get( "converters.depth_camera.xtion_resolution", 1); // QVGA
+  size_t camera_depth_stereo_resolution = boot_config_.get( "converters.depth_camera.stereo_resolution", 9); // Q720p
+  size_t camera_depth_fps               = boot_config_.get( "converters.depth_camera.fps", 10);
+  size_t camera_depth_recorder_fps      = boot_config_.get( "converters.depth_camera.recorder_fps", 5);
+
+  bool camera_stereo_enabled          = boot_config_.get( "converters.stereo_camera.enabled", true);
+  size_t camera_stereo_resolution     = boot_config_.get( "converters.stereo_camera.resolution", 15); // QQ720px2
+  size_t camera_stereo_fps            = boot_config_.get( "converters.stereo_camera.fps", 10);
+  size_t camera_stereo_recorder_fps    = boot_config_.get( "converters.stereo_camera.recorder_fps", 5);
 
   bool camera_ir_enabled              = boot_config_.get( "converters.ir_camera.enabled", true);
   size_t camera_ir_resolution         = boot_config_.get( "converters.ir_camera.resolution", 1); // QVGA
@@ -593,6 +601,18 @@ void Driver::registerDefaultConverter()
   bool bumper_enabled                 = boot_config_.get( "converters.bumper.enabled", true);
   bool hand_enabled                   = boot_config_.get( "converters.touch_hand.enabled", true);
   bool head_enabled                   = boot_config_.get( "converters.touch_head.enabled", true);
+
+  // Load the correct variables depending on the type of the depth camera
+  // (XTION or stereo). IR disabled if the robot uses a stereo camera to
+  // compute the depth
+  if (this->has_stereo) {
+      camera_ir_enabled = false;
+      camera_depth_resolution = camera_depth_stereo_resolution;
+  }
+  else {
+      camera_depth_resolution = camera_depth_xtion_resolution;
+  }
+
   /*
    * The info converter will be called once after it was added to the priority queue. Once it is its turn to be called, its
    * callAll method will be triggered (because InfoPublisher is considered to always have subscribers, isSubscribed always
@@ -694,19 +714,46 @@ void Driver::registerDefaultConverter()
     {
       boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
       boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", camera_depth_recorder_fps );
-      boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", camera_depth_fps, sessionPtr_, AL::kDepthCamera, camera_depth_resolution );
+      boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>(
+        "depth_camera",
+        camera_depth_fps,
+        sessionPtr_,
+        AL::kDepthCamera,
+        camera_depth_resolution,
+        this->has_stereo);
+
       dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
       dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
       dcc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, dcr, _1, _2) );
       registerConverter( dcc, dcp, dcr );
     }
 
+    /** Stereo Camera */
+    if (this->has_stereo && camera_stereo_enabled)
+    {
+      boost::shared_ptr<publisher::CameraPublisher> scp = boost::make_shared<publisher::CameraPublisher>( "camera/stereo/image_raw", AL::kInfraredOrStereoCamera );
+      boost::shared_ptr<recorder::CameraRecorder> scr = boost::make_shared<recorder::CameraRecorder>( "camera/stereo", camera_stereo_recorder_fps );
+
+      boost::shared_ptr<converter::CameraConverter> scc = boost::make_shared<converter::CameraConverter>(
+        "stereo_camera",
+        camera_stereo_fps,
+        sessionPtr_,
+        AL::kInfraredOrStereoCamera,
+        camera_stereo_resolution,
+        this->has_stereo);
+
+      scc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, scp, _1, _2) );
+      scc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, scr, _1, _2) );
+      scc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, scr, _1, _2) );
+      registerConverter( scc, scp, scr );
+    }
+
     /** Infrared Camera */
     if ( camera_ir_enabled )
     {
-      boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
+      boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredOrStereoCamera );
       boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", camera_ir_recorder_fps );
-      boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", camera_ir_fps, sessionPtr_, AL::kInfraredCamera, camera_ir_resolution);
+      boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", camera_ir_fps, sessionPtr_, AL::kInfraredOrStereoCamera, camera_ir_resolution);
       icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
       icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
       icc->registerCallback( message_actions::LOG, boost::bind(&recorder::CameraRecorder::bufferize, icr, _1, _2) );

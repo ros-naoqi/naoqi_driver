@@ -36,7 +36,7 @@ namespace AL
   const int kTopCamera = 0;
   const int kBottomCamera = 1;
   const int kDepthCamera = 2;
-  const int kInfraredCamera = 3;
+  const int kInfraredOrStereoCamera = 3;
 
   const float kApertureH_OV7670  = 47.8f;
   const float kApertureV_OV7670  = 36.8f;
@@ -51,6 +51,15 @@ namespace AL
   const int k16VGA = 4;  //2560*1920
   const int k1920p = k16VGA;  //2560*1920
   const int k720p = 5;  //1280*720
+  const int kQ720p = 9; //640*360
+  const int kQQ720p = 10; //320*180
+  const int kQQQ720p = 11; //160*90
+  const int kQQQQ720p = 12; //80*45
+  const int k720px2 = 13;  //2560*720
+  const int kQ720px2 = 14; //1280*360
+  const int kQQ720px2 = 15; //640*180
+  const int kQQQ720px2 = 16; //320*90
+  const int kQQQQ720px2 = 17; //160*45
   const int k1080p = 6;  //1920*1080
   const int kQQQVGA = 7;  // 80*60
   const int kQQQQVGA = 8;  // 40*30
