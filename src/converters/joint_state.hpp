@@ -71,6 +71,7 @@ private:
 
   /** Motion Proxy **/
   qi::AnyObject p_motion_;
+  qi::AnyObject p_memory_;
 
   /** Registered Callbacks **/
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
