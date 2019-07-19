@@ -28,8 +28,10 @@
  * ROS includes
  */
 #include <ros/ros.h>
+#include <qi/anyvalue.hpp>
 #include <geometry_msgs/PoseStamped.h>
 #include <tf2_ros/buffer.h>
+#include <naoqi_bridge_msgs/PoseStampedWithSpeed.h>
 
 namespace naoqi
 {
@@ -43,7 +45,7 @@ public:
   ~MovetoSubscriber(){}
 
   void reset( ros::NodeHandle& nh );
-  void callback( const geometry_msgs::PoseStampedConstPtr& pose_msg );
+  void callback( const naoqi_bridge_msgs::PoseStampedWithSpeedConstPtr &msg );
 
 private:
   qi::AnyObject p_motion_;
