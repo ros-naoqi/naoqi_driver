@@ -128,8 +128,8 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
 
     } catch (qi::FutureUserException e) {
         // Sets the velocity and torques field to nan if no info is provided
-        al_joint_velocities.push_back(std::nan(".NAN"));
-        al_joint_torques.push_back(std::nan(".NAN"));
+        al_joint_velocities.push_back(std::numeric_limits<double>::quiet_NaN());
+        al_joint_torques.push_back(std::numeric_limits<double>::quiet_NaN());
     }
   }
 
