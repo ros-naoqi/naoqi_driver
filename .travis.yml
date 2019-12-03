@@ -39,6 +39,7 @@ install:
 script:
   - sudo docker run -t -d --name=$DOCKER_VERSION -v $CI_SOURCE_PATH/../:/catkin_ws/src/ osrf/ros:$DOCKER_VERSION bash
   - sudo docker exec -i $DOCKER_VERSION apt-get update
+  - sudo docker exec -i $DOCKER_VERSION apt-get upgrade -y
   - sudo docker exec -i $DOCKER_VERSION rosdep update --include-eol-distros
   - sudo docker exec -i $DOCKER_VERSION rosdep install -i -y --from-paths /catkin_ws/src/naoqi_driver
   - sudo docker exec -i $DOCKER_VERSION bash -c 'source /opt/ros/*/setup.bash; catkin_make --directory catkin_ws/'
