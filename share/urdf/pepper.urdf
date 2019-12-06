@@ -1461,4 +1461,11 @@
     <axis xyz="1.0 0 0"/>
     <limit effort="3.25" lower="0" upper="0" velocity="6.28319"/>
   </joint>
+  <link name="ExternalLaser_frame"/>
+  <joint name="LaserSensor/External_sensor_fixedjoint" type="fixed">
+    <parent link="Tibia"/>
+    <child link="ExternalLaser_frame"/>
+    <origin rpy="0 0 0" xyz="0.1579 0 -0.1073"/>
+    <axis xyz="0 0 0"/>
+  </joint>
 </robot>

@@ -51,9 +51,12 @@ public:
 private:
 
   qi::AnyObject p_memory_;
+  qi::AnyObject p_laser_;
 
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
   sensor_msgs::LaserScan msg_;
+
+  bool has_ext_laser;
 }; // class
 
 } //publisher
