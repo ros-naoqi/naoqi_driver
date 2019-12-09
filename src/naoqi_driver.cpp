@@ -591,6 +591,8 @@ void Driver::registerDefaultConverter()
 
   bool laser_enabled                  = boot_config_.get( "converters.laser.enabled", true);
   size_t laser_frequency              = boot_config_.get( "converters.laser.frequency", 10);
+  float laser_range_min              = boot_config_.get<float>("converters.laser.range_min", 0.1);
+  float laser_range_max              = boot_config_.get<float>("converters.laser.range_max", 3.0);
 
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
@@ -782,6 +784,8 @@ void Driver::registerDefaultConverter()
       boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", laser_frequency, sessionPtr_ );
+
+      lc->setLaserRanges(laser_range_min, laser_range_max);
       lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
       lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
       lc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::bufferize, lr, _1) );
