@@ -46,19 +46,9 @@ Travis - Continuous Integration
     :alt: Kinetic with Ubuntu Xenial
     :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
 
-.. |lunar| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/3
-    :alt: Lunar with Ubuntu Xenial
-    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
-
-.. |lunar_stretch| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/4
-    :alt: Lunar with Debian Stretch
-    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
-
 +-------------+---------------+---------------+-----------------+
 | ROS Release | Ubuntu Trusty | Ubuntu Xenial | Debian Stretch  |
 +=============+===============+===============+=================+
-| Lunar       | N/A           | |lunar|       | |lunar_stretch| |
-+-------------+---------------+---------------+-----------------+
 | Kinetic     | N/A           | |kinetic|     | N/A             |
 +-------------+---------------+---------------+-----------------+
 | Indigo      | |indigo|      | N/A           | N/A             |
