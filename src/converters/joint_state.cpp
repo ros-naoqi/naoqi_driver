@@ -70,7 +70,7 @@ void JointStateConverter::reset()
 
   // set mimic joint list
   mimic_.clear();
-  for(std::map< std::string, boost::shared_ptr< urdf::Joint > >::iterator i = model.joints_.begin(); i != model.joints_.end(); i++){
+  for(std::map< std::string, urdf::JointSharedPtr >::iterator i = model.joints_.begin(); i != model.joints_.end(); i++){
     if(i->second->mimic){
       mimic_.insert(make_pair(i->first, i->second->mimic));
     }

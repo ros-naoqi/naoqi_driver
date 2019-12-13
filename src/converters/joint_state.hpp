@@ -45,7 +45,7 @@ class JointStateConverter : public BaseConverter<JointStateConverter>
 
   typedef boost::shared_ptr<tf2_ros::Buffer> BufferPtr;
 
-  typedef std::map<std::string, boost::shared_ptr<urdf::JointMimic> > MimicMap;
+  typedef std::map<std::string, urdf::JointMimicSharedPtr> MimicMap;
 
 public:
   JointStateConverter( const std::string& name, const float& frequency, const BufferPtr& tf2_buffer, const qi::SessionPtr& session );
