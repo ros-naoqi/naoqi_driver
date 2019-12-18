@@ -1,6 +1,11 @@
 # This config uses industrial_ci (https://github.com/ros-industrial/industrial_ci.git).
 # For troubleshooting, see readme (https://github.com/ros-industrial/industrial_ci/blob/master/README.rst)
 
+notifications:
+  email:
+    if: branch = master
+    on_success: change
+    on_failure: always
 services:
   - docker
 
