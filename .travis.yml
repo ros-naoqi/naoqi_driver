@@ -1,47 +1,36 @@
-branches:
-    only:
-      - master
-
-notifications:
-    on_success: never
-    on_failure: never
-
-os :
-  - linux
-
-dist:
-  - trusty
-
-sudo:
-  - required
-
-
-language:
-  - generic
+# This config uses industrial_ci (https://github.com/ros-industrial/industrial_ci.git).
+# For troubleshooting, see readme (https://github.com/ros-industrial/industrial_ci/blob/master/README.rst)
 
 services:
   - docker
 
-matrix:
-  include:
-    - env: DOCKER_VERSION=indigo-desktop-trusty
-    - env: DOCKER_VERSION=kinetic-desktop-xenial
+# include the following block if the C/C++ build artifacts should get cached by Travis,
+# CCACHE_DIR needs to get set as well to actually fill the cache
+cache:
+  directories:
+    - $HOME/.ccache
 
+git:
+  quiet: true # optional, silences the cloning of the target repository
+
+# configure the build environment(s)
+# https://github.com/ros-industrial/industrial_ci/blob/master/doc/index.rst#variables-you-can-configure
 env:
-  global:
-    - CI_SOURCE_PATH=$(pwd)
+  global: # global settings for all jobs
+    - ROS_REPO=ros
+    - CCACHE_DIR=$HOME/.ccache # enables C/C++ caching in industrial_ci
+  matrix: # each line is a job
+    - ROS_DISTRO="indigo"
+    - ROS_DISTRO="kinetic"
+    - ROS_DISTRO="melodic"
 
+# allow failures, e.g. for unsupported distros
+matrix:
+  allow_failures:
+    - env: ROS_DISTRO="melodic"
+
+# clone and run industrial_ci
 install:
-  - sudo docker pull osrf/ros:$DOCKER_VERSION
-
+  - git clone --quiet --depth 1 https://github.com/ros-industrial/industrial_ci.git .industrial_ci -b master
 script:
-  - sudo docker run -t -d --name=$DOCKER_VERSION -v $CI_SOURCE_PATH/../:/catkin_ws/src/ osrf/ros:$DOCKER_VERSION bash
-  - sudo docker exec -i $DOCKER_VERSION apt-get update
-  - sudo docker exec -i $DOCKER_VERSION apt-get upgrade -y
-  - sudo docker exec -i $DOCKER_VERSION rosdep update --include-eol-distros
-  - sudo docker exec -i $DOCKER_VERSION rosdep install -i -y --from-paths /catkin_ws/src/naoqi_driver
-  - sudo docker exec -i $DOCKER_VERSION bash -c 'source /opt/ros/*/setup.bash; catkin_make --directory catkin_ws/'
-  - sudo docker exec -i $DOCKER_VERSION bash -c 'source /opt/ros/*/setup.bash; catkin_make run_tests --directory /catkin_ws/'
-
-after_script:
-  - sudo docker stop $DOCKER_VERSION
+  - .industrial_ci/travis.sh
