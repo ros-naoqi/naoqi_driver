@@ -46,9 +46,15 @@ Travis - Continuous Integration
     :alt: Kinetic with Ubuntu Xenial
     :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
 
+.. |melodic| image:: https://travis-matrix-badges.herokuapp.com/repos/ros-naoqi/naoqi_driver/branches/master/3
+    :alt: Melodic with Ubuntu Bionic
+    :target: https://travis-ci.org/ros-naoqi/naoqi_driver/
+
 +-------------+---------------+---------------+-----------------+
-| ROS Release | Ubuntu Trusty | Ubuntu Xenial | Debian Stretch  |
+| ROS Release | Ubuntu Trusty | Ubuntu Xenial | Ubuntu Bionic   |
 +=============+===============+===============+=================+
+| Melodic     | N/A           | N/A           | |melodic|       |
++-------------+---------------+---------------+-----------------+
 | Kinetic     | N/A           | |kinetic|     | N/A             |
 +-------------+---------------+---------------+-----------------+
 | Indigo      | |indigo|      | N/A           | N/A             |
