@@ -2,8 +2,8 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.11 (2020-01-08)
+-------------------
 * Merge pull request `#129 <https://github.com/ros-naoqi/naoqi_driver/issues/129>`_ from Pandhariix/melodic_compatibility
   Melodic compatibility
 * Merge pull request `#126 <https://github.com/ros-naoqi/naoqi_driver/issues/126>`_ from Pandhariix/lasers_range
