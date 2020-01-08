@@ -33,8 +33,7 @@ env:
 # allow failures, e.g. for unsupported distros
 matrix:
   allow_failures:
-    - env: ROS_DISTRO="melodic" OS_NAME=ubuntu OS_CODE_NAME=bionic
-    - env: ROS_DISTRO="melodic" OS_NAME=debian OS_CODE_NAME=stretch
+    - env: ROS_DISTRO="indigo"
 
 # clone and run industrial_ci
 install:
