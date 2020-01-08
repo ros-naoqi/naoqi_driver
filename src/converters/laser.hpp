@@ -48,9 +48,13 @@ public:
 
   void reset( );
 
+  void setLaserRanges(const float &range_min, const float &range_max);
+
 private:
 
   qi::AnyObject p_memory_;
+  float range_min_;
+  float range_max_;
 
   std::map<message_actions::MessageAction, Callback_t> callbacks_;
   sensor_msgs::LaserScan msg_;

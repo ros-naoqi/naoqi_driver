@@ -216,9 +216,24 @@ void LaserConverter::reset( )
   msg_.angle_min = -2.0944;   // -120
   msg_.angle_max = 2.0944;    // +120
   msg_.angle_increment = (2*2.0944) / (15+15+15+8+8); // 240 deg FoV / 61 points (blind zones inc)
-  msg_.range_min = 0.1; // in m
-  msg_.range_max = 1.5; // in m
+  msg_.range_min = this->range_min_; // in m
+  msg_.range_max = this->range_max_; // in m
   msg_.ranges = std::vector<float>(61, -1.0f);
+}
+
+void LaserConverter::setLaserRanges(
+    const float &range_min,
+    const float &range_max) {
+  
+  if (range_min > 0)
+    this->range_min_ = range_min;
+  else
+    this->range_min_ = 0.1;
+  
+  if (range_max > this->range_min_)
+    this->range_max_ = range_max;
+  else
+    this->range_max_ = 3.0;
 }
 
 } //converter

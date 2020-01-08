@@ -71,7 +71,9 @@
     "laser":
     {
       "enabled"       : true,
-      "frequency"     : 10
+      "frequency"     : 10,
+      "range_min"     : 0.1,
+      "range_max"     : 3.0
     },
     "sonar":
     {
