@@ -22,7 +22,7 @@ git:
 # https://github.com/ros-industrial/industrial_ci/blob/master/doc/index.rst#variables-you-can-configure
 env:
   global: # global settings for all jobs
-    - ROS_REPO=ros
+    - ROS_REPO=testing
     - CCACHE_DIR=$HOME/.ccache # enables C/C++ caching in industrial_ci
   matrix: # each line is a job
     - ROS_DISTRO="indigo"
@@ -33,8 +33,7 @@ env:
 # allow failures, e.g. for unsupported distros
 matrix:
   allow_failures:
-    - env: ROS_DISTRO="melodic" OS_NAME=ubuntu OS_CODE_NAME=bionic
-    - env: ROS_DISTRO="melodic" OS_NAME=debian OS_CODE_NAME=stretch
+    - env: ROS_DISTRO="indigo"
 
 # clone and run industrial_ci
 install:
