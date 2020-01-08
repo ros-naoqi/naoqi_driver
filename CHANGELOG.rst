@@ -1,6 +1,66 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package naoqi_rosbridge
+Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Merge pull request `#129 <https://github.com/ros-naoqi/naoqi_driver/issues/129>`_ from Pandhariix/melodic_compatibility
+  Melodic compatibility
+* Merge pull request `#126 <https://github.com/ros-naoqi/naoqi_driver/issues/126>`_ from Pandhariix/lasers_range
+  Parametrizable range for Pepper's lasers
+* Merge pull request `#130 <https://github.com/ros-naoqi/naoqi_driver/issues/130>`_ from Pandhariix/melodic_ci
+  Adapt the README to the new CI
+* Update CI, add melodic-stretch
+* Adapt the README to the new CI
+* Merge pull request `#128 <https://github.com/ros-naoqi/naoqi_driver/issues/128>`_ from ros-naoqi/use_ici
+  use industrial_ci instead of custom CI
+* send emails only for builds on master branch
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* use industrial_ci instead of custom CI
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* Remove -Werror=deprecated-declarations to compile for melodic
+* Replace the joint and joint mimics boost shared pointers by urdf::JointMimicSharedPtr & urdf::JointSharedPtr
+* Include iostream to avoid cout not a member of std
+* Merge pull request `#127 <https://github.com/ros-naoqi/naoqi_driver/issues/127>`_ from ros-naoqi/remove_eol_lunar
+  remove EOL ROS Lunar from travis config
+* remove lunar from readme as well
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* remove EOL ROS Lunar from travis config
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* Parametrizable range for Pepper's lasers. Default range, 0.1 to 3.0 meters
+* Merge pull request `#125 <https://github.com/ros-naoqi/naoqi_driver/issues/125>`_ from Pandhariix/indigo_ci
+  Use std::numeric_limits<double>::quiet_NaN for indigo compatibility
+* Merge pull request `#124 <https://github.com/ros-naoqi/naoqi_driver/issues/124>`_ from ros-naoqi/fix_orocos
+  upgrade to make sure all package versions are consistent
+* Replace std::nan to std::numeric_limits<double>::quiet_NaN for the indigo compatibility
+* upgrade to make sure all package versions are comsistent
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* Merge pull request `#123 <https://github.com/ros-naoqi/naoqi_driver/issues/123>`_ from ros-naoqi/rosdep_eol
+  pass rosdep eol flag
+* pass rosdep eol flag
+  Signed-off-by: Mikael Arguedas <mikael.arguedas@gmail.com>
+* Merge pull request `#113 <https://github.com/ros-naoqi/naoqi_driver/issues/113>`_ from Pandhariix/master
+  Add velocities and torques to the joint states
+* Changing the maintainer
+* Add velocities and torques to the joint states
+* Merge pull request `#112 <https://github.com/ros-naoqi/naoqi_driver/issues/112>`_ from Pandhariix/hotfix/indigo_compilation
+  Fix compilation error for indigo
+* Fix compilation error for indigo
+* Merge pull request `#111 <https://github.com/ros-naoqi/naoqi_driver/issues/111>`_ from Pandhariix/feature/stereo
+  Feature/stereo
+* Print the detected version of the robot
+* Update boot_config to take into account the stereo
+* Update naoqi_driver to take into account robots with stereo
+* Add methods handling the camera parameters for the stereo cameras and call them in the getCameraInfo method
+* Update the CameraConverter class to take the stereo into account
+* Add the isDepthStereo method to the driver helpers
+* Add the RGB Stereo and Depth Stereo parameters to the vision definitions
+* Merge pull request `#108 <https://github.com/ros-naoqi/naoqi_driver/issues/108>`_ from kochigami/add-initializing-message
+  * add naoqi_driver initialized message
+  * modify the message of service and subscriber registering process
+* modify message of service and subscriber registering process like others
+* add naoqi_driver initialized message
+* Contributors: Kanae Kochigami, Maxime Busy, Mikael Arguedas, Natalia Lyubova, Pandhariix, Séverin Lemaignan
 
 0.5.10 (2018-02-16)
 -------------------
