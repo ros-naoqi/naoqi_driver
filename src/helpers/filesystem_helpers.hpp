@@ -19,6 +19,7 @@
 #ifndef FILESYSTEM_HELPERS_HPP
 #define FILESYSTEM_HELPERS_HPP
 
+#include <iostream>
 #include <qi/session.hpp>
 
 #include <boost/filesystem.hpp>
