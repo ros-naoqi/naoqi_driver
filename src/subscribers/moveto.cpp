@@ -48,40 +48,84 @@ void MovetoSubscriber::reset( ros::NodeHandle& nh )
 
 void MovetoSubscriber::callback( const geometry_msgs::PoseStampedConstPtr& pose_msg )
 {
-  if ( pose_msg->header.frame_id == "base_footprint" )
-  {
-    double yaw = helpers::transform::getYaw(pose_msg->pose);
-
-    std::cout << "going to move x: " <<  pose_msg->pose.position.x << " y: " << pose_msg->pose.position.y << " z: " << pose_msg->pose.position.z << " yaw: " << yaw << std::endl;
-    p_motion_.async<void>("moveTo", pose_msg->pose.position.x, pose_msg->pose.position.y, yaw);
-  }
-  else{
+  if (pose_msg->header.frame_id == "odom") {
     geometry_msgs::PoseStamped pose_msg_bf;
-    //geometry_msgs::TransformStamped tf_trans;
-    //tf_listenerPtr_->waitForTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(5) );
-    bool canTransform = tf2_buffer_->canTransform("base_footprint", pose_msg->header.frame_id, ros::Time(0), ros::Duration(2) );
+
+    bool canTransform = tf2_buffer_->canTransform(
+      "base_footprint",
+      "odom",
+      ros::Time(0),
+      ros::Duration(2));
+
     if (!canTransform) {
-      std::cout << "Cannot transform from " << pose_msg->header.frame_id << " to base_footprint" << std::endl;
+      std::cout << "Cannot transform from "
+                << "odom"
+                << " to base_footprint"
+                << std::endl;
       return;
     }
-    try
-    {
-      //tf_listenerPtr_->lookupTransform( "/base_footprint", pose_msg->header.frame_id, ros::Time(0), tf_trans);
-      //std::cout << "got a transform " << tf_trans.getOrigin().x() << std::endl;
-      tf2_buffer_->transform( *pose_msg, pose_msg_bf, "base_footprint", ros::Time(0), pose_msg->header.frame_id );
+
+    try {
+      tf2_buffer_->transform(
+        *pose_msg,
+        pose_msg_bf,
+        "base_footprint",
+        ros::Time(0),
+        "odom");
+
       double yaw = helpers::transform::getYaw(pose_msg_bf.pose);
-      std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x << " y: " << pose_msg_bf.pose.position.y << " z: " << pose_msg_bf.pose.position.z << " yaw: " << yaw << std::endl;
-      p_motion_.async<void>("moveTo", pose_msg_bf.pose.position.x, pose_msg_bf.pose.position.y, yaw );
-    } catch( const tf2::LookupException& e)
-    {
+
+      std::cout << "odom to move x: " <<  pose_msg_bf.pose.position.x
+                << " y: " << pose_msg_bf.pose.position.y
+                << " yaw: " << yaw << std::endl;
+
+      if (std::isnan(yaw)) {
+        yaw = 0.0;
+        std::cout << "Yaw is nan, changed to 0.0" << std::endl;
+      }
+
+      p_motion_.async<void>(
+        "moveTo",
+        pose_msg_bf.pose.position.x,
+        pose_msg_bf.pose.position.y,
+        yaw);
+
+    } catch( const tf2::LookupException& e) {
       std::cout << e.what() << std::endl;
-      std::cout << "moveto position in frame_id " << pose_msg->header.frame_id << "is not supported in any other base frame than basefootprint" << std::endl;
-    }
-    catch( const tf2::ExtrapolationException& e)
-    {
+      std::cout << "moveto position in frame_id "
+                << pose_msg->header.frame_id
+                << "is not supported in any other base frame than "
+                   "basefootprint"
+                << std::endl;
+    } catch( const tf2::ExtrapolationException& e) {
       std::cout << "received an error on the time lookup" << std::endl;
     }
   }
+  else if (pose_msg->header.frame_id == "base_footprint"){
+    double yaw = helpers::transform::getYaw(pose_msg->pose);
+    std::cout << "going to move x: "
+              <<  pose_msg->pose.position.x
+              << " y: " << pose_msg->pose.position.y
+              << " yaw: " << yaw << std::endl;
+
+    if (std::isnan(yaw)) {
+      yaw = 0.0;
+      std::cout << "Yaw is nan, changed to 0.0" << std::endl;
+    }
+
+    p_motion_.async<void>(
+      "moveTo",
+      pose_msg->pose.position.x,
+      pose_msg->pose.position.y,
+      yaw);
+  }
+
+  else
+    std::cout << "Cannot reach position expressed in the "
+              << pose_msg->header.frame_id
+              << " frame, enter a valid frame id in the pose's header"
+                 " (base_footprint or odom)"
+              << std::endl;
 }
 
 } //publisher
