@@ -21,7 +21,7 @@
   <build_depend version_gte="0.0.4">naoqi_bridge_msgs</build_depend>
   <build_depend>naoqi_libqi</build_depend>
   <build_depend>naoqi_libqicore</build_depend>
-  <build_depend>orocos_kdl</build_depend>
+  <build_depend>liborocos-kdl</build_depend>
   <build_depend>robot_state_publisher</build_depend>
   <build_depend>rosbag_storage</build_depend>
   <build_depend>rosconsole</build_depend>
@@ -40,7 +40,7 @@
   <run_depend version_gte="0.0.4">naoqi_bridge_msgs</run_depend>
   <run_depend>naoqi_libqi</run_depend>
   <run_depend>naoqi_libqicore</run_depend>
-  <run_depend>orocos_kdl</run_depend>
+  <run_depend>liborocos-kdl</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>rosbag_storage</run_depend>
   <run_depend>rosconsole</run_depend>
