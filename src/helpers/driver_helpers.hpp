@@ -44,6 +44,8 @@ std::string& getLanguage( const qi::SessionPtr& session );
 
 bool isDepthStereo(const qi::SessionPtr &session);
 
+bool isRealRobot(const qi::SessionPtr &session);
+
 } // driver
 } // helpers
 } // naoqi
