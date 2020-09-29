@@ -41,8 +41,20 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   // Get the robot type
   std::cout << "Receiving information about robot model" << std::endl;
   qi::AnyObject p_memory = session->service("ALMemory");
-  std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
-  std::string version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
+  std::string robot; 
+  try {
+    robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
+  }
+  catch(const qi::FutureUserException& e) {
+    robot = p_memory.call<std::string>("getData", "Dialog/RobotModel" );
+  }
+  std::string version;
+  try {
+    version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
+  }
+  catch(const qi::FutureUserException& e) {
+    version = "unknown";
+  }
   std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
 
   if (std::string(robot) == "nao")
@@ -257,6 +269,17 @@ bool isDepthStereo(const qi::SessionPtr &session) {
    std::cerr << e.what() << std::endl;
    return false;
  }
+}
+
+bool isRealRobot(const qi::SessionPtr &session) {
+  qi::AnyObject p_memory = session->service("ALMemory");
+  try {
+    p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
+    return true;
+  }
+  catch(const qi::FutureUserException& e) {
+    return false;
+  }
 }
 
 } // driver

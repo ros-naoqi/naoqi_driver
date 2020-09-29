@@ -165,6 +165,9 @@ void Driver::loadBootConfig()
   if (!file_path.empty())
   {
     boost::property_tree::read_json( file_path, boot_config_ );
+    if(!helpers::driver::isRealRobot(sessionPtr_)) {
+      boot_config_.put("converters.audio.enabled", false);
+    }
   }
 }
 
