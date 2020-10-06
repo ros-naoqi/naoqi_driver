@@ -25,8 +25,16 @@
 #include "naoqi_env.hpp"
 #include "helpers/driver_helpers.hpp"
 
+#if LIBQI_VERSION >= 29
+#include "driver_authenticator.hpp"
+#endif
+
+
 int main(int argc, char** argv)
 {
+  const std::string no_password = "no_password";
+  std::string protocol = "tcp://";
+
   /* launch naoqi service */
   qi::ApplicationSession app(argc, argv);
   /* In case you launch via roslaunch/rosrun we remove the ros args */
@@ -37,6 +45,10 @@ int main(int argc, char** argv)
   po::options_description desc("Options");
   desc.add_options()
     ("help,h", "print help message")
+    ("nao_ip", po::value<std::string>(), "the ip of the robot")
+    ("nao_port", po::value<int>(), "the ip of the robot")
+    ("user,u", po::value<std::string>(), "the user profile on the robot, nao by default")
+    ("password,p", po::value<std::string>(), "the password of the robot")
     ("roscore_ip,r", po::value<std::string>(), "set the ip of the roscore to use")
     ("network_interface,i", po::value<std::string>()->default_value("eth0"),  "set the network interface over which to connect")
     ("namespace,n", po::value<std::string>()->default_value("naoqi_driver_node"), "set an explicit namespace in case ROS namespace variables cannot be used");
@@ -63,15 +75,30 @@ int main(int argc, char** argv)
     exit(0);
   }
 
-
-  // everything's correctly parsed - let's start the app!
-#if LIBQI_VERSION>24
-  app.startSession();
+  if (vm["password"].as<std::string>().compare(no_password) != 0) {
+#if LIBQI_VERSION>=29
+    protocol = "tcps://";
+    naoqi::DriverAuthenticatorFactory *factory = new naoqi::DriverAuthenticatorFactory;
+    factory->user = vm["user"].as<std::string>();
+    factory->pass = vm["password"].as<std::string>();
+    app.session()->setClientAuthenticatorFactory(qi::ClientAuthenticatorFactoryPtr(factory));
 #else
-  app.start();
+    std::cout << BOLDRED 
+              << "No need to set a password" 
+              << RESETCOLOR
+              << std::endl;
 #endif
-  boost::shared_ptr<naoqi::Driver> bs = boost::make_shared<naoqi::Driver>(app.session(), vm["namespace"].as<std::string>());
+  }
 
+  qi::Url url(protocol + vm["nao_ip"].as<std::string>() + ":" + std::to_string(vm["nao_port"].as<int>()));
+  qi::Future<void> connection = app.session()->connect(url);
+
+  if (connection.hasError()) {
+    std::cout << BOLDRED << connection.error() <<  RESETCOLOR << std::endl;
+    return 0;
+  }
+
+  boost::shared_ptr<naoqi::Driver> bs = boost::make_shared<naoqi::Driver>(app.session(), vm["namespace"].as<std::string>());
   app.session()->registerService("ROS-Driver", bs);
 
   // set ros paramters directly upfront if available
