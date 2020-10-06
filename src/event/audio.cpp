@@ -32,21 +32,33 @@
 namespace naoqi
 {
 
-AudioEventRegister::AudioEventRegister()
-{
-}
-
 AudioEventRegister::AudioEventRegister( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : serviceId(0),
     p_audio_( session->service("ALAudioDevice")),
     p_robot_model_(session->service("ALRobotModel")),
     session_(session),
+    naoqi_version_(helpers::driver::getNaoqiVersion(session)),
     isStarted_(false),
     isPublishing_(false),
     isRecording_(false),
     isDumping_(false)
 {
-  int micConfig = p_robot_model_.call<int>("_getMicrophoneConfig");
+  // _getMicrophoneConfig is used for NAOqi < 2.9, _getConfigMap for NAOqi > 2.9
+  int micConfig;
+
+  if (helpers::driver::isNaoqiVersionLesser(naoqi_version_, 2, 9))
+  {
+    micConfig = p_robot_model_.call<int>("_getMicrophoneConfig");
+  }
+  else
+  {
+    std::map<std::string, std::string> config_map =\
+      p_robot_model_.call<std::map<std::string, std::string> >("_getConfigMap");
+
+    micConfig = std::atoi(
+      config_map["RobotConfig/Head/Device/Micro/Version"].c_str());
+  }
+
   if(micConfig){
     channelMap.push_back(3);
     channelMap.push_back(5);
