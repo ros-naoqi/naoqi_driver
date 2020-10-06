@@ -35,9 +35,14 @@ namespace converter
 SonarConverter::SonarConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : BaseConverter( name, frequency, session ),
     p_memory_( session->service("ALMemory") ),
-    p_sonar_( session->service("ALSonar") ),
     is_subscribed_(false)
 {
+  // Only create a sonar proxy if NAOqi < 2.9
+  if (helpers::driver::isNaoqiVersionLesser(naoqi_version_, 2, 9))
+  {
+    p_sonar_ = session->service("ALSonar");
+  }
+
   std::vector<std::string> keys;
   if (robot_ == robot::PEPPER) {
     keys.push_back("Device/SubDeviceList/Platform/Front/Sonar/Sensor/Value");
@@ -74,7 +79,7 @@ SonarConverter::SonarConverter( const std::string& name, const float& frequency,
 
 SonarConverter::~SonarConverter()
 {
-  if (is_subscribed_)
+  if (is_subscribed_ && helpers::driver::isNaoqiVersionLesser(naoqi_version_, 2, 9))
   {
     p_sonar_.call<void>("unsubscribe", "ROS");
     is_subscribed_ = false;
@@ -88,7 +93,7 @@ void SonarConverter::registerCallback( message_actions::MessageAction action, Ca
 
 void SonarConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  if (!is_subscribed_)
+  if (!is_subscribed_ && helpers::driver::isNaoqiVersionLesser(naoqi_version_, 2, 9))
   {
     p_sonar_.call<void>("subscribe", "ROS");
     is_subscribed_ = true;
@@ -117,7 +122,7 @@ void SonarConverter::callAll( const std::vector<message_actions::MessageAction>&
 
 void SonarConverter::reset( )
 {
-  if (is_subscribed_)
+  if (is_subscribed_ && helpers::driver::isNaoqiVersionLesser(naoqi_version_, 2, 9))
   {
     p_sonar_.call<void>("unsubscribe", "ROS");
     is_subscribed_ = false;
