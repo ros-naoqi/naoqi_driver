@@ -42,30 +42,29 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   std::cout << "Receiving information about robot model" << std::endl;
   qi::AnyObject p_memory = session->service("ALMemory");
   std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
-  std::string version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
+  std::string hardware_version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
+  robot::NaoqiVersion naoqi_version = getNaoqiVersion(session);
   std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);
+
+  std::cout << BOLDYELLOW << "Robot detected/NAOqi version: " << RESETCOLOR;
 
   if (std::string(robot) == "nao")
   {
     info.type = naoqi_bridge_msgs::RobotInfo::NAO;
-    std::cout << BOLDYELLOW << "Robot detected: "
-              << BOLDCYAN << "NAO " << version
-              << RESETCOLOR << std::endl;
+    std::cout << BOLDCYAN << "NAO " << hardware_version << RESETCOLOR;
   }
   if (std::string(robot) == "pepper" || std::string(robot) == "juliette" )
   {
     info.type = naoqi_bridge_msgs::RobotInfo::PEPPER;
-    std::cout << BOLDYELLOW << "Robot detected: "
-              << BOLDCYAN << "Pepper " << version
-              << RESETCOLOR << std::endl;
+    std::cout << BOLDCYAN << "Pepper " << hardware_version << RESETCOLOR;
   }
   if (std::string(robot) == "romeo" )
   {
     info.type = naoqi_bridge_msgs::RobotInfo::ROMEO;
-    std::cout << BOLDYELLOW << "Robot detected: "
-              << BOLDCYAN << "Romeo " << version
-              << RESETCOLOR << std::endl;
+    std::cout << BOLDCYAN << "Romeo " << hardware_version << RESETCOLOR;
   }
+
+  std::cout << BOLDCYAN << " / " << naoqi_version.text << RESETCOLOR << std::endl;
 
   // Get the data from RobotConfig
   qi::AnyObject p_motion = session->service("ALMotion");
@@ -198,6 +197,67 @@ const robot::Robot& getRobot( const qi::SessionPtr& session )
   return robot;
 }
 
+/**
+ * @brief Function that retrieves the NAOqi version of the robot
+ * 
+ * @param session 
+ * @return const robot::NaoqiVersion& 
+ */
+const robot::NaoqiVersion& getNaoqiVersion( const qi::SessionPtr& session )
+{
+  static robot::NaoqiVersion naoqi_version;
+
+  try {
+    qi::AnyObject p_system = session->service("ALSystem");
+    naoqi_version.text = p_system.call<std::string>("systemVersion");
+
+  } catch (const std::exception& e) {
+    std::cerr << "Could not retrieve the version of NAOqi: "
+      << e.what()
+      << std::endl;
+
+    naoqi_version.text = "unknown";
+    return naoqi_version;
+  }
+
+  std::string buff("");
+  std::vector<int> version_numbers;
+
+  for (std::string::size_type i = 0; i < naoqi_version.text.size(); ++i)
+  {
+    if (naoqi_version.text[i] != '.')
+    {
+      buff += naoqi_version.text[i];
+    }
+    else if (naoqi_version.text[i] == '.' && buff != "")
+    {
+      version_numbers.push_back(std::atoi(buff.c_str()));
+      buff = "";
+    }
+  }
+
+  if (buff != "")
+  {
+    version_numbers.push_back(std::atoi(buff.c_str()));
+  }
+
+  if (version_numbers.size() != 4)
+  {
+    std::cerr << "Unconsistent version number for NAOqi, should contain 4 "
+      << "elements: "
+      << naoqi_version.text
+      << std::endl;
+
+    return naoqi_version;
+  }
+
+  naoqi_version.major = version_numbers[0];
+  naoqi_version.minor = version_numbers[1];
+  naoqi_version.patch = version_numbers[2];
+  naoqi_version.build = version_numbers[3];
+  return naoqi_version;
+}
+
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session )
 {
   static naoqi_bridge_msgs::RobotInfo robot_info =  getRobotInfoLocal(session);
@@ -257,6 +317,47 @@ bool isDepthStereo(const qi::SessionPtr &session) {
    std::cerr << e.what() << std::endl;
    return false;
  }
+}
+
+/**
+ * @brief Function that returns true if the provided naoqi_version is
+ * (strictly) lesser than the specified one (major.minor.patch.build).
+ * 
+ * @param naoqi_version 
+ * @param major 
+ * @param minor 
+ * @param patch 
+ * @param build 
+ * @return true 
+ * @return false 
+ */
+bool isNaoqiVersionLesser(
+  const robot::NaoqiVersion& naoqi_version,
+  const int& major,
+  const int& minor,
+  const int& patch,
+  const int& build)
+{
+  if (naoqi_version.major < major)
+  {
+    return true;
+  }
+  else if (naoqi_version.minor < minor)
+  {
+    return true;
+  }
+  else if (naoqi_version.patch < patch)
+  {
+    return true;
+  }
+  else if (naoqi_version.build < build)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 } // driver

@@ -36,6 +36,8 @@ namespace driver
 
 const robot::Robot& getRobot( const qi::SessionPtr& session );
 
+const robot::NaoqiVersion& getNaoqiVersion( const qi::SessionPtr& session );
+
 const naoqi_bridge_msgs::RobotInfo& getRobotInfo( const qi::SessionPtr& session );
 
 bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRequest req );
@@ -43,6 +45,13 @@ bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRe
 std::string& getLanguage( const qi::SessionPtr& session );
 
 bool isDepthStereo(const qi::SessionPtr &session);
+
+bool isNaoqiVersionLesser(
+  const robot::NaoqiVersion& naoqi_version,
+  const int& major,
+  const int& minor=0,
+  const int& patch=0,
+  const int& build=0);
 
 } // driver
 } // helpers
