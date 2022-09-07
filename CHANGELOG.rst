@@ -2,8 +2,8 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.12 (2022-09-07)
+-------------------
 * Fix typo in README, remove old rst README
 * Merge pull request `#153 <https://github.com/ros-naoqi/naoqi_driver/issues/153>`_ from mbusy/ci
   CI migration to github actions
