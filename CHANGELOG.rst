@@ -2,6 +2,29 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix typo in README, remove old rst README
+* Merge pull request `#153 <https://github.com/ros-naoqi/naoqi_driver/issues/153>`_ from mbusy/ci
+  CI migration to github actions
+* Migrate CI from TravisCI to Github actions, update the README accordingly (switching to markdown)
+* Merge pull request `#152 <https://github.com/ros-naoqi/naoqi_driver/issues/152>`_ from mbusy/naoqi-2.9
+  Naoqi 2.9 compatibility
+* Refactor the converters for compatibility
+* Refactor the audio event for compatibility
+* Add the getNaoqiVersion and isNaoqiVersionLesser to the driver helpers
+* Add the NaoqiVersion struct
+* Handle libqi 2.9 for the external registration, and update the launchfile accordingly
+* Add the driver authenticator class
+* Merge pull request `#132 <https://github.com/ros-naoqi/naoqi_driver/issues/132>`_ from mbusy/robust_movebase
+  Robustify moveTo
+* Safer moveTo: only odom and base_footprint are accepted as references, and check if yaw is nan
+* Merge pull request `#131 <https://github.com/ros-naoqi/naoqi_driver/issues/131>`_ from ros-naoqi/testing_repo
+  Update CI for melodic
+* melodic not allowed to fail anymore, indigo allowed
+* use testing repo
+* Contributors: Maxime Busy, Mikael Arguedas, Pandhariix, mbusy
+
 0.5.11 (2020-01-08)
 -------------------
 * Merge pull request `#129 <https://github.com/ros-naoqi/naoqi_driver/issues/129>`_ from Pandhariix/melodic_compatibility
