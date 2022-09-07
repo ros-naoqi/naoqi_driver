@@ -10,7 +10,6 @@ The __naoqi_driver__ module is in charge of providing some
 bridge capabilities between ROS and NAOqiOS.
 
 ## How it works
-============
 
 The __naoqi_driver__ module is a NAOqi module that also acts
 as a ROS node. As there is no __roscore__ on the robot, it
