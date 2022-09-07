@@ -45,6 +45,7 @@ public:
     name_( name ),
     frequency_( frequency ),
     robot_( helpers::driver::getRobot(session) ),
+    naoqi_version_( helpers::driver::getNaoqiVersion(session) ),
     session_(session),
     record_enabled_(false)
   {}
@@ -68,6 +69,8 @@ protected:
   float frequency_;
   /** The type of the robot */
   const robot::Robot& robot_;
+  /* The version of the Naoqi Software on the robot */
+  const robot::NaoqiVersion& naoqi_version_;
 
   /** Pointer to a session from which we can create proxies */
   qi::SessionPtr session_;

@@ -41,6 +41,15 @@ enum Robot
   PEPPER,
   ROMEO
 };
+
+struct NaoqiVersion
+{
+  int major;
+  int minor;
+  int patch;
+  int build;
+  std::string text;
+};
 }
 
 enum Topics {
