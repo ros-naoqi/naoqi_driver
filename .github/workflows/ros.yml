@@ -1,0 +1,41 @@
+name: ros
+
+on:
+  workflow_call:
+    inputs:
+      ROS_DISTRO:
+        required: true
+        type: string
+      ROS_REPO:
+        required: true
+        type: string
+      OS_NAME:
+        required: true
+        type: string
+      OS_CODE_NAME:
+        required: true
+        type: string
+      ALLOW_FAIL:
+        required: true
+        type: boolean
+
+jobs:
+  ros_ci:
+    name: ROS
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.ALLOW_FAIL }}
+    env:
+      CCACHE_DIR: "${{ github.workspace }}/.ccache"
+    steps:
+      - name: Check out the naoqi_driver repo
+        uses: actions/checkout@v2
+      - name: Fetch/store directory used by ccache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ inputs.ROS_DISTRO }}-${{ inputs.ROS_REPO }}-${{github.run_id}}
+          restore-keys: |
+            ccache-${{ inputs.ROS_DISTRO }}-${{ inputs.ROS_REPO }}-
+      - name: Run industrial CI
+        uses: 'ros-industrial/industrial_ci@master'
+        env: ${{ inputs }}

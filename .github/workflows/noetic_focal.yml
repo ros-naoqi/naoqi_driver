@@ -1,0 +1,15 @@
+name: ros-noetic-focal
+
+on:
+  push
+
+jobs:
+  ros_noetic_focal_ci:
+    name: noetic (focal)
+    uses: ./.github/workflows/ros.yml
+    with:
+      ROS_DISTRO: noetic
+      ROS_REPO: testing
+      OS_NAME: ubuntu
+      OS_CODE_NAME: focal
+      ALLOW_FAIL: false

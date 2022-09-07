@@ -1,0 +1,15 @@
+name: ros-melodic-bionic
+
+on:
+  push
+
+jobs:
+  ros_melodic_bionic_ci:
+    name: melodic (bionic)
+    uses: ./.github/workflows/ros.yml
+    with:
+      ROS_DISTRO: melodic
+      ROS_REPO: testing
+      OS_NAME: ubuntu
+      OS_CODE_NAME: bionic
+      ALLOW_FAIL: false
