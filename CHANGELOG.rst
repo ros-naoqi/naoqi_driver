@@ -2,6 +2,13 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'noetic_update'
+* Update package.xml for noetic compatibility
+* Update README, remove CI stretch tests
+* Contributors: mbusy
+
 0.5.12 (2022-09-07)
 -------------------
 * Fix typo in README, remove old rst README
