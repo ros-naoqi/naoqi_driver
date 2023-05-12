@@ -36,6 +36,11 @@ To run, the driver requires the `naoqi_libqi`, `naoqi_libqicore` and `naoqi_brid
 The driver can be launched using the following command:
 ```sh
 roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> network_interface:=<interface> username:=<name> password:=<passwd>
+
+ici : roslaunch naoqi_driver naoqi_driver.launch nao_ip:=192.168.0.174 nao_port:=9503 network_interface:=ens33 username:=nao password:=nao
+
+source chemin/setup.bash
+
 ```
 Note that the username and password arguments are only required for robots running naoqi 2.9 or greater 
 
