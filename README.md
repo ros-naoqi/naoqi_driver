@@ -67,6 +67,33 @@ angular:
   z: 1.8"
 ```
 
+Warning: naoqi_driver for melodic and greater have to be used for robots running naoqi 2.9 and greater
+
+## Check that the launchfil is running correctly
+
+Check that naoqi_driver is connected with : 
+```sh
+rosnode info /naoqi_driver
+```
+
+Check that you can move the head by publishing on /joint_angles: 
+```sh
+rostopic pub /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{header: {seq: 0, stamp: now, frame_id: ''}, joint_names: ['HeadYaw', 'HeadPitch'], joint_angles: [0.5,-0.1], speed: 0.1, relative: 0}"
+```
+You can see the published message with rostopic echo /joint_angles
+
+Check that you can move the robot by publishing on cmd_vel to make the robot move:
+```sh
+rostopic pub /cmd_vel geometry_msgs/Twist "linear:
+  x: 2.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 1.8"
+```
+
 
 ## Build status
 
