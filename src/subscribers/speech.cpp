@@ -29,7 +29,7 @@ namespace subscriber
 SpeechSubscriber::SpeechSubscriber( const std::string& name, const std::string& speech_topic, const qi::SessionPtr& session ):
   speech_topic_(speech_topic),
   BaseSubscriber( name, speech_topic, session ),
-  p_tts_( session->service("ALTextToSpeech") )
+  p_tts_( session->service("ALTextToSpeech").value())
 {}
 
 void SpeechSubscriber::reset( ros::NodeHandle& nh )

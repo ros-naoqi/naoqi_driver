@@ -45,7 +45,7 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
 
   // Get the robot type
   std::cout << "Receiving information about robot model" << std::endl;
-  qi::AnyObject p_memory = session->service("ALMemory");
+  qi::AnyObject p_memory = session->service("ALMemory").value();
   std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
   std::string hardware_version = p_memory.call<std::string>("getData", "RobotConfig/Body/BaseVersion" );
   robot::NaoqiVersion naoqi_version = getNaoqiVersion(session);
@@ -282,7 +282,7 @@ const robot::NaoqiVersion& getNaoqiVersion( const qi::SessionPtr& session )
   static robot::NaoqiVersion naoqi_version;
 
   try {
-    qi::AnyObject p_system = session->service("ALSystem");
+    qi::AnyObject p_system = session->service("ALSystem").value();
     naoqi_version.text = p_system.call<std::string>("systemVersion");
 
   } catch (const std::exception& e) {
@@ -345,7 +345,7 @@ bool& setLanguage( const qi::SessionPtr& session, naoqi_bridge_msgs::SetStringRe
   static bool success;
   std::cout << "Receiving service call of setting speech language" << std::endl;
   try{
-    qi::AnyObject p_text_to_speech = session->service("ALTextToSpeech");
+    qi::AnyObject p_text_to_speech = session->service("ALTextToSpeech").value();
     p_text_to_speech.call<void>("setLanguage", req.data);
     success = true;
     return success;

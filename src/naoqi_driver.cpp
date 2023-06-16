@@ -476,7 +476,7 @@ bool Driver::registerMemoryConverter( const std::string& key, float frequency, c
   dataType::DataType data_type;
   qi::AnyValue value;
   try {
-    qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
+    qi::AnyObject p_memory = sessionPtr_->service("ALMemory").value();
     value = p_memory.call<qi::AnyValue>("getData", key);
   } catch (const std::exception& e) {
     std::cout << BOLDRED << "Could not get data in memory for the key: "
@@ -1295,7 +1295,7 @@ bool Driver::registerEventConverter(const std::string& key, const dataType::Data
   dataType::DataType data_type;
   qi::AnyValue value;
   try {
-    qi::AnyObject p_memory = sessionPtr_->service("ALMemory");
+    qi::AnyObject p_memory = sessionPtr_->service("ALMemory").value();
     value = p_memory.call<qi::AnyValue>("getData", key);
   } catch (const std::exception& e) {
     std::cout << BOLDRED << "Could not get data in memory for the key: "

@@ -40,7 +40,7 @@ TouchEventRegister<T>::TouchEventRegister()
 template<class T>
 TouchEventRegister<T>::TouchEventRegister( const std::string& name, const std::vector<std::string> keys, const float& frequency, const qi::SessionPtr& session )
   : serviceId(0),
-    p_memory_( session->service("ALMemory")),
+    p_memory_( session->service("ALMemory").value()),
     session_(session),
     isStarted_(false),
     isPublishing_(false),
@@ -91,7 +91,7 @@ void TouchEventRegister<T>::startProcess()
     {
       //std::string serviceName = std::string("ROS-Driver-") + typeid(T).name();
       std::string serviceName = std::string("ROS-Driver-") + keys_[0];
-      serviceId = session_->registerService(serviceName, this->shared_from_this());
+      serviceId = session_->registerService(serviceName, this->shared_from_this()).value();
       for(std::vector<std::string>::const_iterator it = keys_.begin(); it != keys_.end(); ++it) {
         std::cerr << *it << std::endl;
         p_memory_.call<void>("subscribeToEvent",it->c_str(), serviceName, "touchCallback");
