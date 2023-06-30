@@ -2,6 +2,13 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Support for Pepper running NAOqi 2.9 #157
+  * Audio is disabled for now
+* Update README contents and presentation
+* Contributors: Mouad Abrini, Théo Magoudi, Victor Paléologue, Maxime Busy
+
 0.5.13 (2022-09-14)
 -------------------
 * Merge branch 'noetic_update'
