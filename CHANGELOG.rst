@@ -2,8 +2,8 @@
 Changelog for package naoqi_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2023-06-30)
+------------------
 * Support for Pepper running NAOqi 2.9 #157
   * Audio is disabled for now
 * Update README contents and presentation
