@@ -12,7 +12,7 @@ bridge capabilities between ROS and NAOqiOS.
 
 ## Dependencies
 
-To run, the driver requires the `naoqi_libqi`: https://github.com/ros-naoqi/libqi , `naoqi_libqicore` : https://github.com/ros-naoqi/libqicore and `naoqi_bridge_msgs`: https://github.com/ros-naoqi/naoqi_bridge_msgs packages. Those can be installed using apt-get (if they have been released for your ROS distro) or from source. Additionally, `pepper_meshes` : https://github.com/ros-naoqi/pepper_meshes and/or `nao_meshes`: https://github.com/ros-naoqi/nao_meshescan be useful if you try to display the robot in RViz.
+To run, the driver requires the [`naoqi_libqi`](https://github.com/ros-naoqi/libqi), [`naoqi_libqicore`](https://github.com/ros-naoqi/libqicore) and [`naoqi_bridge_msgs`](https://github.com/ros-naoqi/naoqi_bridge_msgs) packages. Those can be installed using apt-get (if they have been released for your ROS distro) or from source. Additionally, [`pepper_meshes`](https://github.com/ros-naoqi/pepper_meshes) and/or [`nao_meshes`](https://github.com/ros-naoqi/nao_meshes) can be useful if you try to display the robot in RViz.
 
 ## How it works
 
@@ -26,14 +26,16 @@ your robot, running NAOqi OS, and your desktop, running ROS.
 ## Launch
 
 Before launching, you may want to shutdown the autonomous life of the robot with the following process:
+
 ```sh
 ssh nao@<naoip>
-qicli call ALAutonomousLife.setState disabled 
+qicli call ALAutonomousLife.setState disabled
 qicli call ALMotion.wakeUp
 ```
+
 The driver can be launched using the following command:
 
-Be aware that username and password arguments are only 
+Be aware that username and password arguments are only
 required for robots running NAOqi 2.9 or greater.
 
 ```sh
@@ -41,7 +43,7 @@ source <catkin_ws>/devel/setup.bash
 roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> roscore_ip := <ip> network_interface:=<interface> username:=<name> password:=<passwd>
 ```
 
-Warning: `naoqi_driver` for melodic and greater have to be used for robots 
+Warning: `naoqi_driver` for melodic and greater have to be used for robots
 running NAOqi 2.9 and greater.
 
 ## Check that the node is running correctly
@@ -72,6 +74,7 @@ angular:
   y: 0.0
   z: 1.8"
 ```
+
 ## Build status
 
 ROS Distro| Binary Status | Source Status | Github Build |
@@ -89,5 +92,3 @@ cd doc
 doxygen Doxyfile
 sphinx-build -b html ./source/ ./build/
 ```
-
-
