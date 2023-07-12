@@ -24,27 +24,25 @@ Once connected, normal ROS communication is happening between
 your robot, running NAOqi OS, and your desktop, running ROS.
 
 ## Launch
-Before launching, you may want to shutdown the autonomous life of the robot with the following process :
+
+Before launching, you may want to shutdown the autonomous life of the robot with the following process:
 ```sh
 ssh nao@<naoip>
 qicli call ALAutonomousLife.setState disabled 
 qicli call ALMotion.wakeUp
 ```
-
-
-
 The driver can be launched using the following command:
 
-Be aware that username and password arguments are only required for robots running NAOqi 2.9 or greater
+Be aware that username and password arguments are only 
+required for robots running NAOqi 2.9 or greater.
 
 ```sh
 source <catkin_ws>/devel/setup.bash
 roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> roscore_ip := <ip> network_interface:=<interface> username:=<name> password:=<passwd>
 ```
 
-Note that the username and password arguments are only required for robots running NAOqi 2.9 or greater
-
-Warning: `naoqi_driver` for melodic and greater have to be used for robots running NAOqi 2.9 and greater
+Warning: `naoqi_driver` for melodic and greater have to be used for robots 
+running NAOqi 2.9 and greater.
 
 ## Check that the node is running correctly
 
@@ -74,37 +72,6 @@ angular:
   y: 0.0
   z: 1.8"
 ```
-
-## Check that the node is running correctly
-
-Check that naoqi_driver is connected with:
-
-```sh
-rosnode info /naoqi_driver
-```
-
-Check that you can move the head by publishing on `/joint_angles`:
-
-```sh
-rostopic pub /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{header: {seq: 0, stamp: now, frame_id: ''}, joint_names: ['HeadYaw', 'HeadPitch'], joint_angles: [0.5,-0.1], speed: 0.1, relative: 0}"
-```
-
-You can see the published message with `rostopic echo /joint_angles`
-
-Check that you can move the robot by publishing on cmd_vel to make the robot move:
-
-```sh
-rostopic pub /cmd_vel geometry_msgs/Twist "linear:
-  x: 2.0
-  y: 0.0
-  z: 0.0
-angular:
-  x: 0.0
-  y: 0.0
-  z: 1.8"
-```
-
-
 ## Build status
 
 ROS Distro| Binary Status | Source Status | Github Build |
