@@ -24,6 +24,14 @@ Once connected, normal ROS communication is happening between
 your robot, running NAOqi OS, and your desktop, running ROS.
 
 ## Launch
+Before launching, you may want to shutdown the autonomous life of the robot with the following process :
+```sh
+ssh nao@<naoip>
+qicli call ALAutonomousLife.setState disabled 
+qicli call ALMotion.wakeUp
+```
+
+
 
 The driver can be launched using the following command:
 
@@ -31,7 +39,7 @@ Be aware that username and password arguments are only required for robots runni
 
 ```sh
 source <catkin_ws>/devel/setup.bash
-roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> network_interface:=<interface> username:=<name> password:=<passwd>
+roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> roscore_ip := <ip> network_interface:=<interface> username:=<name> password:=<passwd>
 ```
 
 Note that the username and password arguments are only required for robots running NAOqi 2.9 or greater
@@ -49,7 +57,7 @@ rosnode info /naoqi_driver
 Check that you can move the head by publishing on `/joint_angles`:
 
 ```sh
-rostopic pub /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{header: {seq: 0, stamp: now, frame_id: ''}, joint_names: ['HeadYaw', 'HeadPitch'], joint_angles: [0.5,-0.1], speed: 0.1, relative: 0}"
+rostopic pub /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{header: {seq: 0, stamp: now, frame_id: ''}, joint_names: ['HeadYaw', 'HeadPitch'], joint_angles: [0.5,0.1], speed: 0.1, relative: 0}"
 ```
 
 You can see the published message with `rostopic echo /joint_angles`
