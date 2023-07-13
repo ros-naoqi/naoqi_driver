@@ -128,7 +128,7 @@ LogConverter::LogConverter( const std::string& name, float frequency, const qi::
   LogLevel(qi::LogLevel_Verbose, rosgraph_msgs::Log::DEBUG, ros::console::levels::Debug);
   LogLevel(qi::LogLevel_Debug, rosgraph_msgs::Log::DEBUG, ros::console::levels::Debug);
 
-  listener_ = logger_->createListener();
+  listener_ = logger_->getListener();
   set_qi_logger_level();
   listener_->onLogMessage.connect(logCallback);
 }
