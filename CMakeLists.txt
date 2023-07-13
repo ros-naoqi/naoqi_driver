@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.8.3)
-project(naoqi_driver)
+project(naoqi_driver VERSION 0.6.1 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.2)
 
 # define source files that can be used by qibuild or catkin
 set(
