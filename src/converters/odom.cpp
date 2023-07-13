@@ -34,11 +34,11 @@ namespace naoqi
 {
 namespace converter
 {
- 
+
 OdomConverter::OdomConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session ):
   BaseConverter( name, frequency, session ),
-  p_motion_( session->service("ALMotion") )
-  
+  p_motion_(session->service("ALMotion").value())
+
 {
 }
 
@@ -49,22 +49,22 @@ void OdomConverter::registerCallback( message_actions::MessageAction action, Cal
 
 void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& actions )
 {
-  
+
   int FRAME_WORLD = 1;
   bool use_sensor = true;
   // documentation of getPosition available here: http://doc.aldebaran.com/2-1/naoqi/motion/control-cartesian.html
   std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", FRAME_WORLD, use_sensor );
-  
+
   const ros::Time& odom_stamp = ros::Time::now();
   std::vector<float> al_speed_data = p_motion_.call<std::vector<float> >( "getRobotVelocity" );
-  
+
   const float& odomX  =  al_odometry_data[0];
   const float& odomY  =  al_odometry_data[1];
   const float& odomZ  =  al_odometry_data[2];
   const float& odomWX =  al_odometry_data[3];
   const float& odomWY =  al_odometry_data[4];
   const float& odomWZ =  al_odometry_data[5];
-  
+
   const float& dX = al_speed_data[0];
   const float& dY = al_speed_data[1];
   const float& dWZ = al_speed_data[2];
@@ -83,11 +83,11 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   msg_odom.pose.pose.position.x = odomX;
   msg_odom.pose.pose.position.y = odomY;
   msg_odom.pose.pose.position.z = odomZ;
-  
+
   msg_odom.twist.twist.linear.x = dX;
   msg_odom.twist.twist.linear.y = dY;
   msg_odom.twist.twist.linear.z = 0;
-  
+
   msg_odom.twist.twist.angular.x = 0;
   msg_odom.twist.twist.angular.y = 0;
   msg_odom.twist.twist.angular.z = dWZ;
@@ -95,7 +95,7 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   for_each( message_actions::MessageAction action, actions )
   {
     callbacks_[action](msg_odom);
-    
+
   }
 }
 

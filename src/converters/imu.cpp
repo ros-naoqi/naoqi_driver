@@ -40,7 +40,7 @@ namespace converter {
 
   ImuConverter::ImuConverter(const std::string& name, const IMU::Location& location,  const float& frequency, const qi::SessionPtr& session):
     BaseConverter(name, frequency, session),
-    p_memory_(session->service("ALMemory"))
+    p_memory_(session->service("ALMemory").value())
   {
     if(location == IMU::TORSO){
       msg_imu_.header.frame_id = "base_link";

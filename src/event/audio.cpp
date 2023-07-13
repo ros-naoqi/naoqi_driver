@@ -34,8 +34,8 @@ namespace naoqi
 
 AudioEventRegister::AudioEventRegister( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : serviceId(0),
-    p_audio_( session->service("ALAudioDevice")),
-    p_robot_model_(session->service("ALRobotModel")),
+    p_audio_( session->service("ALAudioDevice").value()),
+    p_robot_model_(session->service("ALRobotModel").value()),
     session_(session),
     naoqi_version_(helpers::driver::getNaoqiVersion(session)),
     isStarted_(false),
@@ -103,7 +103,7 @@ void AudioEventRegister::startProcess()
   {
     if(!serviceId)
     {
-      serviceId = session_->registerService("ROS-Driver-Audio", shared_from_this());
+      serviceId = session_->registerService("ROS-Driver-Audio", shared_from_this()).value();
       p_audio_.call<void>(
               "setClientPreferences",
               "ROS-Driver-Audio",

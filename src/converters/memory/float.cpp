@@ -34,7 +34,7 @@ namespace converter
 MemoryFloatConverter::MemoryFloatConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session, const std::string& memory_key )
   : BaseConverter( name, frequency, session ),
     memory_key_(memory_key),
-    p_memory_( session->service("ALMemory") )
+    p_memory_(session->service("ALMemory").value())
 {}
 
 void MemoryFloatConverter::registerCallback( message_actions::MessageAction action, Callback_t cb )

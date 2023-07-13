@@ -54,6 +54,7 @@ public:
     for_each(const LogLevel& log_level, all_)
       if (log_level.qi_ == qi)
         return log_level;
+    return LogLevel::default_;
   }
 
   static const LogLevel& get_from_ros_msg(rosgraph_msgs::Log::_level_type ros_msg)
@@ -61,6 +62,7 @@ public:
     for_each(const LogLevel& log_level, all_)
       if (log_level.ros_msg_ == ros_msg)
         return log_level;
+    return LogLevel::default_;
   }
 
   static const LogLevel& get_from_ros_console(ros::console::levels::Level ros_console)
@@ -68,17 +70,21 @@ public:
     for_each(const LogLevel& log_level, all_)
       if (log_level.ros_console_ == ros_console)
         return log_level;
+    return LogLevel::default_;
   }
 
   qi::LogLevel qi_;
   rosgraph_msgs::Log::_level_type ros_msg_;
   ros::console::levels::Level ros_console_;
 
+  static const LogLevel default_;
+
 private:
   static std::vector<LogLevel> all_;
 };
 
 std::vector<LogLevel> LogLevel::all_ = std::vector<LogLevel>();
+const LogLevel LogLevel::default_ = LogLevel(qi::LogLevel_Info, rosgraph_msgs::Log::INFO, ros::console::levels::Info);
 
 /** Callback called for each libqi log message
  */
@@ -122,7 +128,7 @@ LogConverter::LogConverter( const std::string& name, float frequency, const qi::
   LogLevel(qi::LogLevel_Verbose, rosgraph_msgs::Log::DEBUG, ros::console::levels::Debug);
   LogLevel(qi::LogLevel_Debug, rosgraph_msgs::Log::DEBUG, ros::console::levels::Debug);
 
-  listener_ = logger_->getListener();
+  listener_ = logger_->createListener();
   set_qi_logger_level();
   listener_->onLogMessage.connect(logCallback);
 }

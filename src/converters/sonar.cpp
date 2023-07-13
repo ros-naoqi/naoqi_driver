@@ -34,7 +34,7 @@ namespace converter
 
 SonarConverter::SonarConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session )
   : BaseConverter( name, frequency, session ),
-    p_memory_( session->service("ALMemory").value() ),
+    p_memory_(session->service("ALMemory").value()),
     is_subscribed_(false)
 {
   // Only create a sonar proxy if NAOqi < 2.9

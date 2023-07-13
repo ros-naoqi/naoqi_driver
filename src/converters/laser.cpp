@@ -130,7 +130,7 @@ static const char* laserMemoryKeys[] = {
 
 LaserConverter::LaserConverter( const std::string& name, const float& frequency, const qi::SessionPtr& session ):
   BaseConverter( name, frequency, session ),
-  p_memory_(session->service("ALMemory"))
+  p_memory_(session->service("ALMemory").value())
 {
 }
 
@@ -224,12 +224,12 @@ void LaserConverter::reset( )
 void LaserConverter::setLaserRanges(
     const float &range_min,
     const float &range_max) {
-  
+
   if (range_min > 0)
     this->range_min_ = range_min;
   else
     this->range_min_ = 0.1;
-  
+
   if (range_max > this->range_min_)
     this->range_max_ = range_max;
   else
