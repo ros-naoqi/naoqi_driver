@@ -109,6 +109,21 @@ inline std::string& getBootConfigFile()
 #endif
 }
 
+/** mem config loader */
+static const std::string mem_config_file_name = "mem_config.json";
+inline std::string& getMemConfigFile()
+{
+#ifdef CATKIN_BUILD
+  static std::string path = ros::package::getPath("naoqi_driver")+"/share/"+mem_config_file_name;
+  std::cout << "found a catkin prefix " << path << std::endl;
+  return path;
+#else
+  static std::string path = qi::path::findData( "/", mem_config_file_name );
+  std::cout << "found a qibuild path " << path << std::endl;
+  return path;
+#endif
+}
+
 /* URDF loader */
 inline std::string& getURDF( std::string filename )
 {

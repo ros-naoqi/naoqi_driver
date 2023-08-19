@@ -63,7 +63,7 @@
 #include "subscribers/teleop.hpp"
 #include "subscribers/moveto.hpp"
 #include "subscribers/speech.hpp"
-
+#include "subscribers/memory.hpp"
 
 /*
  * SERVICES
@@ -155,6 +155,7 @@ void Driver::init()
   registerDefaultConverter();
   registerDefaultSubscriber();
   registerDefaultServices();
+  addMemoryConverters(helpers::filesystem::getMemConfigFile());
   startRosLoop();
 }
 
@@ -937,6 +938,7 @@ void Driver::registerDefaultSubscriber()
   registerSubscriber( boost::make_shared<naoqi::subscriber::TeleopSubscriber>("teleop", "/cmd_vel", "/joint_angles", sessionPtr_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::MovetoSubscriber>("moveto", "/move_base_simple/goal", sessionPtr_, tf2_buffer_) );
   registerSubscriber( boost::make_shared<naoqi::subscriber::SpeechSubscriber>("speech", "/speech", sessionPtr_) );
+  registerSubscriber( boost::make_shared<naoqi::subscriber::MemorySubscriber>("update_memory", "/update_memory", sessionPtr_) );
 }
 
 void Driver::registerService( service::Service srv )
@@ -1222,15 +1224,6 @@ void Driver::parseJsonFile(std::string filepath, boost::property_tree::ptree &pt
 }
 
 void Driver::addMemoryConverters(std::string filepath){
-  // Check if the nodeHandle pointer is already initialized
-  if(!nhPtr_){
-    std::cout << BOLDRED << "The connection with the ROS master does not seem to be initialized." << std::endl
-              << BOLDYELLOW << "Please run:" << RESETCOLOR << std::endl
-              << GREEN << "\t$ qicli call ROS-Driver.setMasterURI <YourROSCoreIP>" << RESETCOLOR << std::endl
-              << BOLDYELLOW << "before trying to add converters" << RESETCOLOR << std::endl;
-    return;
-  }
-
   // Open the file filepath and parse it
   boost::property_tree::ptree pt;
   parseJsonFile(filepath, pt);
