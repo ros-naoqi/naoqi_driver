@@ -5,10 +5,13 @@ This module establishes a ROS bridge with NAOqi. It publishes several sensor dat
 It also enables ROS to call parts of the NAOqi API.
 It was tested with a pepper robot.
 
-## What it does
+## Installation
 
-The __naoqi_driver__ module is in charge of providing some
-bridge capabilities between ROS and NAOqiOS.
+For **noetic**, on Ubuntu 20.04:
+
+```sh
+sudo apt install ros-noetic-naoqi-driver
+```
 
 ## Dependencies
 
