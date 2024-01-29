@@ -46,6 +46,8 @@ roslaunch naoqi_driver naoqi_driver.launch nao_ip:=<ip> nao_port:=<port> roscore
 Warning: `naoqi_driver` for melodic and greater have to be used for robots
 running NAOqi 2.9 and greater.
 
+Warning: If you have a `connection refused error` such as [this issue](https://github.com/ros-naoqi/naoqi_driver/issues/162) when using robots running NAOqi 2.8 and greater, please try to give `nao_port:=9503` explicitly.
+
 ## Check that the node is running correctly
 
 Check that naoqi_driver is connected with :
