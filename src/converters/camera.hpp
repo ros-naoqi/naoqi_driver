@@ -29,6 +29,11 @@
 */
 #include <image_transport/image_transport.h>
 
+/*
+* CV includes
+*/
+#include <opencv2/imgproc/imgproc.hpp>
+
 namespace naoqi
 {
 namespace converter
@@ -70,6 +75,7 @@ private:
   // goes along with colorspace_
   std::string msg_colorspace_;
   int cv_mat_type_;
+  cv::Mat cv_img_;
   // msg frame id
   std::string msg_frameid_;
   sensor_msgs::CameraInfo camera_info_;
