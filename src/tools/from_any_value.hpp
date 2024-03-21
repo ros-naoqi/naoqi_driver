@@ -39,6 +39,7 @@ NaoqiImage fromAnyValueToNaoqiImage(qi::AnyValue& value);
 std::vector<std::string> fromAnyValueToStringVector(qi::AnyValue& value, std::vector<std::string>& result);
 
 std::vector<float> fromAnyValueToFloatVector(qi::AnyValue& value, std::vector<float>& result);
+std::vector<int> fromAnyValueToIntVector(qi::AnyValue& value, std::vector<int>& result);
 
 void fromAnyValueToFloatVectorVector(
         qi::AnyValue &value,

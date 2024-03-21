@@ -40,7 +40,7 @@
 #include "converters/memory/string.hpp"
 #include "converters/log.hpp"
 #include "converters/odom.hpp"
-
+#include "converters/people.hpp"
 /*
  * PUBLISHERS
  */
@@ -594,6 +594,9 @@ void Driver::registerDefaultConverter()
   float laser_range_min              = boot_config_.get<float>("converters.laser.range_min", 0.1);
   float laser_range_max              = boot_config_.get<float>("converters.laser.range_max", 3.0);
 
+  bool people_enabled                  = boot_config_.get( "converters.people.enabled", true);
+  size_t people_frequency              = boot_config_.get( "converters.people.frequency", 1);
+
   bool sonar_enabled                  = boot_config_.get( "converters.sonar.enabled", true);
   size_t sonar_frequency              = boot_config_.get( "converters.sonar.frequency", 10);
 
@@ -792,6 +795,20 @@ void Driver::registerDefaultConverter()
       registerConverter( lc, lp, lr );
     }
   }
+
+  /** People */
+  if ( people_enabled )
+  {
+
+    boost::shared_ptr<publisher::BasicPublisher<people_msgs::People> > pp = boost::make_shared<publisher::BasicPublisher<people_msgs::People> >( "people" );
+    boost::shared_ptr<recorder::BasicRecorder<people_msgs::People> > pr = boost::make_shared<recorder::BasicRecorder<people_msgs::People> >( "people" );
+    boost::shared_ptr<converter::PeopleConverter> pc = boost::make_shared<converter::PeopleConverter>( "people", people_frequency, sessionPtr_ );
+    pc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<people_msgs::People>::publish, pp, _1) );
+    pc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<people_msgs::People>::write, pr, _1) );
+    pc->registerCallback( message_actions::LOG, boost::bind(&recorder::BasicRecorder<people_msgs::People>::bufferize, pr, _1) );
+    registerConverter( pc, pp, pr );
+  }
+
 
   /** Sonar */
   if ( sonar_enabled )

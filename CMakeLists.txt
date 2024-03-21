@@ -12,6 +12,7 @@ set(
   src/converters/info.cpp
   src/converters/joint_state.cpp
   src/converters/laser.cpp
+  src/converters/people.cpp
   src/converters/memory_list.cpp
   src/converters/memory/bool.cpp
   src/converters/memory/int.cpp
